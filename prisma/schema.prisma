@@ -74,6 +74,7 @@ model Chat {
     visibility Visibility @default(private)
     user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
     messages   Message[]
+    stream     Stream[]
 }
 
 model Message {
@@ -84,4 +85,13 @@ model Message {
     attachments Json
     createdAt   DateTime @default(now())
     chat        Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
+}
+
+model Stream {
+    id        String   @id @default(uuid())
+    chatId    String
+    createdAt DateTime @default(now())
+    chat      Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
+
+    @@index([chatId])
 }

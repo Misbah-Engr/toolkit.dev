@@ -1,0 +1,215 @@
+import { after } from "next/server";
+
+import {
+  appendClientMessage,
+  appendResponseMessages,
+  createDataStream,
+  smoothStream,
+} from "ai";
+
+import { createResumableStreamContext } from "resumable-stream";
+
+import { auth } from "@/server/auth";
+import { api } from "@/trpc/server";
+
+import { postRequestBodySchema, type PostRequestBody } from "./schema";
+
+import { generateText, streamText } from "@/lib/ai/generate";
+import { generateUUID } from "@/lib/utils";
+
+import { ChatSDKError } from "@/lib/errors";
+
+import type { ResumableStreamContext } from "resumable-stream";
+import type { CoreAssistantMessage, CoreToolMessage, UIMessage } from "ai";
+
+export const maxDuration = 60;
+
+let globalStreamContext: ResumableStreamContext | null = null;
+
+function getStreamContext() {
+  if (!globalStreamContext) {
+    try {
+      globalStreamContext = createResumableStreamContext({
+        waitUntil: after,
+      });
+    } catch (error: unknown) {
+      if (error instanceof Error && error.message.includes("REDIS_URL")) {
+        console.log(
+          " > Resumable streams are disabled due to missing REDIS_URL",
+        );
+      } else {
+        console.error(error);
+      }
+    }
+  }
+
+  return globalStreamContext;
+}
+
+export async function POST(request: Request) {
+  let requestBody: PostRequestBody;
+
+  try {
+    requestBody = postRequestBodySchema.parse(await request.json());
+  } catch (error) {
+    console.error(error);
+    return new ChatSDKError("bad_request:api").toResponse();
+  }
+
+  try {
+    const { id, message, selectedChatModel, selectedVisibilityType } =
+      requestBody;
+
+    const session = await auth();
+
+    if (!session?.user) {
+      return new ChatSDKError("unauthorized:chat").toResponse();
+    }
+
+    const messageCount = await api.messages.getMessageCountByUserId();
+
+    if (messageCount > 100) {
+      return new ChatSDKError("rate_limit:chat").toResponse();
+    }
+
+    const chat = await api.chats.getChat(id);
+
+    if (!chat) {
+      const title = await generateTitleFromUserMessage(message);
+
+      await api.chats.createChat({
+        id,
+        userId: session.user.id,
+        title,
+        visibility: selectedVisibilityType,
+      });
+    } else {
+      if (chat.userId !== session.user.id) {
+        return new ChatSDKError("forbidden:chat").toResponse();
+      }
+    }
+
+    const previousMessages = await api.messages.getMessagesForChat({
+      chatId: id,
+    });
+
+    const messages = appendClientMessage({
+      // @ts-expect-error: todo add type conversion from DBMessage[] to UIMessage[]
+      messages: previousMessages,
+      message,
+    });
+
+    await api.messages.createMessage({
+      chatId: id,
+      id: message.id,
+      role: "user",
+      parts: message.parts,
+      attachments:
+        message.experimental_attachments?.map((attachment) => attachment.url) ??
+        [],
+    });
+
+    const streamId = generateUUID();
+    await api.streams.createStreamId({ streamId, chatId: id });
+
+    const stream = createDataStream({
+      execute: (dataStream) => {
+        const result = streamText({
+          system: "You are a helpful assistant.",
+          messages,
+          maxSteps: 5,
+          experimental_transform: smoothStream({ chunking: "word" }),
+          experimental_generateMessageId: generateUUID,
+          onFinish: async ({ response }) => {
+            if (session.user?.id) {
+              try {
+                const assistantId = getTrailingMessageId({
+                  messages: response.messages.filter(
+                    (message) => message.role === "assistant",
+                  ),
+                });
+
+                if (!assistantId) {
+                  throw new Error("No assistant message found!");
+                }
+
+                const [, assistantMessage] = appendResponseMessages({
+                  messages: [message],
+                  responseMessages: response.messages,
+                });
+
+                if (!assistantMessage) {
+                  throw new Error("No assistant message found!");
+                }
+
+                await api.messages.createMessage({
+                  chatId: id,
+                  id: assistantId,
+                  role: "assistant",
+                  parts: assistantMessage.parts ?? [],
+                  attachments:
+                    assistantMessage.experimental_attachments?.map(
+                      (attachment) => attachment.url,
+                    ) ?? [],
+                });
+              } catch (_) {
+                console.error("Failed to save chat");
+              }
+            }
+          },
+        });
+
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        result.consumeStream();
+
+        result.mergeIntoDataStream(dataStream, {
+          sendReasoning: true,
+        });
+      },
+      onError: () => {
+        return "Oops, an error occurred!";
+      },
+    });
+
+    const streamContext = getStreamContext();
+
+    if (streamContext) {
+      return new Response(
+        await streamContext.resumableStream(streamId, () => stream),
+      );
+    } else {
+      return new Response(stream);
+    }
+  } catch (error) {
+    if (error instanceof ChatSDKError) {
+      return error.toResponse();
+    }
+  }
+}
+
+async function generateTitleFromUserMessage(message: UIMessage) {
+  const { text: title } = await generateText({
+    system: `\n
+      - you will generate a short title based on the first message a user begins a conversation with
+      - ensure it is not more than 80 characters long
+      - the title should be a summary of the user's message
+      - do not use quotes or colons`,
+    prompt: JSON.stringify(message),
+  });
+
+  return title;
+}
+
+type ResponseMessageWithoutId = CoreToolMessage | CoreAssistantMessage;
+type ResponseMessage = ResponseMessageWithoutId & { id: string };
+export function getTrailingMessageId({
+  messages,
+}: {
+  messages: Array<ResponseMessage>;
+}): string | null {
+  const trailingMessage = messages.at(-1);
+
+  if (!trailingMessage) return null;
+
+  return trailingMessage.id;
+}

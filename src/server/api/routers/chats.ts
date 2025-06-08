@@ -48,6 +48,7 @@ export const chatsRouter = createTRPCRouter({
   createChat: protectedProcedure
     .input(
       z.object({
+        id: z.string(),
         title: z.string(),
         visibility: z.enum(["public", "private"]),
         userId: z.string(),
