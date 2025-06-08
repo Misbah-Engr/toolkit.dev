@@ -1,6 +1,52 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
+const createAuthSchema = () => {
+  const authSchema = {};
+
+  if (process.env.AUTH_DISCORD_ID && process.env.AUTH_DISCORD_SECRET) {
+    authSchema.AUTH_DISCORD_ID = z.string();
+    authSchema.AUTH_DISCORD_SECRET = z.string();
+  }
+
+  if (process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET) {
+    authSchema.AUTH_GOOGLE_ID = z.string();
+    authSchema.AUTH_GOOGLE_SECRET = z.string();
+  }
+
+  if (process.env.AUTH_GITHUB_ID && process.env.AUTH_GITHUB_SECRET) {
+    authSchema.AUTH_GITHUB_ID = z.string();
+    authSchema.AUTH_GITHUB_SECRET = z.string();
+  }
+
+  if (Object.keys(authSchema).length === 0) {
+    throw new Error("No authentication provider configured");
+  }
+
+  return authSchema;
+};
+
+const authRuntimeEnv = () => {
+  const object = {};
+
+  if (process.env.AUTH_DISCORD_ID && process.env.AUTH_DISCORD_SECRET) {
+    object.AUTH_DISCORD_ID = process.env.AUTH_DISCORD_ID;
+    object.AUTH_DISCORD_SECRET = process.env.AUTH_DISCORD_SECRET;
+  }
+
+  if (process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET) {
+    object.AUTH_GOOGLE_ID = process.env.AUTH_GOOGLE_ID;
+    object.AUTH_GOOGLE_SECRET = process.env.AUTH_GOOGLE_SECRET;
+  }
+
+  if (process.env.AUTH_GITHUB_ID && process.env.AUTH_GITHUB_SECRET) {
+    object.AUTH_GITHUB_ID = process.env.AUTH_GITHUB_ID;
+    object.AUTH_GITHUB_SECRET = process.env.AUTH_GITHUB_SECRET;
+  }
+
+  return object;
+};
+
 export const env = createEnv({
   /**
    * Specify your server-side environment variables schema here. This way you can ensure the app
@@ -11,12 +57,11 @@ export const env = createEnv({
       process.env.NODE_ENV === "production"
         ? z.string()
         : z.string().optional(),
-    AUTH_DISCORD_ID: z.string(),
-    AUTH_DISCORD_SECRET: z.string(),
     DATABASE_URL: z.string().url(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
+    ...createAuthSchema(),
   },
 
   /**
@@ -34,10 +79,9 @@ export const env = createEnv({
    */
   runtimeEnv: {
     AUTH_SECRET: process.env.AUTH_SECRET,
-    AUTH_DISCORD_ID: process.env.AUTH_DISCORD_ID,
-    AUTH_DISCORD_SECRET: process.env.AUTH_DISCORD_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
+    ...authRuntimeEnv(),
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
