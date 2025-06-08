@@ -50,6 +50,7 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
+    chats         Chat[]
 }
 
 model VerificationToken {
@@ -58,4 +59,29 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+enum Visibility {
+    public
+    private
+}
+
+model Chat {
+    id         String     @id @default(uuid())
+    createdAt  DateTime   @default(now())
+    title      String
+    userId     String
+    visibility Visibility @default(private)
+    user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+    messages   Message[]
+}
+
+model Message {
+    id          String   @id @default(uuid())
+    chatId      String
+    role        String
+    parts       Json
+    attachments Json
+    createdAt   DateTime @default(now())
+    chat        Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
 }
