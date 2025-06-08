@@ -56,7 +56,7 @@ export const messagesRouter = createTRPCRouter({
           chatId,
         },
         orderBy: {
-          createdAt: "desc",
+          createdAt: "asc",
         },
       });
 
@@ -88,7 +88,13 @@ export const messagesRouter = createTRPCRouter({
         id: z.string(),
         role: z.enum(["user", "assistant"]),
         parts: z.array(messagePartSchema),
-        attachments: z.array(z.string()),
+        attachments: z.array(
+          z.object({
+            url: z.string().url(),
+            name: z.string().min(1).max(2000),
+            contentType: z.enum(["image/png", "image/jpg", "image/jpeg"]),
+          }),
+        ),
       }),
     )
     .mutation(async ({ ctx, input }) => {

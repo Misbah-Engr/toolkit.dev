@@ -38,7 +38,6 @@ export const Chat: React.FC<Props> = ({
   initialChatModel,
   initialVisibilityType,
   isReadonly,
-  session,
   autoResume,
 }) => {
   const utils = api.useUtils();
@@ -107,7 +106,7 @@ export const Chat: React.FC<Props> = ({
 
   return (
     <>
-      <div className="bg-background flex h-dvh min-w-0 flex-col">
+      <div className="bg-background flex h-full min-w-0 flex-col">
         <Messages
           chatId={id}
           status={status}

@@ -40,9 +40,11 @@ export default function RootLayout({
           <ThemeProvider>
             <SidebarProvider>
               <AppSidebar />
-              <SidebarInset>
+              <SidebarInset className="flex h-dvh flex-col">
                 <Navbar />
-                {children}
+                <div className="h-0 flex-1 overflow-hidden bg-red-500">
+                  {children}
+                </div>
               </SidebarInset>
             </SidebarProvider>
           </ThemeProvider>

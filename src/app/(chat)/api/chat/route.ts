@@ -57,8 +57,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const { id, message, selectedChatModel, selectedVisibilityType } =
-      requestBody;
+    const { id, message, selectedVisibilityType } = requestBody;
 
     const session = await auth();
 
@@ -105,8 +104,11 @@ export async function POST(request: Request) {
       role: "user",
       parts: message.parts,
       attachments:
-        message.experimental_attachments?.map((attachment) => attachment.url) ??
-        [],
+        message.experimental_attachments?.map((attachment) => ({
+          url: attachment.url,
+          name: attachment.name,
+          contentType: attachment.contentType,
+        })) ?? [],
     });
 
     const streamId = generateUUID();
@@ -149,7 +151,14 @@ export async function POST(request: Request) {
                   parts: assistantMessage.parts ?? [],
                   attachments:
                     assistantMessage.experimental_attachments?.map(
-                      (attachment) => attachment.url,
+                      (attachment) => ({
+                        url: attachment.url,
+                        name: attachment.name ?? "",
+                        contentType: attachment.contentType as
+                          | "image/png"
+                          | "image/jpg"
+                          | "image/jpeg",
+                      }),
                     ) ?? [],
                 });
               } catch (_) {
@@ -202,7 +211,7 @@ async function generateTitleFromUserMessage(message: UIMessage) {
 
 type ResponseMessageWithoutId = CoreToolMessage | CoreAssistantMessage;
 type ResponseMessage = ResponseMessageWithoutId & { id: string };
-export function getTrailingMessageId({
+function getTrailingMessageId({
   messages,
 }: {
   messages: Array<ResponseMessage>;

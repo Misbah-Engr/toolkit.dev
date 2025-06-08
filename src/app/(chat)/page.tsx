@@ -1,13 +1,34 @@
-import { HydrateClient } from "@/trpc/server";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
-export default async function Home() {
+import { Chat } from "./_components/chat";
+
+import { auth } from "@/server/auth";
+
+import { generateUUID } from "@/lib/utils";
+
+export default async function Page() {
+  const session = await auth();
+
+  if (!session) {
+    redirect("/api/auth/guest");
+  }
+
+  const id = generateUUID();
+
+  const cookieStore = await cookies();
+  const modelIdFromCookie = cookieStore.get("chat-model");
+
   return (
-    <HydrateClient>
-      <main className="flex min-h-screen flex-col items-center justify-center">
-        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-          <h1 className="text-4xl font-bold">Open Chat</h1>
-        </div>
-      </main>
-    </HydrateClient>
+    <Chat
+      key={id}
+      id={id}
+      initialMessages={[]}
+      initialChatModel={modelIdFromCookie?.value ?? "gpt-4o"}
+      initialVisibilityType="private"
+      isReadonly={false}
+      session={session}
+      autoResume={false}
+    />
   );
 }
