@@ -19,7 +19,7 @@ export const streamsRouter = createTRPCRouter({
             createdAt: new Date(),
           },
         });
-      } catch (error) {
+      } catch (_) {
         throw new Error("Failed to create stream id");
       }
     }),
