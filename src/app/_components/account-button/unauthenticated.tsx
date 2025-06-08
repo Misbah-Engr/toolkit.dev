@@ -6,10 +6,11 @@ import { signIn } from "next-auth/react";
 
 import { Button } from "@/components/ui/button";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 import { ProviderIcon } from "./provider-icon";
 
@@ -22,26 +23,24 @@ interface Props {
 
 export const Unauthenticated: React.FC<Props> = ({ providers }) => {
   return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button variant="outline" className="w-full cursor-pointer">
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline">
           <User />
           Sign In
         </Button>
-      </PopoverTrigger>
-      <PopoverContent>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
         {providers.map((provider) => (
-          <Button
+          <DropdownMenuItem
             key={provider.id}
-            variant="outline"
-            className="w-full cursor-pointer"
             onClick={() => signIn(provider.id, { callbackUrl: "/" })}
           >
             <ProviderIcon provider={provider.name} />
             Sign In with {provider.name}
-          </Button>
+          </DropdownMenuItem>
         ))}
-      </PopoverContent>
-    </Popover>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };

@@ -2,12 +2,15 @@
 
 import { LogOut, User } from "lucide-react";
 
+import { signOut } from "next-auth/react";
+
 import { Button } from "@/components/ui/button";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 import type { Session } from "next-auth";
 
@@ -17,8 +20,8 @@ interface Props {
 
 export const Authenticated: React.FC<Props> = ({ session }) => {
   return (
-    <Popover>
-      <PopoverTrigger asChild>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
         <Button variant="outline">
           {session.user.image ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -32,13 +35,13 @@ export const Authenticated: React.FC<Props> = ({ session }) => {
           )}
           {session.user.name ?? "Signed In"}
         </Button>
-      </PopoverTrigger>
-      <PopoverContent>
-        <Button variant="outline">
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem onClick={() => signOut()}>
           <LogOut />
           Sign Out
-        </Button>
-      </PopoverContent>
-    </Popover>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
