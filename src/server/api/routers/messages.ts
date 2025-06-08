@@ -109,4 +109,17 @@ export const messagesRouter = createTRPCRouter({
         where: { id: input },
       });
     }),
+
+  deleteMessagesAfterTimestamp: protectedProcedure
+    .input(
+      z.object({
+        chatId: z.string(),
+        timestamp: z.date(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.message.deleteMany({
+        where: { chatId: input.chatId, createdAt: { lt: input.timestamp } },
+      });
+    }),
 });
