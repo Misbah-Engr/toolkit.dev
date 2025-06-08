@@ -32,7 +32,7 @@ export async function AppSidebar({
         <SidebarHeader>
           <div className="flex items-center gap-2 px-1">
             <Logo className="size-6" />
-            <h1 className="overflow-hidden text-2xl font-bold whitespace-nowrap group-data-[collapsible=icon]:hidden">
+            <h1 className="overflow-hidden text-xl font-bold whitespace-nowrap group-data-[collapsible=icon]:hidden">
               Open Chat
             </h1>
           </div>

@@ -7,6 +7,8 @@ import { Geist_Mono } from "next/font/google";
 import { TRPCReactProvider } from "@/trpc/react";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "./_components/sidebar";
+import { Navbar } from "./_components/navbar";
+import { ThemeProvider } from "./_contexts/theme";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -31,10 +33,15 @@ export default function RootLayout({
     <html lang="en" className={`${geist.variable} ${geistMono.variable}`}>
       <body>
         <TRPCReactProvider>
-          <SidebarProvider>
-            <AppSidebar />
-            <SidebarInset>{children}</SidebarInset>
-          </SidebarProvider>
+          <ThemeProvider>
+            <SidebarProvider>
+              <AppSidebar />
+              <SidebarInset>
+                <Navbar />
+                {children}
+              </SidebarInset>
+            </SidebarProvider>
+          </ThemeProvider>
         </TRPCReactProvider>
       </body>
     </html>
