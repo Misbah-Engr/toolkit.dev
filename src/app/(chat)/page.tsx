@@ -1,5 +1,4 @@
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 import { Chat } from "./_components/chat";
 
@@ -11,7 +10,7 @@ export default async function Page() {
   const session = await auth();
 
   if (!session) {
-    redirect("/api/auth/guest");
+    return null;
   }
 
   const id = generateUUID();
