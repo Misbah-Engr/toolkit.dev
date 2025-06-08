@@ -47,6 +47,30 @@ const authRuntimeEnv = () => {
   return object;
 };
 
+const createLlmSchema = () => {
+  const llmSchema = {};
+
+  if (process.env.OPENAI_API_KEY) {
+    llmSchema.OPENAI_API_KEY = z.string();
+  }
+
+  if (Object.keys(llmSchema).length === 0) {
+    throw new Error("No LLM provider configured");
+  }
+
+  return llmSchema;
+};
+
+const llmRuntimeEnv = () => {
+  const object = {};
+
+  if (process.env.OPENAI_API_KEY) {
+    object.OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+  }
+
+  return object;
+};
+
 export const env = createEnv({
   /**
    * Specify your server-side environment variables schema here. This way you can ensure the app
@@ -62,6 +86,7 @@ export const env = createEnv({
       .enum(["development", "test", "production"])
       .default("development"),
     ...createAuthSchema(),
+    ...createLlmSchema(),
   },
 
   /**
@@ -82,6 +107,7 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
     ...authRuntimeEnv(),
+    ...llmRuntimeEnv(),
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
