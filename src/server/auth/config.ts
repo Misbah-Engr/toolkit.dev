@@ -1,6 +1,6 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
 
-import { createProviders } from "./providers";
+import { providers } from "./providers";
 
 import { db } from "@/server/db";
 
@@ -33,7 +33,7 @@ declare module "next-auth" {
  * @see https://next-auth.js.org/configuration/options
  */
 export const authConfig = {
-  providers: createProviders(),
+  providers,
   adapter: PrismaAdapter(db),
   callbacks: {
     session: ({ session, user }) => ({
