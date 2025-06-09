@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 
 import { auth } from "@/server/auth";
-import { Chat } from "../_components/chat";
+import { Chat } from "../../_components/chat";
 import { api } from "@/trpc/server";
 
 import type { Message } from "@prisma/client";
@@ -12,10 +12,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   const { id } = params;
 
-  console.log(id);
   const chat = await api.chats.getChat(id);
-
-  console.log(chat);
 
   if (!chat) {
     notFound();
