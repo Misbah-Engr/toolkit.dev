@@ -60,7 +60,8 @@ export async function POST(request: Request) {
   }
 
   try {
-    const { id, message, selectedVisibilityType } = requestBody;
+    const { id, message, selectedVisibilityType, selectedChatModel } =
+      requestBody;
 
     const session = await auth();
 
@@ -119,7 +120,7 @@ export async function POST(request: Request) {
 
     const stream = createDataStream({
       execute: (dataStream) => {
-        const result = streamText({
+        const result = streamText(selectedChatModel, {
           system: "You are a helpful assistant.",
           messages,
           maxSteps: 5,
@@ -196,11 +197,13 @@ export async function POST(request: Request) {
     if (error instanceof ChatSDKError) {
       return error.toResponse();
     }
+    console.error("Unexpected error in chat route:", error);
+    return new ChatSDKError("bad_request:api").toResponse();
   }
 }
 
 async function generateTitleFromUserMessage(message: UIMessage) {
-  const { text: title } = await generateText({
+  const { text: title } = await generateText("openai:gpt-4o-mini", {
     system: `\n
       - you will generate a short title based on the first message a user begins a conversation with
       - ensure it is not more than 80 characters long

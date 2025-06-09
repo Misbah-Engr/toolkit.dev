@@ -15,15 +15,17 @@ import equal from "fast-deep-equal";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
-import { PreviewAttachment } from "./preview-attachment";
+import { PreviewAttachment } from "../preview-attachment";
 
-import { useScrollToBottom } from "../_hooks/use-scroll-to-bottom";
+import { useScrollToBottom } from "../../_hooks/use-scroll-to-bottom";
 
 import { cn } from "@/lib/utils";
 
 import type { Dispatch, SetStateAction, ChangeEvent } from "react";
 import type { Attachment, UIMessage } from "ai";
 import type { UseChatHelpers } from "@ai-sdk/react";
+import { ModelSelect } from "./model-select";
+import type { Model } from "@/lib/types";
 
 interface Props {
   chatId: string;
@@ -36,6 +38,8 @@ interface Props {
   messages: Array<UIMessage>;
   setMessages: UseChatHelpers["setMessages"];
   handleSubmit: UseChatHelpers["handleSubmit"];
+  selectedChatModel: Model | undefined;
+  setSelectedChatModel: (model: Model) => void;
   className?: string;
 }
 
@@ -49,6 +53,8 @@ const PureMultimodalInput: React.FC<Props> = ({
   setAttachments,
   setMessages,
   handleSubmit,
+  selectedChatModel,
+  setSelectedChatModel,
   className,
 }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -104,6 +110,11 @@ const PureMultimodalInput: React.FC<Props> = ({
   const [uploadQueue, setUploadQueue] = useState<Array<string>>([]);
 
   const submitForm = useCallback(() => {
+    if (!selectedChatModel) {
+      toast.error("Please select a model");
+      return;
+    }
+
     window.history.replaceState({}, "", `/chat/${chatId}`);
 
     handleSubmit(undefined, {
@@ -118,6 +129,7 @@ const PureMultimodalInput: React.FC<Props> = ({
       textareaRef.current?.focus();
     }
   }, [
+    selectedChatModel,
     attachments,
     handleSubmit,
     setAttachments,
@@ -219,16 +231,6 @@ const PureMultimodalInput: React.FC<Props> = ({
         )}
       </AnimatePresence>
 
-      {/* {messages.length === 0 &&
-        attachments.length === 0 &&
-        uploadQueue.length === 0 && (
-          <SuggestedActions
-            append={append}
-            chatId={chatId}
-            selectedVisibilityType={selectedVisibilityType}
-          />
-        )} */}
-
       <input
         type="file"
         className="pointer-events-none fixed -top-4 -left-4 size-0.5 opacity-0"
@@ -268,7 +270,7 @@ const PureMultimodalInput: React.FC<Props> = ({
         value={input}
         onChange={handleInput}
         className={cn(
-          "bg-muted max-h-[calc(75dvh)] min-h-[24px] resize-none overflow-hidden rounded-2xl pb-10 !text-base dark:border-zinc-700",
+          "bg-muted max-h-[calc(75dvh)] min-h-[24px] resize-none overflow-hidden rounded-2xl pb-16 !text-base dark:border-zinc-700",
           className,
         )}
         rows={2}
@@ -288,10 +290,15 @@ const PureMultimodalInput: React.FC<Props> = ({
             }
           }
         }}
+        disabled={!selectedChatModel}
       />
 
       <div className="absolute bottom-0 flex w-fit flex-row justify-start p-2">
         <AttachmentsButton fileInputRef={fileInputRef} status={status} />
+        <ModelSelect
+          selectedChatModel={selectedChatModel}
+          setSelectedChatModel={setSelectedChatModel}
+        />
       </div>
 
       <div className="absolute right-0 bottom-0 flex w-fit flex-row justify-end p-2">
@@ -302,6 +309,7 @@ const PureMultimodalInput: React.FC<Props> = ({
             input={input}
             submitForm={submitForm}
             uploadQueue={uploadQueue}
+            disabled={!selectedChatModel}
           />
         )}
       </div>
@@ -315,6 +323,8 @@ export const MultimodalInput = memo(
     if (prevProps.input !== nextProps.input) return false;
     if (prevProps.status !== nextProps.status) return false;
     if (!equal(prevProps.attachments, nextProps.attachments)) return false;
+    if (!equal(prevProps.selectedChatModel, nextProps.selectedChatModel))
+      return false;
 
     return true;
   },
@@ -369,15 +379,19 @@ function PureStopButton({
 
 const StopButton = memo(PureStopButton);
 
-function PureSendButton({
-  submitForm,
-  input,
-  uploadQueue,
-}: {
+interface SendButtonProps {
   submitForm: () => void;
   input: string;
   uploadQueue: Array<string>;
-}) {
+  disabled: boolean;
+}
+
+const PureSendButton: React.FC<SendButtonProps> = ({
+  submitForm,
+  input,
+  uploadQueue,
+  disabled,
+}) => {
   return (
     <Button
       data-testid="send-button"
@@ -386,12 +400,12 @@ function PureSendButton({
         event.preventDefault();
         submitForm();
       }}
-      disabled={input.length === 0 || uploadQueue.length > 0}
+      disabled={input.length === 0 || uploadQueue.length > 0 || disabled}
     >
       <ArrowUp size={14} />
     </Button>
   );
-}
+};
 
 const SendButton = memo(PureSendButton, (prevProps, nextProps) => {
   if (prevProps.uploadQueue.length !== nextProps.uploadQueue.length)

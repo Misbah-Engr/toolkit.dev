@@ -1,5 +1,9 @@
 import { z } from "zod";
 
+import { models } from "@/lib/ai/models";
+
+import type { providers } from "@/lib/ai/registry";
+
 const textPartSchema = z.object({
   text: z.string().min(1).max(2000),
   type: z.enum(["text"]),
@@ -23,7 +27,12 @@ export const postRequestBodySchema = z.object({
       )
       .optional(),
   }),
-  selectedChatModel: z.enum(["gpt-4o"]),
+  selectedChatModel: z.enum(
+    models.map((model) => `${model.provider}:${model.modelId}`) as [
+      `${keyof typeof providers}:${string}`,
+      ...`${keyof typeof providers}:${string}`[],
+    ],
+  ),
   selectedVisibilityType: z.enum(["public", "private"]),
 });
 

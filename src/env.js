@@ -64,6 +64,18 @@ const createLlmSchema = () => {
     llmSchema.OPENAI_API_KEY = z.string();
   }
 
+  if (process.env.ANTHROPIC_API_KEY) {
+    llmSchema.ANTHROPIC_API_KEY = z.string();
+  }
+
+  if (process.env.XAI_API_KEY) {
+    llmSchema.XAI_API_KEY = z.string();
+  }
+
+  if (process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
+    llmSchema.GOOGLE_GENERATIVE_AI_API_KEY = z.string();
+  }
+
   if (Object.keys(llmSchema).length === 0) {
     throw new Error("No LLM provider configured");
   }
@@ -76,6 +88,19 @@ const llmRuntimeEnv = () => {
 
   if (process.env.OPENAI_API_KEY) {
     object.OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+  }
+
+  if (process.env.ANTHROPIC_API_KEY) {
+    object.ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
+  }
+
+  if (process.env.XAI_API_KEY) {
+    object.XAI_API_KEY = process.env.XAI_API_KEY;
+  }
+
+  if (process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
+    object.GOOGLE_GENERATIVE_AI_API_KEY =
+      process.env.GOOGLE_GENERATIVE_AI_API_KEY;
   }
 
   return object;
