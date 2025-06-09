@@ -21,6 +21,7 @@ import { ChatSDKError } from "@/lib/errors";
 import type { Attachment, UIMessage } from "ai";
 import type { Session } from "next-auth";
 import { api } from "@/trpc/react";
+import { type Model } from "@/lib/types";
 
 interface Props {
   id: string;
@@ -41,6 +42,8 @@ export const Chat: React.FC<Props> = ({
   autoResume,
 }) => {
   const utils = api.useUtils();
+
+  const [selectedChatModel, setSelectedChatModel] = useState<Model>();
 
   const {
     messages,
@@ -64,7 +67,7 @@ export const Chat: React.FC<Props> = ({
     experimental_prepareRequestBody: (body) => ({
       id,
       message: body.messages.at(-1),
-      selectedChatModel: initialChatModel,
+      selectedChatModel: `${selectedChatModel?.provider}:${selectedChatModel?.modelId}`,
       selectedVisibilityType: initialVisibilityType,
     }),
     onFinish: () => {
@@ -129,6 +132,8 @@ export const Chat: React.FC<Props> = ({
               setAttachments={setAttachments}
               messages={messages}
               setMessages={setMessages}
+              selectedChatModel={selectedChatModel}
+              setSelectedChatModel={setSelectedChatModel}
             />
           )}
         </form>
