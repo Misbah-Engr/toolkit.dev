@@ -36,7 +36,6 @@ interface Props {
 export const Chat: React.FC<Props> = ({
   id,
   initialMessages,
-  initialChatModel,
   initialVisibilityType,
   isReadonly,
   autoResume,
