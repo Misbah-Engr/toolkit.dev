@@ -129,8 +129,6 @@ export const Chat: React.FC<Props> = ({
               setAttachments={setAttachments}
               messages={messages}
               setMessages={setMessages}
-              append={append}
-              selectedVisibilityType={initialVisibilityType}
             />
           )}
         </form>

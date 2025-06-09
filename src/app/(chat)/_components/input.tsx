@@ -25,23 +25,7 @@ import type { Dispatch, SetStateAction, ChangeEvent } from "react";
 import type { Attachment, UIMessage } from "ai";
 import type { UseChatHelpers } from "@ai-sdk/react";
 
-type VisibilityType = "public" | "private";
-
-function PureMultimodalInput({
-  chatId,
-  input,
-  setInput,
-  status,
-  stop,
-  attachments,
-  setAttachments,
-  messages,
-  setMessages,
-  append,
-  handleSubmit,
-  className,
-  selectedVisibilityType,
-}: {
+interface Props {
   chatId: string;
   input: UseChatHelpers["input"];
   setInput: UseChatHelpers["setInput"];
@@ -51,11 +35,22 @@ function PureMultimodalInput({
   setAttachments: Dispatch<SetStateAction<Array<Attachment>>>;
   messages: Array<UIMessage>;
   setMessages: UseChatHelpers["setMessages"];
-  append: UseChatHelpers["append"];
   handleSubmit: UseChatHelpers["handleSubmit"];
   className?: string;
-  selectedVisibilityType: VisibilityType;
-}) {
+}
+
+const PureMultimodalInput: React.FC<Props> = ({
+  chatId,
+  input,
+  setInput,
+  status,
+  stop,
+  attachments,
+  setAttachments,
+  setMessages,
+  handleSubmit,
+  className,
+}) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { width } = useWindowSize();
 
@@ -158,6 +153,7 @@ function PureMultimodalInput({
       const { error } = (await response.json()) as { error: string };
       toast.error(error);
     } catch (error) {
+      console.error(error);
       toast.error("Failed to upload file, please try again!");
     }
   };
@@ -311,7 +307,7 @@ function PureMultimodalInput({
       </div>
     </div>
   );
-}
+};
 
 export const MultimodalInput = memo(
   PureMultimodalInput,
@@ -319,8 +315,6 @@ export const MultimodalInput = memo(
     if (prevProps.input !== nextProps.input) return false;
     if (prevProps.status !== nextProps.status) return false;
     if (!equal(prevProps.attachments, nextProps.attachments)) return false;
-    if (prevProps.selectedVisibilityType !== nextProps.selectedVisibilityType)
-      return false;
 
     return true;
   },
