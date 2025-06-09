@@ -1,4 +1,9 @@
-import { SiDiscord, SiGithub, SiGoogle } from "@icons-pack/react-simple-icons";
+import {
+  SiDiscord,
+  SiGithub,
+  SiGoogle,
+  SiX,
+} from "@icons-pack/react-simple-icons";
 
 import { cn } from "@/lib/utils";
 
@@ -13,6 +18,7 @@ export const ProviderIcon: React.FC<Props> = ({ provider, className }) => {
       Discord: SiDiscord,
       Google: SiGoogle,
       GitHub: SiGithub,
+      Twitter: SiX,
     }[provider] ?? null;
 
   return Icon ? <Icon className={cn("size-4", className)} /> : null;

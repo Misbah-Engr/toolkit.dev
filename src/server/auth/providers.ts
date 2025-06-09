@@ -5,13 +5,17 @@ import DiscordProvider, {
 } from "next-auth/providers/discord";
 import GoogleProvider, { type GoogleProfile } from "next-auth/providers/google";
 import GithubProvider, { type GitHubProfile } from "next-auth/providers/github";
+import TwitterProvider, {
+  type TwitterProfile,
+} from "next-auth/providers/twitter";
 
-import type { OAuthConfig, OIDCConfig, Provider } from "next-auth/providers";
+import type { OAuthConfig } from "next-auth/providers";
 
 export const providers: (
   | OAuthConfig<DiscordProfile>
   | OAuthConfig<GoogleProfile>
   | OAuthConfig<GitHubProfile>
+  | OAuthConfig<TwitterProfile>
 )[] = [
   ...("AUTH_DISCORD_ID" in env && "AUTH_DISCORD_SECRET" in env
     ? [
@@ -34,6 +38,14 @@ export const providers: (
         GithubProvider({
           clientId: env.AUTH_GITHUB_ID,
           clientSecret: env.AUTH_GITHUB_SECRET,
+        }),
+      ]
+    : []),
+  ...("AUTH_TWITTER_ID" in env && "AUTH_TWITTER_SECRET" in env
+    ? [
+        TwitterProvider({
+          clientId: env.AUTH_TWITTER_ID,
+          clientSecret: env.AUTH_TWITTER_SECRET,
         }),
       ]
     : []),

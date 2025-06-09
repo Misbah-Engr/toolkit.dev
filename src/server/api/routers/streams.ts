@@ -11,17 +11,13 @@ export const streamsRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      try {
-        return await ctx.db.stream.create({
-          data: {
-            id: input.streamId,
-            chatId: input.chatId,
-            createdAt: new Date(),
-          },
-        });
-      } catch (_) {
-        throw new Error("Failed to create stream id");
-      }
+      return await ctx.db.stream.create({
+        data: {
+          id: input.streamId,
+          chatId: input.chatId,
+          createdAt: new Date(),
+        },
+      });
     }),
 
   getStreamIdsByChatId: protectedProcedure
@@ -31,22 +27,18 @@ export const streamsRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
-      try {
-        const streams = await ctx.db.stream.findMany({
-          where: {
-            chatId: input.chatId,
-          },
-          orderBy: {
-            createdAt: "asc",
-          },
-          select: {
-            id: true,
-          },
-        });
+      const streams = await ctx.db.stream.findMany({
+        where: {
+          chatId: input.chatId,
+        },
+        orderBy: {
+          createdAt: "asc",
+        },
+        select: {
+          id: true,
+        },
+      });
 
-        return streams.map((stream) => stream.id);
-      } catch (error) {
-        throw new Error("Failed to get stream ids by chat id");
-      }
+      return streams.map((stream) => stream.id);
     }),
 });
