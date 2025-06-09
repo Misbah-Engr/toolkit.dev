@@ -19,6 +19,11 @@ const createAuthSchema = () => {
     authSchema.AUTH_GITHUB_SECRET = z.string();
   }
 
+  if (process.env.AUTH_TWITTER_ID && process.env.AUTH_TWITTER_SECRET) {
+    authSchema.AUTH_TWITTER_ID = z.string();
+    authSchema.AUTH_TWITTER_SECRET = z.string();
+  }
+
   if (Object.keys(authSchema).length === 0) {
     throw new Error("No authentication provider configured");
   }
@@ -42,6 +47,11 @@ const authRuntimeEnv = () => {
   if (process.env.AUTH_GITHUB_ID && process.env.AUTH_GITHUB_SECRET) {
     object.AUTH_GITHUB_ID = process.env.AUTH_GITHUB_ID;
     object.AUTH_GITHUB_SECRET = process.env.AUTH_GITHUB_SECRET;
+  }
+
+  if (process.env.AUTH_TWITTER_ID && process.env.AUTH_TWITTER_SECRET) {
+    object.AUTH_TWITTER_ID = process.env.AUTH_TWITTER_ID;
+    object.AUTH_TWITTER_SECRET = process.env.AUTH_TWITTER_SECRET;
   }
 
   return object;
