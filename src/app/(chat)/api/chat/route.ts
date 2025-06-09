@@ -3,6 +3,7 @@ import { after } from "next/server";
 import {
   appendClientMessage,
   appendResponseMessages,
+  convertToCoreMessages,
   createDataStream,
   smoothStream,
 } from "ai";
@@ -108,11 +109,16 @@ export async function POST(request: Request) {
       role: "user",
       parts: message.parts,
       attachments:
-        message.experimental_attachments?.map((attachment) => ({
-          url: attachment.url,
-          name: attachment.name,
-          contentType: attachment.contentType,
-        })) ?? [],
+        message.experimental_attachments
+          ?.filter((attachment) => attachment.contentType !== "application/pdf")
+          .map((attachment) => ({
+            url: attachment.url,
+            name: attachment.name,
+            contentType: attachment.contentType as
+              | "image/png"
+              | "image/jpg"
+              | "image/jpeg",
+          })) ?? [],
     });
 
     const streamId = generateUUID();
@@ -122,7 +128,7 @@ export async function POST(request: Request) {
       execute: (dataStream) => {
         const result = streamText(selectedChatModel, {
           system: "You are a helpful assistant.",
-          messages,
+          messages: convertToCoreMessages(messages),
           maxSteps: 5,
           experimental_transform: smoothStream({ chunking: "word" }),
           experimental_generateMessageId: generateUUID,
