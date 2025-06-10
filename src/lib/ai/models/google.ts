@@ -1,11 +1,16 @@
-import type { Model } from "@/lib/types";
+import { ModelCapability, type Model } from "@/lib/types";
 
 const googleModelData: Omit<Model, "provider">[] = [
   {
     name: "Gemini 2.5 Pro Preview",
     modelId: "gemini-2.5-pro-preview-05-06",
     description: "Next-generation Gemini with enhanced reasoning",
-    capabilities: ["thinking", "vision", "code", "reasoning"],
+    capabilities: [
+      ModelCapability.Thinking,
+      ModelCapability.Vision,
+      ModelCapability.Code,
+      ModelCapability.Reasoning,
+    ],
     bestFor: ["Complex reasoning", "Advanced analysis", "Research"],
     contextLength: 2000000,
     isNew: true,
@@ -14,7 +19,12 @@ const googleModelData: Omit<Model, "provider">[] = [
     name: "Gemini 2.5 Flash Preview",
     modelId: "gemini-2.5-flash-preview-04-17",
     description: "Fast version of Gemini 2.5 for quick responses",
-    capabilities: ["fast", "vision", "code", "reasoning"],
+    capabilities: [
+      ModelCapability.Fast,
+      ModelCapability.Vision,
+      ModelCapability.Code,
+      ModelCapability.Reasoning,
+    ],
     bestFor: ["Quick tasks", "Real-time responses", "Efficient processing"],
     contextLength: 1000000,
     isNew: true,
@@ -23,7 +33,12 @@ const googleModelData: Omit<Model, "provider">[] = [
     name: "Gemini 2.0 Flash",
     modelId: "gemini-2.0-flash",
     description: "Balanced performance with multimodal capabilities",
-    capabilities: ["vision", "code", "reasoning", "audio"],
+    capabilities: [
+      ModelCapability.Vision,
+      ModelCapability.Code,
+      ModelCapability.Reasoning,
+      ModelCapability.Audio,
+    ],
     bestFor: ["Multimodal tasks", "General purpose", "Balanced performance"],
     contextLength: 1000000,
     isNew: true,
@@ -32,7 +47,11 @@ const googleModelData: Omit<Model, "provider">[] = [
     name: "Gemini 1.5 Pro",
     modelId: "gemini-1.5-pro",
     description: "Powerful model with large context window",
-    capabilities: ["vision", "code", "reasoning"],
+    capabilities: [
+      ModelCapability.Vision,
+      ModelCapability.Code,
+      ModelCapability.Reasoning,
+    ],
     bestFor: ["Long documents", "Complex analysis", "Deep reasoning"],
     contextLength: 2000000,
   },
@@ -40,7 +59,11 @@ const googleModelData: Omit<Model, "provider">[] = [
     name: "Gemini 1.5 Flash",
     modelId: "gemini-1.5-flash",
     description: "Fast and efficient for everyday tasks",
-    capabilities: ["vision", "code", "fast"],
+    capabilities: [
+      ModelCapability.Vision,
+      ModelCapability.Code,
+      ModelCapability.Fast,
+    ],
     bestFor: ["Quick responses", "General chat", "Efficient processing"],
     contextLength: 1000000,
   },
@@ -48,7 +71,7 @@ const googleModelData: Omit<Model, "provider">[] = [
     name: "Gemini 1.5 Flash 8B",
     modelId: "gemini-1.5-flash-8b",
     description: "Compact model optimized for speed",
-    capabilities: ["fast"],
+    capabilities: [ModelCapability.Fast],
     bestFor: ["Ultra-fast responses", "Simple tasks", "Cost-effective"],
     contextLength: 1000000,
   },

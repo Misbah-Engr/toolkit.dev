@@ -1,6 +1,6 @@
 import { createProviderRegistry } from "ai";
 
-import { openai } from "@ai-sdk/openai";
+import { openai } from "./providers/openai";
 import { anthropic } from "@ai-sdk/anthropic";
 import { xai } from "@ai-sdk/xai";
 import { google } from "@ai-sdk/google";

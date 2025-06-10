@@ -52,19 +52,6 @@ const openAiModelData: Omit<Model, "provider">[] = [
     contextLength: 128000,
   },
   {
-    name: "GPT-4o Mini Search",
-    modelId: "gpt-4o-mini-search",
-    description: "GPT-4o with web search capabilities",
-    capabilities: [
-      ModelCapability.WebSearch,
-      ModelCapability.Vision,
-      ModelCapability.Code,
-      ModelCapability.Reasoning,
-    ],
-    bestFor: ["Research", "Current events", "Fact-checking"],
-    contextLength: 128000,
-  },
-  {
     name: "GPT-4 Turbo",
     modelId: "gpt-4-turbo",
     description: "Optimized for speed and efficiency",
