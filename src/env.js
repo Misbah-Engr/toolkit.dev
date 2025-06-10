@@ -76,6 +76,10 @@ const createLlmSchema = () => {
     llmSchema.GOOGLE_GENERATIVE_AI_API_KEY = z.string();
   }
 
+  if (process.env.PERPLEXITY_API_KEY) {
+    llmSchema.PERPLEXITY_API_KEY = z.string();
+  }
+
   if (Object.keys(llmSchema).length === 0) {
     throw new Error("No LLM provider configured");
   }
@@ -101,6 +105,10 @@ const llmRuntimeEnv = () => {
   if (process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
     object.GOOGLE_GENERATIVE_AI_API_KEY =
       process.env.GOOGLE_GENERATIVE_AI_API_KEY;
+  }
+
+  if (process.env.PERPLEXITY_API_KEY) {
+    object.PERPLEXITY_API_KEY = process.env.PERPLEXITY_API_KEY;
   }
 
   return object;

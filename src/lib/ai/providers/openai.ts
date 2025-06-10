@@ -1,7 +1,8 @@
+import { customProvider } from "ai";
 import { openai as openaiBase } from "@ai-sdk/openai";
 
-import { openAiModels } from "./models";
-import { customProvider } from "ai";
+import { openAiModels } from "../models/openai";
+
 import { ModelCapability } from "@/lib/ai/types";
 
 export const openai = customProvider({

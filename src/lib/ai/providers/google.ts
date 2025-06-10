@@ -1,7 +1,7 @@
 import { customProvider } from "ai";
 import { google as googleBase } from "@ai-sdk/google";
 
-import { googleModels } from "./models";
+import { googleModels } from "../models/google";
 
 export const google = customProvider({
   languageModels: {
