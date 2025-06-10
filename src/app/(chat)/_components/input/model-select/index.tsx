@@ -16,7 +16,7 @@ import { ChevronsUpDown, X } from "lucide-react";
 import { useModelSelect } from "./hooks/use-model-select";
 import { MobileModelCard } from "./components/mobile-model-card";
 import { DesktopModelItem } from "./components/desktop-model-item";
-import { ModelInfoDropdown } from "./components/model-info-dropdown";
+import { ModelInfoDropdown } from "./components/desktop-info-dropdown";
 
 interface Props {
   selectedChatModel: Model | undefined;
