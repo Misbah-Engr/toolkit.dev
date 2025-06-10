@@ -28,6 +28,7 @@ import type { ResumableStreamContext } from "resumable-stream";
 import type { CoreAssistantMessage, CoreToolMessage, UIMessage } from "ai";
 import type { Chat } from "@prisma/client";
 import { SearchOptions } from "@/lib/ai/types";
+import { type providers } from "@/lib/ai/registry";
 
 export const maxDuration = 60;
 
@@ -138,63 +139,63 @@ export async function POST(request: Request) {
 
     const stream = createDataStream({
       execute: (dataStream) => {
-        const result = streamText(
-          `${selectedChatModel}${shouldUseOpenaiResponses ? "-responses" : ""}`,
-          {
-            system: "You are a helpful assistant.",
-            messages: convertToCoreMessages(messages),
-            maxSteps: 5,
-            experimental_transform: smoothStream({ chunking: "word" }),
-            experimental_generateMessageId: generateUUID,
-            onFinish: async ({ response }) => {
-              if (session.user?.id) {
-                try {
-                  const assistantId = getTrailingMessageId({
-                    messages: response.messages.filter(
-                      (message) => message.role === "assistant",
-                    ),
-                  });
-
-                  if (!assistantId) {
-                    throw new Error("No assistant message found!");
-                  }
-
-                  const [, assistantMessage] = appendResponseMessages({
-                    messages: [message],
-                    responseMessages: response.messages,
-                  });
-
-                  if (!assistantMessage) {
-                    throw new Error("No assistant message found!");
-                  }
-
-                  await api.messages.createMessage({
-                    chatId: id,
-                    id: assistantId,
-                    role: "assistant",
-                    parts: assistantMessage.parts ?? [],
-                    attachments:
-                      assistantMessage.experimental_attachments?.map(
-                        (attachment) => ({
-                          url: attachment.url,
-                          name: attachment.name ?? "",
-                          contentType: attachment.contentType as
-                            | "image/png"
-                            | "image/jpg"
-                            | "image/jpeg",
-                        }),
-                      ) ?? [],
-                  });
-                } catch (error) {
-                  console.error(error);
-                }
-              }
-            },
-            tools: shouldUseOpenaiResponses
-              ? { web_search_preview: openai.tools.webSearchPreview() }
-              : undefined,
+        const result = streamText(getModelId(selectedChatModel, searchOption), {
+          system: "You are a helpful assistant.",
+          messages: convertToCoreMessages(messages),
+          maxSteps: 5,
+          experimental_transform: smoothStream({ chunking: "word" }),
+          experimental_generateMessageId: generateUUID,
+          onError: (error) => {
+            console.error(error);
           },
-        );
+          onFinish: async ({ response }) => {
+            if (session.user?.id) {
+              try {
+                const assistantId = getTrailingMessageId({
+                  messages: response.messages.filter(
+                    (message) => message.role === "assistant",
+                  ),
+                });
+
+                if (!assistantId) {
+                  throw new Error("No assistant message found!");
+                }
+
+                const [, assistantMessage] = appendResponseMessages({
+                  messages: [message],
+                  responseMessages: response.messages,
+                });
+
+                if (!assistantMessage) {
+                  throw new Error("No assistant message found!");
+                }
+
+                await api.messages.createMessage({
+                  chatId: id,
+                  id: assistantId,
+                  role: "assistant",
+                  parts: assistantMessage.parts ?? [],
+                  attachments:
+                    assistantMessage.experimental_attachments?.map(
+                      (attachment) => ({
+                        url: attachment.url,
+                        name: attachment.name ?? "",
+                        contentType: attachment.contentType as
+                          | "image/png"
+                          | "image/jpg"
+                          | "image/jpeg",
+                      }),
+                    ) ?? [],
+                });
+              } catch (error) {
+                console.error(error);
+              }
+            }
+          },
+          tools: shouldUseOpenaiResponses
+            ? { web_search_preview: openai.tools.webSearchPreview() }
+            : undefined,
+        });
 
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
         result.consumeStream();
@@ -252,6 +253,29 @@ function getTrailingMessageId({
 
   return trailingMessage.id;
 }
+
+const getModelId = (
+  model: `${keyof typeof providers}:${string}`,
+  searchOption: SearchOptions | undefined,
+): `${keyof typeof providers}:${string}` => {
+  // no need for dynamic mdoel config
+  if (!searchOption) return model;
+
+  const [provider, modelId] = model.split(":");
+  if (provider === "openai") {
+    if (searchOption === SearchOptions.OpenAiResponses) {
+      return `${provider}:${modelId}-responses`;
+    }
+  }
+
+  if (provider === "google") {
+    if (searchOption === SearchOptions.Native) {
+      return `${provider}:${modelId}-search`;
+    }
+  }
+
+  return model;
+};
 
 export async function GET(request: Request) {
   const streamContext = getStreamContext();
