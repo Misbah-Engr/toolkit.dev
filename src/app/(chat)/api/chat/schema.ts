@@ -3,6 +3,7 @@ import { z } from "zod";
 import { models } from "@/lib/ai/models";
 
 import type { providers } from "@/lib/ai/registry";
+import { SearchOptions } from "@/lib/ai/types";
 
 const textPartSchema = z.object({
   text: z.string().min(1).max(2000),
@@ -39,6 +40,7 @@ export const postRequestBodySchema = z.object({
     ],
   ),
   selectedVisibilityType: z.enum(["public", "private"]),
+  searchOption: z.nativeEnum(SearchOptions).optional(),
 });
 
 export type PostRequestBody = z.infer<typeof postRequestBodySchema>;

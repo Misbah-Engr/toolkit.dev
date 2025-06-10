@@ -1,10 +1,14 @@
 "use client";
 
 import { useRef } from "react";
-import type { Model } from "@/lib/types";
-import { cn } from "@/lib/utils";
-import { ModelProviderIcon } from "@/components/ui/model-icon";
+
 import { Badge } from "@/components/ui/badge";
+import { ModelProviderIcon } from "@/components/ui/model-icon";
+
+import type { Model } from "@/lib/ai/types";
+import { cn } from "@/lib/utils";
+
+import { capabilityIcons, capabilityColors } from "../utils";
 
 interface DesktopModelItemProps {
   model: Model;
@@ -27,7 +31,7 @@ export const DesktopModelItem: React.FC<DesktopModelItemProps> = ({
     <div
       ref={itemRef}
       className={cn(
-        "flex items-center gap-2 px-3 py-2 cursor-pointer transition-colors hover:bg-accent/50 rounded-md",
+        "hover:bg-accent/50 flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 transition-colors",
         isSelected && "bg-accent",
       )}
       onClick={onSelect}
@@ -38,16 +42,34 @@ export const DesktopModelItem: React.FC<DesktopModelItemProps> = ({
       }}
       onMouseLeave={onLeave}
     >
-      <ModelProviderIcon
-        provider={model.provider}
-        className="size-4 flex-shrink-0"
-      />
-      <span className="flex-1 text-sm truncate">{model.name}</span>
-      {model.isNew && (
-        <Badge variant="secondary" className="text-xs h-5">
-          New
-        </Badge>
-      )}
+      {/* Name, provider, new badge stack */}
+      <div className="flex min-w-0 flex-shrink-0 items-center gap-2">
+        <ModelProviderIcon
+          provider={model.provider}
+          className="size-4 flex-shrink-0"
+        />
+        <span className="truncate text-sm font-medium">{model.name}</span>
+        {model.isNew && (
+          <Badge variant="secondary" className="h-5 text-xs">
+            New
+          </Badge>
+        )}
+      </div>
+      {/* Capabilities justified to the right */}
+      <div className="flex flex-1 justify-end gap-1">
+        {model.capabilities?.map((capability) => {
+          const Icon = capabilityIcons[capability];
+          return (
+            <Badge
+              key={capability}
+              variant="capability"
+              className={`h-5 gap-1 px-1 text-xs ${capabilityColors[capability]}`}
+            >
+              {Icon && <Icon className="size-3" />}
+            </Badge>
+          );
+        })}
+      </div>
     </div>
   );
-}; 
+};

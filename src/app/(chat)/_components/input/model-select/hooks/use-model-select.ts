@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { api } from "@/trpc/react";
-import type { Model } from "@/lib/types";
+import type { Model, ModelCapability, Provider } from "@/lib/ai/types";
 
 interface UseModelSelectProps {
   selectedChatModel: Model | undefined;
@@ -17,10 +17,15 @@ export const useModelSelect = ({
   const [isMobile, setIsMobile] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [hoveredModel, setHoveredModel] = useState<Model | null>(null);
-  const [
-    dropdownPosition,
-    setDropdownPosition,
-  ] = useState<{ top: number; left: number } | null>(null);
+  const [dropdownPosition, setDropdownPosition] = useState<{
+    top: number;
+    left: number;
+  } | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCapabilities, setSelectedCapabilities] = useState<
+    ModelCapability[]
+  >([]);
+  const [selectedProviders, setSelectedProviders] = useState<Provider[]>([]);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -88,18 +93,58 @@ export const useModelSelect = ({
     closeInfoDropdown();
   };
 
+  const filteredModels = models?.filter((model) => {
+    const matchesSearch =
+      model.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      model.description?.toLowerCase().includes(searchQuery.toLowerCase());
+
+    const matchesCapabilities =
+      selectedCapabilities.length === 0 ||
+      selectedCapabilities.every((capability) =>
+        model.capabilities?.includes(capability),
+      );
+
+    const matchesProviders =
+      selectedProviders.length === 0 ||
+      selectedProviders.includes(model.provider);
+
+    return matchesSearch && matchesCapabilities && matchesProviders;
+  });
+
+  const toggleCapability = (capability: ModelCapability) => {
+    setSelectedCapabilities((prev) =>
+      prev.includes(capability)
+        ? prev.filter((c) => c !== capability)
+        : [...prev, capability],
+    );
+  };
+
+  const toggleProvider = (provider: Provider) => {
+    setSelectedProviders((prev) =>
+      prev.includes(provider)
+        ? prev.filter((p) => p !== provider)
+        : [...prev, provider],
+    );
+  };
+
   return {
-    models,
+    models: filteredModels,
     isLoading,
     isMobile,
     isOpen,
     setIsOpen,
     hoveredModel,
     dropdownPosition,
+    searchQuery,
+    setSearchQuery,
+    selectedCapabilities,
+    selectedProviders,
+    toggleCapability,
+    toggleProvider,
     handleModelSelect,
     handleModelHover,
     handleModelLeave,
     closeInfoDropdown,
     onInfoDropdownEnter,
   };
-}; 
+};

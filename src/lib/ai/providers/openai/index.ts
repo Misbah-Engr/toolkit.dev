@@ -2,7 +2,7 @@ import { openai as openaiBase } from "@ai-sdk/openai";
 
 import { openAiModels } from "./models";
 import { customProvider } from "ai";
-import { ModelCapability } from "@/lib/types";
+import { ModelCapability } from "@/lib/ai/types";
 
 export const openai = customProvider({
   languageModels: {

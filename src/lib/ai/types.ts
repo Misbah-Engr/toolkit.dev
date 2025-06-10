@@ -1,4 +1,4 @@
-import type { providers } from "./ai/registry";
+import type { providers } from "./registry";
 
 export type Provider = keyof typeof providers;
 
@@ -23,3 +23,9 @@ export type Model = {
   contextLength?: number;
   isNew?: boolean;
 };
+
+export enum SearchOptions {
+  Native = "Native",
+  OpenAiResponses = "OpenAI Responses",
+  Exa = "Exa Search",
+}

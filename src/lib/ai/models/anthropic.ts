@@ -1,6 +1,6 @@
 import { anthropic } from "@ai-sdk/anthropic";
 
-import { ModelCapability, type Model } from "@/lib/types";
+import { ModelCapability, type Model } from "@/lib/ai/types";
 
 const anthropicModelData: Omit<Model, "provider">[] = [
   {

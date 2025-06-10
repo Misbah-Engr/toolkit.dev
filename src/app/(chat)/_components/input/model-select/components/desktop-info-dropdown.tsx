@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import type { Model } from "@/lib/types";
+import type { Model } from "@/lib/ai/types";
 import { Badge } from "@/components/ui/badge";
 import { ModelProviderIcon } from "@/components/ui/model-icon";
 import {
   capabilityIcons,
   capabilityLabels,
+  capabilityColors,
   formatContextLength,
 } from "../utils";
 
@@ -42,7 +43,7 @@ export const ModelInfoDropdown: React.FC<ModelInfoDropdownProps> = ({
   return (
     <div
       ref={dropdownRef}
-      className="fixed z-[60] bg-popover border rounded-md shadow-lg p-3 w-80 max-h-[300px] overflow-y-auto"
+      className="bg-popover fixed z-[60] max-h-[300px] w-80 overflow-y-auto rounded-md border p-3 shadow-lg"
       style={{
         top: position.top,
         left: position.left,
@@ -57,9 +58,9 @@ export const ModelInfoDropdown: React.FC<ModelInfoDropdownProps> = ({
             className="size-5 flex-shrink-0"
           />
           <div className="flex items-center gap-1">
-            <h3 className="font-medium text-sm">{model.name}</h3>
+            <h3 className="text-sm font-medium">{model.name}</h3>
             {model.isNew && (
-              <Badge variant="secondary" className="text-xs h-5">
+              <Badge variant="secondary" className="h-5 text-xs">
                 New
               </Badge>
             )}
@@ -67,7 +68,7 @@ export const ModelInfoDropdown: React.FC<ModelInfoDropdownProps> = ({
         </div>
 
         {model.description && (
-          <p className="text-xs text-muted-foreground">{model.description}</p>
+          <p className="text-muted-foreground text-xs">{model.description}</p>
         )}
 
         {model.capabilities && model.capabilities.length > 0 && (
@@ -78,7 +79,7 @@ export const ModelInfoDropdown: React.FC<ModelInfoDropdownProps> = ({
                 <Badge
                   key={capability}
                   variant="capability"
-                  className="text-xs h-5 px-1 gap-1"
+                  className={`h-5 gap-1 px-1 text-xs ${capabilityColors[capability]}`}
                 >
                   {Icon && <Icon className="size-3" />}
                   {capabilityLabels[capability]}
@@ -88,7 +89,7 @@ export const ModelInfoDropdown: React.FC<ModelInfoDropdownProps> = ({
           </div>
         )}
 
-        <div className="space-y-1 text-xs text-muted-foreground">
+        <div className="text-muted-foreground space-y-1 text-xs">
           {model.bestFor && model.bestFor.length > 0 && (
             <div>
               <span className="font-medium">Best for:</span>{" "}
@@ -105,4 +106,4 @@ export const ModelInfoDropdown: React.FC<ModelInfoDropdownProps> = ({
       </div>
     </div>
   );
-}; 
+};

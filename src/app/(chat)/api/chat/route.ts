@@ -8,6 +8,8 @@ import {
   smoothStream,
 } from "ai";
 
+import { openai } from "@ai-sdk/openai";
+
 import { createResumableStreamContext } from "resumable-stream";
 
 import { differenceInSeconds } from "date-fns";
@@ -25,6 +27,7 @@ import { ChatSDKError } from "@/lib/errors";
 import type { ResumableStreamContext } from "resumable-stream";
 import type { CoreAssistantMessage, CoreToolMessage, UIMessage } from "ai";
 import type { Chat } from "@prisma/client";
+import { SearchOptions } from "@/lib/ai/types";
 
 export const maxDuration = 60;
 
@@ -61,8 +64,13 @@ export async function POST(request: Request) {
   }
 
   try {
-    const { id, message, selectedVisibilityType, selectedChatModel } =
-      requestBody;
+    const {
+      id,
+      message,
+      selectedVisibilityType,
+      selectedChatModel,
+      searchOption,
+    } = requestBody;
 
     const session = await auth();
 
@@ -124,59 +132,69 @@ export async function POST(request: Request) {
     const streamId = generateUUID();
     await api.streams.createStreamId({ streamId, chatId: id });
 
+    const isOpenai = selectedChatModel.startsWith("openai");
+    const shouldUseOpenaiResponses =
+      isOpenai && searchOption === SearchOptions.OpenAiResponses;
+
     const stream = createDataStream({
       execute: (dataStream) => {
-        const result = streamText(selectedChatModel, {
-          system: "You are a helpful assistant.",
-          messages: convertToCoreMessages(messages),
-          maxSteps: 5,
-          experimental_transform: smoothStream({ chunking: "word" }),
-          experimental_generateMessageId: generateUUID,
-          onFinish: async ({ response }) => {
-            if (session.user?.id) {
-              try {
-                const assistantId = getTrailingMessageId({
-                  messages: response.messages.filter(
-                    (message) => message.role === "assistant",
-                  ),
-                });
+        const result = streamText(
+          `${selectedChatModel}${shouldUseOpenaiResponses ? "-responses" : ""}`,
+          {
+            system: "You are a helpful assistant.",
+            messages: convertToCoreMessages(messages),
+            maxSteps: 5,
+            experimental_transform: smoothStream({ chunking: "word" }),
+            experimental_generateMessageId: generateUUID,
+            onFinish: async ({ response }) => {
+              if (session.user?.id) {
+                try {
+                  const assistantId = getTrailingMessageId({
+                    messages: response.messages.filter(
+                      (message) => message.role === "assistant",
+                    ),
+                  });
 
-                if (!assistantId) {
-                  throw new Error("No assistant message found!");
+                  if (!assistantId) {
+                    throw new Error("No assistant message found!");
+                  }
+
+                  const [, assistantMessage] = appendResponseMessages({
+                    messages: [message],
+                    responseMessages: response.messages,
+                  });
+
+                  if (!assistantMessage) {
+                    throw new Error("No assistant message found!");
+                  }
+
+                  await api.messages.createMessage({
+                    chatId: id,
+                    id: assistantId,
+                    role: "assistant",
+                    parts: assistantMessage.parts ?? [],
+                    attachments:
+                      assistantMessage.experimental_attachments?.map(
+                        (attachment) => ({
+                          url: attachment.url,
+                          name: attachment.name ?? "",
+                          contentType: attachment.contentType as
+                            | "image/png"
+                            | "image/jpg"
+                            | "image/jpeg",
+                        }),
+                      ) ?? [],
+                  });
+                } catch (error) {
+                  console.error(error);
                 }
-
-                const [, assistantMessage] = appendResponseMessages({
-                  messages: [message],
-                  responseMessages: response.messages,
-                });
-
-                if (!assistantMessage) {
-                  throw new Error("No assistant message found!");
-                }
-
-                await api.messages.createMessage({
-                  chatId: id,
-                  id: assistantId,
-                  role: "assistant",
-                  parts: assistantMessage.parts ?? [],
-                  attachments:
-                    assistantMessage.experimental_attachments?.map(
-                      (attachment) => ({
-                        url: attachment.url,
-                        name: attachment.name ?? "",
-                        contentType: attachment.contentType as
-                          | "image/png"
-                          | "image/jpg"
-                          | "image/jpeg",
-                      }),
-                    ) ?? [],
-                });
-              } catch (error) {
-                console.error(error);
               }
-            }
+            },
+            tools: shouldUseOpenaiResponses
+              ? { web_search_preview: openai.tools.webSearchPreview() }
+              : undefined,
           },
-        });
+        );
 
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
         result.consumeStream();
