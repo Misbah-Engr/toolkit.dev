@@ -23,14 +23,11 @@ import { MessageReasoning } from "./message-reasoning";
 
 import { cn, sanitizeText } from "@/lib/utils";
 
-import type { UseChatHelpers } from "@ai-sdk/react";
 import type { UIMessage } from "ai";
 
 interface Props {
   message: UIMessage;
   isLoading: boolean;
-  setMessages: UseChatHelpers["setMessages"];
-  reload: UseChatHelpers["reload"];
   isReadonly: boolean;
   requiresScrollPadding: boolean;
 }
@@ -38,8 +35,6 @@ interface Props {
 const PurePreviewMessage: React.FC<Props> = ({
   message,
   isLoading,
-  setMessages,
-  reload,
   isReadonly,
   requiresScrollPadding,
 }) => {
@@ -140,30 +135,20 @@ const PurePreviewMessage: React.FC<Props> = ({
                   );
                 }
 
-                if (mode === "edit") {
-                  return (
-                    <div key={key} className="flex flex-row items-start gap-2">
-                      <div className="size-8" />
-
-                      <MessageEditor
-                        key={message.id}
-                        message={message}
-                        setMode={setMode}
-                        setMessages={setMessages}
-                        reload={reload}
-                      />
-                    </div>
-                  );
-                }
+                return (
+                  <MessageEditor
+                    key={key}
+                    message={message}
+                    setMode={setMode}
+                  />
+                );
               }
+
+              return null;
             })}
 
-            {!isReadonly && (
-              <MessageActions
-                key={`action-${message.id}`}
-                message={message}
-                isLoading={isLoading}
-              />
+            {message.role === "assistant" && (
+              <MessageActions message={message} isLoading={isLoading} />
             )}
           </div>
         </div>
@@ -175,13 +160,7 @@ const PurePreviewMessage: React.FC<Props> = ({
 export const PreviewMessage = memo(
   PurePreviewMessage,
   (prevProps, nextProps) => {
-    if (prevProps.isLoading !== nextProps.isLoading) return false;
-    if (prevProps.message.id !== nextProps.message.id) return false;
-    if (prevProps.requiresScrollPadding !== nextProps.requiresScrollPadding)
-      return false;
-    if (!equal(prevProps.message.parts, nextProps.message.parts)) return false;
-
-    return true;
+    return equal(prevProps, nextProps);
   },
 );
 

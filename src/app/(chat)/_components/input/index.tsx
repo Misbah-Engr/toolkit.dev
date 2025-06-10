@@ -21,42 +21,30 @@ import { useScrollToBottom } from "../../_hooks/use-scroll-to-bottom";
 
 import { cn } from "@/lib/utils";
 
-import type { Dispatch, SetStateAction, ChangeEvent } from "react";
-import type { Attachment, UIMessage } from "ai";
-import type { UseChatHelpers } from "@ai-sdk/react";
 import { ModelSelect } from "./model-select";
-import type { Model } from "@/lib/types";
+import { useChatContext } from "../../_contexts/chat-context";
+import type { Attachment } from "ai";
+import type { UseChatHelpers } from "@ai-sdk/react";
+import { SearchSelect } from "./search-select";
 
 interface Props {
   chatId: string;
-  input: UseChatHelpers["input"];
-  setInput: UseChatHelpers["setInput"];
-  status: UseChatHelpers["status"];
-  stop: () => void;
-  attachments: Array<Attachment>;
-  setAttachments: Dispatch<SetStateAction<Array<Attachment>>>;
-  messages: Array<UIMessage>;
-  setMessages: UseChatHelpers["setMessages"];
-  handleSubmit: UseChatHelpers["handleSubmit"];
-  selectedChatModel: Model | undefined;
-  setSelectedChatModel: (model: Model) => void;
   className?: string;
 }
 
-const PureMultimodalInput: React.FC<Props> = ({
-  chatId,
-  input,
-  setInput,
-  status,
-  stop,
-  attachments,
-  setAttachments,
-  setMessages,
-  handleSubmit,
-  selectedChatModel,
-  setSelectedChatModel,
-  className,
-}) => {
+const PureMultimodalInput: React.FC<Props> = ({ chatId, className }) => {
+  const {
+    input,
+    setInput,
+    status,
+    stop,
+    attachments,
+    setAttachments,
+    setMessages,
+    handleSubmit,
+    selectedChatModel,
+  } = useChatContext();
+
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { width } = useWindowSize();
 
@@ -138,7 +126,7 @@ const PureMultimodalInput: React.FC<Props> = ({
     chatId,
   ]);
 
-  const uploadFile = async (file: File) => {
+  const uploadFile = async (file: File): Promise<Attachment | undefined> => {
     const formData = new FormData();
     formData.append("file", file);
 
@@ -164,14 +152,16 @@ const PureMultimodalInput: React.FC<Props> = ({
       }
       const { error } = (await response.json()) as { error: string };
       toast.error(error);
+      return undefined;
     } catch (error) {
       console.error(error);
       toast.error("Failed to upload file, please try again!");
+      return undefined;
     }
   };
 
   const handleFileChange = useCallback(
-    async (event: ChangeEvent<HTMLInputElement>) => {
+    async (event: React.ChangeEvent<HTMLInputElement>) => {
       const files = Array.from(event.target.files ?? []);
 
       setUploadQueue(files.map((file) => file.name));
@@ -180,10 +170,10 @@ const PureMultimodalInput: React.FC<Props> = ({
         const uploadPromises = files.map((file) => uploadFile(file));
         const uploadedAttachments = await Promise.all(uploadPromises);
         const successfullyUploadedAttachments = uploadedAttachments.filter(
-          (attachment) => attachment !== undefined,
+          (attachment): attachment is Attachment => attachment !== undefined,
         );
 
-        setAttachments((currentAttachments) => [
+        setAttachments((currentAttachments: Attachment[]) => [
           ...currentAttachments,
           ...successfullyUploadedAttachments,
         ]);
@@ -293,12 +283,10 @@ const PureMultimodalInput: React.FC<Props> = ({
         disabled={!selectedChatModel}
       />
 
-      <div className="absolute bottom-0 flex w-fit flex-row justify-start p-2">
+      <div className="absolute bottom-0 flex w-fit flex-row justify-start gap-2 p-2">
         <AttachmentsButton fileInputRef={fileInputRef} status={status} />
-        <ModelSelect
-          selectedChatModel={selectedChatModel}
-          setSelectedChatModel={setSelectedChatModel}
-        />
+        <ModelSelect />
+        <SearchSelect />
       </div>
 
       <div className="absolute right-0 bottom-0 flex w-fit flex-row justify-end p-2">
@@ -320,13 +308,7 @@ const PureMultimodalInput: React.FC<Props> = ({
 export const MultimodalInput = memo(
   PureMultimodalInput,
   (prevProps, nextProps) => {
-    if (prevProps.input !== nextProps.input) return false;
-    if (prevProps.status !== nextProps.status) return false;
-    if (!equal(prevProps.attachments, nextProps.attachments)) return false;
-    if (!equal(prevProps.selectedChatModel, nextProps.selectedChatModel))
-      return false;
-
-    return true;
+    return equal(prevProps, nextProps);
   },
 );
 
@@ -340,13 +322,14 @@ function PureAttachmentsButton({
   return (
     <Button
       data-testid="attachments-button"
-      className="h-fit rounded-md rounded-bl-lg p-[7px] hover:bg-zinc-200 dark:border-zinc-700 hover:dark:bg-zinc-900"
+      size="icon"
+      variant="outline"
+      className="bg-transparent"
       onClick={(event) => {
         event.preventDefault();
         fileInputRef.current?.click();
       }}
       disabled={status !== "ready"}
-      variant="ghost"
     >
       <Paperclip size={14} />
     </Button>

@@ -6,24 +6,18 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
 import { useDeleteMessagesAfterTimestamp } from "../../_hooks/use-delete-messages";
+import { useChatContext } from "../../_contexts/chat-context";
 
 import type { Dispatch, SetStateAction } from "react";
 import type { Message } from "ai";
-import type { UseChatHelpers } from "@ai-sdk/react";
 
 export type MessageEditorProps = {
   message: Message;
   setMode: Dispatch<SetStateAction<"view" | "edit">>;
-  setMessages: UseChatHelpers["setMessages"];
-  reload: UseChatHelpers["reload"];
 };
 
-export function MessageEditor({
-  message,
-  setMode,
-  setMessages,
-  reload,
-}: MessageEditorProps) {
+export function MessageEditor({ message, setMode }: MessageEditorProps) {
+  const { setMessages, reload } = useChatContext();
   const { mutate } = useDeleteMessagesAfterTimestamp();
 
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);

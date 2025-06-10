@@ -8,6 +8,8 @@ import {
   smoothStream,
 } from "ai";
 
+import { openai } from "@ai-sdk/openai";
+
 import { createResumableStreamContext } from "resumable-stream";
 
 import { differenceInSeconds } from "date-fns";
@@ -25,6 +27,8 @@ import { ChatSDKError } from "@/lib/errors";
 import type { ResumableStreamContext } from "resumable-stream";
 import type { CoreAssistantMessage, CoreToolMessage, UIMessage } from "ai";
 import type { Chat } from "@prisma/client";
+import { SearchOptions } from "@/lib/ai/types";
+import { type providers } from "@/lib/ai/registry";
 
 export const maxDuration = 60;
 
@@ -61,8 +65,13 @@ export async function POST(request: Request) {
   }
 
   try {
-    const { id, message, selectedVisibilityType, selectedChatModel } =
-      requestBody;
+    const {
+      id,
+      message,
+      selectedVisibilityType,
+      selectedChatModel,
+      searchOption,
+    } = requestBody;
 
     const session = await auth();
 
@@ -124,14 +133,21 @@ export async function POST(request: Request) {
     const streamId = generateUUID();
     await api.streams.createStreamId({ streamId, chatId: id });
 
+    const isOpenai = selectedChatModel.startsWith("openai");
+    const shouldUseOpenaiResponses =
+      isOpenai && searchOption === SearchOptions.OpenAiResponses;
+
     const stream = createDataStream({
       execute: (dataStream) => {
-        const result = streamText(selectedChatModel, {
+        const result = streamText(getModelId(selectedChatModel, searchOption), {
           system: "You are a helpful assistant.",
           messages: convertToCoreMessages(messages),
           maxSteps: 5,
           experimental_transform: smoothStream({ chunking: "word" }),
           experimental_generateMessageId: generateUUID,
+          onError: (error) => {
+            console.error(error);
+          },
           onFinish: async ({ response }) => {
             if (session.user?.id) {
               try {
@@ -176,6 +192,9 @@ export async function POST(request: Request) {
               }
             }
           },
+          tools: shouldUseOpenaiResponses
+            ? { web_search_preview: openai.tools.webSearchPreview() }
+            : undefined,
         });
 
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
@@ -234,6 +253,29 @@ function getTrailingMessageId({
 
   return trailingMessage.id;
 }
+
+const getModelId = (
+  model: `${keyof typeof providers}:${string}`,
+  searchOption: SearchOptions | undefined,
+): `${keyof typeof providers}:${string}` => {
+  // no need for dynamic mdoel config
+  if (!searchOption) return model;
+
+  const [provider, modelId] = model.split(":");
+  if (provider === "openai") {
+    if (searchOption === SearchOptions.OpenAiResponses) {
+      return `${provider}:${modelId}-responses`;
+    }
+  }
+
+  if (provider === "google") {
+    if (searchOption === SearchOptions.Native) {
+      return `${provider}:${modelId}-search`;
+    }
+  }
+
+  return model;
+};
 
 export async function GET(request: Request) {
   const streamContext = getStreamContext();
