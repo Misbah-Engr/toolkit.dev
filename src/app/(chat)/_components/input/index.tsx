@@ -32,7 +32,7 @@ import type { Attachment } from "ai";
 import type { UseChatHelpers } from "@ai-sdk/react";
 import { SearchSelect } from "./search-select";
 import type { File as DbFile } from "@prisma/client";
-import { ModelCapability } from "@/lib/ai/types";
+import { ModelCapability } from "@/ai/types";
 import {
   Tooltip,
   TooltipContent,

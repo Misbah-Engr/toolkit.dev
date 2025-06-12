@@ -130,6 +130,7 @@ export const env = createEnv({
       .default("development"),
     ...createAuthSchema(),
     ...createLlmSchema(),
+    EXA_API_KEY: z.string().optional(),
   },
 
   /**
@@ -151,6 +152,7 @@ export const env = createEnv({
     NODE_ENV: process.env.NODE_ENV,
     ...authRuntimeEnv(),
     ...llmRuntimeEnv(),
+    EXA_API_KEY: process.env.EXA_API_KEY,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

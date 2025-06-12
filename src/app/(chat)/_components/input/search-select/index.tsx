@@ -14,7 +14,7 @@ import {
 import { useChatContext } from "../../../_contexts/chat-context";
 import { useState } from "react";
 import { SearchTypeIcon } from "@/components/ui/search-type-icon";
-import { SearchOptions } from "@/lib/ai/types";
+import { SearchOptions } from "@/ai/types";
 
 export const SearchSelect: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
