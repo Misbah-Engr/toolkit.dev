@@ -9,7 +9,7 @@ import {
   SiX,
 } from "@icons-pack/react-simple-icons";
 
-import { ModelCapability, type Provider } from "@/lib/ai/types";
+import { ModelCapability, type Provider } from "@/ai/types";
 
 export const capabilityIcons: Record<
   ModelCapability,

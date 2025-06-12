@@ -1,6 +1,6 @@
 "use client";
 
-import type { Model } from "@/lib/ai/types";
+import type { Model } from "@/ai/types";
 import { cn } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { ModelProviderIcon } from "@/components/ui/model-icon";

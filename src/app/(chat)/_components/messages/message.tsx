@@ -24,6 +24,8 @@ import { MessageReasoning } from "./message-reasoning";
 import { cn, sanitizeText } from "@/lib/utils";
 
 import type { UIMessage } from "ai";
+import { ExaSearchResults } from "@/ai/toolkits/exa/search/component";
+import type { ExaSearchResult } from "@/ai/toolkits/exa/types";
 
 interface Props {
   message: UIMessage;
@@ -100,7 +102,31 @@ const PurePreviewMessage: React.FC<Props> = ({
                 );
               }
 
+              if (type === "tool-invocation") {
+                if (part.toolInvocation.toolName === "exa_search") {
+                  if (part.toolInvocation.state === "result") {
+                    return (
+                      <ExaSearchResults
+                        key={key}
+                        results={
+                          part.toolInvocation.result as ExaSearchResult[]
+                        }
+                      />
+                    );
+                  }
+                }
+                return (
+                  <pre
+                    key={key}
+                    className="w-full max-w-full whitespace-pre-wrap"
+                  >
+                    {JSON.stringify(part.toolInvocation, null, 2)}
+                  </pre>
+                );
+              }
+
               if (type === "text") {
+                console.log(part.text);
                 if (mode === "view") {
                   return (
                     <div key={key} className="flex flex-row items-start gap-2">

@@ -3,7 +3,7 @@
 import { Badge } from "@/components/ui/badge";
 import { ModelProviderIcon } from "@/components/ui/model-icon";
 
-import type { Model } from "@/lib/ai/types";
+import type { Model } from "@/ai/types";
 import { cn } from "@/lib/utils";
 
 import { capabilityIcons, capabilityColors } from "../utils";

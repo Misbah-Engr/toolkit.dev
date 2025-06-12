@@ -18,7 +18,7 @@ import { DesktopModelItem } from "./components/desktop-model-item";
 import { ModelInfoDropdown } from "./components/desktop-info-dropdown";
 import { FeaturedModelCard } from "./components/featured-model-card";
 import { capabilityIcons, capabilityLabels, modelProviderNames } from "./utils";
-import { ModelCapability } from "@/lib/ai/types";
+import { ModelCapability } from "@/ai/types";
 
 import { useModelSelect } from "./hooks/use-model-select";
 

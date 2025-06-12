@@ -1,4 +1,4 @@
-import { ModelCapability, type Model } from "@/lib/ai/types";
+import { ModelCapability, type Model } from "@/ai/types";
 
 const openAiModelData: Omit<Model, "provider">[] = [
   {
@@ -7,7 +7,6 @@ const openAiModelData: Omit<Model, "provider">[] = [
     description: "Most advanced multimodal model with vision and reasoning",
     capabilities: [
       ModelCapability.Vision,
-      ModelCapability.WebSearch,
       ModelCapability.Pdf,
       ModelCapability.ToolCalling,
     ],
@@ -22,7 +21,6 @@ const openAiModelData: Omit<Model, "provider">[] = [
       ModelCapability.Vision,
       ModelCapability.Pdf,
       ModelCapability.ToolCalling,
-      ModelCapability.WebSearch,
     ],
     bestFor: ["Quick tasks", "Cost-effective", "Simple queries"],
     contextLength: 128000,
@@ -51,7 +49,6 @@ const openAiModelData: Omit<Model, "provider">[] = [
       ModelCapability.Vision,
       ModelCapability.Pdf,
       ModelCapability.ToolCalling,
-      ModelCapability.WebSearch,
     ],
     bestFor: ["General purpose", "Improved performance", "Reliability"],
     contextLength: 128000,
@@ -64,7 +61,6 @@ const openAiModelData: Omit<Model, "provider">[] = [
       ModelCapability.Vision,
       ModelCapability.Pdf,
       ModelCapability.ToolCalling,
-      ModelCapability.WebSearch,
     ],
     bestFor: ["Quick responses", "Cost-effective", "Simple tasks"],
     contextLength: 128000,
@@ -77,7 +73,6 @@ const openAiModelData: Omit<Model, "provider">[] = [
       ModelCapability.Vision,
       ModelCapability.Pdf,
       ModelCapability.ToolCalling,
-      ModelCapability.WebSearch,
     ],
     bestFor: ["Simple queries", "Ultra-fast", "Basic assistance"],
     contextLength: 32000,

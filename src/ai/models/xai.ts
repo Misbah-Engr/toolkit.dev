@@ -1,4 +1,4 @@
-import { ModelCapability, type Model } from "@/lib/ai/types";
+import { ModelCapability, type Model } from "@/ai/types";
 
 const xaiModelData: Omit<Model, "provider">[] = [
   {

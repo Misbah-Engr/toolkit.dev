@@ -2,7 +2,7 @@ import { Brain, Sparkles } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-import { SearchOptions } from "@/lib/ai/types";
+import { SearchOptions } from "@/ai/types";
 import { SiOpenai } from "@icons-pack/react-simple-icons";
 
 interface Props {

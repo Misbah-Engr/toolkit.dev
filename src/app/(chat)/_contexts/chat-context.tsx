@@ -15,7 +15,7 @@ import { useAutoResume } from "../_hooks/use-auto-resume";
 import type { ReactNode } from "react";
 import type { Attachment, UIMessage } from "ai";
 import type { UseChatHelpers } from "@ai-sdk/react";
-import { ModelCapability, SearchOptions, type Model } from "@/lib/ai/types";
+import { ModelCapability, SearchOptions, type Model } from "@/ai/types";
 
 interface ChatContextType {
   // Chat state

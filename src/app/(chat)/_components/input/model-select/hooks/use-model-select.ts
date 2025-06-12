@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { api } from "@/trpc/react";
-import type { Model, ModelCapability, Provider } from "@/lib/ai/types";
+import type { Model, ModelCapability, Provider } from "@/ai/types";
 
 interface UseModelSelectProps {
   selectedChatModel: Model | undefined;

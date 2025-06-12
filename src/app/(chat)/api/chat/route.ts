@@ -19,7 +19,7 @@ import { api } from "@/trpc/server";
 
 import { postRequestBodySchema, type PostRequestBody } from "./schema";
 
-import { generateText, streamText } from "@/lib/ai/generate";
+import { generateText, streamText } from "@/ai/generate";
 import { generateUUID } from "@/lib/utils";
 
 import { ChatSDKError } from "@/lib/errors";
@@ -27,8 +27,9 @@ import { ChatSDKError } from "@/lib/errors";
 import type { ResumableStreamContext } from "resumable-stream";
 import type { CoreAssistantMessage, CoreToolMessage, UIMessage } from "ai";
 import type { Chat } from "@prisma/client";
-import { SearchOptions } from "@/lib/ai/types";
-import { type providers } from "@/lib/ai/registry";
+import { SearchOptions } from "@/ai/types";
+import { type providers } from "@/ai/registry";
+import { exaSearch } from "@/ai/toolkits/exa/search/tool";
 
 export const maxDuration = 60;
 
@@ -189,7 +190,9 @@ export async function POST(request: Request) {
           },
           tools: shouldUseOpenaiResponses
             ? { web_search_preview: openai.tools.webSearchPreview() }
-            : undefined,
+            : searchOption === SearchOptions.Exa
+              ? { exa_search: exaSearch }
+              : undefined,
         });
 
         void result.consumeStream();
