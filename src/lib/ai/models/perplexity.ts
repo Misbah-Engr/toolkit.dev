@@ -14,7 +14,7 @@ const perplexityModelData: Omit<Model, "provider">[] = [
     name: "Sonar",
     modelId: "sonar",
     description: "Fast version of Sonar for quick responses",
-    capabilities: [ModelCapability.Fast, ModelCapability.WebSearch],
+    capabilities: [ModelCapability.WebSearch],
     bestFor: ["Quick tasks", "Real-time responses", "Efficient processing"],
     contextLength: 1000000,
     isNew: true,

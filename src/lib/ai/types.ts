@@ -1,16 +1,14 @@
+import type { ProviderMetadata } from "ai";
 import type { providers } from "./registry";
 
 export type Provider = keyof typeof providers;
 
 export enum ModelCapability {
-  Thinking = "thinking",
   Vision = "vision",
   WebSearch = "web-search",
-  Code = "code",
-  Fast = "fast",
   Reasoning = "reasoning",
-  Audio = "audio",
   Pdf = "pdf",
+  ToolCalling = "tool-calling",
 }
 
 export type Model = {
@@ -22,6 +20,7 @@ export type Model = {
   bestFor?: string[];
   contextLength?: number;
   isNew?: boolean;
+  providerOptions?: ProviderMetadata;
 };
 
 export enum SearchOptions {

@@ -197,8 +197,7 @@ export async function POST(request: Request) {
             : undefined,
         });
 
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        result.consumeStream();
+        void result.consumeStream();
 
         result.mergeIntoDataStream(dataStream, {
           sendReasoning: true,
