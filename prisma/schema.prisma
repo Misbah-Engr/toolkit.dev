@@ -51,6 +51,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
     chats         Chat[]
+    files         File[]
 }
 
 model VerificationToken {
@@ -78,13 +79,23 @@ model Chat {
 }
 
 model Message {
-    id          String   @id @default(uuid())
+    id          String       @id @default(uuid())
     chatId      String
     role        String
     parts       Json
-    attachments Json
+    attachments Json[]
+    createdAt   DateTime     @default(now())
+    chat        Chat         @relation(fields: [chatId], references: [id], onDelete: Cascade)
+}
+
+model File {
+    id          String   @id @default(uuid())
+    userId      String
+    name        String
+    contentType String
+    url         String
     createdAt   DateTime @default(now())
-    chat        Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
+    user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Stream {

@@ -2,6 +2,7 @@ import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
 
 import {
   chatsRouter,
+  filesRouter,
   messagesRouter,
   modelsRouter,
   streamsRouter,
@@ -17,6 +18,7 @@ export const appRouter = createTRPCRouter({
   messages: messagesRouter,
   streams: streamsRouter,
   models: modelsRouter,
+  files: filesRouter,
 });
 
 // export type definition of API

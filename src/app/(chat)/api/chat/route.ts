@@ -118,16 +118,11 @@ export async function POST(request: Request) {
       role: "user",
       parts: message.parts,
       attachments:
-        message.experimental_attachments
-          ?.filter((attachment) => attachment.contentType !== "application/pdf")
-          .map((attachment) => ({
-            url: attachment.url,
-            name: attachment.name,
-            contentType: attachment.contentType as
-              | "image/png"
-              | "image/jpg"
-              | "image/jpeg",
-          })) ?? [],
+        message.experimental_attachments?.map((attachment) => ({
+          url: attachment.url,
+          name: attachment.name,
+          contentType: attachment.contentType,
+        })) ?? [],
     });
 
     const streamId = generateUUID();

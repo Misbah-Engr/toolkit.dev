@@ -92,7 +92,12 @@ export const messagesRouter = createTRPCRouter({
           z.object({
             url: z.string().url(),
             name: z.string().min(1).max(2000),
-            contentType: z.enum(["image/png", "image/jpg", "image/jpeg"]),
+            contentType: z.enum([
+              "image/png",
+              "image/jpg",
+              "image/jpeg",
+              "application/pdf",
+            ]),
           }),
         ),
       }),

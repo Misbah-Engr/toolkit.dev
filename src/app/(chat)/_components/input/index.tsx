@@ -26,6 +26,7 @@ import { useChatContext } from "../../_contexts/chat-context";
 import type { Attachment } from "ai";
 import type { UseChatHelpers } from "@ai-sdk/react";
 import { SearchSelect } from "./search-select";
+import type { File as DbFile } from "@prisma/client";
 
 interface Props {
   chatId: string;
@@ -137,17 +138,16 @@ const PureMultimodalInput: React.FC<Props> = ({ chatId, className }) => {
       });
 
       if (response.ok) {
-        const data = (await response.json()) as {
-          url: string;
-          pathname: string;
-          contentType: string;
-        };
-        const { url, pathname, contentType } = data;
+        const data = (await response.json()) as DbFile;
+
+        console.log(data);
+
+        const { url, name, contentType } = data;
 
         return {
           url,
-          name: pathname,
-          contentType: contentType,
+          name,
+          contentType,
         };
       }
       const { error } = (await response.json()) as { error: string };

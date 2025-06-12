@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 import { put } from "@vercel/blob";
 
 import { auth } from "@/server/auth";
+import { api } from "@/trpc/server";
 
 // Use Blob instead of File since File is not available in Node.js environment
 const FileSchema = z.object({
@@ -58,14 +59,20 @@ export async function POST(request: Request) {
 
     try {
       const data = await put(
-        `${session.user.id}/${crypto.randomUUID()}-${filename}`,
+        `${session.user.id}/${crypto.randomUUID()}`,
         fileBuffer,
         {
           access: "public",
         },
       );
 
-      return NextResponse.json(data);
+      const file = await api.files.createFile({
+        name: filename,
+        url: data.url,
+        contentType: validatedFile.data.file.type,
+      });
+
+      return NextResponse.json(file);
     } catch (error) {
       console.error(error);
       return NextResponse.json({ error: "Upload failed" }, { status: 500 });
