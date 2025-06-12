@@ -9,25 +9,30 @@ import { useChatContext } from "../../_contexts/chat-context";
 interface Props {
   chatId: string;
   isReadonly: boolean;
+  containerRef: React.RefObject<HTMLDivElement | null>;
+  endRef: React.RefObject<HTMLDivElement | null>;
+  onViewportEnter: () => void;
+  onViewportLeave: () => void;
 }
 
-const PureMessages: React.FC<Props> = ({ chatId, isReadonly }) => {
+const PureMessages: React.FC<Props> = ({
+  chatId,
+  isReadonly,
+  containerRef,
+  endRef,
+  onViewportEnter,
+  onViewportLeave,
+}) => {
   const { messages, status } = useChatContext();
 
-  const {
-    containerRef: messagesContainerRef,
-    endRef: messagesEndRef,
-    onViewportEnter,
-    onViewportLeave,
-    hasSentMessage,
-  } = useMessages({
+  const { hasSentMessage } = useMessages({
     chatId,
     status,
   });
 
   return (
     <div
-      ref={messagesContainerRef}
+      ref={containerRef}
       className="relative flex min-w-0 flex-1 flex-col gap-6 overflow-y-scroll pt-4"
     >
       {messages.length === 0 && <Greeting />}
@@ -49,7 +54,7 @@ const PureMessages: React.FC<Props> = ({ chatId, isReadonly }) => {
         messages[messages.length - 1]?.role === "user" && <ThinkingMessage />}
 
       <motion.div
-        ref={messagesEndRef}
+        ref={endRef}
         className="min-h-[24px] min-w-[24px] shrink-0"
         onViewportLeave={onViewportLeave}
         onViewportEnter={onViewportEnter}

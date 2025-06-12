@@ -169,11 +169,11 @@ export const ModelSelect: React.FC = () => {
                 ))}
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-2">
                 {/* Featured Models - First 4 in 2x2 grid */}
                 {models.length > 0 && (
-                  <div className="p-3">
-                    <div className="grid grid-cols-2 gap-3">
+                  <div className="p-2 pb-0">
+                    <div className="grid grid-cols-2 gap-2">
                       {models.slice(0, 4).map((model) => (
                         <FeaturedModelCard
                           key={model.modelId}
