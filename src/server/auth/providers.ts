@@ -22,6 +22,7 @@ export const providers: (
         DiscordProvider({
           clientId: env.AUTH_DISCORD_ID,
           clientSecret: env.AUTH_DISCORD_SECRET,
+          allowDangerousEmailAccountLinking: true,
         }),
       ]
     : []),
@@ -30,6 +31,7 @@ export const providers: (
         GoogleProvider({
           clientId: env.AUTH_GOOGLE_ID,
           clientSecret: env.AUTH_GOOGLE_SECRET,
+          allowDangerousEmailAccountLinking: true,
         }),
       ]
     : []),
@@ -38,6 +40,7 @@ export const providers: (
         GithubProvider({
           clientId: env.AUTH_GITHUB_ID,
           clientSecret: env.AUTH_GITHUB_SECRET,
+          allowDangerousEmailAccountLinking: true,
         }),
       ]
     : []),
@@ -46,6 +49,7 @@ export const providers: (
         TwitterProvider({
           clientId: env.AUTH_TWITTER_ID,
           clientSecret: env.AUTH_TWITTER_SECRET,
+          allowDangerousEmailAccountLinking: true,
         }),
       ]
     : []),
