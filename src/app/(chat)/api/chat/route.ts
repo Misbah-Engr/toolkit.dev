@@ -201,8 +201,9 @@ export async function POST(request: Request) {
           sendReasoning: true,
         });
       },
-      onError: () => {
-        return "Oops, an error occurred!";
+      onError: (error) => {
+        console.error(error);
+        throw new ChatSDKError("bad_request:api");
       },
     });
 

@@ -98,6 +98,9 @@ export function ChatProvider({
     onError: (error) => {
       if (error instanceof ChatSDKError) {
         toast.error(error.message);
+      } else {
+        console.error(error);
+        toast.error("An error occurred while processing your request");
       }
     },
   });
