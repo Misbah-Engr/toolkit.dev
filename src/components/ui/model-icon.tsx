@@ -1,25 +1,14 @@
-import {
-  SiGoogle,
-  SiOpenai,
-  SiX,
-  SiAnthropic,
-} from "@icons-pack/react-simple-icons";
-
 import { cn } from "@/lib/utils";
+import type { Provider } from "@/lib/ai/types";
+import { modelIcons } from "@/app/(chat)/_components/input/model-select/utils";
 
 interface Props {
-  provider: string;
+  provider: Provider;
   className?: string;
 }
 
 export const ModelProviderIcon: React.FC<Props> = ({ provider, className }) => {
-  const Icon =
-    {
-      openai: SiOpenai,
-      anthropic: SiAnthropic,
-      google: SiGoogle,
-      xai: SiX,
-    }[provider] ?? null;
+  const Icon = modelIcons[provider] ?? null;
 
   return Icon ? <Icon className={cn("size-4", className)} /> : null;
 };

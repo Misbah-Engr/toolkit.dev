@@ -102,7 +102,6 @@ const openAiModelData: Omit<Model, "provider">[] = [
     capabilities: [ModelCapability.Reasoning, ModelCapability.ToolCalling],
     bestFor: ["Advanced reasoning", "Complex problems", "Research"],
     contextLength: 200000,
-    isNew: true,
   },
   {
     name: "O3",
@@ -116,7 +115,6 @@ const openAiModelData: Omit<Model, "provider">[] = [
     ],
     bestFor: ["Complex reasoning", "Research", "Advanced analysis"],
     contextLength: 200000,
-    isNew: true,
   },
   {
     name: "O4 Mini",
@@ -130,7 +128,6 @@ const openAiModelData: Omit<Model, "provider">[] = [
     ],
     bestFor: ["Advanced reasoning", "Complex tasks", "Research"],
     contextLength: 200000,
-    isNew: true,
   },
 ];
 

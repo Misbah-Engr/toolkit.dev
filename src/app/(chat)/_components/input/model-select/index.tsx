@@ -16,7 +16,8 @@ import {
 import { MobileModelCard } from "./components/mobile-model-card";
 import { DesktopModelItem } from "./components/desktop-model-item";
 import { ModelInfoDropdown } from "./components/desktop-info-dropdown";
-import { capabilityIcons, capabilityLabels } from "./utils";
+import { FeaturedModelCard } from "./components/featured-model-card";
+import { capabilityIcons, capabilityLabels, modelProviderNames } from "./utils";
 import { ModelCapability } from "@/lib/ai/types";
 
 import { useModelSelect } from "./hooks/use-model-select";
@@ -92,6 +93,7 @@ export const ModelSelect: React.FC = () => {
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-lg p-0" align="start" sideOffset={8}>
           <div className="bg-background sticky top-0 z-10 border-b p-2">
+            <h2 className="mb-2 text-sm font-bold">Model Selector</h2>
             <div className="relative mb-2">
               <Search className="text-muted-foreground absolute top-2.5 left-2 size-4" />
               <Input
@@ -102,46 +104,59 @@ export const ModelSelect: React.FC = () => {
               />
             </div>
             <div className="space-y-2">
-              <div className="flex flex-wrap gap-1">
-                {availableProviders.map((provider) => (
-                  <Badge
-                    key={provider}
-                    variant={
-                      selectedProviders.includes(provider)
-                        ? "default"
-                        : "outline"
-                    }
-                    className="cursor-pointer gap-1 px-1.5 py-0.5"
-                    onClick={() => toggleProvider(provider)}
-                  >
-                    <ModelProviderIcon provider={provider} className="size-3" />
-                    {provider}
-                  </Badge>
-                ))}
-              </div>
-              <div className="flex flex-wrap gap-1">
-                {Object.values(ModelCapability).map((capability) => {
-                  const Icon = capabilityIcons[capability];
-                  return (
+              <div>
+                <div className="text-muted-foreground mb-1.5 text-xs font-medium">
+                  Providers
+                </div>
+                <div className="flex flex-wrap gap-1">
+                  {availableProviders.map((provider) => (
                     <Badge
-                      key={capability}
+                      key={provider}
                       variant={
-                        selectedCapabilities.includes(capability)
+                        selectedProviders.includes(provider)
                           ? "default"
                           : "outline"
                       }
                       className="cursor-pointer gap-1 px-1.5 py-0.5"
-                      onClick={() => toggleCapability(capability)}
+                      onClick={() => toggleProvider(provider)}
                     >
-                      {Icon && <Icon className="size-3" />}
-                      {capabilityLabels[capability]}
+                      <ModelProviderIcon
+                        provider={provider}
+                        className="size-3"
+                      />
+                      {modelProviderNames[provider]}
                     </Badge>
-                  );
-                })}
+                  ))}
+                </div>
+              </div>
+              <div>
+                <div className="text-muted-foreground mb-1.5 text-xs font-medium">
+                  Capabilities
+                </div>
+                <div className="flex flex-wrap gap-1">
+                  {Object.values(ModelCapability).map((capability) => {
+                    const Icon = capabilityIcons[capability];
+                    return (
+                      <Badge
+                        key={capability}
+                        variant={
+                          selectedCapabilities.includes(capability)
+                            ? "default"
+                            : "outline"
+                        }
+                        className="cursor-pointer gap-1 px-1.5 py-0.5"
+                        onClick={() => toggleCapability(capability)}
+                      >
+                        {Icon && <Icon className="size-3" />}
+                        {capabilityLabels[capability]}
+                      </Badge>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </div>
-          <div className="max-h-[400px] overflow-y-auto">
+          <div className="max-h-96 overflow-y-auto">
             {isMobile ? (
               <div className="flex flex-col gap-2 p-2">
                 {models.map((model) => (
@@ -154,17 +169,49 @@ export const ModelSelect: React.FC = () => {
                 ))}
               </div>
             ) : (
-              <div className="flex flex-col gap-1 p-1">
-                {models.map((model) => (
-                  <DesktopModelItem
-                    key={model.modelId}
-                    model={model}
-                    isSelected={selectedChatModel?.modelId === model.modelId}
-                    onSelect={() => handleModelSelect(model)}
-                    onHover={handleModelHover}
-                    onLeave={handleModelLeave}
-                  />
-                ))}
+              <div className="space-y-4">
+                {/* Featured Models - First 4 in 2x2 grid */}
+                {models.length > 0 && (
+                  <div className="p-3">
+                    <div className="grid grid-cols-2 gap-3">
+                      {models.slice(0, 4).map((model) => (
+                        <FeaturedModelCard
+                          key={model.modelId}
+                          model={model}
+                          isSelected={
+                            selectedChatModel?.modelId === model.modelId
+                          }
+                          onSelect={() => handleModelSelect(model)}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Other Models - Remaining models in compact list */}
+                {models.length > 4 && (
+                  <div className="border-t">
+                    <div className="p-2 pb-1">
+                      <h3 className="text-muted-foreground mb-2 text-xs font-medium">
+                        Other Models
+                      </h3>
+                    </div>
+                    <div className="flex flex-col gap-1 p-1">
+                      {models.slice(4).map((model) => (
+                        <DesktopModelItem
+                          key={model.modelId}
+                          model={model}
+                          isSelected={
+                            selectedChatModel?.modelId === model.modelId
+                          }
+                          onSelect={() => handleModelSelect(model)}
+                          onHover={handleModelHover}
+                          onLeave={handleModelLeave}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>

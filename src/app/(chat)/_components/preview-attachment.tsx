@@ -1,4 +1,4 @@
-import { LoaderIcon } from "lucide-react";
+import { FileIcon, LoaderIcon } from "lucide-react";
 
 import type { Attachment } from "ai";
 
@@ -26,6 +26,10 @@ export const PreviewAttachment: React.FC<Props> = ({
               alt={name ?? "An image attachment"}
               className="size-full rounded-md object-cover"
             />
+          ) : contentType.startsWith("application") ? (
+            <div className="flex size-full items-center justify-center">
+              <FileIcon className="size-4" />
+            </div>
           ) : (
             <div className="" />
           )

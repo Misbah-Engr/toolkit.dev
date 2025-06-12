@@ -1,8 +1,15 @@
 "use client";
 
 import { Eye, Search, Sparkles, File, Wrench } from "lucide-react";
+import {
+  SiGoogle,
+  SiOpenai,
+  SiAnthropic,
+  SiPerplexity,
+  SiX,
+} from "@icons-pack/react-simple-icons";
 
-import { ModelCapability } from "@/lib/ai/types";
+import { ModelCapability, type Provider } from "@/lib/ai/types";
 
 export const capabilityIcons: Record<
   ModelCapability,
@@ -36,4 +43,23 @@ export const formatContextLength = (length?: number) => {
   if (length >= 1000000) return `${(length / 1000000).toFixed(1)}M tokens`;
   if (length >= 1000) return `${(length / 1000).toFixed(0)}K tokens`;
   return `${length} tokens`;
+};
+
+export const modelProviderNames: Record<Provider, string> = {
+  openai: "OpenAI",
+  google: "Google",
+  anthropic: "Anthropic",
+  perplexity: "Perplexity",
+  xai: "xAI",
+};
+
+export const modelIcons: Record<
+  Provider,
+  React.ComponentType<{ className?: string }>
+> = {
+  openai: SiOpenai,
+  google: SiGoogle,
+  anthropic: SiAnthropic,
+  perplexity: SiPerplexity,
+  xai: SiX,
 };

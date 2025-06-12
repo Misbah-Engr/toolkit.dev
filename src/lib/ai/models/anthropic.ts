@@ -15,7 +15,6 @@ const anthropicModelData: Omit<Model, "provider">[] = [
     ],
     bestFor: ["Complex analysis", "Creative writing", "Research"],
     contextLength: 200000,
-    isNew: true,
   },
   {
     name: "Claude Sonnet 4",
@@ -29,7 +28,6 @@ const anthropicModelData: Omit<Model, "provider">[] = [
     ],
     bestFor: ["General purpose", "Code generation", "Analysis"],
     contextLength: 200000,
-    isNew: true,
   },
   {
     name: "Claude 3.7 Sonnet",
@@ -43,7 +41,6 @@ const anthropicModelData: Omit<Model, "provider">[] = [
     ],
     bestFor: ["Code review", "Content creation", "Problem solving"],
     contextLength: 200000,
-    isNew: true,
   },
   {
     name: "Claude 3.5 Haiku",

@@ -8,7 +8,6 @@ const xaiModelData: Omit<Model, "provider">[] = [
     capabilities: [ModelCapability.ToolCalling],
     bestFor: ["General purpose", "Real-time information", "Analysis"],
     contextLength: 128000,
-    isNew: true,
   },
   {
     name: "Grok 3 Fast",
@@ -17,7 +16,6 @@ const xaiModelData: Omit<Model, "provider">[] = [
     capabilities: [ModelCapability.ToolCalling],
     bestFor: ["Quick responses", "Real-time chat", "Simple tasks"],
     contextLength: 128000,
-    isNew: true,
   },
   {
     name: "Grok 3 Mini",
@@ -26,7 +24,6 @@ const xaiModelData: Omit<Model, "provider">[] = [
     capabilities: [ModelCapability.ToolCalling, ModelCapability.Reasoning],
     bestFor: ["Cost-effective", "Simple queries", "Quick tasks"],
     contextLength: 128000,
-    isNew: true,
   },
   {
     name: "Grok 3 Mini Fast",
@@ -35,7 +32,6 @@ const xaiModelData: Omit<Model, "provider">[] = [
     capabilities: [ModelCapability.ToolCalling],
     bestFor: ["Ultra-quick responses", "Simple chat", "Basic tasks"],
     contextLength: 128000,
-    isNew: true,
   },
   {
     name: "Grok 2",

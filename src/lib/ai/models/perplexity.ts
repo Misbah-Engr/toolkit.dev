@@ -8,7 +8,6 @@ const perplexityModelData: Omit<Model, "provider">[] = [
     capabilities: [ModelCapability.WebSearch],
     bestFor: ["Complex reasoning", "Advanced analysis", "Research"],
     contextLength: 2000000,
-    isNew: true,
   },
   {
     name: "Sonar",
@@ -17,7 +16,6 @@ const perplexityModelData: Omit<Model, "provider">[] = [
     capabilities: [ModelCapability.WebSearch],
     bestFor: ["Quick tasks", "Real-time responses", "Efficient processing"],
     contextLength: 1000000,
-    isNew: true,
   },
 ];
 

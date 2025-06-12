@@ -14,7 +14,6 @@ const googleModelData: Omit<Model, "provider">[] = [
     ],
     bestFor: ["Complex reasoning", "Advanced analysis", "Research"],
     contextLength: 2000000,
-    isNew: true,
   },
   {
     name: "Gemini 2.5 Flash Preview",
@@ -29,7 +28,6 @@ const googleModelData: Omit<Model, "provider">[] = [
     ],
     bestFor: ["Quick tasks", "Real-time responses", "Efficient processing"],
     contextLength: 1000000,
-    isNew: true,
   },
   {
     name: "Gemini 2.0 Flash",
@@ -43,7 +41,6 @@ const googleModelData: Omit<Model, "provider">[] = [
     ],
     bestFor: ["Multimodal tasks", "General purpose", "Balanced performance"],
     contextLength: 1000000,
-    isNew: true,
   },
   {
     name: "Gemini 1.5 Pro",
