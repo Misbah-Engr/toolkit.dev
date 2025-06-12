@@ -51,6 +51,7 @@ export const Chat: React.FC<Props> = ({
           endRef={endRef}
           onViewportEnter={onViewportEnter}
           onViewportLeave={onViewportLeave}
+          scrollToBottom={scrollToBottom}
         />
 
         <form className="bg-background mx-auto flex w-full gap-2 px-4 pb-4 md:max-w-3xl md:pb-6">

@@ -16,14 +16,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  CheckCircle,
-  Globe,
-  Lock,
-  MoreHorizontal,
-  Share,
-  TrashIcon,
-} from "lucide-react";
+import { Check, Globe, Lock, MoreHorizontal, Share, Trash } from "lucide-react";
 import { useUpdateChatVisibility } from "@/app/_hooks/use-chat-visibility";
 
 import type { Chat } from "@prisma/client";
@@ -62,12 +55,12 @@ const PureChatItem = ({
 
         <DropdownMenuContent side="bottom" align="end">
           <DropdownMenuSub>
-            <DropdownMenuSubTrigger className="cursor-pointer">
-              <Share />
+            <DropdownMenuSubTrigger className="flex cursor-pointer items-center gap-2">
+              <Share className="size-4" />
               <span>Share</span>
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
-              <DropdownMenuSubContent>
+              <DropdownMenuSubContent sideOffset={8}>
                 <DropdownMenuItem
                   className="cursor-pointer flex-row justify-between"
                   onClick={() => {
@@ -81,7 +74,9 @@ const PureChatItem = ({
                     <Lock size={12} />
                     <span>Private</span>
                   </div>
-                  {chat.visibility === "private" ? <CheckCircle /> : null}
+                  {chat.visibility === "private" ? (
+                    <Check className="size-4" />
+                  ) : null}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   className="cursor-pointer flex-row justify-between"
@@ -96,17 +91,19 @@ const PureChatItem = ({
                     <Globe />
                     <span>Public</span>
                   </div>
-                  {chat.visibility === "public" ? <CheckCircle /> : null}
+                  {chat.visibility === "public" ? (
+                    <Check className="size-4" />
+                  ) : null}
                 </DropdownMenuItem>
               </DropdownMenuSubContent>
             </DropdownMenuPortal>
           </DropdownMenuSub>
 
           <DropdownMenuItem
-            className="text-destructive focus:bg-destructive/15 focus:text-destructive cursor-pointer dark:text-red-500"
+            className="text-destructive focus:bg-destructive/15 focus:text-destructive cursor-pointer"
             onSelect={() => onDelete(chat.id)}
           >
-            <TrashIcon />
+            <Trash className="text-destructive size-4" />
             <span>Delete</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
