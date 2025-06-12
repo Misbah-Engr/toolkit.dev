@@ -208,14 +208,32 @@ const PureMultimodalInput: React.FC<Props> = ({ chatId, className }) => {
     }
   }, [status, scrollToBottom]);
 
+  const removeAttachment = useCallback(
+    (attachmentToRemove: Attachment) => {
+      setAttachments((currentAttachments: Attachment[]) =>
+        currentAttachments.filter(
+          (attachment) => attachment.url !== attachmentToRemove.url,
+        ),
+      );
+    },
+    [setAttachments],
+  );
+
+  const supportsImages = selectedChatModel?.capabilities?.includes(
+    ModelCapability.Vision,
+  );
+  const supportsPdf = selectedChatModel?.capabilities?.includes(
+    ModelCapability.Pdf,
+  );
+
   const acceptedFileTypes = useMemo(() => {
     let acceptedFileTypes: string[] = [];
 
-    if (selectedChatModel?.capabilities?.includes(ModelCapability.Pdf)) {
+    if (supportsPdf) {
       acceptedFileTypes = acceptedFileTypes.concat("application/pdf");
     }
 
-    if (selectedChatModel?.capabilities?.includes(ModelCapability.Vision)) {
+    if (supportsImages) {
       acceptedFileTypes = acceptedFileTypes.concat([
         "image/png",
         "image/jpg",
@@ -223,13 +241,25 @@ const PureMultimodalInput: React.FC<Props> = ({ chatId, className }) => {
       ]);
     }
 
-    console.log(acceptedFileTypes);
-
     return acceptedFileTypes;
-  }, [selectedChatModel]);
+  }, [supportsImages, supportsPdf]);
+
+  const fileDisabledString = useMemo(() => {
+    if (acceptedFileTypes.length === 0) {
+      return "This model does not support attachments. Please select a different model.";
+    }
+    return "";
+  }, [acceptedFileTypes]);
+
+  const submitDisabledString = useMemo(() => {
+    if (attachments.length === 0) {
+      return "Please attach a file or image to your message.";
+    }
+    return "";
+  }, [attachments]);
 
   return (
-    <div className="relative flex w-full flex-col gap-4">
+    <div className="relative flex w-full flex-col gap-4 overflow-y-visible">
       <AnimatePresence>
         {!isAtBottom && (
           <motion.div
@@ -269,10 +299,14 @@ const PureMultimodalInput: React.FC<Props> = ({ chatId, className }) => {
       {(attachments.length > 0 || uploadQueue.length > 0) && (
         <div
           data-testid="attachments-preview"
-          className="flex flex-row items-end gap-2 overflow-x-scroll"
+          className="flex flex-row items-end gap-2 overflow-x-scroll overflow-y-visible"
         >
           {attachments.map((attachment) => (
-            <PreviewAttachment key={attachment.url} attachment={attachment} />
+            <PreviewAttachment
+              key={attachment.url}
+              attachment={attachment}
+              onRemove={() => removeAttachment(attachment)}
+            />
           ))}
 
           {uploadQueue.map((filename) => (
@@ -296,7 +330,7 @@ const PureMultimodalInput: React.FC<Props> = ({ chatId, className }) => {
         value={input}
         onChange={handleInput}
         className={cn(
-          "bg-muted max-h-[calc(75dvh)] min-h-[24px] resize-none overflow-hidden rounded-2xl pb-16 !text-base dark:border-zinc-700",
+          "bg-muted h-auto max-h-[calc(75dvh)] min-h-[24px] resize-none overflow-hidden rounded-2xl pb-14 !text-base dark:border-zinc-700",
           className,
         )}
         rows={2}
@@ -323,11 +357,7 @@ const PureMultimodalInput: React.FC<Props> = ({ chatId, className }) => {
         <AttachmentsButton
           fileInputRef={fileInputRef}
           status={status}
-          disabledString={
-            acceptedFileTypes.length === 0
-              ? "This model does not support attachments"
-              : ""
-          }
+          disabledString={fileDisabledString}
         />
         <ModelSelect />
         <SearchSelect />
@@ -390,7 +420,9 @@ function PureAttachmentsButton({
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>{button}</TooltipTrigger>
-          <TooltipContent>{disabledString}</TooltipContent>
+          <TooltipContent className="max-w-xs text-center">
+            {disabledString}
+          </TooltipContent>
         </Tooltip>
       </TooltipProvider>
     );
@@ -441,11 +473,12 @@ const PureSendButton: React.FC<SendButtonProps> = ({
   return (
     <Button
       data-testid="send-button"
-      className="h-fit rounded-full border p-1.5 dark:border-zinc-600"
+      className="rounded-full border dark:border-zinc-600"
       onClick={(event) => {
         event.preventDefault();
         submitForm();
       }}
+      size="icon"
       disabled={input.length === 0 || uploadQueue.length > 0 || disabled}
     >
       <ArrowUp size={14} />

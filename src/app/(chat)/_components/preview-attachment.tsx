@@ -1,20 +1,26 @@
-import { FileIcon, LoaderIcon } from "lucide-react";
+import { FileIcon, LoaderIcon, X } from "lucide-react";
 
 import type { Attachment } from "ai";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   attachment: Attachment;
   isUploading?: boolean;
+  onRemove?: () => void;
 }
 
 export const PreviewAttachment: React.FC<Props> = ({
   attachment,
   isUploading = false,
+  onRemove,
 }) => {
   const { name, url, contentType } = attachment;
 
   return (
-    <div data-testid="input-attachment-preview" className="flex flex-col gap-2">
+    <div
+      data-testid="input-attachment-preview"
+      className="flex w-20 flex-col gap-1"
+    >
       <div className="bg-muted relative flex aspect-video h-16 w-20 flex-col items-center justify-center rounded-md">
         {contentType ? (
           contentType.startsWith("image") ? (
@@ -46,7 +52,22 @@ export const PreviewAttachment: React.FC<Props> = ({
           </div>
         )}
       </div>
-      <div className="max-w-16 truncate text-xs text-zinc-500">{name}</div>
+      <div className="relative flex w-full flex-row items-center justify-between gap-2">
+        <div className="max-w-full flex-1 truncate text-xs text-zinc-500">
+          {name}
+        </div>
+        {onRemove && !isUploading && (
+          <Button
+            onClick={onRemove}
+            className="size-fit rounded-full p-1"
+            aria-label="Remove attachment"
+            data-testid="remove-attachment-button"
+            size="icon"
+          >
+            <X className="size-2" />
+          </Button>
+        )}
+      </div>
     </div>
   );
 };
