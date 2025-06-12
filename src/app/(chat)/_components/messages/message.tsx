@@ -126,7 +126,6 @@ const PurePreviewMessage: React.FC<Props> = ({
               }
 
               if (type === "text") {
-                console.log(part.text);
                 if (mode === "view") {
                   return (
                     <div key={key} className="flex flex-row items-start gap-2">

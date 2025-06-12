@@ -191,8 +191,6 @@ const PureMultimodalInput: React.FC<Props> = ({
       if (response.ok) {
         const data = (await response.json()) as DbFile;
 
-        console.log(data);
-
         const { url, name, contentType } = data;
 
         return {
@@ -374,7 +372,7 @@ const PureMultimodalInput: React.FC<Props> = ({
             ) {
               event.preventDefault();
 
-              if (status !== "ready") {
+              if (status === "streaming" || status === "submitted") {
                 toast.error(
                   "Please wait for the model to finish its response!",
                 );
