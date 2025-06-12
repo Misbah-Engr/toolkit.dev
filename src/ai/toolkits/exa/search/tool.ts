@@ -4,8 +4,9 @@ import { tool } from "ai";
 
 import { Exa } from "exa-js";
 import { env } from "@/env";
+import type { ExaSearchParams, ExaSearchResult } from "./types";
 
-export const exaSearch = tool({
+export const exaSearch = tool<ExaSearchParams, ExaSearchResult[]>({
   description: "Search the web for up-to-date information",
   parameters: z.object({
     query: z.string().min(1).max(100).describe("The search query"),

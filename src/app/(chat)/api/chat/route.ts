@@ -29,7 +29,7 @@ import type { CoreAssistantMessage, CoreToolMessage, UIMessage } from "ai";
 import type { Chat } from "@prisma/client";
 import { SearchOptions } from "@/ai/types";
 import { type providers } from "@/ai/registry";
-import { exaSearch } from "@/ai/tools/exa";
+import { exaSearch } from "@/ai/toolkits/exa/search/tool";
 
 export const maxDuration = 60;
 
