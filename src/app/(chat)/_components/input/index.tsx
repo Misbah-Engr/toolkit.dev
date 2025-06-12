@@ -24,8 +24,6 @@ import { Textarea } from "@/components/ui/textarea";
 
 import { PreviewAttachment } from "../preview-attachment";
 
-import { useScrollToBottom } from "../../_hooks/use-scroll-to-bottom";
-
 import { cn } from "@/lib/utils";
 
 import { ModelSelect } from "./model-select";
@@ -34,7 +32,7 @@ import type { Attachment } from "ai";
 import type { UseChatHelpers } from "@ai-sdk/react";
 import { SearchSelect } from "./search-select";
 import type { File as DbFile } from "@prisma/client";
-import { ModelCapability, type Model } from "@/lib/ai/types";
+import { ModelCapability } from "@/lib/ai/types";
 import {
   Tooltip,
   TooltipContent,
@@ -44,10 +42,17 @@ import {
 
 interface Props {
   chatId: string;
+  isAtBottom: boolean;
+  scrollToBottom: () => void;
   className?: string;
 }
 
-const PureMultimodalInput: React.FC<Props> = ({ chatId, className }) => {
+const PureMultimodalInput: React.FC<Props> = ({
+  chatId,
+  isAtBottom,
+  scrollToBottom,
+  className,
+}) => {
   const {
     input,
     setInput,
@@ -112,9 +117,40 @@ const PureMultimodalInput: React.FC<Props> = ({ chatId, className }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadQueue, setUploadQueue] = useState<Array<string>>([]);
 
+  const supportsImages = selectedChatModel?.capabilities?.includes(
+    ModelCapability.Vision,
+  );
+  const includesImages = attachments.some((attachment) =>
+    attachment.contentType?.includes("image"),
+  );
+  const includesPdf = attachments.some((attachment) =>
+    attachment.contentType?.includes("pdf"),
+  );
+  const supportsPdf = selectedChatModel?.capabilities?.includes(
+    ModelCapability.Pdf,
+  );
+
+  const submitDisabledString = useMemo(() => {
+    if ((includesImages && !supportsImages) || (includesPdf && !supportsPdf)) {
+      return "This model does not support images or PDFs. Please remove your attachments or select a different model.";
+    }
+    if (includesImages && !supportsImages) {
+      return "This model does not support images. Please remove your image attachments or select a different model.";
+    }
+    if (includesPdf && !supportsPdf) {
+      return "This model does not support PDFs. Please remove your PDF attachments or select a different model.";
+    }
+    return "";
+  }, [includesImages, includesPdf, supportsImages, supportsPdf]);
+
   const submitForm = useCallback(() => {
     if (!selectedChatModel) {
       toast.error("Please select a model");
+      return;
+    }
+
+    if (submitDisabledString) {
+      toast.error(submitDisabledString);
       return;
     }
 
@@ -133,6 +169,7 @@ const PureMultimodalInput: React.FC<Props> = ({ chatId, className }) => {
     }
   }, [
     selectedChatModel,
+    submitDisabledString,
     attachments,
     handleSubmit,
     setAttachments,
@@ -200,8 +237,6 @@ const PureMultimodalInput: React.FC<Props> = ({ chatId, className }) => {
     [setAttachments],
   );
 
-  const { isAtBottom, scrollToBottom } = useScrollToBottom();
-
   useEffect(() => {
     if (status === "submitted") {
       scrollToBottom();
@@ -217,13 +252,6 @@ const PureMultimodalInput: React.FC<Props> = ({ chatId, className }) => {
       );
     },
     [setAttachments],
-  );
-
-  const supportsImages = selectedChatModel?.capabilities?.includes(
-    ModelCapability.Vision,
-  );
-  const supportsPdf = selectedChatModel?.capabilities?.includes(
-    ModelCapability.Pdf,
   );
 
   const acceptedFileTypes = useMemo(() => {
@@ -251,15 +279,8 @@ const PureMultimodalInput: React.FC<Props> = ({ chatId, className }) => {
     return "";
   }, [acceptedFileTypes]);
 
-  const submitDisabledString = useMemo(() => {
-    if (attachments.length === 0) {
-      return "Please attach a file or image to your message.";
-    }
-    return "";
-  }, [attachments]);
-
   return (
-    <div className="relative flex w-full flex-col gap-4 overflow-y-visible">
+    <div className="relative flex w-full flex-col">
       <AnimatePresence>
         {!isAtBottom && (
           <motion.div
@@ -267,7 +288,10 @@ const PureMultimodalInput: React.FC<Props> = ({ chatId, className }) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
-            className="absolute bottom-28 left-1/2 z-50 -translate-x-1/2"
+            className={cn(
+              "absolute bottom-28 left-1/2 z-50 -translate-x-1/2",
+              submitDisabledString && "bottom-32",
+            )}
           >
             <Button
               data-testid="scroll-to-bottom-button"
@@ -299,13 +323,19 @@ const PureMultimodalInput: React.FC<Props> = ({ chatId, className }) => {
       {(attachments.length > 0 || uploadQueue.length > 0) && (
         <div
           data-testid="attachments-preview"
-          className="flex flex-row items-end gap-2 overflow-x-scroll overflow-y-visible"
+          className="mb-2 flex flex-row items-end gap-2 overflow-x-scroll overflow-y-visible"
         >
           {attachments.map((attachment) => (
             <PreviewAttachment
               key={attachment.url}
               attachment={attachment}
               onRemove={() => removeAttachment(attachment)}
+              isError={
+                ((attachment.contentType?.includes("image") ?? false) &&
+                  !supportsImages) ||
+                ((attachment.contentType?.includes("pdf") ?? false) &&
+                  !supportsPdf)
+              }
             />
           ))}
 
@@ -323,58 +353,75 @@ const PureMultimodalInput: React.FC<Props> = ({ chatId, className }) => {
         </div>
       )}
 
-      <Textarea
-        data-testid="multimodal-input"
-        ref={textareaRef}
-        placeholder="Send a message..."
-        value={input}
-        onChange={handleInput}
-        className={cn(
-          "bg-muted h-auto max-h-[calc(75dvh)] min-h-[24px] resize-none overflow-hidden rounded-2xl pb-14 !text-base dark:border-zinc-700",
-          className,
-        )}
-        rows={2}
-        autoFocus
-        onKeyDown={(event) => {
-          if (
-            event.key === "Enter" &&
-            !event.shiftKey &&
-            !event.nativeEvent.isComposing
-          ) {
-            event.preventDefault();
+      <div className="relative">
+        <Textarea
+          data-testid="multimodal-input"
+          ref={textareaRef}
+          placeholder="Send a message..."
+          value={input}
+          onChange={handleInput}
+          className={cn(
+            "bg-muted h-auto max-h-[calc(75dvh)] min-h-[24px] resize-none overflow-hidden rounded-2xl pb-14 !text-base dark:border-zinc-700",
+            className,
+          )}
+          rows={2}
+          autoFocus
+          onKeyDown={(event) => {
+            if (
+              event.key === "Enter" &&
+              !event.shiftKey &&
+              !event.nativeEvent.isComposing
+            ) {
+              event.preventDefault();
 
-            if (status !== "ready") {
-              toast.error("Please wait for the model to finish its response!");
-            } else {
-              submitForm();
+              if (status !== "ready") {
+                toast.error(
+                  "Please wait for the model to finish its response!",
+                );
+              } else {
+                submitForm();
+              }
             }
-          }
-        }}
-        disabled={!selectedChatModel}
-      />
-
-      <div className="absolute bottom-0 flex w-fit flex-row justify-start gap-2 p-2">
-        <AttachmentsButton
-          fileInputRef={fileInputRef}
-          status={status}
-          disabledString={fileDisabledString}
+          }}
+          disabled={!selectedChatModel}
         />
-        <ModelSelect />
-        <SearchSelect />
-      </div>
 
-      <div className="absolute right-0 bottom-0 flex w-fit flex-row justify-end p-2">
-        {status === "submitted" ? (
-          <StopButton stop={stop} setMessages={setMessages} />
-        ) : (
-          <SendButton
-            input={input}
-            submitForm={submitForm}
-            uploadQueue={uploadQueue}
-            disabled={!selectedChatModel}
+        <div className="absolute bottom-0 flex w-fit flex-row justify-start gap-2 p-2">
+          <AttachmentsButton
+            fileInputRef={fileInputRef}
+            status={status}
+            disabledString={fileDisabledString}
           />
-        )}
+          <ModelSelect />
+          <SearchSelect />
+        </div>
+
+        <div className="absolute right-0 bottom-0 flex w-fit flex-row justify-end p-2">
+          {status === "submitted" ? (
+            <StopButton stop={stop} setMessages={setMessages} />
+          ) : (
+            <SendButton
+              input={input}
+              submitForm={submitForm}
+              uploadQueue={uploadQueue}
+              disabled={!selectedChatModel || !!submitDisabledString}
+            />
+          )}
+        </div>
       </div>
+      <motion.div
+        initial={{ opacity: 0, height: 0, marginTop: 0 }}
+        animate={{
+          opacity: submitDisabledString ? 1 : 0,
+          height: submitDisabledString ? "auto" : 0,
+          marginTop: submitDisabledString ? 8 : 0,
+        }}
+        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        className="text-sm text-yellow-600"
+      >
+        {submitDisabledString}
+      </motion.div>
+      <AnimatePresence></AnimatePresence>
     </div>
   );
 };

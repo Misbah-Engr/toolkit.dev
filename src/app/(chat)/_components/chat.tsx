@@ -3,6 +3,8 @@
 import { MultimodalInput } from "./input";
 import { Messages } from "./messages";
 
+import { useScrollToBottom } from "../_hooks/use-scroll-to-bottom";
+
 import { ChatProvider } from "../_contexts/chat-context";
 
 import type { UIMessage } from "ai";
@@ -25,6 +27,15 @@ export const Chat: React.FC<Props> = ({
   isReadonly,
   autoResume,
 }) => {
+  const {
+    containerRef,
+    endRef,
+    isAtBottom,
+    scrollToBottom,
+    onViewportEnter,
+    onViewportLeave,
+  } = useScrollToBottom();
+
   return (
     <ChatProvider
       id={id}
@@ -33,10 +44,23 @@ export const Chat: React.FC<Props> = ({
       autoResume={autoResume}
     >
       <div className="bg-background flex h-full min-w-0 flex-col">
-        <Messages chatId={id} isReadonly={isReadonly} />
+        <Messages
+          chatId={id}
+          isReadonly={isReadonly}
+          containerRef={containerRef}
+          endRef={endRef}
+          onViewportEnter={onViewportEnter}
+          onViewportLeave={onViewportLeave}
+        />
 
         <form className="bg-background mx-auto flex w-full gap-2 px-4 pb-4 md:max-w-3xl md:pb-6">
-          {!isReadonly && <MultimodalInput chatId={id} />}
+          {!isReadonly && (
+            <MultimodalInput
+              chatId={id}
+              isAtBottom={isAtBottom}
+              scrollToBottom={scrollToBottom}
+            />
+          )}
         </form>
       </div>
     </ChatProvider>

@@ -6,7 +6,7 @@ import { ModelProviderIcon } from "@/components/ui/model-icon";
 import type { Model } from "@/lib/ai/types";
 import { cn } from "@/lib/utils";
 
-import { capabilityIcons, capabilityLabels, capabilityColors } from "../utils";
+import { capabilityIcons, capabilityColors } from "../utils";
 
 interface FeaturedModelCardProps {
   model: Model;
