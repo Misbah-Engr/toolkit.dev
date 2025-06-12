@@ -1,6 +1,13 @@
 "use client";
 
-import React, { useRef, useEffect, useState, useCallback, memo } from "react";
+import React, {
+  useRef,
+  useEffect,
+  useState,
+  useCallback,
+  memo,
+  useMemo,
+} from "react";
 
 import { ArrowUp, Paperclip, Octagon, ArrowDown } from "lucide-react";
 
@@ -27,6 +34,13 @@ import type { Attachment } from "ai";
 import type { UseChatHelpers } from "@ai-sdk/react";
 import { SearchSelect } from "./search-select";
 import type { File as DbFile } from "@prisma/client";
+import { ModelCapability, type Model } from "@/lib/ai/types";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface Props {
   chatId: string;
@@ -194,6 +208,26 @@ const PureMultimodalInput: React.FC<Props> = ({ chatId, className }) => {
     }
   }, [status, scrollToBottom]);
 
+  const acceptedFileTypes = useMemo(() => {
+    let acceptedFileTypes: string[] = [];
+
+    if (selectedChatModel?.capabilities?.includes(ModelCapability.Pdf)) {
+      acceptedFileTypes = acceptedFileTypes.concat("application/pdf");
+    }
+
+    if (selectedChatModel?.capabilities?.includes(ModelCapability.Vision)) {
+      acceptedFileTypes = acceptedFileTypes.concat([
+        "image/png",
+        "image/jpg",
+        "image/jpeg",
+      ]);
+    }
+
+    console.log(acceptedFileTypes);
+
+    return acceptedFileTypes;
+  }, [selectedChatModel]);
+
   return (
     <div className="relative flex w-full flex-col gap-4">
       <AnimatePresence>
@@ -226,8 +260,10 @@ const PureMultimodalInput: React.FC<Props> = ({ chatId, className }) => {
         className="pointer-events-none fixed -top-4 -left-4 size-0.5 opacity-0"
         ref={fileInputRef}
         multiple
+        accept={acceptedFileTypes.join(",")}
         onChange={handleFileChange}
         tabIndex={-1}
+        disabled={!selectedChatModel || acceptedFileTypes.length === 0}
       />
 
       {(attachments.length > 0 || uploadQueue.length > 0) && (
@@ -284,7 +320,15 @@ const PureMultimodalInput: React.FC<Props> = ({ chatId, className }) => {
       />
 
       <div className="absolute bottom-0 flex w-fit flex-row justify-start gap-2 p-2">
-        <AttachmentsButton fileInputRef={fileInputRef} status={status} />
+        <AttachmentsButton
+          fileInputRef={fileInputRef}
+          status={status}
+          disabledString={
+            acceptedFileTypes.length === 0
+              ? "This model does not support attachments"
+              : ""
+          }
+        />
         <ModelSelect />
         <SearchSelect />
       </div>
@@ -315,25 +359,44 @@ export const MultimodalInput = memo(
 function PureAttachmentsButton({
   fileInputRef,
   status,
+  disabledString,
 }: {
   fileInputRef: React.MutableRefObject<HTMLInputElement | null>;
   status: UseChatHelpers["status"];
+  disabledString: string;
 }) {
-  return (
+  const button = (
     <Button
       data-testid="attachments-button"
       size="icon"
       variant="outline"
-      className="bg-transparent"
+      className={cn("bg-transparent", {
+        "cursor-not-allowed opacity-50": status !== "ready" || !!disabledString,
+      })}
       onClick={(event) => {
         event.preventDefault();
-        fileInputRef.current?.click();
+        if (status === "ready" && !disabledString) {
+          fileInputRef.current?.click();
+        }
       }}
       disabled={status !== "ready"}
     >
       <Paperclip size={14} />
     </Button>
   );
+
+  if (disabledString) {
+    return (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>{button}</TooltipTrigger>
+          <TooltipContent>{disabledString}</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
+  }
+
+  return button;
 }
 
 const AttachmentsButton = memo(PureAttachmentsButton);
