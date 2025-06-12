@@ -29,6 +29,7 @@ import type { CoreAssistantMessage, CoreToolMessage, UIMessage } from "ai";
 import type { Chat } from "@prisma/client";
 import { SearchOptions } from "@/ai/types";
 import { type providers } from "@/ai/registry";
+import { exaSearch } from "@/ai/tools/exa";
 
 export const maxDuration = 60;
 
@@ -189,7 +190,9 @@ export async function POST(request: Request) {
           },
           tools: shouldUseOpenaiResponses
             ? { web_search_preview: openai.tools.webSearchPreview() }
-            : undefined,
+            : searchOption === SearchOptions.Exa
+              ? { exa_search: exaSearch }
+              : undefined,
         });
 
         void result.consumeStream();
