@@ -12,13 +12,29 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { useChatContext } from "../../../_contexts/chat-context";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { SearchTypeIcon } from "@/components/ui/search-type-icon";
-import { SearchOptions } from "@/ai/types";
+import { ModelCapability, SearchOptions } from "@/ai/types";
 
 export const SearchSelect: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { searchOption, setSearchOption, selectedChatModel } = useChatContext();
+
+  const searchOptions = useMemo(() => {
+    const options = [];
+    if (selectedChatModel?.capabilities?.includes(ModelCapability.WebSearch)) {
+      options.push(SearchOptions.Native);
+    }
+    if (selectedChatModel?.provider === "openai") {
+      options.push(SearchOptions.OpenAiResponses);
+    }
+    if (
+      selectedChatModel?.capabilities?.includes(ModelCapability.ToolCalling)
+    ) {
+      options.push(SearchOptions.Exa);
+    }
+    return options;
+  }, [selectedChatModel]);
 
   if (!selectedChatModel) {
     return null;
@@ -42,12 +58,8 @@ export const SearchSelect: React.FC = () => {
           <ChevronsUpDown className="size-4 opacity-50" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent
-        className="w-[300px] p-0"
-        align="start"
-        sideOffset={8}
-      >
-        {Object.values(SearchOptions).map((option) => (
+      <DropdownMenuContent className="w-fit p-0" align="start" sideOffset={8}>
+        {searchOptions.map((option) => (
           <DropdownMenuItem
             key={option}
             onClick={() => setSearchOption(option)}

@@ -100,7 +100,19 @@ const PurePreviewMessage: React.FC<Props> = ({
                 );
               }
 
+              if (type === "tool-invocation") {
+                return (
+                  <pre
+                    key={key}
+                    className="w-full max-w-full whitespace-pre-wrap"
+                  >
+                    {JSON.stringify(part.toolInvocation, null, 2)}
+                  </pre>
+                );
+              }
+
               if (type === "text") {
+                console.log(part.text);
                 if (mode === "view") {
                   return (
                     <div key={key} className="flex flex-row items-start gap-2">
