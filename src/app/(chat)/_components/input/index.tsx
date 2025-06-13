@@ -30,9 +30,9 @@ import { ModelSelect } from "./model-select";
 import { useChatContext } from "../../_contexts/chat-context";
 import type { Attachment } from "ai";
 import type { UseChatHelpers } from "@ai-sdk/react";
-import { SearchSelect } from "./search-select";
+import { ToolsSelect } from "./tools";
 import type { File as DbFile } from "@prisma/client";
-import { ModelCapability } from "@/ai/types";
+import { LanguageModelCapability } from "@/ai/types";
 import {
   Tooltip,
   TooltipContent,
@@ -118,7 +118,7 @@ const PureMultimodalInput: React.FC<Props> = ({
   const [uploadQueue, setUploadQueue] = useState<Array<string>>([]);
 
   const supportsImages = selectedChatModel?.capabilities?.includes(
-    ModelCapability.Vision,
+    LanguageModelCapability.Vision,
   );
   const includesImages = attachments.some((attachment) =>
     attachment.contentType?.includes("image"),
@@ -127,7 +127,7 @@ const PureMultimodalInput: React.FC<Props> = ({
     attachment.contentType?.includes("pdf"),
   );
   const supportsPdf = selectedChatModel?.capabilities?.includes(
-    ModelCapability.Pdf,
+    LanguageModelCapability.Pdf,
   );
 
   const submitDisabledString = useMemo(() => {
@@ -391,7 +391,7 @@ const PureMultimodalInput: React.FC<Props> = ({
             disabledString={fileDisabledString}
           />
           <ModelSelect />
-          <SearchSelect />
+          <ToolsSelect />
         </div>
 
         <div className="absolute right-0 bottom-0 flex w-fit flex-row justify-end p-2">

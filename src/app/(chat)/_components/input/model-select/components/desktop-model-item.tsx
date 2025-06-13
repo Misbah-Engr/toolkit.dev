@@ -5,16 +5,16 @@ import { useRef } from "react";
 import { Badge } from "@/components/ui/badge";
 import { ModelProviderIcon } from "@/components/ui/model-icon";
 
-import type { Model } from "@/ai/types";
+import type { LanguageModel } from "@/ai/types";
 import { cn } from "@/lib/utils";
 
 import { capabilityIcons, capabilityColors } from "../utils";
 
 interface DesktopModelItemProps {
-  model: Model;
+  model: LanguageModel;
   isSelected: boolean;
   onSelect: () => void;
-  onHover: (model: Model, element: HTMLDivElement) => void;
+  onHover: (model: LanguageModel, element: HTMLDivElement) => void;
   onLeave: () => void;
 }
 

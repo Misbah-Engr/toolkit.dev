@@ -9,33 +9,33 @@ import {
   SiX,
 } from "@icons-pack/react-simple-icons";
 
-import { ModelCapability, type Provider } from "@/ai/types";
+import { LanguageModelCapability, type Provider } from "@/ai/types";
 
 export const capabilityIcons: Record<
-  ModelCapability,
+  LanguageModelCapability,
   React.ComponentType<{ className?: string }>
 > = {
-  [ModelCapability.Vision]: Eye,
-  [ModelCapability.WebSearch]: Search,
-  [ModelCapability.Reasoning]: Sparkles,
-  [ModelCapability.Pdf]: File,
-  [ModelCapability.ToolCalling]: Wrench,
+  [LanguageModelCapability.Vision]: Eye,
+  [LanguageModelCapability.WebSearch]: Search,
+  [LanguageModelCapability.Reasoning]: Sparkles,
+  [LanguageModelCapability.Pdf]: File,
+  [LanguageModelCapability.ToolCalling]: Wrench,
 };
 
-export const capabilityLabels: Record<ModelCapability, string> = {
-  [ModelCapability.Vision]: "Vision",
-  [ModelCapability.WebSearch]: "Web Search",
-  [ModelCapability.Reasoning]: "Reasoning",
-  [ModelCapability.Pdf]: "PDF",
-  [ModelCapability.ToolCalling]: "Tool Calling",
+export const capabilityLabels: Record<LanguageModelCapability, string> = {
+  [LanguageModelCapability.Vision]: "Vision",
+  [LanguageModelCapability.WebSearch]: "Web Search",
+  [LanguageModelCapability.Reasoning]: "Reasoning",
+  [LanguageModelCapability.Pdf]: "PDF",
+  [LanguageModelCapability.ToolCalling]: "Tool Calling",
 };
 
-export const capabilityColors: Record<ModelCapability, string> = {
-  [ModelCapability.Vision]: "bg-green-100 text-green-800",
-  [ModelCapability.WebSearch]: "bg-yellow-100 text-yellow-800",
-  [ModelCapability.Reasoning]: "bg-orange-100 text-orange-800",
-  [ModelCapability.Pdf]: "bg-gray-200 text-gray-800",
-  [ModelCapability.ToolCalling]: "bg-blue-100 text-blue-800",
+export const capabilityColors: Record<LanguageModelCapability, string> = {
+  [LanguageModelCapability.Vision]: "bg-green-100 text-green-800",
+  [LanguageModelCapability.WebSearch]: "bg-yellow-100 text-yellow-800",
+  [LanguageModelCapability.Reasoning]: "bg-orange-100 text-orange-800",
+  [LanguageModelCapability.Pdf]: "bg-gray-200 text-gray-800",
+  [LanguageModelCapability.ToolCalling]: "bg-blue-100 text-blue-800",
 };
 
 export const formatContextLength = (length?: number) => {

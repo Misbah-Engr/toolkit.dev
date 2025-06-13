@@ -1,14 +1,18 @@
-import { ModelCapability, type Model } from "@/ai/types";
+import {
+  LanguageModelCapability,
+  type ImageModel,
+  type LanguageModel,
+} from "@/ai/types";
 
-const openAiModelData: Omit<Model, "provider">[] = [
+const openAiLanguageModelsData: Omit<LanguageModel, "provider">[] = [
   {
     name: "GPT-4o",
     modelId: "gpt-4o",
     description: "Most advanced multimodal model with vision and reasoning",
     capabilities: [
-      ModelCapability.Vision,
-      ModelCapability.Pdf,
-      ModelCapability.ToolCalling,
+      LanguageModelCapability.Vision,
+      LanguageModelCapability.Pdf,
+      LanguageModelCapability.ToolCalling,
     ],
     bestFor: ["Multimodal tasks", "Vision analysis", "Code generation"],
     contextLength: 128000,
@@ -18,9 +22,9 @@ const openAiModelData: Omit<Model, "provider">[] = [
     modelId: "gpt-4o-mini",
     description: "Smaller, faster version of GPT-4o",
     capabilities: [
-      ModelCapability.Vision,
-      ModelCapability.Pdf,
-      ModelCapability.ToolCalling,
+      LanguageModelCapability.Vision,
+      LanguageModelCapability.Pdf,
+      LanguageModelCapability.ToolCalling,
     ],
     bestFor: ["Quick tasks", "Cost-effective", "Simple queries"],
     contextLength: 128000,
@@ -29,7 +33,7 @@ const openAiModelData: Omit<Model, "provider">[] = [
     name: "GPT-4o Search Preview",
     modelId: "gpt-4o-search-preview",
     description: "GPT-4o with web search capabilities",
-    capabilities: [ModelCapability.WebSearch],
+    capabilities: [LanguageModelCapability.WebSearch],
     bestFor: ["Research", "Current events", "Fact-checking"],
     contextLength: 128000,
   },
@@ -37,7 +41,7 @@ const openAiModelData: Omit<Model, "provider">[] = [
     name: "GPT-4o Mini Search",
     modelId: "gpt-4o-mini-search",
     description: "GPT-4o with web search capabilities",
-    capabilities: [ModelCapability.WebSearch],
+    capabilities: [LanguageModelCapability.WebSearch],
     bestFor: ["Research", "Current events", "Fact-checking"],
     contextLength: 128000,
   },
@@ -46,9 +50,9 @@ const openAiModelData: Omit<Model, "provider">[] = [
     modelId: "gpt-4.1",
     description: "Enhanced version with improved capabilities",
     capabilities: [
-      ModelCapability.Vision,
-      ModelCapability.Pdf,
-      ModelCapability.ToolCalling,
+      LanguageModelCapability.Vision,
+      LanguageModelCapability.Pdf,
+      LanguageModelCapability.ToolCalling,
     ],
     bestFor: ["General purpose", "Improved performance", "Reliability"],
     contextLength: 128000,
@@ -58,9 +62,9 @@ const openAiModelData: Omit<Model, "provider">[] = [
     modelId: "gpt-4.1-mini",
     description: "Compact version for efficiency",
     capabilities: [
-      ModelCapability.Vision,
-      ModelCapability.Pdf,
-      ModelCapability.ToolCalling,
+      LanguageModelCapability.Vision,
+      LanguageModelCapability.Pdf,
+      LanguageModelCapability.ToolCalling,
     ],
     bestFor: ["Quick responses", "Cost-effective", "Simple tasks"],
     contextLength: 128000,
@@ -70,9 +74,9 @@ const openAiModelData: Omit<Model, "provider">[] = [
     modelId: "gpt-4.1-nano",
     description: "Ultra-compact model for basic tasks",
     capabilities: [
-      ModelCapability.Vision,
-      ModelCapability.Pdf,
-      ModelCapability.ToolCalling,
+      LanguageModelCapability.Vision,
+      LanguageModelCapability.Pdf,
+      LanguageModelCapability.ToolCalling,
     ],
     bestFor: ["Simple queries", "Ultra-fast", "Basic assistance"],
     contextLength: 32000,
@@ -82,10 +86,10 @@ const openAiModelData: Omit<Model, "provider">[] = [
     modelId: "o1",
     description: "Advanced reasoning model for complex problems",
     capabilities: [
-      ModelCapability.Vision,
-      ModelCapability.Reasoning,
-      ModelCapability.ToolCalling,
-      ModelCapability.Pdf,
+      LanguageModelCapability.Vision,
+      LanguageModelCapability.Reasoning,
+      LanguageModelCapability.ToolCalling,
+      LanguageModelCapability.Pdf,
     ],
     bestFor: ["Complex reasoning", "Math", "Science", "Research"],
     contextLength: 200000,
@@ -94,7 +98,10 @@ const openAiModelData: Omit<Model, "provider">[] = [
     name: "O3 Mini",
     modelId: "o3-mini",
     description: "Next-generation reasoning model",
-    capabilities: [ModelCapability.Reasoning, ModelCapability.ToolCalling],
+    capabilities: [
+      LanguageModelCapability.Reasoning,
+      LanguageModelCapability.ToolCalling,
+    ],
     bestFor: ["Advanced reasoning", "Complex problems", "Research"],
     contextLength: 200000,
   },
@@ -103,10 +110,10 @@ const openAiModelData: Omit<Model, "provider">[] = [
     modelId: "o3",
     description: "Most advanced reasoning model",
     capabilities: [
-      ModelCapability.ToolCalling,
-      ModelCapability.Reasoning,
-      ModelCapability.Pdf,
-      ModelCapability.Vision,
+      LanguageModelCapability.ToolCalling,
+      LanguageModelCapability.Reasoning,
+      LanguageModelCapability.Pdf,
+      LanguageModelCapability.Vision,
     ],
     bestFor: ["Complex reasoning", "Research", "Advanced analysis"],
     contextLength: 200000,
@@ -116,17 +123,33 @@ const openAiModelData: Omit<Model, "provider">[] = [
     modelId: "o4-mini",
     description: "Latest generation reasoning model",
     capabilities: [
-      ModelCapability.Reasoning,
-      ModelCapability.Pdf,
-      ModelCapability.Vision,
-      ModelCapability.ToolCalling,
+      LanguageModelCapability.Reasoning,
+      LanguageModelCapability.Pdf,
+      LanguageModelCapability.Vision,
+      LanguageModelCapability.ToolCalling,
     ],
     bestFor: ["Advanced reasoning", "Complex tasks", "Research"],
     contextLength: 200000,
   },
 ];
 
-export const openAiModels: Model[] = openAiModelData.map((model) => ({
-  ...model,
-  provider: "openai",
-}));
+export const openAiLanguageModels: LanguageModel[] =
+  openAiLanguageModelsData.map((model) => ({
+    ...model,
+    provider: "openai",
+  }));
+
+const openAiImageModelsData: Omit<ImageModel, "provider">[] = [
+  {
+    name: "GPT Image",
+    modelId: "gpt-image-1",
+    description: "Most advanced image generation model",
+  },
+];
+
+export const openAiImageModels: ImageModel[] = openAiImageModelsData.map(
+  (model) => ({
+    ...model,
+    provider: "openai",
+  }),
+);
