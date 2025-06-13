@@ -17,6 +17,7 @@ const badgeVariants = cva(
         outline: "text-foreground",
         capability:
           "border-transparent bg-muted text-muted-foreground hover:bg-muted/80",
+        success: "border-transparent bg-green-500/20 text-green-500",
       },
     },
     defaultVariants: {
@@ -35,4 +36,4 @@ function Badge({ className, variant, ...props }: BadgeProps) {
   );
 }
 
-export { Badge, badgeVariants }; 
+export { Badge, badgeVariants };

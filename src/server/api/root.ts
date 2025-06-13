@@ -7,6 +7,7 @@ import {
   modelsRouter,
   streamsRouter,
   usersRouter,
+  accountsRouter,
 } from "./routers";
 
 /**
@@ -21,6 +22,7 @@ export const appRouter = createTRPCRouter({
   models: modelsRouter,
   files: filesRouter,
   users: usersRouter,
+  accounts: accountsRouter,
 });
 
 // export type definition of API

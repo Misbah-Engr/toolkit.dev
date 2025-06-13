@@ -4,10 +4,18 @@ import { redirect } from "next/navigation";
 
 import { api } from "@/trpc/server";
 
-import type { NextPage } from "next";
 import { AccountHeader } from "./components/header";
+import { AccountTabs } from "./components/tabs";
 
-const AccountPage: NextPage = async () => {
+import type { NextPage } from "next";
+
+const AccountPage = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ tab?: string }>;
+}) => {
+  const { tab } = await searchParams;
+
   const session = await auth();
 
   if (!session) {
@@ -21,8 +29,9 @@ const AccountPage: NextPage = async () => {
   }
 
   return (
-    <div className="mx-auto max-w-4xl px-2 py-4">
+    <div className="mx-auto max-w-4xl space-y-4 px-2 py-4 md:space-y-8">
       <AccountHeader user={user} />
+      <AccountTabs defaultTab={tab} />
     </div>
   );
 };
