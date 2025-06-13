@@ -1,8 +1,8 @@
 import { type z } from "zod";
 
-export type ExaSearchParams = z.ZodObject<{
-  query: z.ZodString;
-}>;
+export type ExaSearchParams = {
+  query: string;
+};
 
 export type ExaSearchResult = {
   title: string | null;

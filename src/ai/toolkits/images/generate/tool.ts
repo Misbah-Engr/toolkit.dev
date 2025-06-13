@@ -2,10 +2,8 @@ import z from "zod";
 
 import { tool, experimental_generateImage as generateImage } from "ai";
 
-import type { ImageGenerationParams, ImageGenerationResult } from "./types";
 import { registry } from "@/ai/registry";
 import { put } from "@vercel/blob";
-import { auth } from "@/server/auth";
 import { api } from "@/trpc/server";
 
 export const imageGeneration = (
@@ -16,7 +14,7 @@ export const imageGeneration = (
     | `google:${string}`
     | `perplexity:${string}`,
 ) =>
-  tool<ImageGenerationParams, ImageGenerationResult>({
+  tool({
     description: "Search the web for up-to-date information",
     parameters: z.object({
       prompt: z
