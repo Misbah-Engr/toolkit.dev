@@ -1,5 +1,4 @@
 import React from "react";
-import type { ExaSearchResult, ExaSearchParams } from "./types";
 import {
   Dialog,
   DialogContent,
@@ -8,26 +7,32 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import Markdown from "react-markdown";
+import type {
+  baseSearchTool,
+  ExaSearchToolArgs,
+  ExaSearchToolResult,
+} from "./base";
+import type { ClientToolConfig } from "@/mcp/types";
 
 interface ExaSearchCallProps {
-  args: ExaSearchParams;
+  args: ExaSearchToolArgs;
 }
 
-export function ExaSearchCallingComponent({ args }: ExaSearchCallProps) {
+const ExaSearchCallingComponent: React.FC<ExaSearchCallProps> = ({ args }) => {
   return (
     <div className="flex items-center gap-2 text-sm">
       <span className="text-muted-foreground">Searching for:</span>
       <span className="font-medium">{args.query}</span>
     </div>
   );
-}
+};
 
 interface ExaSearchResultsProps {
-  results: ExaSearchResult[];
+  result: ExaSearchToolResult;
 }
 
-export function ExaSearchResults({ results }: ExaSearchResultsProps) {
-  if (!results.length) {
+const ExaSearchResults: React.FC<ExaSearchResultsProps> = ({ result }) => {
+  if (!result.results.length) {
     return <div className="text-gray-500">No results found</div>;
   }
 
@@ -35,7 +40,7 @@ export function ExaSearchResults({ results }: ExaSearchResultsProps) {
     <div className="space-y-4">
       <h1 className="text-lg font-semibold">Exa Search Results</h1>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {results.map((result, index) => (
+        {result.results.map((result, index) => (
           <Dialog key={index}>
             <DialogTrigger asChild>
               <div className="group flex cursor-pointer flex-col items-start justify-between rounded-lg border border-gray-200 p-4 transition-all hover:border-blue-300 hover:shadow-md">
@@ -78,4 +83,12 @@ export function ExaSearchResults({ results }: ExaSearchResultsProps) {
       </div>
     </div>
   );
-}
+};
+
+export const exaSearchToolConfigClient: ClientToolConfig<
+  typeof baseSearchTool.inputSchema.shape,
+  typeof baseSearchTool.outputSchema.shape
+> = {
+  CallComponent: ExaSearchCallingComponent,
+  ResultComponent: ExaSearchResults,
+};

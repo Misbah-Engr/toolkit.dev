@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { Code, Edit } from "lucide-react";
+import { Edit } from "lucide-react";
 
 import {
   SidebarGroup,

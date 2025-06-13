@@ -24,19 +24,11 @@ import { MessageReasoning } from "./message-reasoning";
 import { cn, sanitizeText } from "@/lib/utils";
 
 import type { UIMessage } from "ai";
-import {
-  ExaSearchCallingComponent,
-  ExaSearchResults,
-} from "@/ai/toolkits/exa/search/component";
-import type { ExaSearchParams, ExaSearchResult } from "@/ai/toolkits/exa/types";
-import type {
-  ImageGenerationParams,
-  ImageGenerationResult,
-} from "@/ai/toolkits/images/generate/types";
-import {
-  ImageGenerationCallingComponent,
-  ImageGenerationResults,
-} from "@/ai/toolkits/images/generate/component";
+
+import type { Servers, ServerToolNames } from "@/mcp/servers/shared";
+import { getServerConfig } from "@/mcp/servers/client";
+import type z from "zod";
+import type { McpToolResult } from "@/mcp/types";
 
 interface Props {
   message: UIMessage;
@@ -114,50 +106,103 @@ const PurePreviewMessage: React.FC<Props> = ({
               }
 
               if (type === "tool-invocation") {
-                if (part.toolInvocation.toolName === "exa_search") {
-                  if (
-                    part.toolInvocation.state === "call" ||
-                    part.toolInvocation.state === "partial-call"
-                  ) {
-                    return (
-                      <ExaSearchCallingComponent
-                        key={key}
-                        args={part.toolInvocation.args as ExaSearchParams}
-                      />
-                    );
-                  }
+                const { toolInvocation } = part;
 
+                console.log(toolInvocation);
+
+                const isMcp = toolInvocation.toolName.startsWith("mcp_");
+
+                if (!isMcp) {
                   return (
-                    <ExaSearchResults
+                    <pre
                       key={key}
-                      results={part.toolInvocation.result as ExaSearchResult[]}
-                    />
+                      className="w-full max-w-full whitespace-pre-wrap"
+                    >
+                      {JSON.stringify(toolInvocation, null, 2)}
+                    </pre>
                   );
                 }
 
-                if (part.toolInvocation.toolName === "image_generation") {
-                  if (
-                    part.toolInvocation.state === "call" ||
-                    part.toolInvocation.state === "partial-call"
-                  ) {
-                    return (
-                      <ImageGenerationCallingComponent
-                        key={key}
-                        args={part.toolInvocation.args as ImageGenerationParams}
-                      />
-                    );
-                  }
+                const { toolName } = toolInvocation;
 
+                const [, server, tool] = toolName.split("_");
+
+                if (!server || !tool) {
                   return (
-                    <ImageGenerationResults
+                    <pre
                       key={key}
-                      result={
-                        part.toolInvocation
-                          .result as unknown as ImageGenerationResult
+                      className="w-full max-w-full whitespace-pre-wrap"
+                    >
+                      {JSON.stringify(part.toolInvocation, null, 2)}
+                    </pre>
+                  );
+                }
+
+                const typedServer = server as Servers;
+
+                const mcpServerConfig = getServerConfig(typedServer);
+
+                if (!mcpServerConfig) {
+                  return (
+                    <pre
+                      key={key}
+                      className="w-full max-w-full whitespace-pre-wrap"
+                    >
+                      {JSON.stringify(part.toolInvocation, null, 2)}
+                    </pre>
+                  );
+                }
+
+                const typedTool = tool as ServerToolNames[typeof typedServer];
+                const toolConfig = mcpServerConfig.tools[typedTool];
+
+                if (
+                  toolConfig &&
+                  (toolInvocation.state === "call" ||
+                    toolInvocation.state === "partial-call")
+                ) {
+                  return (
+                    <toolConfig.CallComponent
+                      key={key}
+                      args={
+                        toolInvocation.args as z.infer<
+                          typeof toolConfig.inputSchema
+                        >
                       }
                     />
                   );
                 }
+
+                if (toolConfig && toolInvocation.state === "result") {
+                  const result = toolInvocation.result as McpToolResult<
+                    typeof toolConfig.outputSchema.shape
+                  >;
+
+                  if (result.isError) {
+                    return (
+                      <div key={key}>
+                        <p>There was an error</p>
+                        <p>{result.content[0]?.text}</p>
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <toolConfig.ResultComponent
+                      key={key}
+                      result={
+                        (
+                          toolInvocation.result as {
+                            structuredContent: z.infer<
+                              typeof toolConfig.outputSchema
+                            >;
+                          }
+                        ).structuredContent
+                      }
+                    />
+                  );
+                }
+
                 return (
                   <pre
                     key={key}

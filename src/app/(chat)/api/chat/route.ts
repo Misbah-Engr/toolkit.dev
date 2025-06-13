@@ -5,10 +5,9 @@ import {
   appendResponseMessages,
   convertToCoreMessages,
   createDataStream,
+  experimental_createMCPClient,
   smoothStream,
 } from "ai";
-
-import { openai } from "@ai-sdk/openai";
 
 import { createResumableStreamContext } from "resumable-stream";
 
@@ -29,8 +28,8 @@ import type { CoreAssistantMessage, CoreToolMessage, UIMessage } from "ai";
 import type { Chat } from "@prisma/client";
 import { SearchOptions } from "@/ai/types";
 import { type providers } from "@/ai/registry";
-import { exaSearch } from "@/ai/toolkits/exa/search/tool";
-import { imageGeneration } from "@/ai/toolkits/images/generate/tool";
+import { env } from "@/env";
+import { Servers } from "@/mcp/servers/shared";
 
 export const maxDuration = 60;
 
@@ -115,6 +114,8 @@ export async function POST(request: Request) {
       message,
     });
 
+    console.log(request.headers.get("cookie"));
+
     await api.messages.createMessage({
       chatId: id,
       id: message.id,
@@ -131,9 +132,25 @@ export async function POST(request: Request) {
     const streamId = generateUUID();
     await api.streams.createStreamId({ streamId, chatId: id });
 
-    const isOpenai = selectedChatModel.startsWith("openai");
-    const shouldUseOpenaiResponses =
-      isOpenai && searchOption === SearchOptions.OpenAiResponses;
+    const [exaTools, imageTools] = await Promise.all(
+      [Servers.Exa, Servers.Image].map(async (server) => {
+        const mcp = await experimental_createMCPClient({
+          transport: {
+            type: "sse",
+            url: `${env.APP_URL}/mcp/${server}/sse`,
+            headers: {
+              Cookie: request.headers.get("cookie") ?? "",
+            },
+          },
+        });
+
+        const tools = await mcp.tools();
+
+        return tools;
+      }),
+    );
+
+    console.log(exaTools, imageTools);
 
     const stream = createDataStream({
       execute: (dataStream) => {
@@ -190,17 +207,21 @@ export async function POST(request: Request) {
               }
             }
           },
+          // tools: {
+          //   ...(shouldUseOpenaiResponses
+          //     ? { web_search_preview: openai.tools.webSearchPreview() }
+          //     : searchOption === SearchOptions.Exa
+          //       ? { exa_search: exaSearch }
+          //       : undefined),
+          //   ...(imageGenerationModel
+          //     ? {
+          //         image_generation: imageGeneration(imageGenerationModel),
+          //       }
+          //     : undefined),
+          // },
           tools: {
-            ...(shouldUseOpenaiResponses
-              ? { web_search_preview: openai.tools.webSearchPreview() }
-              : searchOption === SearchOptions.Exa
-                ? { exa_search: exaSearch }
-                : undefined),
-            ...(imageGenerationModel
-              ? {
-                  image_generation: imageGeneration(imageGenerationModel),
-                }
-              : undefined),
+            ...exaTools,
+            ...imageTools,
           },
         });
 

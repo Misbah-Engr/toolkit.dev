@@ -13,13 +13,7 @@ import {
   useReactTable,
   type VisibilityState,
 } from "@tanstack/react-table";
-import {
-  ArrowUpDown,
-  ChevronDown,
-  Loader2,
-  MoreHorizontal,
-  Trash,
-} from "lucide-react";
+import { ChevronDown, Loader2, MoreHorizontal, Trash } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -132,7 +126,6 @@ export function DataTableDemo() {
     data: attachments,
     isLoading,
     fetchNextPage,
-    hasNextPage,
   } = api.files.getUserFiles.useInfiniteQuery(
     {
       limit: 10,
