@@ -18,6 +18,7 @@ import type { UseChatHelpers } from "@ai-sdk/react";
 import {
   LanguageModelCapability,
   SearchOptions,
+  type ImageModel,
   type LanguageModel,
 } from "@/ai/types";
 
@@ -38,6 +39,8 @@ interface ChatContextType {
   setSelectedChatModel: (model: LanguageModel) => void;
   searchOption: SearchOptions | undefined;
   setSearchOption: (option: SearchOptions | undefined) => void;
+  imageGenerationModel: ImageModel | undefined;
+  setImageGenerationModel: (model: ImageModel | undefined) => void;
 
   // Chat actions
   handleSubmit: UseChatHelpers["handleSubmit"];
@@ -68,6 +71,9 @@ export function ChatProvider({
   const [searchOption, setSearchOption] = useState<SearchOptions | undefined>(
     undefined,
   );
+  const [imageGenerationModel, setImageGenerationModel] = useState<
+    ImageModel | undefined
+  >(undefined);
   const [attachments, setAttachments] = useState<Array<Attachment>>([]);
 
   const {
@@ -93,6 +99,9 @@ export function ChatProvider({
       id,
       message: body.messages.at(-1),
       selectedChatModel: `${selectedChatModel?.provider}:${selectedChatModel?.modelId}`,
+      imageGenerationModel: imageGenerationModel
+        ? `${imageGenerationModel.provider}:${imageGenerationModel.modelId}`
+        : undefined,
       selectedVisibilityType: initialVisibilityType,
       searchOption,
     }),
@@ -147,6 +156,8 @@ export function ChatProvider({
     stop,
     reload,
     append,
+    imageGenerationModel,
+    setImageGenerationModel,
   };
 
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;

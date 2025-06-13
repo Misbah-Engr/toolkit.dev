@@ -17,34 +17,37 @@ export const useModelSelect = ({
   selectedChatModel,
   setSelectedChatModel,
 }: UseModelSelectProps) => {
-  const { data: models, isLoading } = api.models.getModels.useQuery(undefined, {
-    select: (data) => {
-      const providers = Array.from(
-        new Set(data.map((model) => model.provider)),
-      );
-      const modelsByProvider = providers.reduce(
-        (acc, provider) => {
-          acc[provider] = data.filter((model) => model.provider === provider);
-          return acc;
-        },
-        {} as Record<string, typeof data>,
-      );
+  const { data: models, isLoading } = api.models.getLanguageModels.useQuery(
+    undefined,
+    {
+      select: (data) => {
+        const providers = Array.from(
+          new Set(data.map((model) => model.provider)),
+        );
+        const modelsByProvider = providers.reduce(
+          (acc, provider) => {
+            acc[provider] = data.filter((model) => model.provider === provider);
+            return acc;
+          },
+          {} as Record<string, typeof data>,
+        );
 
-      const result: typeof data = [];
-      let index = 0;
-      while (result.length < data.length) {
-        for (const provider of providers) {
-          const providerModels = modelsByProvider[provider];
-          const model = providerModels?.[index];
-          if (model) {
-            result.push(model);
+        const result: typeof data = [];
+        let index = 0;
+        while (result.length < data.length) {
+          for (const provider of providers) {
+            const providerModels = modelsByProvider[provider];
+            const model = providerModels?.[index];
+            if (model) {
+              result.push(model);
+            }
           }
+          index++;
         }
-        index++;
-      }
-      return result;
+        return result;
+      },
     },
-  });
+  );
   const [isMobile, setIsMobile] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [hoveredModel, setHoveredModel] = useState<LanguageModel | null>(null);

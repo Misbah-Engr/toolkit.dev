@@ -1,7 +1,8 @@
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 
-import { models } from "@/ai/models";
+import { imageModels, languageModels } from "@/ai/models";
 
 export const modelsRouter = createTRPCRouter({
-  getModels: protectedProcedure.query(async ({}) => models),
+  getLanguageModels: protectedProcedure.query(async ({}) => languageModels),
+  getImageModels: protectedProcedure.query(async ({}) => imageModels),
 });

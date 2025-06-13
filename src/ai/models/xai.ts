@@ -1,6 +1,10 @@
-import { LanguageModelCapability, type LanguageModel } from "@/ai/types";
+import {
+  LanguageModelCapability,
+  type ImageModel,
+  type LanguageModel,
+} from "@/ai/types";
 
-const xaiModelData: Omit<LanguageModel, "provider">[] = [
+const xaiLanguageModelData: Omit<LanguageModel, "provider">[] = [
   {
     name: "Grok 3",
     modelId: "grok-3",
@@ -57,7 +61,22 @@ const xaiModelData: Omit<LanguageModel, "provider">[] = [
   },
 ];
 
-export const xaiModels: LanguageModel[] = xaiModelData.map((model) => ({
+export const xaiLanguageModels: LanguageModel[] = xaiLanguageModelData.map(
+  (model) => ({
+    ...model,
+    provider: "xai",
+  }),
+);
+
+const xaiImageModelData: Omit<ImageModel, "provider">[] = [
+  {
+    name: "Grok 2 Image",
+    modelId: "grok-2-image",
+    description: "Latest generation Grok model with enhanced capabilities",
+  },
+];
+
+export const xaiImageModels: ImageModel[] = xaiImageModelData.map((model) => ({
   ...model,
   provider: "xai",
 }));

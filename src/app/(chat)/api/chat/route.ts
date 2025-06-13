@@ -73,6 +73,7 @@ export async function POST(request: Request) {
       selectedVisibilityType,
       selectedChatModel,
       searchOption,
+      imageGenerationModel,
     } = requestBody;
 
     const session = await auth();
@@ -195,7 +196,11 @@ export async function POST(request: Request) {
               : searchOption === SearchOptions.Exa
                 ? { exa_search: exaSearch }
                 : undefined),
-            image_generation: imageGeneration("openai:gpt-image-1"),
+            ...(imageGenerationModel
+              ? {
+                  image_generation: imageGeneration(imageGenerationModel),
+                }
+              : undefined),
           },
         });
 

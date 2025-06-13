@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Wrench } from "lucide-react";
 import { SearchSelect } from "./search";
+import { ImageGenerationSelect } from "./image-generation";
 
 export const ToolsSelect = () => {
   return (
@@ -19,6 +20,7 @@ export const ToolsSelect = () => {
 
       <DropdownMenuContent side="bottom" align="start">
         <SearchSelect />
+        <ImageGenerationSelect />
       </DropdownMenuContent>
     </DropdownMenu>
   );
