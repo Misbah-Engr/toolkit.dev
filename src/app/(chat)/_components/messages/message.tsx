@@ -37,6 +37,10 @@ import {
   ImageGenerationCallingComponent,
   ImageGenerationResults,
 } from "@/ai/toolkits/images/generate/component";
+import type { Servers } from "@/mcp/servers/shared";
+import { serverConfigs } from "@/mcp/servers/server";
+import { clientConfigs } from "@/mcp/servers/client";
+import type z from "zod";
 
 interface Props {
   message: UIMessage;
@@ -114,50 +118,86 @@ const PurePreviewMessage: React.FC<Props> = ({
               }
 
               if (type === "tool-invocation") {
-                if (part.toolInvocation.toolName === "exa_search") {
-                  if (
-                    part.toolInvocation.state === "call" ||
-                    part.toolInvocation.state === "partial-call"
-                  ) {
-                    return (
-                      <ExaSearchCallingComponent
-                        key={key}
-                        args={part.toolInvocation.args as ExaSearchParams}
-                      />
-                    );
-                  }
+                const { toolInvocation } = part;
 
+                const isMcp = toolInvocation.toolName.startsWith("mcp_");
+
+                if (!isMcp) {
                   return (
-                    <ExaSearchResults
+                    <pre
                       key={key}
-                      results={part.toolInvocation.result as ExaSearchResult[]}
-                    />
+                      className="w-full max-w-full whitespace-pre-wrap"
+                    >
+                      {JSON.stringify(toolInvocation, null, 2)}
+                    </pre>
                   );
                 }
 
-                if (part.toolInvocation.toolName === "image_generation") {
-                  if (
-                    part.toolInvocation.state === "call" ||
-                    part.toolInvocation.state === "partial-call"
-                  ) {
-                    return (
-                      <ImageGenerationCallingComponent
-                        key={key}
-                        args={part.toolInvocation.args as ImageGenerationParams}
-                      />
-                    );
-                  }
+                const { toolName } = toolInvocation;
 
+                const [, server, tool] = toolName.split("_");
+
+                if (!server || !tool) {
                   return (
-                    <ImageGenerationResults
+                    <pre
                       key={key}
-                      result={
-                        part.toolInvocation
-                          .result as unknown as ImageGenerationResult
+                      className="w-full max-w-full whitespace-pre-wrap"
+                    >
+                      {JSON.stringify(part.toolInvocation, null, 2)}
+                    </pre>
+                  );
+                }
+
+                const mcpServerConfig = clientConfigs[server as Servers];
+
+                console.log(mcpServerConfig);
+
+                if (!mcpServerConfig) {
+                  return (
+                    <pre
+                      key={key}
+                      className="w-full max-w-full whitespace-pre-wrap"
+                    >
+                      {JSON.stringify(part.toolInvocation, null, 2)}
+                    </pre>
+                  );
+                }
+
+                const toolConfig =
+                  mcpServerConfig.tools[
+                    toolName as keyof typeof mcpServerConfig.tools
+                  ];
+
+                if (
+                  toolConfig &&
+                  (toolInvocation.state === "call" ||
+                    toolInvocation.state === "partial-call")
+                ) {
+                  return (
+                    <toolConfig.CallComponent
+                      key={key}
+                      args={
+                        toolInvocation.args as z.infer<
+                          typeof toolConfig.inputSchema
+                        >
                       }
                     />
                   );
                 }
+
+                if (toolConfig && toolInvocation.state === "result") {
+                  return (
+                    <toolConfig.ResultComponent
+                      key={key}
+                      result={
+                        toolInvocation.result as z.infer<
+                          typeof toolConfig.outputSchema
+                        >
+                      }
+                    />
+                  );
+                }
+
                 return (
                   <pre
                     key={key}

@@ -5,6 +5,7 @@ import {
   appendResponseMessages,
   convertToCoreMessages,
   createDataStream,
+  experimental_createMCPClient,
   smoothStream,
 } from "ai";
 
@@ -31,6 +32,7 @@ import { SearchOptions } from "@/ai/types";
 import { type providers } from "@/ai/registry";
 import { exaSearch } from "@/ai/toolkits/exa/search/tool";
 import { imageGeneration } from "@/ai/toolkits/images/generate/tool";
+import { env } from "@/env";
 
 export const maxDuration = 60;
 
@@ -135,6 +137,15 @@ export async function POST(request: Request) {
     const shouldUseOpenaiResponses =
       isOpenai && searchOption === SearchOptions.OpenAiResponses;
 
+    const exaMcp = await experimental_createMCPClient({
+      transport: {
+        type: "sse",
+        url: `${env.APP_URL}/mcp/exa/sse`,
+      },
+    });
+
+    const exaTools = await exaMcp.tools();
+
     const stream = createDataStream({
       execute: (dataStream) => {
         const result = streamText(getModelId(selectedChatModel, searchOption), {
@@ -190,18 +201,19 @@ export async function POST(request: Request) {
               }
             }
           },
-          tools: {
-            ...(shouldUseOpenaiResponses
-              ? { web_search_preview: openai.tools.webSearchPreview() }
-              : searchOption === SearchOptions.Exa
-                ? { exa_search: exaSearch }
-                : undefined),
-            ...(imageGenerationModel
-              ? {
-                  image_generation: imageGeneration(imageGenerationModel),
-                }
-              : undefined),
-          },
+          // tools: {
+          //   ...(shouldUseOpenaiResponses
+          //     ? { web_search_preview: openai.tools.webSearchPreview() }
+          //     : searchOption === SearchOptions.Exa
+          //       ? { exa_search: exaSearch }
+          //       : undefined),
+          //   ...(imageGenerationModel
+          //     ? {
+          //         image_generation: imageGeneration(imageGenerationModel),
+          //       }
+          //     : undefined),
+          // },
+          tools: exaTools,
         });
 
         void result.consumeStream();
