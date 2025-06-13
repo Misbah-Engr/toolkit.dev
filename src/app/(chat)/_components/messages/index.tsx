@@ -13,6 +13,7 @@ interface Props {
   endRef: React.RefObject<HTMLDivElement | null>;
   onViewportEnter: () => void;
   onViewportLeave: () => void;
+  scrollToBottom: (behavior: ScrollBehavior) => void;
 }
 
 const PureMessages: React.FC<Props> = ({
@@ -22,12 +23,14 @@ const PureMessages: React.FC<Props> = ({
   endRef,
   onViewportEnter,
   onViewportLeave,
+  scrollToBottom,
 }) => {
   const { messages, status } = useChatContext();
 
   const { hasSentMessage } = useMessages({
     chatId,
     status,
+    scrollToBottom,
   });
 
   return (

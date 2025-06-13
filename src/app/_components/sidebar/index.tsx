@@ -30,10 +30,10 @@ export async function AppSidebar({
     <HydrateClient>
       <Sidebar collapsible="icon" {...props}>
         <SidebarHeader>
-          <div className="flex items-center gap-2 px-1">
+          <div className="flex items-center gap-2 p-2">
             <Logo className="size-6" />
             <h1 className="overflow-hidden text-xl font-bold whitespace-nowrap group-data-[collapsible=icon]:hidden">
-              Open Chat
+              <span className="text-primary">Open</span>Chat
             </h1>
           </div>
         </SidebarHeader>

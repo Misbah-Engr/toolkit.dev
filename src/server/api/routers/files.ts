@@ -3,18 +3,35 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 
 export const filesRouter = createTRPCRouter({
-  getUserFiles: protectedProcedure.query(async ({ ctx }) => {
-    const userId = ctx.session.user.id;
+  getUserFiles: protectedProcedure
+    .input(
+      z.object({
+        limit: z.number().min(1).max(100).default(10),
+        cursor: z.string().optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
 
-    return ctx.db.file.findMany({
-      where: {
-        userId,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
-  }),
+      const items = await ctx.db.file.findMany({
+        where: {
+          userId,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: input.limit + 1,
+        cursor: input.cursor ? { id: input.cursor } : undefined,
+      });
+
+      const hasMore = items.length > input.limit;
+      const nextCursor = hasMore ? items[input.limit]!.id : undefined;
+
+      return {
+        items: items.slice(0, input.limit),
+        nextCursor,
+      };
+    }),
 
   getFile: protectedProcedure
     .input(
