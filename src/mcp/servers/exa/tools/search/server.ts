@@ -25,6 +25,10 @@ export const exaSearchToolConfigServer: ServerToolConfig<
         url: result.url,
         content: result.text.slice(0, 1000),
         publishedDate: result.publishedDate,
+        image: result.image,
+        favicon: result.favicon,
+        score: result.score,
+        author: result.author,
       })),
     };
   },

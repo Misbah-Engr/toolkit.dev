@@ -114,8 +114,6 @@ export async function POST(request: Request) {
       message,
     });
 
-    console.log(request.headers.get("cookie"));
-
     await api.messages.createMessage({
       chatId: id,
       id: message.id,
@@ -149,8 +147,6 @@ export async function POST(request: Request) {
         return tools;
       }),
     );
-
-    console.log(exaTools, imageTools);
 
     const stream = createDataStream({
       execute: (dataStream) => {

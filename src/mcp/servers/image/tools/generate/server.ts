@@ -4,6 +4,7 @@ import { type baseGenerateTool } from "./base";
 import type { ServerToolConfig } from "@/mcp/types";
 import { registry } from "@/ai/registry";
 import { put } from "@vercel/blob";
+import { api } from "@/trpc/server";
 
 export const generateToolConfigServer: ServerToolConfig<
   typeof baseGenerateTool.inputSchema.shape,
@@ -11,7 +12,7 @@ export const generateToolConfigServer: ServerToolConfig<
 > = {
   callback: async ({ prompt }, context) => {
     const { image } = await generateImage({
-      model: registry.imageModel("openai:gpt-image-1"),
+      model: registry.imageModel("xai:grok-2-image"),
       prompt,
     });
 
@@ -34,9 +35,7 @@ export const generateToolConfigServer: ServerToolConfig<
       access: "public",
     });
 
-    console.log("context.api", context.api);
-
-    await context.api.images.createImage({
+    await api.images.createImage({
       url: imageUrl,
       contentType: image.mimeType,
     });

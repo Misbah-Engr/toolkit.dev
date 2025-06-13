@@ -13,7 +13,6 @@ export const clientConfigs: ClientConfigs = {
   [Servers.Image]: imageClientConfig,
 };
 
-// Helper function to properly type server config lookup
 export function getServerConfig<T extends Servers>(
   server: T,
 ): McpServerConfigClient<ServerToolNames[T]> {
