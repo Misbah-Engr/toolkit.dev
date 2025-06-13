@@ -29,6 +29,7 @@ import type { Chat } from "@prisma/client";
 import { SearchOptions } from "@/ai/types";
 import { type providers } from "@/ai/registry";
 import { env } from "@/env";
+import { Servers } from "@/mcp/servers/shared";
 
 export const maxDuration = 60;
 
@@ -129,18 +130,22 @@ export async function POST(request: Request) {
     const streamId = generateUUID();
     await api.streams.createStreamId({ streamId, chatId: id });
 
-    const isOpenai = selectedChatModel.startsWith("openai");
-    const shouldUseOpenaiResponses =
-      isOpenai && searchOption === SearchOptions.OpenAiResponses;
+    const [exaTools, imageTools] = await Promise.all(
+      [Servers.Exa, Servers.Image].map(async (server) => {
+        const mcp = await experimental_createMCPClient({
+          transport: {
+            type: "sse",
+            url: `${env.APP_URL}/mcp/${server}/sse`,
+          },
+        });
 
-    const exaMcp = await experimental_createMCPClient({
-      transport: {
-        type: "sse",
-        url: `${env.APP_URL}/mcp/exa/sse`,
-      },
-    });
+        const tools = await mcp.tools();
 
-    const exaTools = await exaMcp.tools();
+        return tools;
+      }),
+    );
+
+    console.log(exaTools, imageTools);
 
     const stream = createDataStream({
       execute: (dataStream) => {
@@ -209,7 +214,10 @@ export async function POST(request: Request) {
           //       }
           //     : undefined),
           // },
-          tools: exaTools,
+          tools: {
+            ...exaTools,
+            ...imageTools,
+          },
         });
 
         void result.consumeStream();

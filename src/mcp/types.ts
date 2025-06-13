@@ -52,3 +52,24 @@ export type McpServerConfigServer<ToolNames extends string> =
 
 export type McpServerConfigClient<ToolNames extends string> =
   McpServerConfigBase<ToolNames, ClientTool>;
+
+export type McpToolResult<Result extends ZodRawShape = ZodRawShape> =
+  | {
+      isError: true;
+      content: Array<{
+        type: "text";
+        text: string;
+      }>;
+    }
+  | {
+      isError: false;
+      content: Array<{
+        type: "text";
+        text: string;
+      }>;
+      structuredContent: z.infer<ZodObject<Result>>;
+    };
+
+export type ToolResponseSuccess = {
+  isError: false;
+};

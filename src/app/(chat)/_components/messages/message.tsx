@@ -28,6 +28,7 @@ import type { UIMessage } from "ai";
 import type { Servers, ServerToolNames } from "@/mcp/servers/shared";
 import { clientConfigs } from "@/mcp/servers/client";
 import type z from "zod";
+import type { McpToolResult } from "@/mcp/types";
 
 interface Props {
   message: UIMessage;
@@ -107,6 +108,8 @@ const PurePreviewMessage: React.FC<Props> = ({
               if (type === "tool-invocation") {
                 const { toolInvocation } = part;
 
+                console.log(toolInvocation);
+
                 const isMcp = toolInvocation.toolName.startsWith("mcp_");
 
                 if (!isMcp) {
@@ -151,7 +154,6 @@ const PurePreviewMessage: React.FC<Props> = ({
                 }
 
                 const typedTool = tool as ServerToolNames[typeof typedServer];
-
                 const toolConfig = mcpServerConfig.tools[typedTool];
 
                 if (
@@ -172,6 +174,19 @@ const PurePreviewMessage: React.FC<Props> = ({
                 }
 
                 if (toolConfig && toolInvocation.state === "result") {
+                  const result = toolInvocation.result as McpToolResult<
+                    typeof toolConfig.outputSchema
+                  >;
+
+                  if (result.isError) {
+                    return (
+                      <div key={key}>
+                        <p>There was an error</p>
+                        <p>{result.content[0]?.text}</p>
+                      </div>
+                    );
+                  }
+
                   return (
                     <toolConfig.ResultComponent
                       key={key}
