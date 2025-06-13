@@ -28,7 +28,7 @@ import type { UIMessage } from "ai";
 import type { Servers, ServerToolNames } from "@/mcp/servers/shared";
 import { getServerConfig } from "@/mcp/servers/client";
 import type z from "zod";
-import type { ClientTool, McpToolResult } from "@/mcp/types";
+import type { McpToolResult } from "@/mcp/types";
 
 interface Props {
   message: UIMessage;
