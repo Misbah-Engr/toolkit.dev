@@ -127,7 +127,26 @@ export const columns: ColumnDef<File>[] = [
   },
 ];
 
-export function DataTableDemo({ attachments }: { attachments: File[] }) {
+export function DataTableDemo() {
+  const {
+    data: attachments,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+  } = api.files.getUserFiles.useInfiniteQuery(
+    {
+      limit: 10,
+    },
+    {
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    },
+  );
+
+  const flattenedData = React.useMemo(
+    () => attachments?.pages.flatMap((page) => page.items) ?? [],
+    [attachments],
+  );
+
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -137,7 +156,7 @@ export function DataTableDemo({ attachments }: { attachments: File[] }) {
   const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
-    data: attachments,
+    data: flattenedData,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -153,6 +172,11 @@ export function DataTableDemo({ attachments }: { attachments: File[] }) {
       columnVisibility,
       rowSelection,
     },
+    manualPagination: true,
+    onPaginationChange: () => {
+      void fetchNextPage();
+    },
+    pageCount: 10,
   });
 
   return (
@@ -230,6 +254,15 @@ export function DataTableDemo({ attachments }: { attachments: File[] }) {
                   ))}
                 </TableRow>
               ))
+            ) : isLoading ? (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="flex h-24 items-center justify-center gap-2 text-center"
+                >
+                  <Loader2 className="h-4 w-4 animate-spin" /> Loading...
+                </TableCell>
+              </TableRow>
             ) : (
               <TableRow>
                 <TableCell
