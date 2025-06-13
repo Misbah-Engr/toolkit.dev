@@ -2,7 +2,7 @@
 
 import { memo, useState } from "react";
 
-import { Pencil, Sparkles } from "lucide-react";
+import { Pencil } from "lucide-react";
 
 import { AnimatePresence, motion } from "motion/react";
 

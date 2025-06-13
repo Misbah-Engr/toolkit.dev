@@ -1,9 +1,6 @@
 import { serverConfigs } from "@/mcp/servers/server";
 import type { Servers } from "@/mcp/servers/shared";
 import { createMcpHandler } from "@vercel/mcp-adapter";
-import { auth } from "@/server/auth";
-import { createCaller } from "@/server/api/root";
-import { createTRPCContext } from "@/server/api/trpc";
 
 // Create a wrapper function that can access Next.js route parameters
 async function createHandlerWithParams(
@@ -12,33 +9,10 @@ async function createHandlerWithParams(
 ) {
   const { server } = await params;
 
-  // Get the authenticated session
-  const session = await auth();
-
-  if (!session) {
-    return new Response("Unauthorized", { status: 401 });
-  }
-
-  // Create authenticated tRPC context and caller
-  const trpcContext = await createTRPCContext({
-    headers: request.headers,
-  });
-
-  // Override the session in the context with the current session
-  const authenticatedContext = {
-    ...trpcContext,
-    session,
-  };
-
-  const authenticatedCaller = createCaller(() =>
-    Promise.resolve(authenticatedContext),
-  );
-
   const handler = createMcpHandler(
     (mcpServer) => {
       const serverConfig = serverConfigs[server];
 
-      // You can now use the server parameter here
       Object.entries(serverConfig.tools).forEach(([toolName, tool]) => {
         const { description, inputSchema, callback, message } = tool;
         mcpServer.tool(
@@ -46,8 +20,7 @@ async function createHandlerWithParams(
           description,
           inputSchema.shape,
           async (args) => {
-            // Pass the authenticated caller to the callback if it needs it
-            const result = await callback(args, { api: authenticatedCaller });
+            const result = await callback(args);
             return {
               content: [
                 {
@@ -77,7 +50,6 @@ async function createHandlerWithParams(
     },
   );
 
-  // Call the MCP handler
   return await handler(request);
 }
 
