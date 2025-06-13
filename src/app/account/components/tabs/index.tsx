@@ -1,11 +1,25 @@
+import React from "react";
+
+import { File, User } from "lucide-react";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 import { ConnectedAccounts } from "./connected-accounts";
+import { Attachments } from "./attachments";
+import { HStack } from "@/components/ui/stack";
 
 const tabs = [
   {
     label: "Connected Accounts",
     value: "connected-accounts",
     component: <ConnectedAccounts />,
+    icon: <User />,
+  },
+  {
+    label: "Attachments",
+    value: "attachments",
+    component: <Attachments />,
+    icon: <File />,
   },
 ];
 
@@ -19,7 +33,10 @@ export const AccountTabs: React.FC<Props> = ({ defaultTab }) => {
       <TabsList>
         {tabs.map((tab) => (
           <TabsTrigger key={tab.value} value={tab.value}>
-            {tab.label}
+            <HStack className="gap-2">
+              {tab.icon}
+              {tab.label}
+            </HStack>
           </TabsTrigger>
         ))}
       </TabsList>
