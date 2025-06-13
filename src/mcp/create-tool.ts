@@ -1,4 +1,4 @@
-import type { z, ZodObject, ZodRawShape } from "zod";
+import type { ZodObject, ZodRawShape } from "zod";
 import type {
   BaseTool,
   ClientTool,

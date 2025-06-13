@@ -1,54 +1,26 @@
 import { createClientTool, createServerTool } from "./create-tool";
 
 import type {
-  BaseTool,
   ClientTool,
   ClientToolConfig,
   McpServerConfigBase,
   McpServerConfigClient,
-  McpServerConfigParams,
   McpServerConfigServer,
   ServerTool,
   ServerToolConfig,
 } from "./types";
-
-export const createBaseServerConfig = <ToolNames extends string>(
-  config: McpServerConfigParams<ToolNames>,
-): McpServerConfigBase<ToolNames> => {
-  const tools = Object.keys(config.tools).reduce(
-    (acc, toolName) => {
-      const tool = config.tools[toolName as ToolNames];
-      acc[`mcp_${config.id}_${toolName}` as `mcp_${string}_${ToolNames}`] =
-        tool;
-      return acc;
-    },
-    {} as Record<`mcp_${string}_${ToolNames}`, BaseTool>,
-  );
-
-  console.log({
-    message: "createBaseServerConfig",
-    tools,
-  });
-
-  return {
-    ...config,
-    tools,
-  };
-};
 
 export const createServerConfigServer = <ToolNames extends string>(
   config: McpServerConfigBase<ToolNames>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   toolConfigs: Record<ToolNames, ServerToolConfig<any, any>>,
 ): McpServerConfigServer<ToolNames> => {
-  const tools = Object.keys(toolConfigs).reduce<
-    Record<`mcp_${string}_${ToolNames}`, ServerTool>
-  >(
+  const tools = Object.keys(toolConfigs).reduce(
     (acc, toolName) => {
-      const baseToolConfig =
-        config.tools[`mcp_${config.id}_${toolName as ToolNames}`];
-      const serverToolConfig = toolConfigs[toolName as ToolNames];
-      acc[`mcp_${config.id}_${toolName as ToolNames}`] = createServerTool(
+      const typedToolName = toolName as ToolNames;
+      const baseToolConfig = config.tools[typedToolName];
+      const serverToolConfig = toolConfigs[typedToolName];
+      acc[`mcp_${config.id}_${typedToolName}`] = createServerTool(
         baseToolConfig,
         serverToolConfig,
       );
@@ -68,19 +40,15 @@ export const createServerConfigClient = <ToolNames extends string>(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   toolConfigs: Record<ToolNames, ClientToolConfig<any, any>>,
 ): McpServerConfigClient<ToolNames> => {
-  const tools = Object.keys(config.tools).reduce<Record<string, ClientTool>>(
-    (acc, fullToolName) => {
-      const baseToolConfig =
-        config.tools[fullToolName as `mcp_${string}_${ToolNames}`];
-      const toolName = fullToolName.split(":")[3] as ToolNames;
-      const toolConfig = toolConfigs[toolName];
-      acc[`mcp_${config.id}_${toolName}`] = createClientTool(
-        baseToolConfig,
-        toolConfig,
-      );
+  const tools = Object.keys(toolConfigs).reduce(
+    (acc, toolName) => {
+      const typedToolName = toolName as ToolNames;
+      const baseToolConfig = config.tools[typedToolName];
+      const toolConfig = toolConfigs[typedToolName];
+      acc[typedToolName] = createClientTool(baseToolConfig, toolConfig);
       return acc;
     },
-    {},
+    {} as Record<ToolNames, ClientTool>,
   );
 
   return {

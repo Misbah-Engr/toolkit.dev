@@ -9,8 +9,6 @@ import {
   smoothStream,
 } from "ai";
 
-import { openai } from "@ai-sdk/openai";
-
 import { createResumableStreamContext } from "resumable-stream";
 
 import { differenceInSeconds } from "date-fns";
@@ -30,8 +28,6 @@ import type { CoreAssistantMessage, CoreToolMessage, UIMessage } from "ai";
 import type { Chat } from "@prisma/client";
 import { SearchOptions } from "@/ai/types";
 import { type providers } from "@/ai/registry";
-import { exaSearch } from "@/ai/toolkits/exa/search/tool";
-import { imageGeneration } from "@/ai/toolkits/images/generate/tool";
 import { env } from "@/env";
 
 export const maxDuration = 60;

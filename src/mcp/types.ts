@@ -37,13 +37,6 @@ export type ClientTool<
   Result extends ZodRawShape = ZodRawShape,
 > = ClientToolConfig<Args, Result> & BaseTool<Args, Result>;
 
-export type McpServerConfigParams<ToolNames extends string> = {
-  id: string;
-  name: string;
-  description: string;
-  tools: Record<ToolNames, BaseTool>;
-};
-
 export type McpServerConfigBase<
   ToolNames extends string,
   Tool extends BaseTool = BaseTool,
@@ -51,10 +44,11 @@ export type McpServerConfigBase<
   id: string;
   name: string;
   description: string;
-  tools: Record<`mcp_${string}_${ToolNames}`, Tool>;
+  tools: Record<ToolNames, Tool>;
 };
 
 export type McpServerConfigServer<ToolNames extends string> =
-  McpServerConfigBase<ToolNames, ServerTool>;
+  McpServerConfigBase<`mcp_${string}_${ToolNames}`, ServerTool>;
+
 export type McpServerConfigClient<ToolNames extends string> =
   McpServerConfigBase<ToolNames, ClientTool>;

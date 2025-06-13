@@ -1,12 +1,12 @@
-import { createBaseServerConfig } from "@/mcp/create-server-config";
 import { baseSearchTool } from "./tools/search/base";
 import { Servers } from "../shared";
+import type { McpServerConfigBase } from "@/mcp/types";
 
 export enum ExaTools {
   Search = "search",
 }
 
-export const baseExaServerConfig = createBaseServerConfig({
+export const baseExaServerConfig: McpServerConfigBase<ExaTools> = {
   id: Servers.Exa,
   name: "Exa",
   description:
@@ -14,4 +14,4 @@ export const baseExaServerConfig = createBaseServerConfig({
   tools: {
     [ExaTools.Search]: baseSearchTool,
   },
-});
+};

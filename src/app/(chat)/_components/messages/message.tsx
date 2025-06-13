@@ -24,21 +24,8 @@ import { MessageReasoning } from "./message-reasoning";
 import { cn, sanitizeText } from "@/lib/utils";
 
 import type { UIMessage } from "ai";
-import {
-  ExaSearchCallingComponent,
-  ExaSearchResults,
-} from "@/ai/toolkits/exa/search/component";
-import type { ExaSearchParams, ExaSearchResult } from "@/ai/toolkits/exa/types";
-import type {
-  ImageGenerationParams,
-  ImageGenerationResult,
-} from "@/ai/toolkits/images/generate/types";
-import {
-  ImageGenerationCallingComponent,
-  ImageGenerationResults,
-} from "@/ai/toolkits/images/generate/component";
-import type { Servers } from "@/mcp/servers/shared";
-import { serverConfigs } from "@/mcp/servers/server";
+
+import type { Servers, ServerToolNames } from "@/mcp/servers/shared";
 import { clientConfigs } from "@/mcp/servers/client";
 import type z from "zod";
 
@@ -148,9 +135,9 @@ const PurePreviewMessage: React.FC<Props> = ({
                   );
                 }
 
-                const mcpServerConfig = clientConfigs[server as Servers];
+                const typedServer = server as Servers;
 
-                console.log(mcpServerConfig);
+                const mcpServerConfig = clientConfigs[typedServer];
 
                 if (!mcpServerConfig) {
                   return (
@@ -163,10 +150,9 @@ const PurePreviewMessage: React.FC<Props> = ({
                   );
                 }
 
-                const toolConfig =
-                  mcpServerConfig.tools[
-                    toolName as keyof typeof mcpServerConfig.tools
-                  ];
+                const typedTool = tool as ServerToolNames[typeof typedServer];
+
+                const toolConfig = mcpServerConfig.tools[typedTool];
 
                 if (
                   toolConfig &&
@@ -190,9 +176,13 @@ const PurePreviewMessage: React.FC<Props> = ({
                     <toolConfig.ResultComponent
                       key={key}
                       result={
-                        toolInvocation.result as z.infer<
-                          typeof toolConfig.outputSchema
-                        >
+                        (
+                          toolInvocation.result as {
+                            structuredContent: z.infer<
+                              typeof toolConfig.outputSchema
+                            >;
+                          }
+                        ).structuredContent
                       }
                     />
                   );
