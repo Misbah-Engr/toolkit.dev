@@ -10,14 +10,10 @@ async function createHandlerWithParams(
   request: Request,
   { params }: { params: Promise<{ server: Servers }> },
 ) {
-  console.log(request.headers);
-
   const { server } = await params;
 
   // Get the authenticated session
   const session = await auth();
-
-  console.log("session", session);
 
   if (!session) {
     return new Response("Unauthorized", { status: 401 });

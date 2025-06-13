@@ -25,7 +25,13 @@ export const exaSearchToolConfigServer: ServerToolConfig<
         url: result.url,
         content: result.text.slice(0, 1000),
         publishedDate: result.publishedDate,
+        image: result.image,
+        favicon: result.favicon,
+        score: result.score,
+        author: result.author,
       })),
     };
   },
+  message:
+    "The user is shown the article in three cards. Do not list the sources again. Just give a 1-2 sentence summary response to their question and ask what else they would like to know.",
 };

@@ -12,6 +12,10 @@ const outputSchema = z.object({
       url: z.string().url(),
       content: z.string(),
       publishedDate: z.string().optional(),
+      image: z.string().optional(),
+      favicon: z.string().optional(),
+      score: z.number().optional(),
+      author: z.string().optional(),
     }),
   ),
 });

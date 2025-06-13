@@ -48,6 +48,7 @@ export type McpServerConfigBase<
   id: string;
   name: string;
   description: string;
+  icon: React.FC<{ className?: string }>;
   tools: Record<ToolNames, Tool>;
 };
 

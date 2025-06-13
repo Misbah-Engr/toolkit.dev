@@ -25,10 +25,9 @@ import { cn, sanitizeText } from "@/lib/utils";
 
 import type { UIMessage } from "ai";
 
-import type { Servers, ServerToolNames } from "@/mcp/servers/shared";
-import { getServerConfig } from "@/mcp/servers/client";
-import type z from "zod";
-import type { McpToolResult } from "@/mcp/types";
+import { MessageTool } from "./message-tool";
+import { Logo } from "@/components/ui/logo";
+import { AnimatedShinyText } from "@/components/magicui/animated-shiny-text";
 
 interface Props {
   message: UIMessage;
@@ -50,7 +49,10 @@ const PurePreviewMessage: React.FC<Props> = ({
       <motion.div
         data-testid={`message-${message.role}`}
         className="group/message mx-auto w-full max-w-3xl px-4"
-        initial={{ y: 5, opacity: 0 }}
+        initial={{
+          y: message.parts?.length < 2 ? 5 : 0,
+          opacity: message.parts?.length < 2 ? 0 : 1,
+        }}
         animate={{ y: 0, opacity: 1 }}
         data-role={message.role}
       >
@@ -66,7 +68,7 @@ const PurePreviewMessage: React.FC<Props> = ({
           {message.role === "assistant" && (
             <div className="ring-border bg-background flex size-8 shrink-0 items-center justify-center rounded-full ring-1">
               <div className="translate-y-px">
-                <Sparkles size={14} />
+                <Logo className="size-5" />
               </div>
             </div>
           )}
@@ -108,108 +110,8 @@ const PurePreviewMessage: React.FC<Props> = ({
               if (type === "tool-invocation") {
                 const { toolInvocation } = part;
 
-                console.log(toolInvocation);
-
-                const isMcp = toolInvocation.toolName.startsWith("mcp_");
-
-                if (!isMcp) {
-                  return (
-                    <pre
-                      key={key}
-                      className="w-full max-w-full whitespace-pre-wrap"
-                    >
-                      {JSON.stringify(toolInvocation, null, 2)}
-                    </pre>
-                  );
-                }
-
-                const { toolName } = toolInvocation;
-
-                const [, server, tool] = toolName.split("_");
-
-                if (!server || !tool) {
-                  return (
-                    <pre
-                      key={key}
-                      className="w-full max-w-full whitespace-pre-wrap"
-                    >
-                      {JSON.stringify(part.toolInvocation, null, 2)}
-                    </pre>
-                  );
-                }
-
-                const typedServer = server as Servers;
-
-                const mcpServerConfig = getServerConfig(typedServer);
-
-                if (!mcpServerConfig) {
-                  return (
-                    <pre
-                      key={key}
-                      className="w-full max-w-full whitespace-pre-wrap"
-                    >
-                      {JSON.stringify(part.toolInvocation, null, 2)}
-                    </pre>
-                  );
-                }
-
-                const typedTool = tool as ServerToolNames[typeof typedServer];
-                const toolConfig = mcpServerConfig.tools[typedTool];
-
-                if (
-                  toolConfig &&
-                  (toolInvocation.state === "call" ||
-                    toolInvocation.state === "partial-call")
-                ) {
-                  return (
-                    <toolConfig.CallComponent
-                      key={key}
-                      args={
-                        toolInvocation.args as z.infer<
-                          typeof toolConfig.inputSchema
-                        >
-                      }
-                    />
-                  );
-                }
-
-                if (toolConfig && toolInvocation.state === "result") {
-                  const result = toolInvocation.result as McpToolResult<
-                    typeof toolConfig.outputSchema.shape
-                  >;
-
-                  if (result.isError) {
-                    return (
-                      <div key={key}>
-                        <p>There was an error</p>
-                        <p>{result.content[0]?.text}</p>
-                      </div>
-                    );
-                  }
-
-                  return (
-                    <toolConfig.ResultComponent
-                      key={key}
-                      result={
-                        (
-                          toolInvocation.result as {
-                            structuredContent: z.infer<
-                              typeof toolConfig.outputSchema
-                            >;
-                          }
-                        ).structuredContent
-                      }
-                    />
-                  );
-                }
-
                 return (
-                  <pre
-                    key={key}
-                    className="w-full max-w-full whitespace-pre-wrap"
-                  >
-                    {JSON.stringify(part.toolInvocation, null, 2)}
-                  </pre>
+                  <MessageTool key={key} toolInvocation={toolInvocation} />
                 );
               }
 
@@ -297,12 +199,14 @@ export const ThinkingMessage = () => {
         )}
       >
         <div className="ring-border flex size-8 shrink-0 items-center justify-center rounded-full ring-1">
-          <Sparkles size={14} />
+          <Logo className="size-5" />
         </div>
 
         <div className="flex w-full flex-col gap-2">
-          <div className="text-muted-foreground flex flex-col gap-4">
-            Hmm...
+          <div className="text-muted-foreground mt-0.5 flex flex-col gap-4">
+            <AnimatedShinyText className="font-medium">
+              Thinking...
+            </AnimatedShinyText>
           </div>
         </div>
       </div>
