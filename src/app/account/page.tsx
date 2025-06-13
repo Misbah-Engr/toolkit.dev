@@ -7,8 +7,6 @@ import { api } from "@/trpc/server";
 import { AccountHeader } from "./components/header";
 import { AccountTabs } from "./components/tabs";
 
-import type { NextPage } from "next";
-
 const AccountPage = async ({
   searchParams,
 }: {

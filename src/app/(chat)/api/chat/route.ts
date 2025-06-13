@@ -30,7 +30,6 @@ import { SearchOptions } from "@/ai/types";
 import { type providers } from "@/ai/registry";
 import { env } from "@/env";
 import { Servers } from "@/mcp/servers/shared";
-import { getToken } from "next-auth/jwt";
 
 export const maxDuration = 60;
 
@@ -304,8 +303,6 @@ const getModelId = (
 export async function GET(request: Request) {
   const streamContext = getStreamContext();
   const resumeRequestedAt = new Date();
-
-  const token = await getToken({ req: request });
 
   if (!streamContext) {
     return new Response(null, { status: 204 });

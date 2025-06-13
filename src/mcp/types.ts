@@ -1,5 +1,5 @@
 import type { z, ZodObject, ZodRawShape } from "zod";
-import type { AppRouter, createCaller } from "@/server/api/root";
+import type { createCaller } from "@/server/api/root";
 
 export type BaseTool<
   Args extends ZodRawShape = ZodRawShape,

@@ -126,7 +126,6 @@ export function DataTableDemo() {
     data: attachments,
     isLoading,
     fetchNextPage,
-    hasNextPage,
   } = api.files.getUserFiles.useInfiniteQuery(
     {
       limit: 10,
