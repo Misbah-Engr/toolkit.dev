@@ -1,5 +1,5 @@
 import React from "react";
-import { type ExaSearchResult } from "../types";
+import type { ExaSearchResult, ExaSearchParams } from "./types";
 import {
   Dialog,
   DialogContent,
@@ -8,6 +8,19 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import Markdown from "react-markdown";
+
+interface ExaSearchCallProps {
+  args: ExaSearchParams;
+}
+
+export function ExaSearchCallingComponent({ args }: ExaSearchCallProps) {
+  return (
+    <div className="flex items-center gap-2 text-sm">
+      <span className="text-muted-foreground">Searching for:</span>
+      <span className="font-medium">{args.query}</span>
+    </div>
+  );
+}
 
 interface ExaSearchResultsProps {
   results: ExaSearchResult[];
@@ -30,7 +43,9 @@ export function ExaSearchResults({ results }: ExaSearchResultsProps) {
                   {result.title}
                 </h3>
                 <p className="mt-2 text-sm text-gray-500">
-                  {new Date(result.publishedDate).toLocaleDateString()}
+                  {result.publishedDate
+                    ? new Date(result.publishedDate).toLocaleDateString()
+                    : "No published date"}
                 </p>
               </div>
             </DialogTrigger>
@@ -41,7 +56,9 @@ export function ExaSearchResults({ results }: ExaSearchResultsProps) {
               <div className="mt-4 space-y-4">
                 <div className="text-sm text-gray-500">
                   Published:{" "}
-                  {new Date(result.publishedDate).toLocaleDateString()}
+                  {result.publishedDate
+                    ? new Date(result.publishedDate).toLocaleDateString()
+                    : "No published date"}
                 </div>
                 <Markdown>{result.content}</Markdown>
                 <div className="pt-4">

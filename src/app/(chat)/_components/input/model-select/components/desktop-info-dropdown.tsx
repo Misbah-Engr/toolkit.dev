@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import type { Model } from "@/ai/types";
+import type { LanguageModel } from "@/ai/types";
 import { Badge } from "@/components/ui/badge";
 import { ModelProviderIcon } from "@/components/ui/model-icon";
 import {
@@ -12,7 +12,7 @@ import {
 } from "../utils";
 
 interface ModelInfoDropdownProps {
-  model: Model;
+  model: LanguageModel;
   position: { top: number; left: number };
   onClose: () => void;
   onMouseEnter: () => void;

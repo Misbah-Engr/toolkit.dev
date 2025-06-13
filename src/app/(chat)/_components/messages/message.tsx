@@ -24,8 +24,19 @@ import { MessageReasoning } from "./message-reasoning";
 import { cn, sanitizeText } from "@/lib/utils";
 
 import type { UIMessage } from "ai";
-import { ExaSearchResults } from "@/ai/toolkits/exa/search/component";
-import type { ExaSearchResult } from "@/ai/toolkits/exa/types";
+import {
+  ExaSearchCallingComponent,
+  ExaSearchResults,
+} from "@/ai/toolkits/exa/search/component";
+import type { ExaSearchParams, ExaSearchResult } from "@/ai/toolkits/exa/types";
+import type {
+  ImageGenerationParams,
+  ImageGenerationResult,
+} from "@/ai/toolkits/images/generate/types";
+import {
+  ImageGenerationCallingComponent,
+  ImageGenerationResults,
+} from "@/ai/toolkits/images/generate/component";
 
 interface Props {
   message: UIMessage;
@@ -104,16 +115,48 @@ const PurePreviewMessage: React.FC<Props> = ({
 
               if (type === "tool-invocation") {
                 if (part.toolInvocation.toolName === "exa_search") {
-                  if (part.toolInvocation.state === "result") {
+                  if (
+                    part.toolInvocation.state === "call" ||
+                    part.toolInvocation.state === "partial-call"
+                  ) {
                     return (
-                      <ExaSearchResults
+                      <ExaSearchCallingComponent
                         key={key}
-                        results={
-                          part.toolInvocation.result as ExaSearchResult[]
-                        }
+                        args={part.toolInvocation.args as ExaSearchParams}
                       />
                     );
                   }
+
+                  return (
+                    <ExaSearchResults
+                      key={key}
+                      results={part.toolInvocation.result as ExaSearchResult[]}
+                    />
+                  );
+                }
+
+                if (part.toolInvocation.toolName === "image_generation") {
+                  if (
+                    part.toolInvocation.state === "call" ||
+                    part.toolInvocation.state === "partial-call"
+                  ) {
+                    return (
+                      <ImageGenerationCallingComponent
+                        key={key}
+                        args={part.toolInvocation.args as ImageGenerationParams}
+                      />
+                    );
+                  }
+
+                  return (
+                    <ImageGenerationResults
+                      key={key}
+                      result={
+                        part.toolInvocation
+                          .result as unknown as ImageGenerationResult
+                      }
+                    />
+                  );
                 }
                 return (
                   <pre

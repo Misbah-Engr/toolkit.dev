@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { models } from "@/ai/models";
+import { imageModels, languageModels } from "@/ai/models";
 
 import type { providers } from "@/ai/registry";
 import { SearchOptions } from "@/ai/types";
@@ -34,11 +34,19 @@ export const postRequestBodySchema = z.object({
       .optional(),
   }),
   selectedChatModel: z.enum(
-    models.map((model) => `${model.provider}:${model.modelId}`) as [
+    languageModels.map((model) => `${model.provider}:${model.modelId}`) as [
       `${keyof typeof providers}:${string}`,
       ...`${keyof typeof providers}:${string}`[],
     ],
   ),
+  imageGenerationModel: z
+    .enum(
+      imageModels.map((model) => `${model.provider}:${model.modelId}`) as [
+        `${keyof typeof providers}:${string}`,
+        ...`${keyof typeof providers}:${string}`[],
+      ],
+    )
+    .optional(),
   selectedVisibilityType: z.enum(["public", "private"]),
   searchOption: z.nativeEnum(SearchOptions).optional(),
 });

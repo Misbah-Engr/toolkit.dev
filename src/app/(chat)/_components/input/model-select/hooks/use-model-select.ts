@@ -2,55 +2,62 @@
 
 import { useState, useEffect, useRef } from "react";
 import { api } from "@/trpc/react";
-import type { Model, ModelCapability, Provider } from "@/ai/types";
+import type {
+  LanguageModel,
+  LanguageModelCapability,
+  Provider,
+} from "@/ai/types";
 
 interface UseModelSelectProps {
-  selectedChatModel: Model | undefined;
-  setSelectedChatModel: (model: Model) => void;
+  selectedChatModel: LanguageModel | undefined;
+  setSelectedChatModel: (model: LanguageModel) => void;
 }
 
 export const useModelSelect = ({
   selectedChatModel,
   setSelectedChatModel,
 }: UseModelSelectProps) => {
-  const { data: models, isLoading } = api.models.getModels.useQuery(undefined, {
-    select: (data) => {
-      const providers = Array.from(
-        new Set(data.map((model) => model.provider)),
-      );
-      const modelsByProvider = providers.reduce(
-        (acc, provider) => {
-          acc[provider] = data.filter((model) => model.provider === provider);
-          return acc;
-        },
-        {} as Record<string, typeof data>,
-      );
+  const { data: models, isLoading } = api.models.getLanguageModels.useQuery(
+    undefined,
+    {
+      select: (data) => {
+        const providers = Array.from(
+          new Set(data.map((model) => model.provider)),
+        );
+        const modelsByProvider = providers.reduce(
+          (acc, provider) => {
+            acc[provider] = data.filter((model) => model.provider === provider);
+            return acc;
+          },
+          {} as Record<string, typeof data>,
+        );
 
-      const result: typeof data = [];
-      let index = 0;
-      while (result.length < data.length) {
-        for (const provider of providers) {
-          const providerModels = modelsByProvider[provider];
-          const model = providerModels?.[index];
-          if (model) {
-            result.push(model);
+        const result: typeof data = [];
+        let index = 0;
+        while (result.length < data.length) {
+          for (const provider of providers) {
+            const providerModels = modelsByProvider[provider];
+            const model = providerModels?.[index];
+            if (model) {
+              result.push(model);
+            }
           }
+          index++;
         }
-        index++;
-      }
-      return result;
+        return result;
+      },
     },
-  });
+  );
   const [isMobile, setIsMobile] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [hoveredModel, setHoveredModel] = useState<Model | null>(null);
+  const [hoveredModel, setHoveredModel] = useState<LanguageModel | null>(null);
   const [dropdownPosition, setDropdownPosition] = useState<{
     top: number;
     left: number;
   } | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCapabilities, setSelectedCapabilities] = useState<
-    ModelCapability[]
+    LanguageModelCapability[]
   >([]);
   const [selectedProviders, setSelectedProviders] = useState<Provider[]>([]);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -78,7 +85,7 @@ export const useModelSelect = ({
     setDropdownPosition(null);
   };
 
-  const handleModelHover = (model: Model, element: HTMLDivElement) => {
+  const handleModelHover = (model: LanguageModel, element: HTMLDivElement) => {
     if (isMobile) return;
 
     if (timerRef.current) {
@@ -114,7 +121,7 @@ export const useModelSelect = ({
     }
   };
 
-  const handleModelSelect = (model: Model) => {
+  const handleModelSelect = (model: LanguageModel) => {
     setSelectedChatModel(model);
     setIsOpen(false);
     closeInfoDropdown();
@@ -138,7 +145,7 @@ export const useModelSelect = ({
     return matchesSearch && matchesCapabilities && matchesProviders;
   });
 
-  const toggleCapability = (capability: ModelCapability) => {
+  const toggleCapability = (capability: LanguageModelCapability) => {
     setSelectedCapabilities((prev) =>
       prev.includes(capability)
         ? prev.filter((c) => c !== capability)

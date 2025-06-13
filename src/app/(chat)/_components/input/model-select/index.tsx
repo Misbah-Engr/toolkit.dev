@@ -18,7 +18,7 @@ import { DesktopModelItem } from "./components/desktop-model-item";
 import { ModelInfoDropdown } from "./components/desktop-info-dropdown";
 import { FeaturedModelCard } from "./components/featured-model-card";
 import { capabilityIcons, capabilityLabels, modelProviderNames } from "./utils";
-import { ModelCapability } from "@/ai/types";
+import { LanguageModelCapability } from "@/ai/types";
 
 import { useModelSelect } from "./hooks/use-model-select";
 
@@ -71,7 +71,7 @@ export const ModelSelect: React.FC = () => {
               <>
                 <ModelProviderIcon
                   provider={selectedChatModel.provider}
-                  className="mr-2 size-4"
+                  className="size-4"
                 />
                 <span className="flex-1 truncate text-left">
                   {selectedChatModel.name}
@@ -81,7 +81,6 @@ export const ModelSelect: React.FC = () => {
                     </Badge>
                   )}
                 </span>
-                <ChevronsUpDown className="size-4 opacity-50" />
               </>
             ) : (
               <>
@@ -134,7 +133,7 @@ export const ModelSelect: React.FC = () => {
                   Capabilities
                 </div>
                 <div className="flex flex-wrap gap-1">
-                  {Object.values(ModelCapability).map((capability) => {
+                  {Object.values(LanguageModelCapability).map((capability) => {
                     const Icon = capabilityIcons[capability];
                     return (
                       <Badge

@@ -30,6 +30,7 @@ import type { Chat } from "@prisma/client";
 import { SearchOptions } from "@/ai/types";
 import { type providers } from "@/ai/registry";
 import { exaSearch } from "@/ai/toolkits/exa/search/tool";
+import { imageGeneration } from "@/ai/toolkits/images/generate/tool";
 
 export const maxDuration = 60;
 
@@ -72,6 +73,7 @@ export async function POST(request: Request) {
       selectedVisibilityType,
       selectedChatModel,
       searchOption,
+      imageGenerationModel,
     } = requestBody;
 
     const session = await auth();
@@ -188,11 +190,18 @@ export async function POST(request: Request) {
               }
             }
           },
-          tools: shouldUseOpenaiResponses
-            ? { web_search_preview: openai.tools.webSearchPreview() }
-            : searchOption === SearchOptions.Exa
-              ? { exa_search: exaSearch }
-              : undefined,
+          tools: {
+            ...(shouldUseOpenaiResponses
+              ? { web_search_preview: openai.tools.webSearchPreview() }
+              : searchOption === SearchOptions.Exa
+                ? { exa_search: exaSearch }
+                : undefined),
+            ...(imageGenerationModel
+              ? {
+                  image_generation: imageGeneration(imageGenerationModel),
+                }
+              : undefined),
+          },
         });
 
         void result.consumeStream();
@@ -260,11 +269,6 @@ const getModelId = (
   if (!searchOption) return model;
 
   const [provider, modelId] = model.split(":");
-  if (provider === "openai") {
-    if (searchOption === SearchOptions.OpenAiResponses) {
-      return `${provider}:${modelId}-responses`;
-    }
-  }
 
   if (provider === "google") {
     if (searchOption === SearchOptions.Native) {

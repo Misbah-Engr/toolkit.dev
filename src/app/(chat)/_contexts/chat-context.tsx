@@ -15,7 +15,12 @@ import { useAutoResume } from "../_hooks/use-auto-resume";
 import type { ReactNode } from "react";
 import type { Attachment, UIMessage } from "ai";
 import type { UseChatHelpers } from "@ai-sdk/react";
-import { ModelCapability, SearchOptions, type Model } from "@/ai/types";
+import {
+  LanguageModelCapability,
+  SearchOptions,
+  type ImageModel,
+  type LanguageModel,
+} from "@/ai/types";
 
 interface ChatContextType {
   // Chat state
@@ -30,10 +35,12 @@ interface ChatContextType {
       | Array<Attachment>
       | ((prev: Array<Attachment>) => Array<Attachment>),
   ) => void;
-  selectedChatModel: Model | undefined;
-  setSelectedChatModel: (model: Model) => void;
+  selectedChatModel: LanguageModel | undefined;
+  setSelectedChatModel: (model: LanguageModel) => void;
   searchOption: SearchOptions | undefined;
   setSearchOption: (option: SearchOptions | undefined) => void;
+  imageGenerationModel: ImageModel | undefined;
+  setImageGenerationModel: (model: ImageModel | undefined) => void;
 
   // Chat actions
   handleSubmit: UseChatHelpers["handleSubmit"];
@@ -60,10 +67,13 @@ export function ChatProvider({
   autoResume,
 }: ChatProviderProps) {
   const utils = api.useUtils();
-  const [selectedChatModel, setSelectedChatModel] = useState<Model>();
+  const [selectedChatModel, setSelectedChatModel] = useState<LanguageModel>();
   const [searchOption, setSearchOption] = useState<SearchOptions | undefined>(
     undefined,
   );
+  const [imageGenerationModel, setImageGenerationModel] = useState<
+    ImageModel | undefined
+  >(undefined);
   const [attachments, setAttachments] = useState<Array<Attachment>>([]);
 
   const {
@@ -89,6 +99,9 @@ export function ChatProvider({
       id,
       message: body.messages.at(-1),
       selectedChatModel: `${selectedChatModel?.provider}:${selectedChatModel?.modelId}`,
+      imageGenerationModel: imageGenerationModel
+        ? `${imageGenerationModel.provider}:${imageGenerationModel.modelId}`
+        : undefined,
       selectedVisibilityType: initialVisibilityType,
       searchOption,
     }),
@@ -116,7 +129,9 @@ export function ChatProvider({
   useEffect(() => {
     if (selectedChatModel) {
       setSearchOption(
-        selectedChatModel.capabilities?.includes(ModelCapability.WebSearch)
+        selectedChatModel.capabilities?.includes(
+          LanguageModelCapability.WebSearch,
+        )
           ? SearchOptions.Native
           : selectedChatModel.provider === "openai"
             ? SearchOptions.OpenAiResponses
@@ -141,6 +156,8 @@ export function ChatProvider({
     stop,
     reload,
     append,
+    imageGenerationModel,
+    setImageGenerationModel,
   };
 
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;
