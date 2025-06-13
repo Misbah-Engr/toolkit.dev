@@ -26,9 +26,9 @@ import { cn, sanitizeText } from "@/lib/utils";
 import type { UIMessage } from "ai";
 
 import type { Servers, ServerToolNames } from "@/mcp/servers/shared";
-import { clientConfigs } from "@/mcp/servers/client";
+import { getServerConfig } from "@/mcp/servers/client";
 import type z from "zod";
-import type { McpToolResult } from "@/mcp/types";
+import type { ClientTool, McpToolResult } from "@/mcp/types";
 
 interface Props {
   message: UIMessage;
@@ -140,7 +140,7 @@ const PurePreviewMessage: React.FC<Props> = ({
 
                 const typedServer = server as Servers;
 
-                const mcpServerConfig = clientConfigs[typedServer];
+                const mcpServerConfig = getServerConfig(typedServer);
 
                 if (!mcpServerConfig) {
                   return (
@@ -175,7 +175,7 @@ const PurePreviewMessage: React.FC<Props> = ({
 
                 if (toolConfig && toolInvocation.state === "result") {
                   const result = toolInvocation.result as McpToolResult<
-                    typeof toolConfig.outputSchema
+                    typeof toolConfig.outputSchema.shape
                   >;
 
                   if (result.isError) {
