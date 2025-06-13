@@ -10,7 +10,7 @@ export const generateToolConfigServer: ServerToolConfig<
   typeof baseGenerateTool.inputSchema.shape,
   typeof baseGenerateTool.outputSchema.shape
 > = {
-  callback: async ({ prompt }, context) => {
+  callback: async ({ prompt }) => {
     const { image } = await generateImage({
       model: registry.imageModel("xai:grok-2-image"),
       prompt,

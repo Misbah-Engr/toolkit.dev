@@ -1,5 +1,4 @@
 import type { z, ZodObject, ZodRawShape } from "zod";
-import type { createCaller } from "@/server/api/root";
 
 export type BaseTool<
   Args extends ZodRawShape = ZodRawShape,
@@ -16,9 +15,6 @@ export type ServerToolConfig<
 > = {
   callback: (
     args: z.infer<ZodObject<Args>>,
-    context: {
-      api: ReturnType<typeof createCaller>;
-    },
   ) => Promise<z.infer<ZodObject<Result>>>;
   message?: string | ((result: Result) => string);
 };
