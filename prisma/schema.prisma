@@ -52,6 +52,7 @@ model User {
     sessions      Session[]
     chats         Chat[]
     files         File[]
+    images        Image[]
 }
 
 model VerificationToken {
@@ -92,6 +93,15 @@ model File {
     id          String   @id @default(uuid())
     userId      String
     name        String
+    contentType String
+    url         String
+    createdAt   DateTime @default(now())
+    user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Image {
+    id          String   @id @default(uuid())
+    userId      String
     contentType String
     url         String
     createdAt   DateTime @default(now())

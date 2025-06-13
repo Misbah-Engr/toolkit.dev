@@ -23,6 +23,7 @@ import { ChatItem } from "./item";
 
 import { api } from "@/trpc/react";
 import { useDeleteChat } from "@/app/_hooks/use-delete-chat";
+import { Button } from "@/components/ui/button";
 
 export const NavChats = () => {
   return (
@@ -43,15 +44,16 @@ const NavChatsBody = () => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  const [chats] = api.chats.getChats.useSuspenseInfiniteQuery(
-    {
-      limit: 10,
-    },
-    {
-      getNextPageParam: (lastPage) =>
-        lastPage.hasMore ? lastPage.nextCursor : undefined,
-    },
-  );
+  const [chats, { fetchNextPage, hasNextPage, isFetchingNextPage }] =
+    api.chats.getChats.useSuspenseInfiniteQuery(
+      {
+        limit: 10,
+      },
+      {
+        getNextPageParam: (lastPage) =>
+          lastPage.hasMore ? lastPage.nextCursor : undefined,
+      },
+    );
 
   const deleteChat = useDeleteChat();
 
@@ -85,6 +87,16 @@ const NavChatsBody = () => {
             setOpenMobile={setOpenMobile}
           />
         )),
+      )}
+      {hasNextPage && (
+        <Button
+          onClick={() => void fetchNextPage()}
+          variant="ghost"
+          size="xs"
+          className="text-accent-foreground/40 w-full justify-start"
+        >
+          {isFetchingNextPage ? "Loading..." : "Load more"}
+        </Button>
       )}
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
