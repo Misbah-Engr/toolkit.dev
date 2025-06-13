@@ -49,7 +49,10 @@ const PurePreviewMessage: React.FC<Props> = ({
       <motion.div
         data-testid={`message-${message.role}`}
         className="group/message mx-auto w-full max-w-3xl px-4"
-        initial={{ y: 5, opacity: 0 }}
+        initial={{
+          y: message.parts?.length < 2 ? 5 : 0,
+          opacity: message.parts?.length < 2 ? 0 : 1,
+        }}
         animate={{ y: 0, opacity: 1 }}
         data-role={message.role}
       >
@@ -91,8 +94,6 @@ const PurePreviewMessage: React.FC<Props> = ({
               )}
 
             {message.parts?.map((part, index) => {
-              console.log(message);
-
               const { type } = part;
               const key = `message-${message.id}-part-${index}`;
 
@@ -202,8 +203,10 @@ export const ThinkingMessage = () => {
         </div>
 
         <div className="flex w-full flex-col gap-2">
-          <div className="text-muted-foreground flex flex-col gap-4">
-            <AnimatedShinyText>Thinking...</AnimatedShinyText>
+          <div className="text-muted-foreground mt-0.5 flex flex-col gap-4">
+            <AnimatedShinyText className="font-medium">
+              Thinking...
+            </AnimatedShinyText>
           </div>
         </div>
       </div>

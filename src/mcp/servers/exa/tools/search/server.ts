@@ -32,4 +32,6 @@ export const exaSearchToolConfigServer: ServerToolConfig<
       })),
     };
   },
+  message:
+    "The user is shown the article in three cards. Do not list the sources again. Just give a 1-2 sentence summary response to their question and ask what else they would like to know.",
 };

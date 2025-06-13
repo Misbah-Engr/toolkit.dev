@@ -12,6 +12,7 @@ import { Markdown } from "@/components/ui/markdown";
 import type { baseSearchTool } from "./base";
 import type { ClientToolConfig } from "@/mcp/types";
 import { HStack, VStack } from "@/components/ui/stack";
+import { Search } from "lucide-react";
 
 export const exaSearchToolConfigClient: ClientToolConfig<
   typeof baseSearchTool.inputSchema.shape,
@@ -19,10 +20,15 @@ export const exaSearchToolConfigClient: ClientToolConfig<
 > = {
   CallComponent: ({ args }) => {
     return (
-      <div className="flex items-center gap-2 text-sm">
-        <span className="text-muted-foreground">Searching for:</span>
-        <span className="font-medium">{args.query}</span>
-      </div>
+      <HStack className="gap-2">
+        <Search className="text-muted-foreground size-4" />
+        <VStack className="items-start gap-0">
+          <span className="text-muted-foreground/80 text-xs font-medium">
+            Search Query
+          </span>
+          <span className="text-sm">&quot;{args.query}&quot;</span>
+        </VStack>
+      </HStack>
     );
   },
   ResultComponent: ({ result }) => {
@@ -31,13 +37,15 @@ export const exaSearchToolConfigClient: ClientToolConfig<
     }
 
     return (
-      <div className="space-y-4">
-        <h1 className="text-sm font-medium">Search Results</h1>
+      <div className="">
+        <h1 className="text-muted-foreground text-sm font-medium">
+          Search Results
+        </h1>
         <div className="flex flex-col">
           {result.results.map((result, index) => (
             <Dialog key={index}>
               <DialogTrigger asChild>
-                <HStack className="group w-full cursor-pointer items-center border-b py-2 last:border-b-0">
+                <HStack className="group w-full cursor-pointer items-center border-b py-2 last:border-b-0 last:pb-0">
                   <div className="mt-1 size-4 shrink-0 overflow-hidden rounded-sm">
                     {result.favicon ? (
                       // eslint-disable-next-line @next/next/no-img-element

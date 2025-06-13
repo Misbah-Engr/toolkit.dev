@@ -15,9 +15,7 @@ interface Props {
 }
 
 const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
-  const [completeOnFirstMount, setCompleteOnFirstMount] = useState(
-    toolInvocation.state === "result",
-  );
+  const [completeOnFirstMount] = useState(toolInvocation.state === "result");
 
   const isMcp = toolInvocation.toolName.startsWith("mcp_");
 
@@ -59,16 +57,16 @@ const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
   return (
     <motion.div
       initial={{
-        opacity: 0,
+        opacity: completeOnFirstMount ? 1 : 0,
         y: completeOnFirstMount ? 0 : 20,
         scale: completeOnFirstMount ? 1 : 0.95,
       }}
       animate={{
         opacity: 1,
-        y: completeOnFirstMount ? 0 : 0,
-        scale: completeOnFirstMount ? 1 : 0.95,
+        y: 0,
+        scale: 1,
       }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
+      transition={{ duration: 0.4, ease: "easeInOut" }}
       layout
     >
       <Card className="gap-0 overflow-hidden p-0">
@@ -124,7 +122,10 @@ const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
             toolInvocation.state === "partial-call" ? (
               <motion.div
                 key="call"
-                initial={{ opacity: 0, height: 0 }}
+                initial={{
+                  opacity: 0,
+                  height: completeOnFirstMount ? "auto" : 0,
+                }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
                 transition={{
