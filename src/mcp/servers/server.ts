@@ -1,9 +1,23 @@
-import { exaServerConfig } from "./exa/server-config";
-import { imageServerConfig } from "./image/server-config";
+import type { ServerToolkit } from "../types";
+import { exaToolkitServer } from "./exa/server";
+import { imageToolkitServer } from "./image/server";
+import {
+  Servers,
+  type ServerToolNames,
+  type ServerToolParameters,
+} from "./shared";
 
-import { Servers } from "./shared";
-
-export const serverConfigs = {
-  [Servers.Exa]: exaServerConfig,
-  [Servers.Image]: imageServerConfig,
+type ServerToolkits = {
+  [K in Servers]: ServerToolkit<ServerToolNames[K], ServerToolParameters[K]>;
 };
+
+export const serverToolkits: ServerToolkits = {
+  [Servers.Exa]: exaToolkitServer,
+  [Servers.Image]: imageToolkitServer,
+};
+
+export function getServerToolkit<T extends Servers>(
+  server: T,
+): ServerToolkit<ServerToolNames[T], ServerToolParameters[T]> {
+  return serverToolkits[server];
+}

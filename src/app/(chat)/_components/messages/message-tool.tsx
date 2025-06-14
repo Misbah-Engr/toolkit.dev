@@ -1,9 +1,8 @@
 import { AnimatedShinyText } from "@/components/magicui/animated-shiny-text";
 import { Card } from "@/components/ui/card";
 import { HStack } from "@/components/ui/stack";
-import { getServerConfig } from "@/mcp/servers/client";
+import { getClientToolkit } from "@/mcp/servers/client";
 import type { Servers, ServerToolNames } from "@/mcp/servers/shared";
-import type { McpToolResult } from "@/mcp/types";
 import type { ToolInvocation } from "ai";
 import { Loader2 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
@@ -17,19 +16,9 @@ interface Props {
 const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
   const [completeOnFirstMount] = useState(toolInvocation.state === "result");
 
-  const isMcp = toolInvocation.toolName.startsWith("mcp_");
-
-  if (!isMcp) {
-    return (
-      <pre className="w-full max-w-full whitespace-pre-wrap">
-        {JSON.stringify(toolInvocation, null, 2)}
-      </pre>
-    );
-  }
-
   const { toolName } = toolInvocation;
 
-  const [, server, tool] = toolName.split("_");
+  const [server, tool] = toolName.split("_");
 
   if (!server || !tool) {
     return (
@@ -41,7 +30,7 @@ const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
 
   const typedServer = server as Servers;
 
-  const mcpServerConfig = getServerConfig(typedServer);
+  const mcpServerConfig = getClientToolkit(typedServer);
 
   if (!mcpServerConfig) {
     return (
@@ -82,7 +71,7 @@ const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
                 transition={{ duration: 0.2 }}
                 className="text-lg font-medium"
               >
-                {mcpServerConfig.name} MCP
+                {mcpServerConfig.name} Toolkit
               </motion.span>
             ) : (
               <motion.div
@@ -93,7 +82,7 @@ const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
                 transition={{ duration: 0.2 }}
               >
                 <AnimatedShinyText className="text-lg font-medium">
-                  {mcpServerConfig.name} MCP
+                  {mcpServerConfig.name} Toolkit
                 </AnimatedShinyText>
               </motion.div>
             )}
@@ -145,35 +134,35 @@ const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
               </motion.div>
             ) : toolConfig && toolInvocation.state === "result" ? (
               (() => {
-                const result = toolInvocation.result as McpToolResult<
-                  typeof toolConfig.outputSchema.shape
-                >;
+                // const result =
+                //   toolInvocation.result as typeof toolConfig.outputSchema.shape;
 
-                if (result.isError) {
-                  return (
-                    <motion.div
-                      key="error"
-                      initial={{
-                        opacity: completeOnFirstMount ? 1 : 0,
-                        height: completeOnFirstMount ? "auto" : 0,
-                      }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{
-                        opacity: 0,
-                        height: completeOnFirstMount ? "auto" : 0,
-                      }}
-                      transition={{
-                        duration: 0.3,
-                        ease: "easeOut",
-                        height: { duration: 0.4, ease: "easeInOut" },
-                      }}
-                      style={{ overflow: "hidden" }}
-                    >
-                      <p>There was an error</p>
-                      <p>{result.content[0]?.text}</p>
-                    </motion.div>
-                  );
-                }
+                // console.log(result);
+
+                // if (result.isError) {
+                //   return (
+                //     <motion.div
+                //       key="error"
+                //       initial={{
+                //         opacity: completeOnFirstMount ? 1 : 0,
+                //         height: completeOnFirstMount ? "auto" : 0,
+                //       }}
+                //       animate={{ opacity: 1, height: "auto" }}
+                //       exit={{
+                //         opacity: 0,
+                //         height: completeOnFirstMount ? "auto" : 0,
+                //       }}
+                //       transition={{
+                //         duration: 0.3,
+                //         ease: "easeOut",
+                //         height: { duration: 0.4, ease: "easeInOut" },
+                //       }}
+                //       style={{ overflow: "hidden" }}
+                //     >
+                //       <p>There was an error</p>
+                //     </motion.div>
+                //   );
+                // }
 
                 return (
                   <motion.div
@@ -196,13 +185,9 @@ const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
                   >
                     <toolConfig.ResultComponent
                       result={
-                        (
-                          toolInvocation.result as {
-                            structuredContent: z.infer<
-                              typeof toolConfig.outputSchema
-                            >;
-                          }
-                        ).structuredContent
+                        toolInvocation.result as z.infer<
+                          typeof toolConfig.outputSchema
+                        >
                       }
                     />
                   </motion.div>
