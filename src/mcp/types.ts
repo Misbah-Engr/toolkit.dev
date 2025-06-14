@@ -16,7 +16,7 @@ export type ServerToolConfig<
   callback: (
     args: z.infer<ZodObject<Args>>,
   ) => Promise<z.infer<ZodObject<Result>>>;
-  message?: string | ((result: Result) => string);
+  message?: string | ((result: z.infer<ZodObject<Result>>) => string);
 };
 
 export type ServerTool<

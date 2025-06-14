@@ -7,7 +7,7 @@ import { baseImageToolkitConfig } from "./base";
 import { Button } from "@/components/ui/button";
 import { api } from "@/trpc/react";
 import { ModelProviderIcon } from "@/components/ui/model-icon";
-import { VStack } from "@/components/ui/stack";
+import { HStack } from "@/components/ui/stack";
 
 export const imageClientToolkit = createClientToolkit<
   ImageTools,
@@ -22,7 +22,7 @@ export const imageClientToolkit = createClientToolkit<
       const { data: imageModels } = api.models.getImageModels.useQuery();
 
       return (
-        <div className="flex flex-row flex-wrap gap-2">
+        <div className="flex flex-col gap-2">
           {imageModels?.map((model) => (
             <Button
               key={model.modelId}
@@ -36,13 +36,13 @@ export const imageClientToolkit = createClientToolkit<
                   model: `${model.provider}:${model.modelId}` as const,
                 });
               }}
-              className="h-fit flex-1"
+              className="h-fit flex-1 justify-between"
             >
-              <ModelProviderIcon provider={model.provider} />
-              <VStack className="items-start gap-0">
+              <HStack>
+                <ModelProviderIcon provider={model.provider} />
                 <p className="text-sm">{model.name}</p>
-                <p className="text-xs">{model.modelId}</p>
-              </VStack>
+              </HStack>
+              <p className="text-xs opacity-60">{model.modelId}</p>
             </Button>
           ))}
         </div>

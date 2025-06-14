@@ -185,9 +185,12 @@ const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
                   >
                     <toolConfig.ResultComponent
                       result={
-                        toolInvocation.result as z.infer<
-                          typeof toolConfig.outputSchema
-                        >
+                        (
+                          toolInvocation.result as {
+                            result: z.infer<typeof toolConfig.outputSchema>;
+                            message?: string;
+                          }
+                        ).result
                       }
                     />
                   </motion.div>
