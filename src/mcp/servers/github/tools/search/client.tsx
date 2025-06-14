@@ -61,11 +61,11 @@ export const githubSearchReposToolConfigClient: ClientToolConfig<
                   <HStack className="items-center gap-4">
                     <HStack className="gap-1 text-sm">
                       <Star className="size-4 text-yellow-500" />
-                      {repo.stars}
+                      {repo.stars.toLocaleString()}
                     </HStack>
                     <HStack className="gap-1 text-sm">
-                      <GitFork className="size-4 text-blue-500" />
-                      {repo.forks}
+                      <GitFork className="size-4" />
+                      {repo.forks.toLocaleString()}
                     </HStack>
                   </HStack>
                 </HStack>

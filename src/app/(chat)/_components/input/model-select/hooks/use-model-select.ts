@@ -75,7 +75,21 @@ export const useModelSelect = ({
 
   useEffect(() => {
     const firstModel = models?.[0];
-    if (firstModel && !selectedChatModel) {
+
+    if (selectedChatModel && models) {
+      // If there's a selected model, validate it still exists in available models
+      const modelStillExists = models.some(
+        (model) =>
+          model.modelId === selectedChatModel.modelId &&
+          model.provider === selectedChatModel.provider,
+      );
+
+      // If the persisted model no longer exists, fall back to the first available model
+      if (!modelStillExists && firstModel) {
+        setSelectedChatModel(firstModel);
+      }
+    } else if (firstModel && !selectedChatModel) {
+      // Only auto-select the first model if no model is currently selected
       setSelectedChatModel(firstModel);
     }
   }, [models, setSelectedChatModel, selectedChatModel]);

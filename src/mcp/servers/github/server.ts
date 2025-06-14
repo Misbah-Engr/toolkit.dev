@@ -1,6 +1,9 @@
 import { createServerToolkit } from "@/mcp/create-toolkit";
 import { baseGithubToolkitConfig } from "./base";
-import { githubSearchReposToolConfigServer } from "./tools/search/server";
+import {
+  githubSearchReposToolConfigServer,
+  githubRepoInfoToolConfigServer,
+} from "./tools/server";
 import { GithubTools } from "./tools";
 import { api } from "@/trpc/server";
 import { Octokit } from "octokit";
@@ -20,6 +23,7 @@ export const githubToolkitServer = createServerToolkit(
 
     return {
       [GithubTools.SearchRepos]: githubSearchReposToolConfigServer(octokit),
+      [GithubTools.RepoInfo]: githubRepoInfoToolConfigServer(octokit),
     };
   },
 );

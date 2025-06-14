@@ -9,6 +9,7 @@ import { api } from "@/trpc/react";
 import { generateUUID } from "@/lib/utils";
 import { fetchWithErrorHandlers } from "@/lib/fetch";
 import { ChatSDKError } from "@/lib/errors";
+import { localStorageUtils } from "@/lib/local-storage";
 
 import { useAutoResume } from "../_hooks/use-auto-resume";
 
@@ -22,6 +23,7 @@ import {
 } from "@/ai/types";
 import type { ClientToolkit } from "@/mcp/types";
 import type { z, ZodRawShape } from "zod";
+import { clientToolkits } from "@/mcp/servers/client";
 
 interface ChatContextType {
   // Chat state
@@ -80,13 +82,17 @@ export function ChatProvider({
   autoResume,
 }: ChatProviderProps) {
   const utils = api.useUtils();
-  const [selectedChatModel, setSelectedChatModel] = useState<LanguageModel>();
-  const [useNativeSearch, setUseNativeSearch] = useState(false);
-  const [imageGenerationModel, setImageGenerationModel] = useState<
+
+  // Initialize state from local storage
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [selectedChatModel, setSelectedChatModelState] =
+    useState<LanguageModel>();
+  const [useNativeSearch, setUseNativeSearchState] = useState(false);
+  const [imageGenerationModel, setImageGenerationModelState] = useState<
     ImageModel | undefined
   >(undefined);
   const [attachments, setAttachments] = useState<Array<Attachment>>([]);
-  const [toolkits, setToolkits] = useState<
+  const [toolkits, setToolkitsState] = useState<
     Array<{
       id: string;
       toolkit: ClientToolkit;
@@ -94,19 +100,93 @@ export function ChatProvider({
     }>
   >([]);
 
+  // Load preferences from localStorage on mount
+  useEffect(() => {
+    const preferences = localStorageUtils.getPreferences();
+
+    if (preferences.selectedChatModel) {
+      setSelectedChatModelState(preferences.selectedChatModel);
+    }
+
+    if (preferences.imageGenerationModel) {
+      setImageGenerationModelState(preferences.imageGenerationModel);
+    }
+
+    if (typeof preferences.useNativeSearch === "boolean") {
+      setUseNativeSearchState(preferences.useNativeSearch);
+    }
+
+    // Restore toolkits by matching persisted ones with available client toolkits
+    if (preferences.toolkits && preferences.toolkits.length > 0) {
+      const restoredToolkits = preferences.toolkits
+        .map((persistedToolkit) => {
+          const clientToolkit =
+            clientToolkits[persistedToolkit.id as keyof typeof clientToolkits];
+          if (clientToolkit) {
+            return {
+              id: persistedToolkit.id,
+              toolkit: clientToolkit,
+              parameters: persistedToolkit.parameters,
+            };
+          }
+          return null;
+        })
+        .filter(
+          (
+            toolkit,
+          ): toolkit is {
+            id: string;
+            toolkit: ClientToolkit;
+            parameters: z.infer<ClientToolkit["parameters"]>;
+          } => toolkit !== null,
+        );
+
+      setToolkitsState(restoredToolkits);
+    }
+
+    setIsInitialized(true);
+  }, []);
+
+  // Wrapper functions that also save to localStorage
+  const setSelectedChatModel = (model: LanguageModel) => {
+    setSelectedChatModelState(model);
+    localStorageUtils.setSelectedChatModel(model);
+  };
+
+  const setUseNativeSearch = (enabled: boolean) => {
+    setUseNativeSearchState(enabled);
+    localStorageUtils.setUseNativeSearch(enabled);
+  };
+
+  const setImageGenerationModel = (model: ImageModel | undefined) => {
+    setImageGenerationModelState(model);
+    localStorageUtils.setImageGenerationModel(model);
+  };
+
+  const setToolkits = (
+    newToolkits: Array<{
+      id: string;
+      toolkit: ClientToolkit;
+      parameters: z.infer<ClientToolkit["parameters"]>;
+    }>,
+  ) => {
+    setToolkitsState(newToolkits);
+    localStorageUtils.setToolkits(newToolkits);
+  };
+
   const addToolkit = (
     id: string,
     toolkit: ClientToolkit,
     parameters: z.infer<ClientToolkit["parameters"]>,
   ) => {
-    setToolkits((prev) => [
-      ...prev.filter((t) => t.id !== id),
+    setToolkits([
+      ...toolkits.filter((t) => t.id !== id),
       { id, toolkit, parameters },
     ]);
   };
 
   const removeToolkit = (id: string) => {
-    setToolkits((prev) => prev.filter((t) => t.id !== id));
+    setToolkits(toolkits.filter((t) => t.id !== id));
   };
 
   const {

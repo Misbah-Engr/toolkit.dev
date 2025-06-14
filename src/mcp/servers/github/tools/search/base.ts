@@ -8,7 +8,7 @@ export const baseSearchReposTool = createBaseTool({
     page: z.number().describe("The page number to search for (default: 1)"),
     per_page: z
       .number()
-      .describe("The number of results per page (default: 10)"),
+      .describe("The number of results per page (default: 5)"),
   }),
   outputSchema: z.object({
     repos: z.array(

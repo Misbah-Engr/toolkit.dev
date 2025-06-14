@@ -1,6 +1,6 @@
 "use client";
 
-import { X, Search } from "lucide-react";
+import { X, Search, Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -48,24 +48,26 @@ export const ModelSelect: React.FC = () => {
     onInfoDropdownEnter,
   } = useModelSelect({ selectedChatModel, setSelectedChatModel });
 
-  if (!models) {
-    return null;
-  }
-
   // Get unique providers from models
   const availableProviders = Array.from(
-    new Set(models.map((model) => model.provider)),
+    new Set((models ?? []).map((model) => model.provider)),
   );
 
   return (
     <>
       <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" className="justify-start bg-transparent">
+          <Button
+            variant="outline"
+            className="justify-start bg-transparent"
+            disabled={isLoading}
+          >
             {isLoading && !selectedChatModel ? (
               <>
-                <Skeleton className="mr-2 h-4 w-4" />
-                <Skeleton className="h-4 w-20" />
+                <Loader2 className="size-4 animate-spin" />
+                <span className="flex-1 truncate text-left">
+                  Loading Models
+                </span>
               </>
             ) : selectedChatModel ? (
               <>
@@ -154,65 +156,6 @@ export const ModelSelect: React.FC = () => {
                 </div>
               </div>
             </div>
-          </div>
-          <div className="max-h-96 overflow-y-auto">
-            {isMobile ? (
-              <div className="flex flex-col gap-2 p-2">
-                {models.map((model) => (
-                  <MobileModelCard
-                    key={model.modelId}
-                    model={model}
-                    isSelected={selectedChatModel?.modelId === model.modelId}
-                    onSelect={() => handleModelSelect(model)}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="space-y-2">
-                {/* Featured Models - First 4 in 2x2 grid */}
-                {models.length > 0 && (
-                  <div className="p-2 pb-0">
-                    <div className="grid grid-cols-2 gap-2">
-                      {models.slice(0, 4).map((model) => (
-                        <FeaturedModelCard
-                          key={model.modelId}
-                          model={model}
-                          isSelected={
-                            selectedChatModel?.modelId === model.modelId
-                          }
-                          onSelect={() => handleModelSelect(model)}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Other Models - Remaining models in compact list */}
-                {models.length > 4 && (
-                  <div className="border-t">
-                    <div className="p-2 pb-1">
-                      <h3 className="text-muted-foreground mb-2 text-xs font-medium">
-                        Other Models
-                      </h3>
-                    </div>
-                    <div className="flex flex-col gap-1 p-1">
-                      {models.slice(4).map((model) => (
-                        <DesktopModelItem
-                          key={model.modelId}
-                          model={model}
-                          isSelected={
-                            selectedChatModel?.modelId === model.modelId
-                          }
-                          onSelect={() => handleModelSelect(model)}
-                          onHover={handleModelHover}
-                          onLeave={handleModelLeave}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
           </div>
         </DropdownMenuContent>
       </DropdownMenu>
