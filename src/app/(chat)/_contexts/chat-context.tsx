@@ -21,6 +21,7 @@ import {
   type ImageModel,
   type LanguageModel,
 } from "@/ai/types";
+import type { McpServerConfigClient } from "@/mcp/types";
 
 interface ChatContextType {
   // Chat state
@@ -37,10 +38,14 @@ interface ChatContextType {
   ) => void;
   selectedChatModel: LanguageModel | undefined;
   setSelectedChatModel: (model: LanguageModel) => void;
-  searchOption: SearchOptions | undefined;
-  setSearchOption: (option: SearchOptions | undefined) => void;
+  useNativeSearch: boolean;
+  setUseNativeSearch: (enabled: boolean) => void;
   imageGenerationModel: ImageModel | undefined;
   setImageGenerationModel: (model: ImageModel | undefined) => void;
+
+  mcpServers: Array<McpServerConfigClient>;
+  addMcpServer: (server: McpServerConfigClient) => void;
+  removeMcpServer: (server: McpServerConfigClient) => void;
 
   // Chat actions
   handleSubmit: UseChatHelpers["handleSubmit"];
@@ -68,13 +73,24 @@ export function ChatProvider({
 }: ChatProviderProps) {
   const utils = api.useUtils();
   const [selectedChatModel, setSelectedChatModel] = useState<LanguageModel>();
-  const [searchOption, setSearchOption] = useState<SearchOptions | undefined>(
-    undefined,
-  );
+  const [useNativeSearch, setUseNativeSearch] = useState(false);
   const [imageGenerationModel, setImageGenerationModel] = useState<
     ImageModel | undefined
   >(undefined);
   const [attachments, setAttachments] = useState<Array<Attachment>>([]);
+  const [mcpServers, setMcpServers] = useState<Array<McpServerConfigClient>>(
+    [],
+  );
+
+  const addMcpServer = (server: McpServerConfigClient) => {
+    setMcpServers((prev) => [
+      ...prev.filter((s) => s.id !== server.id),
+      server,
+    ]);
+  };
+  const removeMcpServer = (server: McpServerConfigClient) => {
+    setMcpServers((prev) => prev.filter((s) => s.id !== server.id));
+  };
 
   const {
     messages,
@@ -103,7 +119,8 @@ export function ChatProvider({
         ? `${imageGenerationModel.provider}:${imageGenerationModel.modelId}`
         : undefined,
       selectedVisibilityType: initialVisibilityType,
-      searchOption,
+      useNativeSearch,
+      mcpServers: mcpServers.map((s) => s.id),
     }),
     onFinish: () => {
       void utils.messages.getMessagesForChat.invalidate({ chatId: id });
@@ -127,16 +144,14 @@ export function ChatProvider({
   });
 
   useEffect(() => {
-    if (selectedChatModel) {
-      setSearchOption(
-        selectedChatModel.capabilities?.includes(
-          LanguageModelCapability.WebSearch,
-        )
-          ? SearchOptions.Native
-          : selectedChatModel.provider === "openai"
-            ? SearchOptions.OpenAiResponses
-            : SearchOptions.Exa,
-      );
+    if (
+      selectedChatModel?.capabilities?.includes(
+        LanguageModelCapability.WebSearch,
+      )
+    ) {
+      setUseNativeSearch(true);
+    } else {
+      setUseNativeSearch(false);
     }
   }, [selectedChatModel]);
 
@@ -150,14 +165,17 @@ export function ChatProvider({
     setAttachments,
     selectedChatModel,
     setSelectedChatModel,
-    searchOption,
-    setSearchOption,
+    useNativeSearch,
+    setUseNativeSearch,
     handleSubmit,
     stop,
     reload,
     append,
     imageGenerationModel,
     setImageGenerationModel,
+    mcpServers,
+    addMcpServer,
+    removeMcpServer,
   };
 
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;

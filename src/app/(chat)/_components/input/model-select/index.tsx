@@ -23,6 +23,7 @@ import { LanguageModelCapability } from "@/ai/types";
 import { useModelSelect } from "./hooks/use-model-select";
 
 import { useChatContext } from "../../../_contexts/chat-context";
+import { NativeSearchToggle } from "../native-search-toggle";
 
 export const ModelSelect: React.FC = () => {
   const { selectedChatModel, setSelectedChatModel } = useChatContext();
@@ -216,7 +217,6 @@ export const ModelSelect: React.FC = () => {
           </div>
         </DropdownMenuContent>
       </DropdownMenu>
-
       {!isMobile && hoveredModel && dropdownPosition && (
         <ModelInfoDropdown
           model={hoveredModel}
