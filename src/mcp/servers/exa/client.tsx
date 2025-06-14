@@ -20,6 +20,7 @@ export const exaClientToolkit = createClientToolkit(
         height={24}
       />
     ),
+    form: null,
   },
   {
     [ExaTools.Search]: exaSearchToolConfigClient,

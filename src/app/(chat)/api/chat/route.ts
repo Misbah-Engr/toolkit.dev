@@ -33,7 +33,7 @@ import type {
 import type { Chat } from "@prisma/client";
 import { type providers } from "@/ai/registry";
 import { openai } from "@ai-sdk/openai";
-import { getServerToolkit } from "@/mcp/servers/server-toolkits";
+import { getServerToolkit } from "@/mcp/servers/server";
 
 export const maxDuration = 60;
 
@@ -265,18 +265,6 @@ export async function POST(request: Request) {
                 }
               }
             },
-            // tools: {
-            //   ...(shouldUseOpenaiResponses
-            //     ? { web_search_preview: openai.tools.webSearchPreview() }
-            //     : searchOption === SearchOptions.Exa
-            //       ? { exa_search: exaSearch }
-            //       : undefined),
-            //   ...(imageGenerationModel
-            //     ? {
-            //         image_generation: imageGeneration(imageGenerationModel),
-            //       }
-            //     : undefined),
-            // },
             tools: {
               ...tools,
               ...(isOpenAi && useNativeSearch

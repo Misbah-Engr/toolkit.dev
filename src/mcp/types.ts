@@ -47,19 +47,25 @@ export type ToolkitConfig<
   Tool extends BaseTool = BaseTool,
 > = {
   tools: Record<ToolNames, Tool>;
-  parameters: Parameters;
+  parameters: z.ZodObject<Parameters>;
 };
 
-export type ClientToolkitConifg = {
-  name: string;
-  description: string;
-  icon: React.FC<{ className?: string }>;
-};
+export type ClientToolkitConifg<Parameters extends ZodRawShape = ZodRawShape> =
+  {
+    name: string;
+    description: string;
+    icon: React.FC<{ className?: string }>;
+    form: React.ComponentType<{
+      parameters: z.infer<ZodObject<Parameters>>;
+      setParameters: (parameters: z.infer<ZodObject<Parameters>>) => void;
+    }> | null;
+  };
 
 export type ClientToolkit<
   ToolNames extends string = string,
   Parameters extends ZodRawShape = ZodRawShape,
-> = ToolkitConfig<ToolNames, Parameters, ClientTool> & ClientToolkitConifg;
+> = ToolkitConfig<ToolNames, Parameters, ClientTool> &
+  ClientToolkitConifg<Parameters>;
 
 export type ServerToolkit<
   ToolNames extends string = string,

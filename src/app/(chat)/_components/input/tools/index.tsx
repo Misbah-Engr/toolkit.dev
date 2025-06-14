@@ -7,10 +7,24 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Check, Plus, Wrench } from "lucide-react";
+import { Check, Plus, Settings, Wrench } from "lucide-react";
 import { useChatContext } from "@/app/(chat)/_contexts/chat-context";
 import { HStack } from "@/components/ui/stack";
-import { clientToolkits } from "@/mcp/servers/client-toolkits";
+import { clientToolkits } from "@/mcp/servers/client";
+import type { ClientToolkit } from "@/mcp/types";
+import { useState } from "react";
+import type z from "zod";
+import type { Servers, ServerToolParameters } from "@/mcp/servers/shared";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { toast } from "sonner";
 
 export const ToolsSelect = () => {
   const { toolkits, addToolkit, removeToolkit } = useChatContext();
@@ -50,7 +64,9 @@ export const ToolsSelect = () => {
                 if (toolkits.some((t) => t.id === id)) {
                   removeToolkit(id);
                 } else {
-                  addToolkit(id, toolkit, {});
+                  if (Object.keys(toolkit.parameters.shape).length === 0) {
+                    addToolkit(id, toolkit as ClientToolkit, {});
+                  }
                 }
               }}
               className="flex items-center justify-between gap-2"
@@ -86,10 +102,67 @@ export const ToolsSelect = () => {
                   </li>
                 ))}
               </ul>
+              {Object.keys(toolkit.parameters.shape).length > 0 && (
+                <ClientToolkitConfigure
+                  toolkit={toolkit as ClientToolkit}
+                  id={id as Servers}
+                  schema={toolkit.parameters}
+                />
+              )}
             </DropdownMenuSubContent>
           </DropdownMenuSub>
         ))}
       </DropdownMenuContent>
     </DropdownMenu>
+  );
+};
+
+const ClientToolkitConfigure: React.FC<{
+  toolkit: ClientToolkit;
+  id: Servers;
+  schema: z.ZodObject<z.ZodRawShape>;
+}> = ({ toolkit, id, schema }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const { addToolkit } = useChatContext();
+
+  const [parameters, setParameters] = useState<ServerToolParameters[typeof id]>(
+    {} as ServerToolParameters[typeof id],
+  );
+
+  const handleSubmit = () => {
+    addToolkit(id, toolkit, parameters);
+    setIsOpen(false);
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <Button variant="outline" className="w-full">
+          <Settings />
+          Configure
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Configure {toolkit.name}</DialogTitle>
+          <DialogDescription>
+            Configure the parameters for {toolkit.name}
+          </DialogDescription>
+        </DialogHeader>
+        {toolkit.form && (
+          <toolkit.form parameters={parameters} setParameters={setParameters} />
+        )}
+        <DialogFooter>
+          <Button
+            onClick={handleSubmit}
+            disabled={!schema.safeParse(parameters).success}
+            className="w-full"
+          >
+            Add
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };

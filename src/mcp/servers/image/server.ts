@@ -5,9 +5,9 @@ import { ImageTools } from "./tools/tools";
 
 export const imageToolkitServer = createServerToolkit(
   baseImageToolkitConfig,
-  async () => {
+  async (parameters) => {
     return {
-      [ImageTools.Generate]: generateToolConfigServer,
+      [ImageTools.Generate]: generateToolConfigServer(parameters),
     };
   },
 );

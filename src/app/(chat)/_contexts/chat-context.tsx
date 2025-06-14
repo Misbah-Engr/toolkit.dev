@@ -20,8 +20,8 @@ import {
   type ImageModel,
   type LanguageModel,
 } from "@/ai/types";
-import type { ClientToolkit, McpServerConfigClient } from "@/mcp/types";
-import type { z, ZodObject } from "zod";
+import type { ClientToolkit } from "@/mcp/types";
+import type { z, ZodRawShape } from "zod";
 
 interface ChatContextType {
   // Chat state
@@ -46,12 +46,12 @@ interface ChatContextType {
   toolkits: Array<{
     id: string;
     toolkit: ClientToolkit;
-    parameters: z.infer<ZodObject<ClientToolkit["parameters"]>>;
+    parameters: z.infer<ClientToolkit["parameters"]>;
   }>;
   addToolkit: (
     id: string,
     toolkit: ClientToolkit,
-    parameters: z.infer<ZodObject<ClientToolkit["parameters"]>>,
+    parameters: z.infer<ClientToolkit["parameters"]>,
   ) => void;
   removeToolkit: (id: string) => void;
 
@@ -90,14 +90,14 @@ export function ChatProvider({
     Array<{
       id: string;
       toolkit: ClientToolkit;
-      parameters: z.infer<ZodObject<ClientToolkit["parameters"]>>;
+      parameters: z.infer<ClientToolkit["parameters"]>;
     }>
   >([]);
 
   const addToolkit = (
     id: string,
     toolkit: ClientToolkit,
-    parameters: z.infer<ZodObject<ClientToolkit["parameters"]>>,
+    parameters: z.infer<ClientToolkit["parameters"]>,
   ) => {
     setToolkits((prev) => [
       ...prev.filter((t) => t.id !== id),

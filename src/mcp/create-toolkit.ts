@@ -11,12 +11,15 @@ import type {
   ToolkitConfig,
 } from "./types";
 
-export const createClientToolkit = <ToolNames extends string>(
-  toolkitConfig: ToolkitConfig<ToolNames>,
-  clientToolkitConfig: ClientToolkitConifg,
+export const createClientToolkit = <
+  ToolNames extends string,
+  Parameters extends ZodRawShape = ZodRawShape,
+>(
+  toolkitConfig: ToolkitConfig<ToolNames, Parameters>,
+  clientToolkitConfig: ClientToolkitConifg<Parameters>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   toolConfigs: Record<ToolNames, ClientToolConfig<any, any>>,
-): ClientToolkit<ToolNames> => {
+): ClientToolkit<ToolNames, Parameters> => {
   return {
     ...toolkitConfig,
     ...clientToolkitConfig,
@@ -30,7 +33,7 @@ export const createClientToolkit = <ToolNames extends string>(
       },
       {} as Record<ToolNames, ClientTool>,
     ),
-  };
+  } as ClientToolkit<ToolNames, Parameters>;
 };
 
 export const createServerToolkit = <

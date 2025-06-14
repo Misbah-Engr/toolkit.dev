@@ -1,7 +1,7 @@
 import { AnimatedShinyText } from "@/components/magicui/animated-shiny-text";
 import { Card } from "@/components/ui/card";
 import { HStack } from "@/components/ui/stack";
-import { getServerConfig } from "@/mcp/servers/client";
+import { getClientToolkit } from "@/mcp/servers/client";
 import type { Servers, ServerToolNames } from "@/mcp/servers/shared";
 import type { ToolInvocation } from "ai";
 import { Loader2 } from "lucide-react";
@@ -30,7 +30,7 @@ const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
 
   const typedServer = server as Servers;
 
-  const mcpServerConfig = getServerConfig(typedServer);
+  const mcpServerConfig = getClientToolkit(typedServer);
 
   if (!mcpServerConfig) {
     return (

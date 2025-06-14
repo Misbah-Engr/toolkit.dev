@@ -1,4 +1,4 @@
-import { serverConfigs } from "@/mcp/servers/server";
+import { serverToolkits } from "@/mcp/servers/server";
 import type { Servers } from "@/mcp/servers/shared";
 import { createMcpHandler } from "@vercel/mcp-adapter";
 
@@ -9,11 +9,15 @@ async function createHandlerWithParams(
 ) {
   const { server } = await params;
 
-  const handler = createMcpHandler(
-    (mcpServer) => {
-      const serverConfig = serverConfigs[server];
+  const serverToolkit = serverToolkits[server];
 
-      Object.entries(serverConfig.tools).forEach(([toolName, tool]) => {
+  const handler = createMcpHandler(
+    async (mcpServer) => {
+      const tools = await serverToolkit.tools({
+        model: "openai:gpt-image-1",
+      });
+
+      Object.entries(tools).forEach(([toolName, tool]) => {
         const { description, inputSchema, callback, message } = tool;
         mcpServer.tool(
           toolName,

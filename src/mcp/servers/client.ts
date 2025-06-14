@@ -1,20 +1,23 @@
-import { exaClientConfig } from "./exa/client-config";
+import type { ClientToolkit } from "../types";
+import {
+  Servers,
+  type ServerToolNames,
+  type ServerToolParameters,
+} from "./shared";
+import { exaClientToolkit } from "./exa/client";
+import { imageClientToolkit } from "./image/client";
 
-import type { McpServerConfigClient } from "../types";
-import { Servers, type ServerToolNames } from "./shared";
-import { imageClientConfig } from "./image/client-config";
-
-type ClientConfigs = {
-  [K in Servers]: McpServerConfigClient<ServerToolNames[K]>;
+type ClientToolkits = {
+  [K in Servers]: ClientToolkit<ServerToolNames[K], ServerToolParameters[K]>;
 };
 
-export const clientConfigs: ClientConfigs = {
-  [Servers.Exa]: exaClientConfig,
-  [Servers.Image]: imageClientConfig,
+export const clientToolkits: ClientToolkits = {
+  [Servers.Exa]: exaClientToolkit,
+  [Servers.Image]: imageClientToolkit,
 };
 
-export function getServerConfig<T extends Servers>(
+export function getClientToolkit<T extends Servers>(
   server: T,
-): McpServerConfigClient<ServerToolNames[T]> {
-  return clientConfigs[server] as McpServerConfigClient<ServerToolNames[T]>;
+): ClientToolkit<ServerToolNames[T], ServerToolParameters[T]> {
+  return clientToolkits[server];
 }

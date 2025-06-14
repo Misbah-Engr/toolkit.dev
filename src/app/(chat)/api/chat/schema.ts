@@ -4,7 +4,7 @@ import { languageModels } from "@/ai/models";
 
 import type { providers } from "@/ai/registry";
 import { Servers } from "@/mcp/servers/shared";
-import { clientToolkits } from "@/mcp/servers/client-toolkits";
+import { clientToolkits } from "@/mcp/servers/client";
 
 const textPartSchema = z.object({
   text: z.string().min(1).max(2000),
@@ -52,9 +52,7 @@ export const postRequestBodySchema = z.object({
         return toolkit.id in clientToolkits;
       })
       .refine((toolkit) => {
-        return z
-          .object(clientToolkits[toolkit.id].parameters)
-          .parse(toolkit.parameters);
+        return clientToolkits[toolkit.id].parameters?.parse(toolkit.parameters);
       }),
   ),
 });
