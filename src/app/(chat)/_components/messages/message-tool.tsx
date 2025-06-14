@@ -3,7 +3,6 @@ import { Card } from "@/components/ui/card";
 import { HStack } from "@/components/ui/stack";
 import { getServerConfig } from "@/mcp/servers/client";
 import type { Servers, ServerToolNames } from "@/mcp/servers/shared";
-import type { McpToolResult } from "@/mcp/types";
 import type { ToolInvocation } from "ai";
 import { Loader2 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
