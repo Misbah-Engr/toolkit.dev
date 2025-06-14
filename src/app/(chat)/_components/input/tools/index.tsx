@@ -2,32 +2,31 @@ import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuPortal,
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Check, Plus, Wrench } from "lucide-react";
-import { clientConfigs } from "@/mcp/servers/client";
 import { useChatContext } from "@/app/(chat)/_contexts/chat-context";
 import { HStack } from "@/components/ui/stack";
+import { clientToolkits } from "@/mcp/servers/client-toolkits";
 
 export const ToolsSelect = () => {
-  const { mcpServers, addMcpServer, removeMcpServer } = useChatContext();
+  const { toolkits, addToolkit, removeToolkit } = useChatContext();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" className="bg-transparent">
-          {mcpServers.length > 0 ? (
+          {toolkits.length > 0 ? (
             <div className="flex items-center">
-              {mcpServers.map((server) => (
+              {toolkits.map((toolkit) => (
                 <div
                   className="bg-card -ml-2 rounded-full border p-1"
-                  key={server.id}
+                  key={toolkit.id}
                 >
-                  <server.icon className="size-4" />
+                  <toolkit.toolkit.icon className="size-4" />
                 </div>
               ))}
             </div>
@@ -35,33 +34,33 @@ export const ToolsSelect = () => {
             <Wrench />
           )}
           <span>
-            {mcpServers.length > 0
-              ? `${mcpServers.length} Tool${mcpServers.length > 1 ? "s" : ""}`
+            {toolkits.length > 0
+              ? `${toolkits.length} Tool${toolkits.length > 1 ? "s" : ""}`
               : "Add Tools"}
           </span>
         </Button>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent side="bottom" align="start">
-        {Object.values(clientConfigs).map((server) => (
-          <DropdownMenuSub key={server.id}>
+        {Object.entries(clientToolkits).map(([id, toolkit]) => (
+          <DropdownMenuSub key={id}>
             <DropdownMenuSubTrigger
               onClick={(e) => {
                 e.preventDefault();
-                if (mcpServers.some((s) => s.id === server.id)) {
-                  removeMcpServer(server);
+                if (toolkits.some((t) => t.id === id)) {
+                  removeToolkit(id);
                 } else {
-                  addMcpServer(server);
+                  addToolkit(id, toolkit, {});
                 }
               }}
               className="flex items-center justify-between gap-2"
               hideChevron
             >
               <HStack className="gap-2">
-                <server.icon className="size-4" />
-                <p className="text-sm font-medium">{server.name}</p>
+                <toolkit.icon className="size-4" />
+                <p className="text-sm font-medium">{toolkit.name}</p>
               </HStack>
-              {mcpServers.some((s) => s.id === server.id) ? (
+              {toolkits.some((t) => t.id === id) ? (
                 <Check className="size-4" />
               ) : (
                 <Plus className="size-4 opacity-20" />
@@ -73,13 +72,13 @@ export const ToolsSelect = () => {
               className="flex max-w-48 flex-col gap-1 p-2 data-[side=right]:data-[align=center]:right-0"
             >
               <div className="flex flex-col">
-                <h1 className="text-lg font-medium">{server.name}</h1>
+                <h1 className="text-lg font-medium">{toolkit.name}</h1>
                 <p className="text-muted-foreground text-sm">
-                  {server.description}
+                  {toolkit.description}
                 </p>
               </div>
               <ul className="flex flex-col gap-2 pl-4">
-                {Object.entries(server.tools).map(([name, tool]) => (
+                {Object.entries(toolkit.tools).map(([name, tool]) => (
                   <li key={name} className="list-disc">
                     <p className="text-muted-foreground text-xs">
                       {tool.description}

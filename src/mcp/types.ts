@@ -37,6 +37,39 @@ export type ClientTool<
   Result extends ZodRawShape = ZodRawShape,
 > = ClientToolConfig<Args, Result> & BaseTool<Args, Result>;
 
+// ------------------------------------------------------------
+// Toolkits
+// ------------------------------------------------------------
+
+export type ToolkitConfig<
+  ToolNames extends string,
+  Parameters extends ZodRawShape = ZodRawShape,
+  Tool extends BaseTool = BaseTool,
+> = {
+  tools: Record<ToolNames, Tool>;
+  parameters: Parameters;
+};
+
+export type ClientToolkitConifg = {
+  name: string;
+  description: string;
+  icon: React.FC<{ className?: string }>;
+};
+
+export type ClientToolkit<
+  ToolNames extends string = string,
+  Parameters extends ZodRawShape = ZodRawShape,
+> = ToolkitConfig<ToolNames, Parameters, ClientTool> & ClientToolkitConifg;
+
+export type ServerToolkit<
+  ToolNames extends string = string,
+  Parameters extends ZodRawShape = ZodRawShape,
+> = {
+  tools: (
+    params: z.infer<ZodObject<Parameters>>,
+  ) => Promise<Record<ToolNames, ServerTool>>;
+};
+
 export type McpServerConfigBase<
   ToolNames extends string,
   Tool extends BaseTool = BaseTool,

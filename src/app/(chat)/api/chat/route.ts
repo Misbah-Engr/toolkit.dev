@@ -5,7 +5,6 @@ import {
   appendResponseMessages,
   convertToCoreMessages,
   createDataStream,
-  experimental_createMCPClient,
   smoothStream,
   tool,
 } from "ai";
@@ -33,9 +32,8 @@ import type {
 } from "ai";
 import type { Chat } from "@prisma/client";
 import { type providers } from "@/ai/registry";
-import { env } from "@/env";
 import { openai } from "@ai-sdk/openai";
-import { serverConfigs } from "@/mcp/servers/server";
+import { getServerToolkit } from "@/mcp/servers/server-toolkits";
 
 export const maxDuration = 60;
 
@@ -78,7 +76,7 @@ export async function POST(request: Request) {
       selectedVisibilityType,
       selectedChatModel,
       useNativeSearch,
-      mcpServers,
+      toolkits,
     } = requestBody;
 
     const session = await auth();
@@ -136,11 +134,14 @@ export async function POST(request: Request) {
     const streamId = generateUUID();
     await api.streams.createStreamId({ streamId, chatId: id });
 
-    const tools = mcpServers.reduce(
-      (acc, server) => {
-        return Object.entries(serverConfigs[server].tools).reduce(
-          (acc, [toolName, serverTool]) => {
-            acc[toolName] = tool({
+    const toolkitTools = await Promise.all(
+      toolkits.map(async ({ id, parameters }) => {
+        const toolkit = getServerToolkit(id);
+        const tools = await toolkit.tools(parameters);
+        return Object.keys(tools).reduce(
+          (acc, toolName) => {
+            const serverTool = tools[toolName as keyof typeof tools];
+            acc[`${id}_${toolName}`] = tool({
               description: serverTool.description,
               parameters: serverTool.inputSchema,
               execute: async (args) => {
@@ -150,11 +151,42 @@ export async function POST(request: Request) {
             });
             return acc;
           },
-          acc,
+          {} as Record<string, Tool>,
         );
+      }),
+    );
+
+    const tools = toolkitTools.reduce(
+      (acc, toolkitTools) => {
+        return {
+          ...acc,
+          ...toolkitTools,
+        };
       },
       {} as Record<string, Tool>,
     );
+
+    // const tools = toolkits.reduce(
+    //   async (acc, toolkit) => {
+    //     const
+    //     return Object.keys(serverToolkits[toolkit.id].tools(toolkit.parameters)).reduce(
+    //       (acc, toolName) => {
+    //         const serverTool
+    //         acc[toolName] = tool({
+    //           description: serverTool.description,
+    //           parameters: serverTool.inputSchema,
+    //           execute: async (args) => {
+    //             const result = await serverTool.callback(args);
+    //             return result;
+    //           },
+    //         });
+    //         return acc;
+    //       },
+    //       acc,
+    //     );
+    //   },
+    //   {} as Record<string, Tool>,
+    // );
 
     // const mcpTools = await Promise.all(
     //   mcpServers?.map(async (server) => {

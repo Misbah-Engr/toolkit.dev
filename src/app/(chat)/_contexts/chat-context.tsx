@@ -17,11 +17,11 @@ import type { Attachment, UIMessage } from "ai";
 import type { UseChatHelpers } from "@ai-sdk/react";
 import {
   LanguageModelCapability,
-  SearchOptions,
   type ImageModel,
   type LanguageModel,
 } from "@/ai/types";
-import type { McpServerConfigClient } from "@/mcp/types";
+import type { ClientToolkit, McpServerConfigClient } from "@/mcp/types";
+import type { z, ZodObject } from "zod";
 
 interface ChatContextType {
   // Chat state
@@ -43,9 +43,17 @@ interface ChatContextType {
   imageGenerationModel: ImageModel | undefined;
   setImageGenerationModel: (model: ImageModel | undefined) => void;
 
-  mcpServers: Array<McpServerConfigClient>;
-  addMcpServer: (server: McpServerConfigClient) => void;
-  removeMcpServer: (server: McpServerConfigClient) => void;
+  toolkits: Array<{
+    id: string;
+    toolkit: ClientToolkit;
+    parameters: z.infer<ZodObject<ClientToolkit["parameters"]>>;
+  }>;
+  addToolkit: (
+    id: string,
+    toolkit: ClientToolkit,
+    parameters: z.infer<ZodObject<ClientToolkit["parameters"]>>,
+  ) => void;
+  removeToolkit: (id: string) => void;
 
   // Chat actions
   handleSubmit: UseChatHelpers["handleSubmit"];
@@ -78,18 +86,27 @@ export function ChatProvider({
     ImageModel | undefined
   >(undefined);
   const [attachments, setAttachments] = useState<Array<Attachment>>([]);
-  const [mcpServers, setMcpServers] = useState<Array<McpServerConfigClient>>(
-    [],
-  );
+  const [toolkits, setToolkits] = useState<
+    Array<{
+      id: string;
+      toolkit: ClientToolkit;
+      parameters: z.infer<ZodObject<ClientToolkit["parameters"]>>;
+    }>
+  >([]);
 
-  const addMcpServer = (server: McpServerConfigClient) => {
-    setMcpServers((prev) => [
-      ...prev.filter((s) => s.id !== server.id),
-      server,
+  const addToolkit = (
+    id: string,
+    toolkit: ClientToolkit,
+    parameters: z.infer<ZodObject<ClientToolkit["parameters"]>>,
+  ) => {
+    setToolkits((prev) => [
+      ...prev.filter((t) => t.id !== id),
+      { id, toolkit, parameters },
     ]);
   };
-  const removeMcpServer = (server: McpServerConfigClient) => {
-    setMcpServers((prev) => prev.filter((s) => s.id !== server.id));
+
+  const removeToolkit = (id: string) => {
+    setToolkits((prev) => prev.filter((t) => t.id !== id));
   };
 
   const {
@@ -120,7 +137,10 @@ export function ChatProvider({
         : undefined,
       selectedVisibilityType: initialVisibilityType,
       useNativeSearch,
-      mcpServers: mcpServers.map((s) => s.id),
+      toolkits: toolkits.map((t) => ({
+        id: t.id,
+        parameters: t.parameters,
+      })),
     }),
     onFinish: () => {
       void utils.messages.getMessagesForChat.invalidate({ chatId: id });
@@ -173,9 +193,9 @@ export function ChatProvider({
     append,
     imageGenerationModel,
     setImageGenerationModel,
-    mcpServers,
-    addMcpServer,
-    removeMcpServer,
+    toolkits,
+    addToolkit,
+    removeToolkit,
   };
 
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;

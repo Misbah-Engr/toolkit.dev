@@ -16,19 +16,9 @@ interface Props {
 const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
   const [completeOnFirstMount] = useState(toolInvocation.state === "result");
 
-  const isMcp = toolInvocation.toolName.startsWith("mcp_");
-
-  if (!isMcp) {
-    return (
-      <pre className="w-full max-w-full whitespace-pre-wrap">
-        {JSON.stringify(toolInvocation, null, 2)}
-      </pre>
-    );
-  }
-
   const { toolName } = toolInvocation;
 
-  const [, server, tool] = toolName.split("_");
+  const [server, tool] = toolName.split("_");
 
   if (!server || !tool) {
     return (
@@ -81,7 +71,7 @@ const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
                 transition={{ duration: 0.2 }}
                 className="text-lg font-medium"
               >
-                {mcpServerConfig.name} MCP
+                {mcpServerConfig.name} Toolkit
               </motion.span>
             ) : (
               <motion.div
@@ -92,7 +82,7 @@ const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
                 transition={{ duration: 0.2 }}
               >
                 <AnimatedShinyText className="text-lg font-medium">
-                  {mcpServerConfig.name} MCP
+                  {mcpServerConfig.name} Toolkit
                 </AnimatedShinyText>
               </motion.div>
             )}

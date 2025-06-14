@@ -1,10 +1,10 @@
 import { z } from "zod";
 
-import { imageModels, languageModels } from "@/ai/models";
+import { languageModels } from "@/ai/models";
 
 import type { providers } from "@/ai/registry";
-import { SearchOptions } from "@/ai/types";
 import { Servers } from "@/mcp/servers/shared";
+import { clientToolkits } from "@/mcp/servers/client-toolkits";
 
 const textPartSchema = z.object({
   text: z.string().min(1).max(2000),
@@ -42,7 +42,21 @@ export const postRequestBodySchema = z.object({
   ),
   selectedVisibilityType: z.enum(["public", "private"]),
   useNativeSearch: z.boolean(),
-  mcpServers: z.array(z.nativeEnum(Servers)),
+  toolkits: z.array(
+    z
+      .object({
+        id: z.nativeEnum(Servers),
+        parameters: z.record(z.string(), z.any()),
+      })
+      .refine((toolkit) => {
+        return toolkit.id in clientToolkits;
+      })
+      .refine((toolkit) => {
+        return z
+          .object(clientToolkits[toolkit.id].parameters)
+          .parse(toolkit.parameters);
+      }),
+  ),
 });
 
 export type PostRequestBody = z.infer<typeof postRequestBodySchema>;
