@@ -39,6 +39,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { NativeSearchToggle } from "./native-search-toggle";
 
 interface Props {
   chatId: string;
@@ -391,6 +392,7 @@ const PureMultimodalInput: React.FC<Props> = ({
             disabledString={fileDisabledString}
           />
           <ModelSelect />
+          <NativeSearchToggle />
           <ToolsSelect />
         </div>
 

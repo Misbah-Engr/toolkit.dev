@@ -51,7 +51,7 @@ export type McpServerConfigBase<
 export type McpServerConfigServer<ToolNames extends string> =
   McpServerConfigBase<`mcp_${string}_${ToolNames}`, ServerTool>;
 
-export type McpServerConfigClient<ToolNames extends string> =
+export type McpServerConfigClient<ToolNames extends string = string> =
   McpServerConfigBase<ToolNames, ClientTool>;
 
 export type McpToolResult<Result extends ZodRawShape = ZodRawShape> =
