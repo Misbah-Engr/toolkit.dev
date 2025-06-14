@@ -3,8 +3,8 @@ import { z } from "zod";
 import { languageModels } from "@/ai/models";
 
 import type { providers } from "@/ai/registry";
-import { Servers } from "@/mcp/servers/shared";
-import { clientToolkits } from "@/mcp/servers/client";
+import { Servers } from "@/toolkits/toolkits/shared";
+import { clientToolkits } from "@/toolkits/toolkits/client";
 
 const textPartSchema = z.object({
   text: z.string().min(1).max(2000),

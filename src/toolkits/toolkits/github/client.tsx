@@ -1,5 +1,5 @@
 import { GithubTools } from "./tools";
-import { createClientToolkit } from "@/mcp/create-toolkit";
+import { createClientToolkit } from "@/toolkits/create-toolkit";
 import { baseGithubToolkitConfig } from "./base";
 import {
   githubSearchReposToolConfigClient,

@@ -1,7 +1,7 @@
 import { ImageIcon } from "lucide-react";
 
 import { ImageTools } from "./tools/tools";
-import { createClientToolkit } from "@/mcp/create-toolkit";
+import { createClientToolkit } from "@/toolkits/create-toolkit";
 import { generateToolConfigClient } from "./tools/generate/client";
 import { baseImageToolkitConfig } from "./base";
 import { Button } from "@/components/ui/button";

@@ -1,5 +1,5 @@
 import { serverToolkits } from "@/mcp/servers/server";
-import type { Servers } from "@/mcp/servers/shared";
+import type { Servers } from "@/toolkits/toolkits/shared";
 import { createMcpHandler } from "@vercel/mcp-adapter";
 
 // Create a wrapper function that can access Next.js route parameters

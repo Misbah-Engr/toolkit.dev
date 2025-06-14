@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 import { ExaTools } from "./tools/tools";
-import { createClientToolkit } from "@/mcp/create-toolkit";
+import { createClientToolkit } from "@/toolkits/create-toolkit";
 import { exaSearchToolConfigClient } from "./tools/search/client";
 import { baseExaToolkitConfig } from "./base";
 

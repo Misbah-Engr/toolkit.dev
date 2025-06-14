@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createBaseTool } from "@/mcp/create-tool";
+import { createBaseTool } from "@/toolkits/create-tool";
 
 const inputSchema = z.object({
   prompt: z.string().min(1).max(100).describe("The image generation prompt"),

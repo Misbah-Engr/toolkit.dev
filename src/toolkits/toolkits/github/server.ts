@@ -1,4 +1,4 @@
-import { createServerToolkit } from "@/mcp/create-toolkit";
+import { createServerToolkit } from "@/toolkits/create-toolkit";
 import { baseGithubToolkitConfig } from "./base";
 import {
   githubSearchReposToolConfigServer,

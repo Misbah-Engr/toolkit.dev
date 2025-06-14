@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createBaseTool } from "@/mcp/create-tool";
+import { createBaseTool } from "@/toolkits/create-tool";
 
 export const baseSearchReposTool = createBaseTool({
   description: "Search for repositories on GitHub",
