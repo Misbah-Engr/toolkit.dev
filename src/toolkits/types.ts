@@ -59,6 +59,9 @@ export type ClientToolkitConifg<Parameters extends ZodRawShape = ZodRawShape> =
       parameters: z.infer<ZodObject<Parameters>>;
       setParameters: (parameters: z.infer<ZodObject<Parameters>>) => void;
     }> | null;
+    addToolkitWrapper?: React.ComponentType<{
+      children: React.ReactNode;
+    }>;
   };
 
 export type ClientToolkit<

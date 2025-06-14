@@ -31,6 +31,45 @@ export const ToolsSelect = () => {
     toolkit: ClientToolkit;
   } | null>(null);
 
+  const addToolkitButtons = (
+    id: Servers,
+    toolkit: ClientToolkit,
+    isSelected: boolean,
+    needsConfiguration: boolean,
+  ) =>
+    isSelected ? (
+      <Button
+        variant="primaryOutline"
+        size="sm"
+        onClick={() => removeToolkit(id)}
+      >
+        Active
+      </Button>
+    ) : needsConfiguration ? (
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() =>
+          setSelectedToolkit({
+            id,
+            toolkit,
+          })
+        }
+      >
+        <Settings className="size-4" />
+        Configure
+      </Button>
+    ) : (
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => addToolkit(id, toolkit, {})}
+      >
+        <Plus className="size-4" />
+        Add
+      </Button>
+    );
+
   return (
     <TooltipProvider>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -167,39 +206,22 @@ export const ToolsSelect = () => {
                           </div>
 
                           <div className="flex w-28 justify-end gap-2">
-                            {isSelected ? (
-                              <Button
-                                variant="primaryOutline"
-                                size="sm"
-                                onClick={() => removeToolkit(id)}
-                              >
-                                Active
-                              </Button>
-                            ) : needsConfiguration ? (
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() =>
-                                  setSelectedToolkit({
-                                    id: id as Servers,
-                                    toolkit: toolkit as ClientToolkit,
-                                  })
-                                }
-                              >
-                                <Settings className="size-4" />
-                                Configure
-                              </Button>
+                            {toolkit.addToolkitWrapper ? (
+                              <toolkit.addToolkitWrapper>
+                                {addToolkitButtons(
+                                  id as Servers,
+                                  toolkit as ClientToolkit,
+                                  isSelected,
+                                  needsConfiguration,
+                                )}
+                              </toolkit.addToolkitWrapper>
                             ) : (
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() =>
-                                  addToolkit(id, toolkit as ClientToolkit, {})
-                                }
-                              >
-                                <Plus className="size-4" />
-                                Add
-                              </Button>
+                              addToolkitButtons(
+                                id as Servers,
+                                toolkit as ClientToolkit,
+                                isSelected,
+                                needsConfiguration,
+                              )
                             )}
                           </div>
                         </div>
