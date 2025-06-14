@@ -1,5 +1,7 @@
 export enum GithubTools {
   SearchRepos = "search-repos",
+  SearchCode = "search-code",
+  SearchUsers = "search-users",
   RepoInfo = "repo-info",
 }
 

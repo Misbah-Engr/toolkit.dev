@@ -2,8 +2,12 @@ import { GithubTools } from "./tools";
 import { createClientToolkit } from "@/mcp/create-toolkit";
 import { baseGithubToolkitConfig } from "./base";
 import {
-  githubSearchReposToolConfigClient,
+  githubSearchRepositoriesToolConfigClient,
+  githubSearchCodeToolConfigClient,
+  githubSearchUsersToolConfigClient,
   githubRepoInfoToolConfigClient,
+  // Keep backwards compatibility
+  githubSearchReposToolConfigClient,
 } from "./tools/client";
 import { SiGithub } from "@icons-pack/react-simple-icons";
 
@@ -16,7 +20,9 @@ export const githubClientToolkit = createClientToolkit(
     form: null,
   },
   {
-    [GithubTools.SearchRepos]: githubSearchReposToolConfigClient,
+    [GithubTools.SearchRepos]: githubSearchRepositoriesToolConfigClient,
+    [GithubTools.SearchCode]: githubSearchCodeToolConfigClient,
+    [GithubTools.SearchUsers]: githubSearchUsersToolConfigClient,
     [GithubTools.RepoInfo]: githubRepoInfoToolConfigClient,
   },
 );
