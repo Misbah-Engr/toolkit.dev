@@ -1,5 +1,5 @@
 import type { LanguageModel, ImageModel } from "@/ai/types";
-import type { ClientToolkit } from "@/mcp/types";
+import type { ClientToolkit } from "@/toolkits/types";
 import type { z } from "zod";
 
 const STORAGE_KEYS = {

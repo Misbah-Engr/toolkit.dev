@@ -33,7 +33,7 @@ import type {
 import type { Chat } from "@prisma/client";
 import { type providers } from "@/ai/registry";
 import { openai } from "@ai-sdk/openai";
-import { getServerToolkit } from "@/mcp/servers/server";
+import { getServerToolkit } from "@/toolkits/toolkits/server";
 
 export const maxDuration = 60;
 

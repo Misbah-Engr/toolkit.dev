@@ -16,11 +16,11 @@ import {
 import { Plus, Settings, Wrench, Info, ArrowLeft } from "lucide-react";
 import { useChatContext } from "@/app/(chat)/_contexts/chat-context";
 import { HStack } from "@/components/ui/stack";
-import { clientToolkits } from "@/mcp/servers/client";
-import type { ClientToolkit } from "@/mcp/types";
+import { clientToolkits } from "@/toolkits/toolkits/client";
+import type { ClientToolkit } from "@/toolkits/types";
 import { useState } from "react";
 import type z from "zod";
-import type { Servers, ServerToolParameters } from "@/mcp/servers/shared";
+import type { Servers, ServerToolParameters } from "@/toolkits/toolkits/shared";
 import { motion } from "motion/react";
 
 export const ToolsSelect = () => {
@@ -30,6 +30,45 @@ export const ToolsSelect = () => {
     id: Servers;
     toolkit: ClientToolkit;
   } | null>(null);
+
+  const addToolkitButtons = (
+    id: Servers,
+    toolkit: ClientToolkit,
+    isSelected: boolean,
+    needsConfiguration: boolean,
+  ) =>
+    isSelected ? (
+      <Button
+        variant="primaryOutline"
+        size="sm"
+        onClick={() => removeToolkit(id)}
+      >
+        Active
+      </Button>
+    ) : needsConfiguration ? (
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() =>
+          setSelectedToolkit({
+            id,
+            toolkit,
+          })
+        }
+      >
+        <Settings className="size-4" />
+        Configure
+      </Button>
+    ) : (
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => addToolkit(id, toolkit, {})}
+      >
+        <Plus className="size-4" />
+        Add
+      </Button>
+    );
 
   return (
     <TooltipProvider>
@@ -167,39 +206,22 @@ export const ToolsSelect = () => {
                           </div>
 
                           <div className="flex w-28 justify-end gap-2">
-                            {isSelected ? (
-                              <Button
-                                variant="primaryOutline"
-                                size="sm"
-                                onClick={() => removeToolkit(id)}
-                              >
-                                Active
-                              </Button>
-                            ) : needsConfiguration ? (
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() =>
-                                  setSelectedToolkit({
-                                    id: id as Servers,
-                                    toolkit: toolkit as ClientToolkit,
-                                  })
-                                }
-                              >
-                                <Settings className="size-4" />
-                                Configure
-                              </Button>
+                            {toolkit.addToolkitWrapper ? (
+                              <toolkit.addToolkitWrapper>
+                                {addToolkitButtons(
+                                  id as Servers,
+                                  toolkit as ClientToolkit,
+                                  isSelected,
+                                  needsConfiguration,
+                                )}
+                              </toolkit.addToolkitWrapper>
                             ) : (
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() =>
-                                  addToolkit(id, toolkit as ClientToolkit, {})
-                                }
-                              >
-                                <Plus className="size-4" />
-                                Add
-                              </Button>
+                              addToolkitButtons(
+                                id as Servers,
+                                toolkit as ClientToolkit,
+                                isSelected,
+                                needsConfiguration,
+                              )
                             )}
                           </div>
                         </div>
