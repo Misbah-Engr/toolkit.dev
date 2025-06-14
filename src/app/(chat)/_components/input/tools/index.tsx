@@ -17,7 +17,7 @@ import { Plus, Settings, Wrench, Info, ArrowLeft } from "lucide-react";
 import { useChatContext } from "@/app/(chat)/_contexts/chat-context";
 import { HStack } from "@/components/ui/stack";
 import { clientToolkits } from "@/toolkits/toolkits/client";
-import type { ClientToolkit } from "@/mcp/types";
+import type { ClientToolkit } from "@/toolkits/types";
 import { useState } from "react";
 import type z from "zod";
 import type { Servers, ServerToolParameters } from "@/toolkits/toolkits/shared";

@@ -1,4 +1,4 @@
-import type { ToolkitConfig } from "@/mcp/types";
+import type { ToolkitConfig } from "@/toolkits/types";
 import { baseSearchTool } from "./tools/search/base";
 import { ExaTools } from "./tools/tools";
 import { z } from "zod";

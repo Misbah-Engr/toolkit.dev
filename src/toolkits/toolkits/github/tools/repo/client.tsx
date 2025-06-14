@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 
 import type { repoInfoTool } from "./base";
-import type { ClientToolConfig } from "@/mcp/types";
+import type { ClientToolConfig } from "@/toolkits/types";
 import { HStack, VStack } from "@/components/ui/stack";
 import {
   GitCommit,

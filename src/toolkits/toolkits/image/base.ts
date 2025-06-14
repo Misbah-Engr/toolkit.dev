@@ -1,4 +1,4 @@
-import type { ToolkitConfig } from "@/mcp/types";
+import type { ToolkitConfig } from "@/toolkits/types";
 import { ImageTools } from "./tools/tools";
 import { baseGenerateTool } from "./tools/generate/base";
 import { z } from "zod";

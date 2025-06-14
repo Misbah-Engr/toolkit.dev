@@ -1,4 +1,4 @@
-import type { ToolkitConfig } from "@/mcp/types";
+import type { ToolkitConfig } from "@/toolkits/types";
 import { z } from "zod";
 import { GithubTools } from "./tools";
 import { baseSearchReposTool, repoInfoTool } from "./tools";

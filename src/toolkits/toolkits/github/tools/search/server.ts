@@ -1,6 +1,6 @@
 import { type baseSearchReposTool } from "./base";
 import { type Octokit } from "octokit";
-import type { ServerToolConfig } from "@/mcp/types";
+import type { ServerToolConfig } from "@/toolkits/types";
 
 export const githubSearchReposToolConfigServer = (
   octokit: Octokit,

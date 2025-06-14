@@ -1,6 +1,6 @@
 import { type repoInfoTool } from "./base";
 import { type Octokit } from "octokit";
-import type { ServerToolConfig } from "@/mcp/types";
+import type { ServerToolConfig } from "@/toolkits/types";
 import { getAllCommits, getTotalCommits } from "../../lib/commits";
 import { getTotalPrs } from "../../lib/prs";
 

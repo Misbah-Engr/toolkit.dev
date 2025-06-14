@@ -1,7 +1,7 @@
 import { experimental_generateImage as generateImage } from "ai";
 
 import { type baseGenerateTool } from "./base";
-import type { ServerToolConfig } from "@/mcp/types";
+import type { ServerToolConfig } from "@/toolkits/types";
 import { type providers, registry } from "@/ai/registry";
 import { put } from "@vercel/blob";
 import { api } from "@/trpc/server";

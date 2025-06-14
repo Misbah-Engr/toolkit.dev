@@ -1,4 +1,4 @@
-import { serverToolkits } from "@/mcp/servers/server";
+import { serverToolkits } from "@/toolkits/toolkits/server";
 import type { Servers } from "@/toolkits/toolkits/shared";
 import { createMcpHandler } from "@vercel/mcp-adapter";
 

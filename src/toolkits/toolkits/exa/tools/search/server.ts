@@ -1,7 +1,7 @@
 import { type baseSearchTool } from "./base";
 import { env } from "@/env";
 import { Exa } from "exa-js";
-import type { ServerToolConfig } from "@/mcp/types";
+import type { ServerToolConfig } from "@/toolkits/types";
 
 export const exaSearchToolConfigServer: ServerToolConfig<
   typeof baseSearchTool.inputSchema.shape,

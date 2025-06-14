@@ -4,7 +4,7 @@ import Image from "next/image";
 
 import type { baseGenerateTool } from "./base";
 
-import type { ClientToolConfig } from "@/mcp/types";
+import type { ClientToolConfig } from "@/toolkits/types";
 
 export const generateToolConfigClient: ClientToolConfig<
   typeof baseGenerateTool.inputSchema.shape,

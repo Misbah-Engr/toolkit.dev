@@ -10,7 +10,7 @@ import {
 import { Markdown } from "@/components/ui/markdown";
 
 import type { baseSearchReposTool } from "./base";
-import type { ClientToolConfig } from "@/mcp/types";
+import type { ClientToolConfig } from "@/toolkits/types";
 import { HStack, VStack } from "@/components/ui/stack";
 import { GitFork, Search, Star } from "lucide-react";
 import { GithubAvatar } from "../../components/user-avatar";

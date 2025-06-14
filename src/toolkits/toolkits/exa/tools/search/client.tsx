@@ -10,7 +10,7 @@ import {
 import { Markdown } from "@/components/ui/markdown";
 
 import type { baseSearchTool } from "./base";
-import type { ClientToolConfig } from "@/mcp/types";
+import type { ClientToolConfig } from "@/toolkits/types";
 import { HStack, VStack } from "@/components/ui/stack";
 import { Search } from "lucide-react";
 
