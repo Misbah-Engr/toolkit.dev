@@ -146,7 +146,26 @@ export async function POST(request: Request) {
               parameters: serverTool.inputSchema,
               execute: async (args) => {
                 const result = await serverTool.callback(args);
-                return result;
+                if (serverTool.message) {
+                  console.log({
+                    result,
+                    message:
+                      typeof serverTool.message === "function"
+                        ? serverTool.message(result)
+                        : serverTool.message,
+                  });
+                  return {
+                    result,
+                    message:
+                      typeof serverTool.message === "function"
+                        ? serverTool.message(result)
+                        : serverTool.message,
+                  };
+                } else {
+                  return {
+                    result,
+                  };
+                }
               },
             });
             return acc;
@@ -165,46 +184,6 @@ export async function POST(request: Request) {
       },
       {} as Record<string, Tool>,
     );
-
-    // const tools = toolkits.reduce(
-    //   async (acc, toolkit) => {
-    //     const
-    //     return Object.keys(serverToolkits[toolkit.id].tools(toolkit.parameters)).reduce(
-    //       (acc, toolName) => {
-    //         const serverTool
-    //         acc[toolName] = tool({
-    //           description: serverTool.description,
-    //           parameters: serverTool.inputSchema,
-    //           execute: async (args) => {
-    //             const result = await serverTool.callback(args);
-    //             return result;
-    //           },
-    //         });
-    //         return acc;
-    //       },
-    //       acc,
-    //     );
-    //   },
-    //   {} as Record<string, Tool>,
-    // );
-
-    // const mcpTools = await Promise.all(
-    //   mcpServers?.map(async (server) => {
-    //     const mcp = await experimental_createMCPClient({
-    //       transport: {
-    //         type: "sse",
-    //         url: `${env.APP_URL}/mcp/${server}/sse`,
-    //         headers: {
-    //           Cookie: request.headers.get("cookie") ?? "",
-    //         },
-    //       },
-    //     });
-
-    //     const tools = await mcp.tools();
-
-    //     return tools;
-    //   }),
-    // );
 
     const isOpenAi = selectedChatModel.startsWith("openai");
 

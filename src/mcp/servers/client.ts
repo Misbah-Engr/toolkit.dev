@@ -6,6 +6,7 @@ import {
 } from "./shared";
 import { exaClientToolkit } from "./exa/client";
 import { imageClientToolkit } from "./image/client";
+import { githubClientToolkit } from "./github/client";
 
 type ClientToolkits = {
   [K in Servers]: ClientToolkit<ServerToolNames[K], ServerToolParameters[K]>;
@@ -14,6 +15,7 @@ type ClientToolkits = {
 export const clientToolkits: ClientToolkits = {
   [Servers.Exa]: exaClientToolkit,
   [Servers.Image]: imageClientToolkit,
+  [Servers.Github]: githubClientToolkit,
 };
 
 export function getClientToolkit<T extends Servers>(

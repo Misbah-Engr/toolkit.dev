@@ -310,7 +310,7 @@ const PureMultimodalInput: React.FC<Props> = ({
 
       <input
         type="file"
-        className="pointer-events-none fixed -top-4 -left-4 size-0.5 opacity-0"
+        className="pointer-events-none fixed -top-4 -left-4 size-0.5"
         ref={fileInputRef}
         multiple
         accept={acceptedFileTypes.join(",")}
