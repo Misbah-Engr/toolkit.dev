@@ -22,7 +22,7 @@ import {
   type LanguageModel,
 } from "@/ai/types";
 import type { ClientToolkit } from "@/mcp/types";
-import type { z, ZodRawShape } from "zod";
+import type { z } from "zod";
 import { clientToolkits } from "@/mcp/servers/client";
 
 interface ChatContextType {
@@ -83,8 +83,6 @@ export function ChatProvider({
 }: ChatProviderProps) {
   const utils = api.useUtils();
 
-  // Initialize state from local storage
-  const [isInitialized, setIsInitialized] = useState(false);
   const [selectedChatModel, setSelectedChatModelState] =
     useState<LanguageModel>();
   const [useNativeSearch, setUseNativeSearchState] = useState(false);
@@ -143,8 +141,6 @@ export function ChatProvider({
 
       setToolkitsState(restoredToolkits);
     }
-
-    setIsInitialized(true);
   }, []);
 
   // Wrapper functions that also save to localStorage

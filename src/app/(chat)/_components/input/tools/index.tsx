@@ -3,7 +3,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -14,7 +13,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Check, Plus, Settings, Wrench, X, Info } from "lucide-react";
+import { Plus, Settings, Wrench, Info, ArrowLeft } from "lucide-react";
 import { useChatContext } from "@/app/(chat)/_contexts/chat-context";
 import { HStack } from "@/components/ui/stack";
 import { clientToolkits } from "@/mcp/servers/client";
@@ -22,27 +21,32 @@ import type { ClientToolkit } from "@/mcp/types";
 import { useState } from "react";
 import type z from "zod";
 import type { Servers, ServerToolParameters } from "@/mcp/servers/shared";
-import { toast } from "sonner";
-import { Separator } from "@/components/ui/separator";
+import { motion } from "motion/react";
 
 export const ToolsSelect = () => {
   const { toolkits, addToolkit, removeToolkit } = useChatContext();
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedToolkit, setSelectedToolkit] = useState<string | null>(null);
+  const [selectedToolkit, setSelectedToolkit] = useState<{
+    id: Servers;
+    toolkit: ClientToolkit;
+  } | null>(null);
 
   return (
     <TooltipProvider>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
-          <Button variant="outline" className="bg-transparent">
+          <Button
+            variant={toolkits.length > 0 ? "primaryOutline" : "outline"}
+            className="bg-transparent"
+          >
             {toolkits.length > 0 ? (
               <div className="flex items-center">
                 {toolkits.map((toolkit) => (
                   <div
-                    className="bg-card -ml-2 rounded-full border p-1"
+                    className="bg-muted -ml-2 rounded-full border p-1"
                     key={toolkit.id}
                   >
-                    <toolkit.toolkit.icon className="size-4" />
+                    <toolkit.toolkit.icon className="text-foreground size-4" />
                   </div>
                 ))}
               </div>
@@ -51,127 +55,174 @@ export const ToolsSelect = () => {
             )}
             <span>
               {toolkits.length > 0
-                ? `${toolkits.length} Tool${toolkits.length > 1 ? "s" : ""}`
-                : "Add Tools"}
+                ? `${toolkits.length} Toolkit${toolkits.length > 1 ? "s" : ""}`
+                : "Add Toolkits"}
             </span>
           </Button>
         </DialogTrigger>
 
         <DialogContent className="flex max-h-[80vh] max-w-2xl flex-col overflow-hidden">
           <DialogHeader>
-            <DialogTitle>Manage Toolkits</DialogTitle>
-            <DialogDescription>
-              Add or remove tools to enhance your chat experience
-            </DialogDescription>
+            <div className="flex items-center gap-2">
+              {selectedToolkit && (
+                <motion.div
+                  initial={{ opacity: 0, x: -10, width: 0 }}
+                  animate={{ opacity: 1, x: 0, width: "auto" }}
+                  exit={{ opacity: 0, x: -10, width: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setSelectedToolkit(null)}
+                    className="p-1"
+                  >
+                    <ArrowLeft className="size-4" />
+                  </Button>
+                </motion.div>
+              )}
+              <div className="flex-1 overflow-hidden">
+                <motion.div
+                  key={
+                    selectedToolkit ? `config-${selectedToolkit.id}` : "list"
+                  }
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <DialogTitle>
+                    {selectedToolkit
+                      ? `Configure ${selectedToolkit.toolkit.name}`
+                      : "Manage Toolkits"}
+                  </DialogTitle>
+                  <DialogDescription>
+                    {selectedToolkit
+                      ? `Configure ${selectedToolkit.toolkit.name} parameters`
+                      : "Add or remove tools to enhance your chat experience"}
+                  </DialogDescription>
+                </motion.div>
+              </div>
+            </div>
           </DialogHeader>
 
-          <div className="flex-1 overflow-y-auto">
-            <div className="flex flex-col gap-4">
-              {Object.entries(clientToolkits).map(([id, toolkit]) => {
-                const isSelected = toolkits.some((t) => t.id === id);
-                const needsConfiguration =
-                  Object.keys(toolkit.parameters.shape).length > 0;
-                const isExpanded = selectedToolkit === id;
+          <div className="relative flex-1 overflow-hidden">
+            <motion.div
+              className="flex h-full w-[200%] gap-2"
+              animate={{ x: selectedToolkit ? "-50%" : "0%" }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            >
+              {/* Toolkit List */}
+              <div className="w-1/2 overflow-y-auto">
+                <div className="flex flex-col">
+                  {Object.entries(clientToolkits).map(([id, toolkit]) => {
+                    const isSelected = toolkits.some((t) => t.id === id);
+                    const needsConfiguration =
+                      Object.keys(toolkit.parameters.shape).length > 0;
 
-                return (
-                  <div
-                    key={id}
-                    className="space-y-2 border-b pb-2 last:border-b-0 last:pb-0"
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="flex flex-col">
-                        <HStack className="gap-3">
-                          <toolkit.icon className="size-4" />
-                          <h3 className="font-medium">{toolkit.name}</h3>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Info className="text-muted-foreground size-4 cursor-pointer" />
-                            </TooltipTrigger>
-                            <TooltipContent side="right" className="max-w-64">
-                              <div className="space-y-2">
-                                <p className="text-sm font-medium">
-                                  Available Tools
-                                </p>
-                                <ul className="space-y-1">
-                                  {Object.entries(toolkit.tools).map(
-                                    ([name, tool]) => (
-                                      <li
-                                        key={name}
-                                        className="flex items-start gap-2"
-                                      >
-                                        <div className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-current" />
-                                        <p className="text-xs">
-                                          {tool.description}
-                                        </p>
-                                      </li>
-                                    ),
-                                  )}
-                                </ul>
-                              </div>
-                            </TooltipContent>
-                          </Tooltip>
-                        </HStack>
-                        <p className="text-muted-foreground text-sm">
-                          {toolkit.description}
-                        </p>
+                    return (
+                      <div
+                        key={id}
+                        className="space-y-2 border-b py-2 last:border-b-0 last:pb-0"
+                      >
+                        <div className="flex items-center justify-between gap-4">
+                          <div className="flex flex-col">
+                            <HStack className="gap-3">
+                              <toolkit.icon className="size-4" />
+                              <h3 className="font-medium">{toolkit.name}</h3>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Info className="text-muted-foreground size-4 cursor-pointer" />
+                                </TooltipTrigger>
+                                <TooltipContent
+                                  side="right"
+                                  className="max-w-64"
+                                >
+                                  <div className="space-y-2">
+                                    <p className="text-sm font-medium">
+                                      Available Tools
+                                    </p>
+                                    <ul className="space-y-1">
+                                      {Object.entries(toolkit.tools).map(
+                                        ([name, tool]) => (
+                                          <li
+                                            key={name}
+                                            className="flex items-start gap-2"
+                                          >
+                                            <div className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-current" />
+                                            <p className="text-xs">
+                                              {tool.description}
+                                            </p>
+                                          </li>
+                                        ),
+                                      )}
+                                    </ul>
+                                  </div>
+                                </TooltipContent>
+                              </Tooltip>
+                            </HStack>
+                            <p className="text-muted-foreground text-xs">
+                              {toolkit.description}
+                            </p>
+                          </div>
+
+                          <div className="flex w-28 justify-end gap-2">
+                            {isSelected ? (
+                              <Button
+                                variant="primaryOutline"
+                                size="sm"
+                                onClick={() => removeToolkit(id)}
+                              >
+                                Active
+                              </Button>
+                            ) : needsConfiguration ? (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() =>
+                                  setSelectedToolkit({
+                                    id: id as Servers,
+                                    toolkit: toolkit as ClientToolkit,
+                                  })
+                                }
+                              >
+                                <Settings className="size-4" />
+                                Configure
+                              </Button>
+                            ) : (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() =>
+                                  addToolkit(id, toolkit as ClientToolkit, {})
+                                }
+                              >
+                                <Plus className="size-4" />
+                                Add
+                              </Button>
+                            )}
+                          </div>
+                        </div>
                       </div>
+                    );
+                  })}
+                </div>
+              </div>
 
-                      <div className="flex items-center gap-2">
-                        {isSelected ? (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => removeToolkit(id)}
-                            className="text-destructive hover:text-destructive"
-                          >
-                            <X className="size-4" />
-                            Remove
-                          </Button>
-                        ) : needsConfiguration ? (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() =>
-                              setSelectedToolkit(isExpanded ? null : id)
-                            }
-                          >
-                            <Settings className="size-4" />
-                            Configure
-                          </Button>
-                        ) : (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() =>
-                              addToolkit(id, toolkit as ClientToolkit, {})
-                            }
-                          >
-                            <Plus className="size-4" />
-                            Add
-                          </Button>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Configuration form */}
-                    {isExpanded && needsConfiguration && (
-                      <>
-                        <Separator />
-                        <ClientToolkitConfigure
-                          toolkit={toolkit as ClientToolkit}
-                          id={id as Servers}
-                          schema={toolkit.parameters}
-                          onAdd={() => {
-                            setSelectedToolkit(null);
-                            setIsOpen(false);
-                          }}
-                        />
-                      </>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
+              {/* Configuration */}
+              <div className="w-1/2 overflow-y-auto">
+                {selectedToolkit && (
+                  <ClientToolkitConfigure
+                    toolkit={selectedToolkit.toolkit}
+                    id={selectedToolkit.id}
+                    schema={selectedToolkit.toolkit.parameters}
+                    onAdd={() => {
+                      setSelectedToolkit(null);
+                    }}
+                  />
+                )}
+              </div>
+            </motion.div>
           </div>
         </DialogContent>
       </Dialog>
@@ -197,9 +248,8 @@ const ClientToolkitConfigure: React.FC<{
   };
 
   return (
-    <div className="space-y-4">
-      <div>
-        <h4 className="mb-2 font-medium">Configuration</h4>
+    <div className="flex h-full flex-col justify-between gap-4">
+      <div className="flex flex-1 flex-col justify-center">
         {toolkit.form && (
           <toolkit.form parameters={parameters} setParameters={setParameters} />
         )}

@@ -204,7 +204,7 @@ export const ThinkingMessage = () => {
 
         <div className="flex w-full flex-col gap-2">
           <div className="text-muted-foreground mt-0.5 flex flex-col gap-4">
-            <AnimatedShinyText className="font-medium">
+            <AnimatedShinyText className="w-fit font-medium">
               Thinking...
             </AnimatedShinyText>
           </div>

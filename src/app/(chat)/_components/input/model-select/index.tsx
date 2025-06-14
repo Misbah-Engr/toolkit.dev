@@ -5,24 +5,27 @@ import { X, Search, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ModelProviderIcon } from "@/components/ui/model-icon";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { MobileModelCard } from "./components/mobile-model-card";
-import { DesktopModelItem } from "./components/desktop-model-item";
-import { ModelInfoDropdown } from "./components/desktop-info-dropdown";
-import { FeaturedModelCard } from "./components/featured-model-card";
-import { capabilityIcons, capabilityLabels, modelProviderNames } from "./utils";
+import {
+  capabilityColors,
+  capabilityIcons,
+  capabilityLabels,
+  modelProviderNames,
+} from "./utils";
 import { LanguageModelCapability } from "@/ai/types";
 
-import { useModelSelect } from "./hooks/use-model-select";
+import { useModelSelect } from "./use-model-select";
 
 import { useChatContext } from "../../../_contexts/chat-context";
+import { cn } from "@/lib/utils";
+import { NativeSearchToggle } from "./native-search-toggle";
 
 export const ModelSelect: React.FC = () => {
   const { selectedChatModel, setSelectedChatModel } = useChatContext();
@@ -30,11 +33,8 @@ export const ModelSelect: React.FC = () => {
   const {
     models,
     isLoading,
-    isMobile,
     isOpen,
     setIsOpen,
-    hoveredModel,
-    dropdownPosition,
     searchQuery,
     setSearchQuery,
     selectedCapabilities,
@@ -42,10 +42,6 @@ export const ModelSelect: React.FC = () => {
     toggleCapability,
     toggleProvider,
     handleModelSelect,
-    handleModelHover,
-    handleModelLeave,
-    closeInfoDropdown,
-    onInfoDropdownEnter,
   } = useModelSelect({ selectedChatModel, setSelectedChatModel });
 
   // Get unique providers from models
@@ -55,12 +51,21 @@ export const ModelSelect: React.FC = () => {
 
   return (
     <>
-      <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+      <DropdownMenu open={isOpen} onOpenChange={isOpen ? setIsOpen : undefined}>
         <DropdownMenuTrigger asChild>
           <Button
             variant="outline"
             className="justify-start bg-transparent"
-            disabled={isLoading}
+            disabled={isLoading && !selectedChatModel}
+            onClick={(event) => {
+              const target = event.target as HTMLElement;
+              const isNativeSearchToggle = target.closest(
+                '[data-native-search-toggle="true"]',
+              );
+              if (!isNativeSearchToggle) {
+                setIsOpen(!isOpen);
+              }
+            }}
           >
             {isLoading && !selectedChatModel ? (
               <>
@@ -83,6 +88,7 @@ export const ModelSelect: React.FC = () => {
                     </Badge>
                   )}
                 </span>
+                <NativeSearchToggle />
               </>
             ) : (
               <>
@@ -157,16 +163,51 @@ export const ModelSelect: React.FC = () => {
               </div>
             </div>
           </div>
+          <div className="max-h-96 overflow-y-auto">
+            {models?.map((model) => (
+              <DropdownMenuItem
+                key={model.modelId}
+                className={cn(
+                  "hover:bg-accent/50 flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 transition-colors",
+                  selectedChatModel?.modelId === model.modelId && "bg-accent",
+                )}
+                onClick={() => handleModelSelect(model)}
+              >
+                {/* Name, provider, new badge stack */}
+                <div className="flex min-w-0 flex-shrink-0 items-center gap-2">
+                  <ModelProviderIcon
+                    provider={model.provider}
+                    className="size-4 flex-shrink-0"
+                  />
+                  <span className="truncate text-sm font-medium">
+                    {model.name}
+                  </span>
+                  {model.isNew && (
+                    <Badge variant="secondary" className="h-5 text-xs">
+                      New
+                    </Badge>
+                  )}
+                </div>
+                {/* Capabilities justified to the right */}
+                <div className="flex flex-1 justify-end gap-1">
+                  {model.capabilities?.map((capability) => {
+                    const Icon = capabilityIcons[capability];
+                    return (
+                      <Badge
+                        key={capability}
+                        variant="capability"
+                        className={`h-5 gap-1 px-1 text-xs ${capabilityColors[capability]}`}
+                      >
+                        {Icon && <Icon className="size-3" />}
+                      </Badge>
+                    );
+                  })}
+                </div>
+              </DropdownMenuItem>
+            ))}
+          </div>
         </DropdownMenuContent>
       </DropdownMenu>
-      {!isMobile && hoveredModel && dropdownPosition && (
-        <ModelInfoDropdown
-          model={hoveredModel}
-          position={dropdownPosition}
-          onClose={closeInfoDropdown}
-          onMouseEnter={onInfoDropdownEnter}
-        />
-      )}
     </>
   );
 };

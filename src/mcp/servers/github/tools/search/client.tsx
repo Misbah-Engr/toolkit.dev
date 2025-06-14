@@ -12,7 +12,7 @@ import { Markdown } from "@/components/ui/markdown";
 import type { baseSearchReposTool } from "./base";
 import type { ClientToolConfig } from "@/mcp/types";
 import { HStack, VStack } from "@/components/ui/stack";
-import { GitBranch, GitFork, Search, Star } from "lucide-react";
+import { GitFork, Search, Star } from "lucide-react";
 import { GithubAvatar } from "../../components/user-avatar";
 
 export const githubSearchReposToolConfigClient: ClientToolConfig<

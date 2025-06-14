@@ -1,11 +1,11 @@
 import { LanguageModelCapability } from "@/ai/types";
 import { useChatContext } from "@/app/(chat)/_contexts/chat-context";
-import { Button } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 import { Globe } from "lucide-react";
 
 export const NativeSearchToggle = () => {
@@ -23,18 +23,24 @@ export const NativeSearchToggle = () => {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <Button
-          variant={useNativeSearch ? "primaryOutline" : "outline"}
-          size="icon"
+        <div
           onClick={(event) => {
             event.preventDefault();
+            event.stopPropagation();
             setUseNativeSearch(!useNativeSearch);
           }}
-          className="bg-transparent"
-          type="button"
+          onMouseDown={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+          }}
+          className={cn(
+            "size-fit cursor-pointer rounded-full bg-transparent p-1",
+            useNativeSearch && "bg-primary/10 text-primary",
+          )}
+          data-native-search-toggle="true"
         >
           <Globe className="size-4" />
-        </Button>
+        </div>
       </TooltipTrigger>
       <TooltipContent>
         {useNativeSearch ? (
