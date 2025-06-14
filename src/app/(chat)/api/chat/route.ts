@@ -7,6 +7,7 @@ import {
   createDataStream,
   experimental_createMCPClient,
   smoothStream,
+  tool,
 } from "ai";
 
 import { createResumableStreamContext } from "resumable-stream";
@@ -24,11 +25,17 @@ import { generateUUID } from "@/lib/utils";
 import { ChatSDKError } from "@/lib/errors";
 
 import type { ResumableStreamContext } from "resumable-stream";
-import type { CoreAssistantMessage, CoreToolMessage, UIMessage } from "ai";
+import type {
+  CoreAssistantMessage,
+  CoreToolMessage,
+  Tool,
+  UIMessage,
+} from "ai";
 import type { Chat } from "@prisma/client";
 import { type providers } from "@/ai/registry";
 import { env } from "@/env";
 import { openai } from "@ai-sdk/openai";
+import { serverConfigs } from "@/mcp/servers/server";
 
 export const maxDuration = 60;
 
@@ -129,23 +136,43 @@ export async function POST(request: Request) {
     const streamId = generateUUID();
     await api.streams.createStreamId({ streamId, chatId: id });
 
-    const mcpTools = await Promise.all(
-      mcpServers?.map(async (server) => {
-        const mcp = await experimental_createMCPClient({
-          transport: {
-            type: "sse",
-            url: `${env.APP_URL}/mcp/${server}/sse`,
-            headers: {
-              Cookie: request.headers.get("cookie") ?? "",
-            },
+    const tools = mcpServers.reduce(
+      (acc, server) => {
+        return Object.entries(serverConfigs[server].tools).reduce(
+          (acc, [toolName, serverTool]) => {
+            acc[toolName] = tool({
+              description: serverTool.description,
+              parameters: serverTool.inputSchema,
+              execute: async (args) => {
+                const result = await serverTool.callback(args);
+                return result;
+              },
+            });
+            return acc;
           },
-        });
-
-        const tools = await mcp.tools();
-
-        return tools;
-      }),
+          acc,
+        );
+      },
+      {} as Record<string, Tool>,
     );
+
+    // const mcpTools = await Promise.all(
+    //   mcpServers?.map(async (server) => {
+    //     const mcp = await experimental_createMCPClient({
+    //       transport: {
+    //         type: "sse",
+    //         url: `${env.APP_URL}/mcp/${server}/sse`,
+    //         headers: {
+    //           Cookie: request.headers.get("cookie") ?? "",
+    //         },
+    //       },
+    //     });
+
+    //     const tools = await mcp.tools();
+
+    //     return tools;
+    //   }),
+    // );
 
     const isOpenAi = selectedChatModel.startsWith("openai");
 
@@ -219,12 +246,7 @@ export async function POST(request: Request) {
             //     : undefined),
             // },
             tools: {
-              ...mcpTools.reduce((acc, tools) => {
-                return {
-                  ...acc,
-                  ...tools,
-                };
-              }, {}),
+              ...tools,
               ...(isOpenAi && useNativeSearch
                 ? { web_search_preview: openai.tools.webSearchPreview() }
                 : {}),

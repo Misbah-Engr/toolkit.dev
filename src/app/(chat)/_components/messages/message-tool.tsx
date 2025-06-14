@@ -145,35 +145,35 @@ const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
               </motion.div>
             ) : toolConfig && toolInvocation.state === "result" ? (
               (() => {
-                const result = toolInvocation.result as McpToolResult<
-                  typeof toolConfig.outputSchema.shape
-                >;
+                // const result =
+                //   toolInvocation.result as typeof toolConfig.outputSchema.shape;
 
-                if (result.isError) {
-                  return (
-                    <motion.div
-                      key="error"
-                      initial={{
-                        opacity: completeOnFirstMount ? 1 : 0,
-                        height: completeOnFirstMount ? "auto" : 0,
-                      }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{
-                        opacity: 0,
-                        height: completeOnFirstMount ? "auto" : 0,
-                      }}
-                      transition={{
-                        duration: 0.3,
-                        ease: "easeOut",
-                        height: { duration: 0.4, ease: "easeInOut" },
-                      }}
-                      style={{ overflow: "hidden" }}
-                    >
-                      <p>There was an error</p>
-                      <p>{result.content[0]?.text}</p>
-                    </motion.div>
-                  );
-                }
+                // console.log(result);
+
+                // if (result.isError) {
+                //   return (
+                //     <motion.div
+                //       key="error"
+                //       initial={{
+                //         opacity: completeOnFirstMount ? 1 : 0,
+                //         height: completeOnFirstMount ? "auto" : 0,
+                //       }}
+                //       animate={{ opacity: 1, height: "auto" }}
+                //       exit={{
+                //         opacity: 0,
+                //         height: completeOnFirstMount ? "auto" : 0,
+                //       }}
+                //       transition={{
+                //         duration: 0.3,
+                //         ease: "easeOut",
+                //         height: { duration: 0.4, ease: "easeInOut" },
+                //       }}
+                //       style={{ overflow: "hidden" }}
+                //     >
+                //       <p>There was an error</p>
+                //     </motion.div>
+                //   );
+                // }
 
                 return (
                   <motion.div
@@ -196,13 +196,9 @@ const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
                   >
                     <toolConfig.ResultComponent
                       result={
-                        (
-                          toolInvocation.result as {
-                            structuredContent: z.infer<
-                              typeof toolConfig.outputSchema
-                            >;
-                          }
-                        ).structuredContent
+                        toolInvocation.result as z.infer<
+                          typeof toolConfig.outputSchema
+                        >
                       }
                     />
                   </motion.div>
