@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuPortal,
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
@@ -19,8 +20,25 @@ export const ToolsSelect = () => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" className="bg-transparent">
-          <Wrench />
-          <span>Tools</span>
+          {mcpServers.length > 0 ? (
+            <div className="flex items-center">
+              {mcpServers.map((server) => (
+                <div
+                  className="bg-card -ml-2 rounded-full border p-1"
+                  key={server.id}
+                >
+                  <server.icon className="size-4" />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <Wrench />
+          )}
+          <span>
+            {mcpServers.length > 0
+              ? `${mcpServers.length} Tool${mcpServers.length > 1 ? "s" : ""}`
+              : "Add Tools"}
+          </span>
         </Button>
       </DropdownMenuTrigger>
 
@@ -51,7 +69,8 @@ export const ToolsSelect = () => {
             </DropdownMenuSubTrigger>
             <DropdownMenuSubContent
               sideOffset={10}
-              className="flex flex-col gap-1"
+              alignOffset={100}
+              className="flex max-w-48 flex-col gap-1 p-2 data-[side=right]:data-[align=center]:right-0"
             >
               <div className="flex flex-col">
                 <h1 className="text-lg font-medium">{server.name}</h1>
