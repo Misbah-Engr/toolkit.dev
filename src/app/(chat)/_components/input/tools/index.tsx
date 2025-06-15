@@ -74,10 +74,7 @@ export const ToolsSelect = () => {
     <TooltipProvider>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
-          <Button
-            variant={toolkits.length > 0 ? "primaryOutline" : "outline"}
-            className="bg-transparent"
-          >
+          <Button variant={"outline"} className="bg-transparent">
             {toolkits.length > 0 ? (
               <div className="flex items-center">
                 {toolkits.map((toolkit) => (
@@ -85,7 +82,7 @@ export const ToolsSelect = () => {
                     className="bg-muted -ml-2 rounded-full border p-1"
                     key={toolkit.id}
                   >
-                    <toolkit.toolkit.icon className="text-foreground size-4" />
+                    <toolkit.toolkit.icon className="text-primary size-4" />
                   </div>
                 ))}
               </div>

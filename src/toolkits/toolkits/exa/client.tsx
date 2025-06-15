@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { Search } from "lucide-react";
 
 import { ExaTools } from "./tools/tools";
 import { createClientToolkit } from "@/toolkits/create-toolkit";
@@ -15,18 +15,10 @@ import { baseExaToolkitConfig } from "./base";
 export const exaClientToolkit = createClientToolkit(
   baseExaToolkitConfig,
   {
-    name: "Exa Search",
+    name: "Search",
     description:
-      "Exa is a comprehensive search toolkit with specialized tools for research, companies, social media, and more",
-    icon: ({ className }) => (
-      <Image
-        src="/icons/exa.png"
-        alt="Exa"
-        className={className}
-        width={24}
-        height={24}
-      />
-    ),
+      "Search for information across the web, including research papers, companies, social media, and more.",
+    icon: Search,
     form: null,
   },
   {

@@ -11,7 +11,7 @@ export const mem0ClientToolkit = createClientToolkit(
   {
     name: "Memory",
     description:
-      "Memory is a memory toolkit that allows you to store and retrieve memories for personalized conversations. It can remember user preferences, past conversations, and context for better interactions.",
+      "Stores and retrieves user context to enhance conversation quality.",
     icon: ({ className }) => <Brain className={className} />,
     form: null,
   },
