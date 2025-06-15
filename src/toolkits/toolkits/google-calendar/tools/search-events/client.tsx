@@ -2,7 +2,6 @@ import React from "react";
 import { type searchEventsTool } from "./base";
 import type { ClientToolConfig } from "@/toolkits/types";
 import { HStack, VStack } from "@/components/ui/stack";
-import { Calendar } from "lucide-react";
 import { EventCard } from "../../components/event-card";
 import { ToolCallComponent } from "../../components/tool-call";
 

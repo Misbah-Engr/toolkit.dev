@@ -12,8 +12,16 @@ import {
 } from "./tools/client";
 import { api } from "@/trpc/react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { signIn } from "next-auth/react";
 import { Loader2 } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import Link from "next/link";
 
 const calendarScope = "https://www.googleapis.com/auth/calendar";
 
@@ -25,14 +33,44 @@ export const googleCalendarClientToolkit = createClientToolkit(
     icon: Calendar,
     form: null,
     addToolkitWrapper: ({ children }) => {
-      const { data: account, isLoading } =
+      const { data: account, isLoading: isLoadingAccount } =
         api.accounts.getAccountByProvider.useQuery("google");
 
-      if (isLoading) {
+      const { data: hasAccess, isLoading: isLoadingAccess } =
+        api.features.hasFeature.useQuery({
+          feature: "google-calendar",
+        });
+
+      if (isLoadingAccount || isLoadingAccess) {
         return (
           <Button variant="outline" size="sm" disabled>
             <Loader2 className="size-4 animate-spin" />
           </Button>
+        );
+      }
+
+      if (!hasAccess) {
+        return (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <Badge variant="primary">Private Beta</Badge>
+              </TooltipTrigger>
+              <TooltipContent className="max-w-xs text-center">
+                We need to add you as a test user on Google Cloud for us to
+                request sensitive OAuth scopes. <br />
+                <br /> Please contact{" "}
+                <Link
+                  href="https://x.com/jsonhedman"
+                  target="_blank"
+                  className="underline"
+                >
+                  @jsonhedman
+                </Link>{" "}
+                on X to request access.
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         );
       }
 

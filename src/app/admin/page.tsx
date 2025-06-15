@@ -25,6 +25,7 @@ export default async function AdminPage() {
       notFound();
     }
   } catch (error) {
+    console.error(error);
     // If there's an error checking admin status, deny access
     notFound();
   }

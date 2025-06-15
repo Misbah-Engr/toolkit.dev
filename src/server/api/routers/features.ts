@@ -14,9 +14,9 @@ const adminProcedure = protectedProcedure.use(async ({ ctx, next }) => {
   });
 
   if (!adminFeature) {
-    throw new TRPCError({ 
-      code: "FORBIDDEN", 
-      message: "Admin access required" 
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "Admin access required",
     });
   }
 
@@ -52,7 +52,12 @@ export const featuresRouter = createTRPCRouter({
           },
         });
       } catch (error) {
-        if (error && typeof error === "object" && "code" in error && error.code === "P2002") {
+        if (
+          error &&
+          typeof error === "object" &&
+          "code" in error &&
+          error.code === "P2002"
+        ) {
           throw new TRPCError({
             code: "CONFLICT",
             message: "Feature with this name already exists",
@@ -111,7 +116,7 @@ export const featuresRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       const targetUserId = input.userId ?? ctx.session.user.id;
-      
+
       // Only allow users to see their own features unless they're admin
       if (targetUserId !== ctx.session.user.id) {
         const adminFeature = await ctx.db.userFeature.findFirst({
@@ -124,9 +129,9 @@ export const featuresRouter = createTRPCRouter({
         });
 
         if (!adminFeature) {
-          throw new TRPCError({ 
-            code: "FORBIDDEN", 
-            message: "Can only view your own features" 
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Can only view your own features",
           });
         }
       }
@@ -144,6 +149,17 @@ export const featuresRouter = createTRPCRouter({
           },
         },
       });
+    }),
+
+  hasFeature: protectedProcedure
+    .input(z.object({ feature: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return !!(await ctx.db.userFeature.findFirst({
+        where: {
+          userId: ctx.session.user.id,
+          feature: { name: input.feature },
+        },
+      }));
     }),
 
   // Add feature to user (admin only)
@@ -173,7 +189,12 @@ export const featuresRouter = createTRPCRouter({
           },
         });
       } catch (error) {
-        if (error && typeof error === "object" && "code" in error && error.code === "P2002") {
+        if (
+          error &&
+          typeof error === "object" &&
+          "code" in error &&
+          error.code === "P2002"
+        ) {
           throw new TRPCError({
             code: "CONFLICT",
             message: "User already has this feature",
