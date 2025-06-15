@@ -53,6 +53,7 @@ model User {
     chats         Chat[]
     files         File[]
     images        Image[]
+    userFeatures  UserFeature[]
 }
 
 model VerificationToken {
@@ -119,4 +120,24 @@ model Stream {
     chat      Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
 
     @@index([chatId])
+}
+
+model Feature {
+    id          String        @id @default(uuid())
+    name        String        @unique
+    description String?
+    createdAt   DateTime      @default(now())
+    updatedAt   DateTime      @updatedAt
+    userFeatures UserFeature[]
+}
+
+model UserFeature {
+    id        String   @id @default(uuid())
+    userId    String
+    featureId String
+    createdAt DateTime @default(now())
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    feature   Feature  @relation(fields: [featureId], references: [id], onDelete: Cascade)
+
+    @@unique([userId, featureId])
 }
