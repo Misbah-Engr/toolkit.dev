@@ -3,11 +3,12 @@ import { Card } from "@/components/ui/card";
 import { HStack } from "@/components/ui/stack";
 import { getClientToolkit } from "@/toolkits/toolkits/client";
 import type { Servers, ServerToolNames } from "@/toolkits/toolkits/shared";
-import type { ToolInvocation } from "ai";
+import type { CreateMessage, ToolInvocation } from "ai";
 import { Loader2 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import React, { useState } from "react";
 import type z from "zod";
+import { useChatContext } from "../../_contexts/chat-context";
 
 interface Props {
   toolInvocation: ToolInvocation;
@@ -134,36 +135,6 @@ const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
               </motion.div>
             ) : toolConfig && toolInvocation.state === "result" ? (
               (() => {
-                // const result =
-                //   toolInvocation.result as typeof toolConfig.outputSchema.shape;
-
-                // console.log(result);
-
-                // if (result.isError) {
-                //   return (
-                //     <motion.div
-                //       key="error"
-                //       initial={{
-                //         opacity: completeOnFirstMount ? 1 : 0,
-                //         height: completeOnFirstMount ? "auto" : 0,
-                //       }}
-                //       animate={{ opacity: 1, height: "auto" }}
-                //       exit={{
-                //         opacity: 0,
-                //         height: completeOnFirstMount ? "auto" : 0,
-                //       }}
-                //       transition={{
-                //         duration: 0.3,
-                //         ease: "easeOut",
-                //         height: { duration: 0.4, ease: "easeInOut" },
-                //       }}
-                //       style={{ overflow: "hidden" }}
-                //     >
-                //       <p>There was an error</p>
-                //     </motion.div>
-                //   );
-                // }
-
                 return (
                   <motion.div
                     key="result"
@@ -183,15 +154,19 @@ const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
                     }}
                     style={{ overflow: "hidden" }}
                   >
-                    <toolConfig.ResultComponent
-                      result={
-                        (
-                          toolInvocation.result as {
-                            result: z.infer<typeof toolConfig.outputSchema>;
-                            message?: string;
+                    <MessageToolResultComponent
+                      Component={({ append }) => (
+                        <toolConfig.ResultComponent
+                          result={
+                            (
+                              toolInvocation.result as {
+                                result: z.infer<typeof toolConfig.outputSchema>;
+                              }
+                            ).result
                           }
-                        ).result
-                      }
+                          append={append}
+                        />
+                      )}
                     />
                   </motion.div>
                 );
@@ -253,3 +228,13 @@ const areEqual = (prevProps: Props, nextProps: Props): boolean => {
 };
 
 export const MessageTool = React.memo(MessageToolComponent, areEqual);
+
+const MessageToolResultComponent: React.FC<{
+  Component: React.ComponentType<{
+    append: (message: CreateMessage) => void;
+  }>;
+}> = ({ Component }) => {
+  const { append } = useChatContext();
+
+  return <Component append={append} />;
+};

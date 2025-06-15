@@ -81,13 +81,6 @@ const PureMultimodalInput: React.FC<Props> = ({
     }
   };
 
-  const resetHeight = () => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height = "98px";
-    }
-  };
-
   const [localStorageInput, setLocalStorageInput] = useLocalStorage(
     "input",
     "",
@@ -162,7 +155,6 @@ const PureMultimodalInput: React.FC<Props> = ({
 
     setAttachments([]);
     setLocalStorageInput("");
-    resetHeight();
 
     if (width && width > 768) {
       textareaRef.current?.focus();
@@ -287,7 +279,7 @@ const PureMultimodalInput: React.FC<Props> = ({
             exit={{ opacity: 0, y: 10 }}
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
             className={cn(
-              "absolute bottom-28 left-1/2 z-50 -translate-x-1/2",
+              "absolute -top-12 left-1/2 z-50 -translate-x-1/2",
               submitDisabledString && "bottom-32",
             )}
           >
@@ -359,7 +351,7 @@ const PureMultimodalInput: React.FC<Props> = ({
           value={input}
           onChange={handleInput}
           className={cn(
-            "bg-muted h-auto max-h-[calc(75dvh)] min-h-[24px] resize-none overflow-hidden rounded-2xl pb-14 !text-base dark:border-zinc-700",
+            "bg-muted h-auto max-h-[calc(75dvh)] min-h-[24px] resize-none overflow-hidden rounded-2xl pb-14 !text-base",
             className,
           )}
           rows={2}

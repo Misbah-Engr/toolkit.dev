@@ -147,13 +147,6 @@ export async function POST(request: Request) {
               execute: async (args) => {
                 const result = await serverTool.callback(args);
                 if (serverTool.message) {
-                  console.log({
-                    result,
-                    message:
-                      typeof serverTool.message === "function"
-                        ? serverTool.message(result)
-                        : serverTool.message,
-                  });
                   return {
                     result,
                     message:

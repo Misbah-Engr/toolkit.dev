@@ -1,7 +1,9 @@
 import { createServerToolkit } from "@/toolkits/create-toolkit";
 import { baseGithubToolkitConfig } from "./base";
 import {
-  githubSearchReposToolConfigServer,
+  githubSearchRepositoriesToolConfigServer,
+  githubSearchCodeToolConfigServer,
+  githubSearchUsersToolConfigServer,
   githubRepoInfoToolConfigServer,
 } from "./tools/server";
 import { GithubTools } from "./tools";
@@ -22,7 +24,10 @@ export const githubToolkitServer = createServerToolkit(
     });
 
     return {
-      [GithubTools.SearchRepos]: githubSearchReposToolConfigServer(octokit),
+      [GithubTools.SearchRepos]:
+        githubSearchRepositoriesToolConfigServer(octokit),
+      [GithubTools.SearchCode]: githubSearchCodeToolConfigServer(octokit),
+      [GithubTools.SearchUsers]: githubSearchUsersToolConfigServer(octokit),
       [GithubTools.RepoInfo]: githubRepoInfoToolConfigServer(octokit),
     };
   },

@@ -1,3 +1,4 @@
+import type { CreateMessage } from "ai";
 import type { z, ZodObject, ZodRawShape } from "zod";
 
 export type BaseTool<
@@ -29,7 +30,10 @@ export type ClientToolConfig<
   Result extends ZodRawShape = ZodRawShape,
 > = {
   CallComponent: React.ComponentType<{ args: z.infer<ZodObject<Args>> }>;
-  ResultComponent: React.ComponentType<{ result: z.infer<ZodObject<Result>> }>;
+  ResultComponent: React.ComponentType<{
+    result: z.infer<ZodObject<Result>>;
+    append: (message: CreateMessage) => void;
+  }>;
 };
 
 export type ClientTool<
