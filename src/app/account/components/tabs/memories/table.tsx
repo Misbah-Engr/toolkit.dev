@@ -1,7 +1,13 @@
 "use client";
 
 import * as React from "react";
-import { ChevronDown, Loader2, MoreHorizontal, Trash } from "lucide-react";
+import {
+  ChevronDown,
+  Loader2,
+  MoreHorizontal,
+  Trash,
+  Brain,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -11,7 +17,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
@@ -23,100 +28,79 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
+import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { api } from "@/trpc/react";
 
-export function DataTableDemo() {
-  const [currentPage, setCurrentPage] = React.useState(0);
+export function MemoriesTable() {
+  const [page, setPage] = React.useState(1);
   const [searchTerm, setSearchTerm] = React.useState("");
   const [selectedRows, setSelectedRows] = React.useState<Set<string>>(
     new Set(),
   );
   const [visibleColumns, setVisibleColumns] = React.useState({
-    name: true,
-    contentType: true,
+    memory: true,
+    categories: true,
+    created_at: true,
     actions: true,
   });
 
   const {
-    data: attachments,
+    data: memoriesData,
     isLoading,
-    fetchNextPage,
-    hasNextPage,
     refetch,
-  } = api.files.getUserFiles.useInfiniteQuery(
-    {
-      limit: 10,
-    },
-    {
-      getNextPageParam: (lastPage) => lastPage.nextCursor,
-    },
-  );
+  } = api.memories.getUserMemories.useQuery({
+    limit: 10,
+    page,
+  });
 
-  const { mutate: deleteAttachment, isPending: isDeleting } =
-    api.files.deleteFile.useMutation({
+  const { mutate: deleteMemory, isPending: isDeleting } =
+    api.memories.deleteMemory.useMutation({
       onSuccess: () => {
-        toast.success("Attachment deleted");
+        toast.success("Memory deleted");
         void refetch();
       },
       onError: (error) => {
-        toast.error("Failed to delete attachment: " + error.message);
+        toast.error("Failed to delete memory: " + error.message);
       },
     });
 
-  const flattenedData = React.useMemo(
-    () => attachments?.pages.flatMap((page) => page.items) ?? [],
-    [attachments],
-  );
-
-  // Filter attachments based on search term
-  const filteredAttachments = React.useMemo(() => {
-    if (!searchTerm) return flattenedData;
-    return flattenedData.filter((attachment) =>
-      attachment.name.toLowerCase().includes(searchTerm.toLowerCase()),
+  // Filter memories based on search term
+  const filteredMemories = React.useMemo(() => {
+    const memories = memoriesData?.items ?? [];
+    if (!searchTerm) return memories;
+    return memories.filter((memory) =>
+      memory.memory?.toLowerCase().includes(searchTerm.toLowerCase()),
     );
-  }, [flattenedData, searchTerm]);
-
-  // Manual pagination
-  const itemsPerPage = 10;
-  const totalPages = Math.ceil(filteredAttachments.length / itemsPerPage);
-  const paginatedAttachments = filteredAttachments.slice(
-    currentPage * itemsPerPage,
-    (currentPage + 1) * itemsPerPage,
-  );
+  }, [memoriesData?.items, searchTerm]);
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedRows(
-        new Set(paginatedAttachments.map((attachment) => attachment.id)),
-      );
+      setSelectedRows(new Set(filteredMemories.map((memory) => memory.id)));
     } else {
       setSelectedRows(new Set());
     }
   };
 
-  const handleSelectRow = (attachmentId: string, checked: boolean) => {
+  const handleSelectRow = (memoryId: string, checked: boolean) => {
     const newSelected = new Set(selectedRows);
     if (checked) {
-      newSelected.add(attachmentId);
+      newSelected.add(memoryId);
     } else {
-      newSelected.delete(attachmentId);
+      newSelected.delete(memoryId);
     }
     setSelectedRows(newSelected);
   };
 
   const handlePreviousPage = () => {
-    if (currentPage > 0) {
-      setCurrentPage(currentPage - 1);
+    if (page > 1) {
+      setPage(page - 1);
     }
   };
 
   const handleNextPage = () => {
-    if (currentPage < totalPages - 1) {
-      setCurrentPage(currentPage + 1);
-    } else if (hasNextPage && currentPage === totalPages - 1) {
-      void fetchNextPage();
+    if (memoriesData?.hasMore) {
+      setPage(page + 1);
     }
   };
 
@@ -128,41 +112,47 @@ export function DataTableDemo() {
   };
 
   const allSelected =
-    paginatedAttachments.length > 0 &&
-    selectedRows.size === paginatedAttachments.length;
+    filteredMemories.length > 0 &&
+    selectedRows.size === filteredMemories.length;
   const someSelected =
-    selectedRows.size > 0 && selectedRows.size < paginatedAttachments.length;
+    selectedRows.size > 0 && selectedRows.size < filteredMemories.length;
 
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
-        <Input
-          placeholder="Filter attachments..."
-          value={searchTerm}
-          onChange={(event) => setSearchTerm(event.target.value)}
-          className="max-w-sm"
-        />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {Object.entries(visibleColumns).map(([key, visible]) => (
-              <DropdownMenuCheckboxItem
-                key={key}
-                className="capitalize"
-                checked={visible}
-                onCheckedChange={() =>
-                  toggleColumn(key as keyof typeof visibleColumns)
-                }
-              >
-                {key.replace(/([A-Z])/g, " $1").toLowerCase()}
-              </DropdownMenuCheckboxItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex items-center gap-2">
+          <Brain className="text-muted-foreground h-5 w-5" />
+          <h3 className="text-lg font-medium">Your Memories</h3>
+        </div>
+        <div className="ml-auto flex items-center gap-2">
+          <Input
+            placeholder="Filter memories..."
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.target.value)}
+            className="max-w-sm"
+          />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline">
+                Columns <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {Object.entries(visibleColumns).map(([key, visible]) => (
+                <DropdownMenuCheckboxItem
+                  key={key}
+                  className="capitalize"
+                  checked={visible}
+                  onCheckedChange={() =>
+                    toggleColumn(key as keyof typeof visibleColumns)
+                  }
+                >
+                  {key.replace("_", " ")}
+                </DropdownMenuCheckboxItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
 
       <div className="rounded-md border">
@@ -180,10 +170,9 @@ export function DataTableDemo() {
                   aria-label="Select all"
                 />
               </TableHead>
-              {visibleColumns.name && <TableHead>Name</TableHead>}
-              {visibleColumns.contentType && (
-                <TableHead>Content Type</TableHead>
-              )}
+              {visibleColumns.memory && <TableHead>Memory</TableHead>}
+              {visibleColumns.categories && <TableHead>Categories</TableHead>}
+              {visibleColumns.created_at && <TableHead>Created</TableHead>}
               {visibleColumns.actions && (
                 <TableHead className="w-12"></TableHead>
               )}
@@ -200,11 +189,11 @@ export function DataTableDemo() {
                 >
                   <div className="flex items-center justify-center gap-2">
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    Loading...
+                    Loading memories...
                   </div>
                 </TableCell>
               </TableRow>
-            ) : paginatedAttachments.length === 0 ? (
+            ) : filteredMemories.length === 0 ? (
               <TableRow>
                 <TableCell
                   colSpan={
@@ -212,29 +201,54 @@ export function DataTableDemo() {
                   }
                   className="h-24 text-center"
                 >
-                  No results.
+                  No memories found.
                 </TableCell>
               </TableRow>
             ) : (
-              paginatedAttachments.map((attachment) => (
-                <TableRow key={attachment.id}>
+              filteredMemories.map((memory) => (
+                <TableRow key={memory.id}>
                   <TableCell>
                     <Checkbox
-                      checked={selectedRows.has(attachment.id)}
+                      checked={selectedRows.has(memory.id)}
                       onCheckedChange={(checked) =>
-                        handleSelectRow(attachment.id, checked as boolean)
+                        handleSelectRow(memory.id, checked as boolean)
                       }
                       aria-label="Select row"
                     />
                   </TableCell>
-                  {visibleColumns.name && (
+                  {visibleColumns.memory && (
                     <TableCell>
-                      <div>{attachment.name}</div>
+                      <div className="max-w-lg truncate text-sm">
+                        {memory.memory}
+                      </div>
                     </TableCell>
                   )}
-                  {visibleColumns.contentType && (
+                  {visibleColumns.categories && (
                     <TableCell>
-                      <div className="capitalize">{attachment.contentType}</div>
+                      <div className="flex flex-wrap gap-1">
+                        {memory.categories?.map((category) => (
+                          <Badge
+                            key={category}
+                            variant="secondary"
+                            className="text-xs"
+                          >
+                            {category}
+                          </Badge>
+                        )) ?? (
+                          <span className="text-muted-foreground text-xs">
+                            No categories
+                          </span>
+                        )}
+                      </div>
+                    </TableCell>
+                  )}
+                  {visibleColumns.created_at && (
+                    <TableCell>
+                      <div className="text-sm">
+                        {memory.created_at
+                          ? new Date(memory.created_at).toLocaleDateString()
+                          : "Unknown"}
+                      </div>
                     </TableCell>
                   )}
                   {visibleColumns.actions && (
@@ -243,25 +257,23 @@ export function DataTableDemo() {
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" className="h-8 w-8 p-0">
                             <span className="sr-only">Open menu</span>
-                            <MoreHorizontal />
+                            <MoreHorizontal className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuLabel>Actions</DropdownMenuLabel>
                           <DropdownMenuItem
-                            onClick={() => deleteAttachment(attachment.id)}
+                            onClick={() => deleteMemory(memory.id)}
                             disabled={isDeleting}
                             className="text-destructive focus:text-destructive"
                           >
                             {isDeleting ? (
-                              <Loader2 className="text-muted-foreground h-4 w-4 animate-spin" />
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                             ) : (
-                              <Trash className="text-destructive h-4 w-4" />
+                              <Trash className="mr-2 h-4 w-4" />
                             )}
                             Delete
                           </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem>View attachment</DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>
@@ -273,16 +285,17 @@ export function DataTableDemo() {
         </Table>
       </div>
 
-      <div className="flex items-center justify-end space-x-2 py-4">
+      <div className="flex items-center justify-between space-x-2 py-4">
         <div className="text-muted-foreground flex-1 text-sm">
-          {selectedRows.size} of {paginatedAttachments.length} row(s) selected.
+          {selectedRows.size} of {filteredMemories.length} row(s) selected.
         </div>
-        <div className="space-x-2">
+        <div className="flex items-center space-x-2">
+          <span className="text-muted-foreground text-sm">Page {page}</span>
           <Button
             variant="outline"
             size="sm"
             onClick={handlePreviousPage}
-            disabled={currentPage === 0}
+            disabled={page <= 1}
           >
             Previous
           </Button>
@@ -290,7 +303,7 @@ export function DataTableDemo() {
             variant="outline"
             size="sm"
             onClick={handleNextPage}
-            disabled={currentPage >= totalPages - 1 && !hasNextPage}
+            disabled={!memoriesData?.hasMore}
           >
             Next
           </Button>

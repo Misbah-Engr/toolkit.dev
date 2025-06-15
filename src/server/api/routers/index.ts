@@ -1,8 +1,9 @@
-export * from "./chats";
-export * from "./messages";
-export * from "./streams";
-export * from "./models";
-export * from "./files";
-export * from "./users";
-export * from "./accounts";
-export * from "./images";
+export { accountsRouter } from "./accounts";
+export { chatsRouter } from "./chats";
+export { filesRouter } from "./files";
+export { imagesRouter } from "./images";
+export { memoriesRouter } from "./memories";
+export { messagesRouter } from "./messages";
+export { modelsRouter } from "./models";
+export { streamsRouter } from "./streams";
+export { usersRouter } from "./users";
