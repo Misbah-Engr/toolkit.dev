@@ -13,7 +13,7 @@ export const exaCompetitorFinderToolConfigClient: ClientToolConfig<
       <ToolCallDisplay
         icon={Users}
         label="Competitor Analysis"
-        value={args.company}
+        value={args.company ?? "..."}
       />
     );
   },

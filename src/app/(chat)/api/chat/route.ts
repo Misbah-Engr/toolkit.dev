@@ -189,6 +189,7 @@ export async function POST(request: Request) {
             system: "You are a helpful assistant.",
             messages: convertToCoreMessages(messages),
             maxSteps: 5,
+            toolCallStreaming: true,
             experimental_transform: smoothStream({ chunking: "word" }),
             experimental_generateMessageId: generateUUID,
             onError: (error) => {

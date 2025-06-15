@@ -21,7 +21,7 @@ export const mem0SearchMemoriesToolConfigClient: ClientToolConfig<
       <ToolCallDisplay
         icon={Search}
         label="Searching Memories"
-        value={args.query}
+        value={args.query ?? "..."}
       />
     );
   },

@@ -151,6 +151,10 @@ const NonMemoizedMarkdown = ({ children, headingClassName, asSpan }: Props) => {
           );
         },
         img({ src, alt }) {
+          if (!src) {
+            return null;
+          }
+
           // eslint-disable-next-line @next/next/no-img-element
           return <img src={src} alt={alt} className="mx-auto" />;
         },

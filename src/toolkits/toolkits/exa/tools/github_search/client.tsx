@@ -1,8 +1,8 @@
 import React from "react";
-import { Github } from "lucide-react";
 import type { baseGithubSearchTool } from "./base";
 import type { ClientToolConfig } from "@/toolkits/types";
 import { ToolCallDisplay, ResultsList } from "../../components";
+import { SiGithub } from "@icons-pack/react-simple-icons";
 
 export const exaGithubSearchToolConfigClient: ClientToolConfig<
   typeof baseGithubSearchTool.inputSchema.shape,
@@ -10,7 +10,11 @@ export const exaGithubSearchToolConfigClient: ClientToolConfig<
 > = {
   CallComponent: ({ args }) => {
     return (
-      <ToolCallDisplay icon={Github} label="GitHub Search" value={args.query} />
+      <ToolCallDisplay
+        icon={SiGithub}
+        label="GitHub Search"
+        value={args.query ?? "..."}
+      />
     );
   },
   ResultComponent: ({ result }) => {

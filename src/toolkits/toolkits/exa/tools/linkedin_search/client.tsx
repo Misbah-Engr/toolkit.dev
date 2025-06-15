@@ -13,7 +13,7 @@ export const exaLinkedinSearchToolConfigClient: ClientToolConfig<
       <ToolCallDisplay
         icon={Linkedin}
         label="LinkedIn Search"
-        value={args.query}
+        value={args.query ?? "..."}
       />
     );
   },

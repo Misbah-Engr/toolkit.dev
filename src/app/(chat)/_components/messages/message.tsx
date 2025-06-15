@@ -77,8 +77,8 @@ const PurePreviewMessage: React.FC<Props> = ({
 
           <div
             className={cn("flex w-full max-w-full flex-col gap-4", {
-              "min-h-96 w-0 flex-1":
-                message.role === "assistant" && requiresScrollPadding,
+              "min-h-96": message.role === "assistant" && requiresScrollPadding,
+              "w-0 flex-1": message.role === "assistant",
             })}
           >
             {message.experimental_attachments &&
@@ -166,7 +166,11 @@ const PurePreviewMessage: React.FC<Props> = ({
             })}
 
             {message.role === "assistant" && (
-              <MessageActions message={message} isLoading={isLoading} chatId={chatId} />
+              <MessageActions
+                message={message}
+                isLoading={isLoading}
+                chatId={chatId}
+              />
             )}
           </div>
         </div>
