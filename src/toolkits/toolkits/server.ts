@@ -4,6 +4,7 @@ import { githubToolkitServer } from "./github/server";
 import { googleCalendarToolkitServer } from "./google-calendar/server";
 import { imageToolkitServer } from "./image/server";
 import { mem0ToolkitServer } from "./mem0/server";
+import { e2bToolkitServer } from "./e2b/server";
 import {
   Servers,
   type ServerToolNames,
@@ -20,6 +21,7 @@ export const serverToolkits: ServerToolkits = {
   [Servers.Github]: githubToolkitServer,
   [Servers.GoogleCalendar]: googleCalendarToolkitServer,
   [Servers.Memory]: mem0ToolkitServer,
+  [Servers.E2B]: e2bToolkitServer,
 };
 
 export function getServerToolkit<T extends Servers>(

@@ -44,7 +44,6 @@ const ChatContent = ({
 
   const { messages } = useChatContext();
   const hasMessages = messages.length > 0;
-  console.log(hasMessages, hasInitialMessages);
 
   return (
     <div className="bg-background relative flex h-full min-w-0 flex-col">

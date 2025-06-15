@@ -33,7 +33,7 @@ export const githubRepoInfoToolConfigClient: ClientToolConfig<
             Fetching Repository Info
           </span>
           <span className="text-sm">
-            {args.owner}/{args.name}
+            {`${args.owner}${args.name ? `/${args.name}` : ""}`}
           </span>
         </VStack>
       </HStack>

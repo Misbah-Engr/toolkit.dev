@@ -11,7 +11,11 @@ export const exaSearchToolConfigClient: ClientToolConfig<
 > = {
   CallComponent: ({ args }) => {
     return (
-      <ToolCallDisplay icon={Search} label="Search Query" value={args.query} />
+      <ToolCallDisplay
+        icon={Search}
+        label="Search Query"
+        value={args.query ?? "..."}
+      />
     );
   },
   ResultComponent: ({ result }) => {

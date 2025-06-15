@@ -13,7 +13,7 @@ export const exaCompanyResearchToolConfigClient: ClientToolConfig<
       <ToolCallDisplay
         icon={Building}
         label="Company Research"
-        value={args.company}
+        value={args.company ?? "..."}
       />
     );
   },

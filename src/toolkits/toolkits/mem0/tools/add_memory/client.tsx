@@ -16,7 +16,7 @@ export const mem0AddMemoryToolConfigClient: ClientToolConfig<
         <ToolCallDisplay
           icon={Plus}
           label="Adding Memory"
-          value={args.content}
+          value={args.content ?? "..."}
         />
       </div>
     );

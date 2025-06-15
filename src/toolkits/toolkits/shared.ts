@@ -8,6 +8,8 @@ import type { imageParameters } from "./image/base";
 import type { ImageTools } from "./image/tools/tools";
 import type { mem0Parameters } from "./mem0/base";
 import type { Mem0Tools } from "./mem0/tools/tools";
+import type { e2bParameters } from "./e2b/base";
+import type { E2BTools } from "./e2b/tools/tools";
 
 export enum Servers {
   Exa = "exa",
@@ -15,6 +17,7 @@ export enum Servers {
   Github = "github",
   GoogleCalendar = "google-calendar",
   Memory = "memory",
+  E2B = "e2b",
 }
 
 export type ServerToolNames = {
@@ -23,6 +26,7 @@ export type ServerToolNames = {
   [Servers.Github]: GithubTools;
   [Servers.GoogleCalendar]: GoogleCalendarTools;
   [Servers.Memory]: Mem0Tools;
+  [Servers.E2B]: E2BTools;
 };
 
 export type ServerToolParameters = {
@@ -31,4 +35,5 @@ export type ServerToolParameters = {
   [Servers.Github]: typeof githubParameters.shape;
   [Servers.GoogleCalendar]: typeof googleCalendarParameters.shape;
   [Servers.Memory]: typeof mem0Parameters.shape;
+  [Servers.E2B]: typeof e2bParameters.shape;
 };

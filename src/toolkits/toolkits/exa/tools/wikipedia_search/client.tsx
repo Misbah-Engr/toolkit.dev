@@ -13,7 +13,7 @@ export const exaWikipediaSearchToolConfigClient: ClientToolConfig<
       <ToolCallDisplay
         icon={Globe}
         label="Wikipedia Search"
-        value={args.query}
+        value={args.query ?? "..."}
       />
     );
   },
