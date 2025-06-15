@@ -1,6 +1,6 @@
 import React from "react";
 
-import { File, User, Brain, Image } from "lucide-react";
+import { File, User, Brain, Image as ImageIcon } from "lucide-react";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -33,7 +33,7 @@ const tabs = [
     label: "Images Generated",
     value: "images",
     component: <Images />,
-    icon: <Image />,
+    icon: <ImageIcon />,
   },
 ];
 

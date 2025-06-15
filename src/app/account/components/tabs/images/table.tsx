@@ -2,18 +2,13 @@
 
 import * as React from "react";
 import {
-  type ColumnDef,
-  type ColumnFiltersState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  type SortingState,
-  useReactTable,
-  type VisibilityState,
-} from "@tanstack/react-table";
-import { ChevronDown, Loader2, MoreHorizontal, Trash, Image as ImageIcon, ExternalLink } from "lucide-react";
+  ChevronDown,
+  Loader2,
+  MoreHorizontal,
+  Trash,
+  Image as ImageIcon,
+  ExternalLink,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -39,154 +34,26 @@ import { toast } from "sonner";
 import { api } from "@/trpc/react";
 import Image from "next/image";
 
-interface ImageData {
-  id: string;
-  url: string;
-  contentType: string;
-  createdAt: Date;
-  userId: string;
-}
-
-export const columns: ColumnDef<ImageData>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ??
-          (table.getIsSomePageRowsSelected() ? "indeterminate" : false)
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    id: "preview",
-    header: "Preview",
-    cell: ({ row }) => (
-      <div className="flex h-16 w-16 items-center justify-center rounded-md border bg-muted">
-        <Image
-          src={row.original.url}
-          alt="Generated image"
-          width={64}
-          height={64}
-          className="h-full w-full rounded-md object-cover"
-          onError={(e) => {
-            const target = e.target as HTMLImageElement;
-            target.style.display = "none";
-            const parent = target.parentElement;
-            if (parent) {
-              parent.innerHTML = '<div class="flex h-full w-full items-center justify-center"><svg class="h-6 w-6 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div>';
-            }
-          }}
-        />
-      </div>
-    ),
-    enableSorting: false,
-  },
-  {
-    id: "url",
-    accessorKey: "url",
-    header: "URL",
-    cell: ({ row }) => (
-      <div className="flex items-center gap-2">
-        <code className="max-w-xs truncate rounded bg-muted px-2 py-1 text-xs">
-          {row.original.url}
-        </code>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => window.open(row.original.url, "_blank")}
-        >
-          <ExternalLink className="h-4 w-4" />
-        </Button>
-      </div>
-    ),
-  },
-  {
-    id: "contentType",
-    header: "Type",
-    cell: ({ row }) => (
-      <div className="font-mono text-sm">{row.original.contentType}</div>
-    ),
-  },
-  {
-    id: "createdAt",
-    header: "Created",
-    cell: ({ row }) => (
-      <div className="text-sm">
-        {new Date(row.original.createdAt).toLocaleDateString()}
-      </div>
-    ),
-  },
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const { mutate: deleteImage, isPending } =
-        api.images.deleteImage.useMutation({
-          onSuccess: () => {
-            toast.success("Image deleted");
-          },
-          onError: (error) => {
-            toast.error("Failed to delete image: " + error.message);
-          },
-        });
-
-      const image = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => window.open(image.url, "_blank")}
-            >
-              <ExternalLink className="mr-2 h-4 w-4" />
-              View Full Size
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => deleteImage(image.id)}
-              disabled={isPending}
-              className="text-destructive focus:text-destructive"
-            >
-              {isPending ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                <Trash className="mr-2 h-4 w-4" />
-              )}
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
-];
-
 export function ImagesTable() {
+  const [currentPage, setCurrentPage] = React.useState(0);
+  const [searchTerm, setSearchTerm] = React.useState("");
+  const [selectedRows, setSelectedRows] = React.useState<Set<string>>(
+    new Set(),
+  );
+  const [visibleColumns, setVisibleColumns] = React.useState({
+    preview: true,
+    url: true,
+    contentType: true,
+    createdAt: true,
+    actions: true,
+  });
+
   const {
     data: imagesData,
     isLoading,
     fetchNextPage,
     hasNextPage,
+    refetch,
   } = api.images.getUserImages.useInfiniteQuery(
     {
       limit: 10,
@@ -196,52 +63,94 @@ export function ImagesTable() {
     },
   );
 
+  const { mutate: deleteImage, isPending: isDeleting } =
+    api.images.deleteImage.useMutation({
+      onSuccess: () => {
+        toast.success("Image deleted");
+        void refetch();
+      },
+      onError: (error) => {
+        toast.error("Failed to delete image: " + error.message);
+      },
+    });
+
   const flattenedData = React.useMemo(
     () => imagesData?.pages.flatMap((page) => page.items) ?? [],
     [imagesData],
   );
 
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    [],
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
+  // Filter images based on search term
+  const filteredImages = React.useMemo(() => {
+    if (!searchTerm) return flattenedData;
+    return flattenedData.filter((image) =>
+      image.url.toLowerCase().includes(searchTerm.toLowerCase()),
+    );
+  }, [flattenedData, searchTerm]);
 
-  const table = useReactTable({
-    data: flattenedData,
-    columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-    },
-  });
+  // Manual pagination
+  const itemsPerPage = 10;
+  const totalPages = Math.ceil(filteredImages.length / itemsPerPage);
+  const paginatedImages = filteredImages.slice(
+    currentPage * itemsPerPage,
+    (currentPage + 1) * itemsPerPage,
+  );
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedRows(new Set(paginatedImages.map((image) => image.id)));
+    } else {
+      setSelectedRows(new Set());
+    }
+  };
+
+  const handleSelectRow = (imageId: string, checked: boolean) => {
+    const newSelected = new Set(selectedRows);
+    if (checked) {
+      newSelected.add(imageId);
+    } else {
+      newSelected.delete(imageId);
+    }
+    setSelectedRows(newSelected);
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages - 1) {
+      setCurrentPage(currentPage + 1);
+    } else if (hasNextPage && currentPage === totalPages - 1) {
+      void fetchNextPage();
+    }
+  };
+
+  const toggleColumn = (columnKey: keyof typeof visibleColumns) => {
+    setVisibleColumns((prev) => ({
+      ...prev,
+      [columnKey]: !prev[columnKey],
+    }));
+  };
+
+  const allSelected =
+    paginatedImages.length > 0 && selectedRows.size === paginatedImages.length;
+  const someSelected =
+    selectedRows.size > 0 && selectedRows.size < paginatedImages.length;
 
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
         <div className="flex items-center gap-2">
-          <ImageIcon className="h-5 w-5 text-muted-foreground" />
+          <ImageIcon className="text-muted-foreground h-5 w-5" />
           <h3 className="text-lg font-medium">Generated Images</h3>
         </div>
         <div className="ml-auto flex items-center gap-2">
           <Input
             placeholder="Filter by URL..."
-            value={(table.getColumn("url")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn("url")?.setFilterValue(event.target.value)
-            }
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.target.value)}
             className="max-w-sm"
           />
           <DropdownMenu>
@@ -251,110 +160,196 @@ export function ImagesTable() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => {
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) =>
-                        column.toggleVisibility(!!value)
-                      }
-                    >
-                      {column.id}
-                    </DropdownMenuCheckboxItem>
-                  );
-                })}
+              {Object.entries(visibleColumns).map(([key, visible]) => (
+                <DropdownMenuCheckboxItem
+                  key={key}
+                  className="capitalize"
+                  checked={visible}
+                  onCheckedChange={() =>
+                    toggleColumn(key as keyof typeof visibleColumns)
+                  }
+                >
+                  {key.replace(/([A-Z])/g, " $1").toLowerCase()}
+                </DropdownMenuCheckboxItem>
+              ))}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
       </div>
+
       <div className="rounded-md border">
         <Table>
           <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
+            <TableRow>
+              <TableHead className="w-12">
+                <Checkbox
+                  checked={allSelected}
+                  ref={(el) => {
+                    if (el)
+                      (el as HTMLInputElement).indeterminate = someSelected;
+                  }}
+                  onCheckedChange={handleSelectAll}
+                  aria-label="Select all"
+                />
+              </TableHead>
+              {visibleColumns.preview && <TableHead>Preview</TableHead>}
+              {visibleColumns.url && <TableHead>URL</TableHead>}
+              {visibleColumns.contentType && <TableHead>Type</TableHead>}
+              {visibleColumns.createdAt && <TableHead>Created</TableHead>}
+              {visibleColumns.actions && (
+                <TableHead className="w-12"></TableHead>
+              )}
+            </TableRow>
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : isLoading ? (
+            {isLoading ? (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length}
-                  className="flex h-24 items-center justify-center gap-2 text-center"
+                  colSpan={
+                    Object.values(visibleColumns).filter(Boolean).length + 1
+                  }
+                  className="h-24 text-center"
                 >
-                  <Loader2 className="h-4 w-4 animate-spin" /> Loading images...
+                  <div className="flex items-center justify-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Loading images...
+                  </div>
                 </TableCell>
               </TableRow>
-            ) : (
+            ) : paginatedImages.length === 0 ? (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length}
+                  colSpan={
+                    Object.values(visibleColumns).filter(Boolean).length + 1
+                  }
                   className="h-24 text-center"
                 >
                   No images found.
                 </TableCell>
               </TableRow>
+            ) : (
+              paginatedImages.map((image) => (
+                <TableRow key={image.id}>
+                  <TableCell>
+                    <Checkbox
+                      checked={selectedRows.has(image.id)}
+                      onCheckedChange={(checked) =>
+                        handleSelectRow(image.id, checked as boolean)
+                      }
+                      aria-label="Select row"
+                    />
+                  </TableCell>
+                  {visibleColumns.preview && (
+                    <TableCell>
+                      <div className="bg-muted flex h-16 w-16 items-center justify-center rounded-md border">
+                        <Image
+                          src={image.url}
+                          alt="Generated image"
+                          width={64}
+                          height={64}
+                          className="h-full w-full rounded-md object-cover"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = "none";
+                            const parent = target.parentElement;
+                            if (parent) {
+                              parent.innerHTML =
+                                '<div class="flex h-full w-full items-center justify-center"><svg class="h-6 w-6 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div>';
+                            }
+                          }}
+                        />
+                      </div>
+                    </TableCell>
+                  )}
+                  {visibleColumns.url && (
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <code className="bg-muted max-w-xs truncate rounded px-2 py-1 text-xs">
+                          {image.url}
+                        </code>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => window.open(image.url, "_blank")}
+                        >
+                          <ExternalLink className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  )}
+                  {visibleColumns.contentType && (
+                    <TableCell>
+                      <div className="font-mono text-sm">
+                        {image.contentType}
+                      </div>
+                    </TableCell>
+                  )}
+                  {visibleColumns.createdAt && (
+                    <TableCell>
+                      <div className="text-sm">
+                        {new Date(image.createdAt).toLocaleDateString()}
+                      </div>
+                    </TableCell>
+                  )}
+                  {visibleColumns.actions && (
+                    <TableCell>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="h-8 w-8 p-0">
+                            <span className="sr-only">Open menu</span>
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                          <DropdownMenuItem
+                            onClick={() => window.open(image.url, "_blank")}
+                          >
+                            <ExternalLink className="mr-2 h-4 w-4" />
+                            View Full Size
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem
+                            onClick={() => deleteImage(image.id)}
+                            disabled={isDeleting}
+                            className="text-destructive focus:text-destructive"
+                          >
+                            {isDeleting ? (
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            ) : (
+                              <Trash className="mr-2 h-4 w-4" />
+                            )}
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  )}
+                </TableRow>
+              ))
             )}
           </TableBody>
         </Table>
       </div>
+
       <div className="flex items-center justify-between space-x-2 py-4">
         <div className="text-muted-foreground flex-1 text-sm">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
+          {selectedRows.size} of {paginatedImages.length} row(s) selected.
         </div>
         <div className="space-x-2">
           <Button
             variant="outline"
             size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
+            onClick={handlePreviousPage}
+            disabled={currentPage === 0}
           >
             Previous
           </Button>
           <Button
             variant="outline"
             size="sm"
-            onClick={() => {
-              table.nextPage();
-              if (hasNextPage && table.getPageCount() === table.getState().pagination.pageIndex + 2) {
-                void fetchNextPage();
-              }
-            }}
-            disabled={!table.getCanNextPage()}
+            onClick={handleNextPage}
+            disabled={currentPage >= totalPages - 1 && !hasNextPage}
           >
             Next
           </Button>

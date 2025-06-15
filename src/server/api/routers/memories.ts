@@ -38,11 +38,11 @@ export const memoriesRouter = createTRPCRouter({
       const memoryClient = new MemoryClient({ apiKey: env.MEM0_API_KEY });
 
       try {
-        const memories = await memoryClient.getAll({
+        const memories = (await memoryClient.getAll({
           user_id: userId,
           page: input.page,
           page_size: input.limit,
-        }) as Memory[] | PaginatedMemoryResponse;
+        })) as Memory[] | PaginatedMemoryResponse;
 
         // Handle both paginated response format and array format
         if (Array.isArray(memories)) {
@@ -54,7 +54,7 @@ export const memoriesRouter = createTRPCRouter({
         }
 
         // If it's a paginated response
-        const items = (memories.memories ?? memories.results) ?? [];
+        const items = memories.memories ?? memories.results ?? [];
         const hasMore = items.length === input.limit;
 
         return {
@@ -89,16 +89,16 @@ export const memoriesRouter = createTRPCRouter({
     const memoryClient = new MemoryClient({ apiKey: env.MEM0_API_KEY });
 
     try {
-      const memories = await memoryClient.getAll({
+      const memories = (await memoryClient.getAll({
         user_id: userId,
-      }) as Memory[] | PaginatedMemoryResponse;
+      })) as Memory[] | PaginatedMemoryResponse;
 
       // Handle both response formats
       if (Array.isArray(memories)) {
         return memories.length;
       }
 
-      const items = (memories.memories ?? memories.results) ?? [];
+      const items = memories.memories ?? memories.results ?? [];
       return items.length;
     } catch (error) {
       console.error("Error counting memories:", error);
@@ -108,9 +108,7 @@ export const memoriesRouter = createTRPCRouter({
 
   deleteMemory: protectedProcedure
     .input(z.string())
-    .mutation(async ({ ctx, input: memoryId }) => {
-      const userId = ctx.session.user.id;
-
+    .mutation(async ({ input: memoryId }) => {
       if (!env.MEM0_API_KEY) {
         throw new Error("MEM0_API_KEY is not set");
       }
