@@ -11,40 +11,33 @@ const STARTER_PROMPTS = [
 ];
 
 export const StarterPrompts = () => {
-  const { setInput, handleSubmit, setAttachments } = useChatContext();
+  const { append } = useChatContext();
 
   const handlePromptClick = (prompt: string) => {
-    setInput(prompt);
-    // Trigger form submission after a small delay
-    setTimeout(() => {
-      handleSubmit(undefined, {
-        experimental_attachments: [],
-      });
-      setAttachments([]);
-    }, 0);
+    void append({
+      role: "user",
+      content: prompt,
+    });
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 10 }}
-      transition={{ delay: 0.7 }}
-      className="mx-auto mt-6 grid max-w-2xl grid-cols-1 gap-2 sm:grid-cols-2"
-    >
+    <div className="mx-auto grid max-w-2xl grid-cols-1 gap-2 sm:grid-cols-2">
       {STARTER_PROMPTS.map((prompt, index) => (
         <motion.button
           key={prompt}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 10 }}
-          transition={{ delay: 0.8 + index * 0.1 }}
+          initial={{ opacity: 0, y: 10, height: "auto" }}
+          animate={{ opacity: 1, y: 0, height: "auto" }}
+          exit={{ opacity: 0, y: 10, height: 0 }}
+          transition={{
+            enter: { delay: 0.1 + index * 0.1 },
+            exit: { delay: 0, duration: 0.1 },
+          }}
           onClick={() => handlePromptClick(prompt)}
           className="bg-muted hover:bg-muted/80 text-muted-foreground hover:text-foreground rounded-xl border p-3 text-left text-sm transition-colors"
         >
           {prompt}
         </motion.button>
       ))}
-    </motion.div>
+    </div>
   );
 };
