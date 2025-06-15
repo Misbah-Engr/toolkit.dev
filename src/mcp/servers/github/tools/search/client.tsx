@@ -1,13 +1,5 @@
 import React from "react";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-
 import type {
   searchRepositoriesTool,
   searchCodeTool,

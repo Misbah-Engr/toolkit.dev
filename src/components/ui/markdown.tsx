@@ -11,15 +11,9 @@ interface Props {
   children: string;
   headingClassName?: string;
   asSpan?: boolean;
-  className?: string;
 }
 
-const NonMemoizedMarkdown = ({
-  children,
-  headingClassName,
-  asSpan,
-  className,
-}: Props) => {
+const NonMemoizedMarkdown = ({ children, headingClassName, asSpan }: Props) => {
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
