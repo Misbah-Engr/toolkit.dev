@@ -2,7 +2,6 @@ import { memo } from "react";
 import { motion } from "motion/react";
 import equal from "fast-deep-equal";
 import { PreviewMessage, ThinkingMessage } from "./message";
-import { Greeting } from "./greeting";
 import { useMessages } from "../../_hooks/use-messages";
 import { useChatContext } from "../../_contexts/chat-context";
 
@@ -38,8 +37,6 @@ const PureMessages: React.FC<Props> = ({
       ref={containerRef}
       className="relative flex min-w-0 flex-1 flex-col gap-6 overflow-y-scroll pt-4"
     >
-      {messages.length === 0 && <Greeting />}
-
       {messages.map((message, index) => (
         <PreviewMessage
           key={message.id}
