@@ -285,7 +285,7 @@ const PureMultimodalInput: React.FC<Props> = ({
           >
             <Button
               data-testid="scroll-to-bottom-button"
-              className="rounded-full"
+              className="bg-muted dark:bg-muted rounded-full"
               size="icon"
               variant="outline"
               onClick={(event) => {
