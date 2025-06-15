@@ -18,7 +18,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Plus, Settings, Wrench, Info } from "lucide-react";
+import { Plus, Wrench, Info } from "lucide-react";
 import { useChatContext } from "@/app/(chat)/_contexts/chat-context";
 import { HStack } from "@/components/ui/stack";
 import { clientToolkits } from "@/toolkits/toolkits/client";
@@ -49,8 +49,8 @@ export const ToolsSelect = () => {
       <Popover>
         <PopoverTrigger asChild>
           <Button variant="outline" size="sm">
-            <Settings className="size-4" />
-            Configure
+            <Plus className="size-4" />
+            Add
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-80">
@@ -128,10 +128,7 @@ export const ToolsSelect = () => {
                             <TooltipTrigger asChild>
                               <Info className="text-muted-foreground size-4 cursor-pointer" />
                             </TooltipTrigger>
-                            <TooltipContent
-                              side="right"
-                              className="max-w-64"
-                            >
+                            <TooltipContent side="right" className="max-w-64">
                               <div className="space-y-2">
                                 <p className="text-sm font-medium">
                                   Available Tools
@@ -210,17 +207,14 @@ const ClientToolkitConfigure: React.FC<{
     <div className="space-y-4">
       <div>
         <h4 className="font-medium">{toolkit.name}</h4>
-        <p className="text-muted-foreground text-sm">
-          Configure {toolkit.name} parameters
-        </p>
       </div>
-      
+
       <div className="space-y-4">
         {toolkit.form && (
           <toolkit.form parameters={parameters} setParameters={setParameters} />
         )}
       </div>
-      
+
       <Button
         onClick={handleSubmit}
         disabled={!schema.safeParse(parameters).success}
