@@ -3,11 +3,13 @@ import { Calendar } from "lucide-react";
 import { GoogleCalendarTools } from "./tools";
 import { createClientToolkit } from "@/toolkits/create-toolkit";
 import { baseGoogleCalendarToolkitConfig } from "./base";
-// import { googleCalendarListCalendarsToolConfigClient } from "./tools/list-calendars/client";
-// import { googleCalendarGetCalendarToolConfigClient } from "./tools/get-calendar/client";
-// import { googleCalendarListEventsToolConfigClient } from "./tools/list-events/client";
-// import { googleCalendarGetEventToolConfigClient } from "./tools/get-event/client";
-// import { googleCalendarSearchEventsToolConfigClient } from "./tools/search-events/client";
+import {
+  googleCalendarListCalendarsToolConfigClient,
+  googleCalendarGetCalendarToolConfigClient,
+  googleCalendarListEventsToolConfigClient,
+  googleCalendarGetEventToolConfigClient,
+  googleCalendarSearchEventsToolConfigClient,
+} from "./tools/client";
 import { api } from "@/trpc/react";
 import { Button } from "@/components/ui/button";
 import { signIn } from "next-auth/react";
@@ -92,26 +94,13 @@ export const googleCalendarClientToolkit = createClientToolkit(
     },
   },
   {
-    // TODO: Implement client components
-    [GoogleCalendarTools.ListCalendars]: {
-      CallComponent: () => <div>Listing calendars...</div>,
-      ResultComponent: () => <div>Calendar list result</div>,
-    },
-    [GoogleCalendarTools.GetCalendar]: {
-      CallComponent: () => <div>Getting calendar...</div>,
-      ResultComponent: () => <div>Calendar details result</div>,
-    },
-    [GoogleCalendarTools.ListEvents]: {
-      CallComponent: () => <div>Listing events...</div>,
-      ResultComponent: () => <div>Events list result</div>,
-    },
-    [GoogleCalendarTools.GetEvent]: {
-      CallComponent: () => <div>Getting event...</div>,
-      ResultComponent: () => <div>Event details result</div>,
-    },
-    [GoogleCalendarTools.SearchEvents]: {
-      CallComponent: () => <div>Searching events...</div>,
-      ResultComponent: () => <div>Search results</div>,
-    },
+    [GoogleCalendarTools.ListCalendars]:
+      googleCalendarListCalendarsToolConfigClient,
+    [GoogleCalendarTools.GetCalendar]:
+      googleCalendarGetCalendarToolConfigClient,
+    [GoogleCalendarTools.ListEvents]: googleCalendarListEventsToolConfigClient,
+    [GoogleCalendarTools.GetEvent]: googleCalendarGetEventToolConfigClient,
+    [GoogleCalendarTools.SearchEvents]:
+      googleCalendarSearchEventsToolConfigClient,
   },
 );
