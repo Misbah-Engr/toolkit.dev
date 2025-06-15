@@ -33,8 +33,8 @@ export const googleCalendarListCalendarsToolConfigClient: ClientToolConfig<
     }
 
     return (
-      <VStack className="items-start gap-4">
-        <HStack className="items-center justify-between">
+      <VStack className="items-start gap-2">
+        <HStack className="text-muted-foreground items-center justify-between">
           <h3 className="text-sm font-medium">
             Calendars ({calendars.length})
           </h3>
@@ -45,7 +45,7 @@ export const googleCalendarListCalendarsToolConfigClient: ClientToolConfig<
           )}
         </HStack>
 
-        <div className="grid gap-3">
+        <div className="flex w-full flex-col gap-2">
           {calendars.map((calendar) => (
             <CalendarCard
               key={calendar.id}

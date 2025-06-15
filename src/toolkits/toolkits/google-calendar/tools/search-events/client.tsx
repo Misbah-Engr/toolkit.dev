@@ -14,7 +14,7 @@ export const googleCalendarSearchEventsToolConfigClient: ClientToolConfig<
     return (
       <ToolCallComponent
         action="Searching Events"
-        primaryText={`"${args.query}"`}
+        primaryText={`"${args.query}" (${args.maxResults ?? 5} events)`}
         secondaryText={`In calendar: ${args.calendarId}`}
       />
     );
@@ -24,19 +24,14 @@ export const googleCalendarSearchEventsToolConfigClient: ClientToolConfig<
 
     if (events.length === 0) {
       return (
-        <div className="flex items-center justify-center py-8">
-          <VStack className="items-center gap-2">
-            <Calendar className="text-muted-foreground size-8" />
-            <p className="text-muted-foreground text-sm">
-              No events found matching your search
-            </p>
-          </VStack>
-        </div>
+        <p className="text-muted-foreground text-sm">
+          No events found matching your search
+        </p>
       );
     }
 
     return (
-      <VStack className="gap-4">
+      <VStack className="items-start gap-2">
         <HStack className="items-center justify-between">
           <h3 className="text-sm font-medium">
             Search Results ({events.length})
@@ -46,7 +41,7 @@ export const googleCalendarSearchEventsToolConfigClient: ClientToolConfig<
           )}
         </HStack>
 
-        <div className="grid gap-3">
+        <div className="flex w-full flex-col gap-2">
           {events.map((event) => (
             <EventCard key={event.id} event={event} showDetails={true} />
           ))}

@@ -13,13 +13,13 @@ export const googleCalendarGetCalendarToolConfigClient: ClientToolConfig<
     return (
       <ToolCallComponent
         action="Fetching Calendar"
-        primaryText={args.calendarId}
+        primaryText={args.calendarId ?? ""}
       />
     );
   },
   ResultComponent: ({ result }) => {
     return (
-      <VStack className="gap-4">
+      <VStack className="items-start gap-2">
         <h3 className="text-sm font-medium">Calendar Details</h3>
         <CalendarCard calendar={result} showDetails={true} />
       </VStack>

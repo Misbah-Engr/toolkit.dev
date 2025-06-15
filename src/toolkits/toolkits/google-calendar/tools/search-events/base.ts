@@ -22,7 +22,7 @@ export const searchEventsTool = createBaseTool({
       ),
     maxResults: z
       .number()
-      .describe("Maximum number of events to return (1-2500, default: 250)"),
+      .describe("Maximum number of events to return (1-2500, default: 5)"),
     orderBy: z
       .string()
       .describe(

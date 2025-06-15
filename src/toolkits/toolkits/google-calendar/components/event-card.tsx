@@ -1,7 +1,14 @@
 import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { HStack, VStack } from "@/components/ui/stack";
-import { Calendar, Clock, MapPin, Users, ExternalLink } from "lucide-react";
+import {
+  Calendar,
+  Clock,
+  MapPin,
+  Users,
+  ExternalLink,
+  User,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -66,86 +73,83 @@ export const EventCard: React.FC<EventCardProps> = ({
   const endTime = formatTime(event.end.dateTime);
 
   return (
-    <div className="hover:bg-muted/50 rounded-lg border p-4 transition-colors">
-      <VStack className="items-start gap-3">
-        <HStack className="w-full items-start gap-2">
-          <Calendar className="text-primary mt-0.5 size-4" />
-          <VStack className="flex-1 items-start gap-1">
-            <h3 className="text-sm font-medium">
+    <VStack className="items-start border-b pb-2 last:border-b-0 last:pb-0">
+      <HStack className="w-full items-start gap-2">
+        <VStack className="flex-1 items-start gap-1">
+          <HStack>
+            <h3 className="text-primary font-medium">
               {event.summary ?? "Untitled Event"}
             </h3>
-
-            {event.description && showDetails && (
-              <p className="text-muted-foreground line-clamp-3 text-xs">
-                {event.description}
-              </p>
-            )}
-
-            <HStack className="text-muted-foreground items-center gap-4 text-xs">
-              <HStack className="items-center gap-1">
-                <Clock className="size-3" />
-                <span>
-                  {isAllDay
-                    ? `${startDate}${startDate !== endDate ? ` - ${endDate}` : ""}`
-                    : `${startTime} - ${endTime}`}
-                </span>
-              </HStack>
-
-              {event.location && (
-                <HStack className="items-center gap-1">
-                  <MapPin className="size-3" />
-                  <span className="max-w-32 truncate">{event.location}</span>
-                </HStack>
-              )}
+            <HStack className="flex-wrap items-center gap-x-1 text-xs">
+              <Clock className="size-3" />
+              <span>
+                {isAllDay
+                  ? `${startDate}${startDate.split(" ")[0] !== endDate.split(" ")[0] ? ` - ${endDate}` : ""}`
+                  : startDate.split(" ")[0] === endDate.split(" ")[0]
+                    ? `${startDate.split(" ")[0]} ${startTime} - ${endTime}`
+                    : `${startDate} ${startTime} - ${endDate} ${endTime}`}
+              </span>
             </HStack>
-          </VStack>
-
-          <HStack className="gap-1">
-            {event.status && event.status !== "confirmed" && (
-              <Badge variant="outline" className="text-xs">
-                {event.status}
-              </Badge>
-            )}
             {isAllDay && (
               <Badge variant="secondary" className="text-xs">
                 All Day
               </Badge>
             )}
+            {event.status && event.status !== "confirmed" && (
+              <Badge variant="outline" className="text-xs">
+                {event.status}
+              </Badge>
+            )}
           </HStack>
-        </HStack>
-
-        {showDetails && (
-          <VStack className="w-full items-start gap-2">
-            {event.organizer && (
-              <HStack className="text-muted-foreground items-center gap-2 text-xs">
-                <Users className="size-3" />
-                <span>
-                  Organized by{" "}
-                  {event.organizer.displayName ?? event.organizer.email}
-                </span>
+          <HStack>
+            {event.location && (
+              <HStack className="items-center gap-1">
+                <MapPin className="size-3" />
+                <span className="max-w-32 truncate">{event.location}</span>
               </HStack>
             )}
+          </HStack>
 
-            {event.attendees && event.attendees.length > 0 && (
-              <div className="text-muted-foreground text-xs">
-                <span>
-                  {event.attendees.length} attendee
-                  {event.attendees.length !== 1 ? "s" : ""}
-                </span>
-              </div>
-            )}
+          {event.description && showDetails && (
+            <p className="text-muted-foreground line-clamp-3 text-xs">
+              {event.description}
+            </p>
+          )}
+        </VStack>
+      </HStack>
 
-            {event.htmlLink && (
-              <Link href={event.htmlLink} target="_blank">
-                <Button variant="outline" size="sm" className="text-xs">
-                  <ExternalLink className="size-3" />
-                  Open in Google Calendar
-                </Button>
-              </Link>
-            )}
-          </VStack>
-        )}
-      </VStack>
-    </div>
+      {showDetails && (
+        <HStack className="w-full flex-wrap gap-2">
+          {event.organizer && (
+            <HStack className="text-muted-foreground items-center gap-2 text-xs">
+              <User className="size-3" />
+              <span>
+                Organized by{" "}
+                {event.organizer.displayName ?? event.organizer.email}
+              </span>
+            </HStack>
+          )}
+
+          {event.attendees && event.attendees.length > 0 && (
+            <HStack className="text-muted-foreground gap-1 text-xs">
+              <Users className="size-3" />
+              <span>
+                {event.attendees.length} attendee
+                {event.attendees.length !== 1 ? "s" : ""}
+              </span>
+            </HStack>
+          )}
+
+          {event.htmlLink && (
+            <Link href={event.htmlLink} target="_blank">
+              <Button variant="outline" size="sm" className="text-xs">
+                <ExternalLink className="size-3" />
+                Open in Google Calendar
+              </Button>
+            </Link>
+          )}
+        </HStack>
+      )}
+    </VStack>
   );
 };

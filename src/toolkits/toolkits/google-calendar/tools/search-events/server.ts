@@ -28,11 +28,11 @@ export const googleCalendarSearchEventsToolConfigServer = (
         q: query,
         timeMin: timeMin || undefined,
         timeMax: timeMax || undefined,
-        maxResults: maxResults || 250,
+        maxResults: maxResults || 5,
         orderBy:
           orderBy && orderBy !== ""
             ? (orderBy as "startTime" | "updated")
-            : undefined,
+            : "updated",
         singleEvents: singleEvents ?? true,
       });
 

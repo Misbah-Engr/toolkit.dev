@@ -27,12 +27,12 @@ export const googleCalendarListEventsToolConfigServer = (
         calendarId,
         timeMin: timeMin || undefined,
         timeMax: timeMax || undefined,
-        maxResults: maxResults || 250,
+        maxResults: maxResults || 5,
         pageToken: pageToken || undefined,
         orderBy:
           orderBy && orderBy !== ""
             ? (orderBy as "startTime" | "updated")
-            : undefined,
+            : "updated",
         singleEvents: singleEvents ?? true,
       });
 
