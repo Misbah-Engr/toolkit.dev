@@ -186,7 +186,7 @@ export async function POST(request: Request) {
         const result = streamText(
           getModelId(selectedChatModel, useNativeSearch),
           {
-            system: "You are a helpful assistant.",
+            system: `You are a helpful assistant. The current date and time is ${new Date().toLocaleString()}.`,
             messages: convertToCoreMessages(messages),
             maxSteps: 5,
             toolCallStreaming: true,
