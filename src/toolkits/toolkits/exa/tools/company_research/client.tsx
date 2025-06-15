@@ -1,8 +1,9 @@
 import React from "react";
 import { Building } from "lucide-react";
 import type { baseCompanyResearchTool } from "./base";
-import type { ClientToolConfig } from "@/mcp/types";
+import type { ClientToolConfig } from "@/toolkits/types";
 import { HStack, VStack } from "@/components/ui/stack";
+import Link from "next/link";
 
 export const exaCompanyResearchToolConfigClient: ClientToolConfig<
   typeof baseCompanyResearchTool.inputSchema.shape,
@@ -27,23 +28,25 @@ export const exaCompanyResearchToolConfigClient: ClientToolConfig<
     }
 
     return (
-      <div className="">
+      <div className="flex flex-col gap-2">
         <h1 className="text-muted-foreground text-sm font-medium">
           Company Research Results
         </h1>
         <div className="flex flex-col gap-2">
           {result.results.map((item, index) => (
-            <div key={index} className="border-l-2 border-blue-200 pl-3">
+            <div key={index} className="border-l-2 pl-2">
               <h3 className="text-sm font-medium">{item.title}</h3>
-              <p className="truncate text-xs text-gray-600">{item.content}</p>
-              <a
+              <p className="text-muted-foreground truncate text-xs">
+                {item.content}
+              </p>
+              <Link
                 href={item.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary text-xs"
               >
                 Read more →
-              </a>
+              </Link>
             </div>
           ))}
         </div>

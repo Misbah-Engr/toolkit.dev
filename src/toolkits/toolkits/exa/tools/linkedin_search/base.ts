@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { createBaseTool } from "@/mcp/create-tool";
+import { createBaseTool } from "@/toolkits/create-tool";
 
-export const baseWikipediaSearchTool = createBaseTool({
-  description: "Search Wikipedia articles on specific topics",
+export const baseLinkedinSearchTool = createBaseTool({
+  description: "Search LinkedIn for companies and people",
   inputSchema: z.object({
     query: z.string().min(1).max(100),
   }),

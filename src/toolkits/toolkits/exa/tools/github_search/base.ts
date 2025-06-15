@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { createBaseTool } from "@/mcp/create-tool";
+import { createBaseTool } from "@/toolkits/create-tool";
 
-export const baseResearchPaperSearchTool = createBaseTool({
-  description: "Search for research papers and academic content",
+export const baseGithubSearchTool = createBaseTool({
+  description: "Search GitHub repositories and accounts",
   inputSchema: z.object({
     query: z.string().min(1).max(100),
   }),

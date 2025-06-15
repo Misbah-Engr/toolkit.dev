@@ -1,10 +1,10 @@
 export enum ExaTools {
   Search = "search",
-  ResearchPaperSearch = "research_paper_search",
-  CompanyResearch = "company_research",
+  ResearchPaperSearch = "research-paper-search",
+  CompanyResearch = "company-research",
   Crawling = "crawling",
-  CompetitorFinder = "competitor_finder",
-  LinkedinSearch = "linkedin_search",
-  WikipediaSearch = "wikipedia_search_exa",
-  GithubSearch = "github_search",
+  CompetitorFinder = "competitor-finder",
+  LinkedinSearch = "linkedin-search",
+  WikipediaSearch = "wikipedia-search-exa",
+  GithubSearch = "github-search",
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "lucide-react";
 import type { baseCrawlingTool } from "./base";
-import type { ClientToolConfig } from "@/mcp/types";
+import type { ClientToolConfig } from "@/toolkits/types";
 import { HStack, VStack } from "@/components/ui/stack";
 
 export const exaCrawlingToolConfigClient: ClientToolConfig<
@@ -14,9 +14,9 @@ export const exaCrawlingToolConfigClient: ClientToolConfig<
         <Link className="text-muted-foreground size-4" />
         <VStack className="items-start gap-0">
           <span className="text-muted-foreground/80 text-xs font-medium">
-            URL Crawling
+            Crawling URLs
           </span>
-          <span className="text-sm">&quot;{args.url}&quot;</span>
+          <span className="text-sm">&quot;{args.urls.join(", ")}&quot;</span>
         </VStack>
       </HStack>
     );
@@ -27,15 +27,14 @@ export const exaCrawlingToolConfigClient: ClientToolConfig<
     }
 
     return (
-      <div className="">
+      <div className="flex flex-col gap-2">
         <h1 className="text-muted-foreground text-sm font-medium">
           Extracted Content
         </h1>
         <div className="flex flex-col gap-2">
           {result.results.map((item, index) => (
-            <div key={index} className="border rounded p-2">
-              <h3 className="font-medium text-sm">{item.title}</h3>
-              <p className="text-xs text-gray-600 mt-1">{item.content.slice(0, 200)}...</p>
+            <div key={index} className="border-l-2 pl-2">
+              <h3 className="text-sm font-medium">{item.title}</h3>
             </div>
           ))}
         </div>

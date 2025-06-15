@@ -3,6 +3,8 @@ import React from "react";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -13,6 +15,7 @@ import type { baseSearchTool } from "./base";
 import type { ClientToolConfig } from "@/toolkits/types";
 import { HStack, VStack } from "@/components/ui/stack";
 import { Search } from "lucide-react";
+import Link from "next/link";
 
 export const exaSearchToolConfigClient: ClientToolConfig<
   typeof baseSearchTool.inputSchema.shape,
@@ -83,26 +86,25 @@ export const exaSearchToolConfigClient: ClientToolConfig<
               <DialogContent className="max-h-[80vh] max-w-3xl overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle>{result.title}</DialogTitle>
-                </DialogHeader>
-                <div className="mt-4 space-y-4">
-                  <div className="text-sm text-gray-500">
-                    Published:{" "}
+                  <DialogDescription>
                     {result.publishedDate
                       ? new Date(result.publishedDate).toLocaleDateString()
                       : "No published date"}
-                  </div>
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="w-full overflow-hidden">
                   <Markdown>{result.content}</Markdown>
-                  <div className="pt-4">
-                    <a
-                      href={result.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-primary hover:text-blue-800"
-                    >
-                      Read full article →
-                    </a>
-                  </div>
                 </div>
+                <DialogFooter>
+                  <Link
+                    href={result.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:bg-primary/10 rounded-md p-1 transition-colors"
+                  >
+                    Read full article →
+                  </Link>
+                </DialogFooter>
               </DialogContent>
             </Dialog>
           ))}

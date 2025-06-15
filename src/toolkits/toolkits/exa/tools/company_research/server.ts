@@ -1,7 +1,7 @@
 import { type baseCompanyResearchTool } from "./base";
 import { env } from "@/env";
 import { Exa } from "exa-js";
-import type { ServerToolConfig } from "@/mcp/types";
+import type { ServerToolConfig } from "@/toolkits/types";
 
 export const exaCompanyResearchToolConfigServer: ServerToolConfig<
   typeof baseCompanyResearchTool.inputSchema.shape,
@@ -14,12 +14,15 @@ export const exaCompanyResearchToolConfigServer: ServerToolConfig<
 
     const exa = new Exa(env.EXA_API_KEY);
 
-    const { results } = await exa.searchAndContents(`${company} company profile business information`, {
-      livecrawl: "always",
-      numResults: 5,
-      type: "neural",
-      useAutoprompt: true,
-    });
+    const { results } = await exa.searchAndContents(
+      `${company} company profile business information`,
+      {
+        livecrawl: "always",
+        numResults: 5,
+        type: "neural",
+        useAutoprompt: true,
+      },
+    );
 
     return {
       results: results.map((result) => ({

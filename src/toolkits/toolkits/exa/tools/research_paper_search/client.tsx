@@ -10,7 +10,7 @@ import {
 import { Markdown } from "@/components/ui/markdown";
 
 import type { baseResearchPaperSearchTool } from "./base";
-import type { ClientToolConfig } from "@/mcp/types";
+import type { ClientToolConfig } from "@/toolkits/types";
 import { HStack, VStack } from "@/components/ui/stack";
 import { BookOpen } from "lucide-react";
 
@@ -66,7 +66,7 @@ export const exaResearchPaperSearchToolConfigClient: ClientToolConfig<
                       {result.publishedDate
                         ? new Date(result.publishedDate).toLocaleDateString()
                         : "No published date"}{" "}
-                      • {result.author ?? "Unknown author"}
+                      {result.author && <>• {result.author}</>}
                     </p>
                   </VStack>
                   {result.image && (
@@ -91,7 +91,7 @@ export const exaResearchPaperSearchToolConfigClient: ClientToolConfig<
                     {result.publishedDate
                       ? new Date(result.publishedDate).toLocaleDateString()
                       : "No published date"}
-                    {result.author && <> • Author: {result.author}</>}
+                    {result.author && <> • {result.author}</>}
                   </div>
                   <Markdown>{result.content}</Markdown>
                   <div className="pt-4">

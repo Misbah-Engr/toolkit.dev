@@ -1,10 +1,10 @@
 import { z } from "zod";
-import { createBaseTool } from "@/mcp/create-tool";
+import { createBaseTool } from "@/toolkits/create-tool";
 
-export const baseCrawlingTool = createBaseTool({
-  description: "Extract content from specific URLs",
+export const baseCompetitorFinderTool = createBaseTool({
+  description: "Find competitors of a company",
   inputSchema: z.object({
-    urls: z.array(z.string()),
+    company: z.string().min(1).max(100),
   }),
   outputSchema: z.object({
     results: z.array(

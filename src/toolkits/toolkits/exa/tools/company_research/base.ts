@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createBaseTool } from "@/mcp/create-tool";
+import { createBaseTool } from "@/toolkits/create-tool";
 
 export const baseCompanyResearchTool = createBaseTool({
   description: "Research companies and gather detailed business information",

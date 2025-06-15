@@ -1,7 +1,7 @@
 import { type baseCrawlingTool } from "./base";
 import { env } from "@/env";
 import { Exa } from "exa-js";
-import type { ServerToolConfig } from "@/mcp/types";
+import type { ServerToolConfig } from "@/toolkits/types";
 
 export const exaCrawlingToolConfigServer: ServerToolConfig<
   typeof baseCrawlingTool.inputSchema.shape,

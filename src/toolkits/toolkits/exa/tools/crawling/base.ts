@@ -1,10 +1,10 @@
 import { z } from "zod";
-import { createBaseTool } from "@/mcp/create-tool";
+import { createBaseTool } from "@/toolkits/create-tool";
 
-export const baseGithubSearchTool = createBaseTool({
-  description: "Search GitHub repositories and accounts",
+export const baseCrawlingTool = createBaseTool({
+  description: "Extract content from specific URLs",
   inputSchema: z.object({
-    query: z.string().min(1).max(100),
+    urls: z.array(z.string()),
   }),
   outputSchema: z.object({
     results: z.array(

@@ -1,11 +1,11 @@
-import { type baseLinkedinSearchTool } from "./base";
+import { type baseResearchPaperSearchTool } from "./base";
 import { env } from "@/env";
 import { Exa } from "exa-js";
-import type { ServerToolConfig } from "@/mcp/types";
+import type { ServerToolConfig } from "@/toolkits/types";
 
-export const exaLinkedinSearchToolConfigServer: ServerToolConfig<
-  typeof baseLinkedinSearchTool.inputSchema.shape,
-  typeof baseLinkedinSearchTool.outputSchema.shape
+export const exaResearchPaperSearchToolConfigServer: ServerToolConfig<
+  typeof baseResearchPaperSearchTool.inputSchema.shape,
+  typeof baseResearchPaperSearchTool.outputSchema.shape
 > = {
   callback: async ({ query }) => {
     if (!env.EXA_API_KEY) {
@@ -17,7 +17,14 @@ export const exaLinkedinSearchToolConfigServer: ServerToolConfig<
     const { results } = await exa.searchAndContents(query, {
       livecrawl: "always",
       numResults: 3,
-      includeDomains: ["linkedin.com"],
+      includeDomains: [
+        "arxiv.org",
+        "scholar.google.com",
+        "pubmed.ncbi.nlm.nih.gov",
+        "researchgate.net",
+        "ieee.org",
+        "acm.org",
+      ],
     });
 
     return {
@@ -34,5 +41,5 @@ export const exaLinkedinSearchToolConfigServer: ServerToolConfig<
     };
   },
   message:
-    "The user is shown LinkedIn profiles and company pages. Provide a summary of the professional information found.",
+    "The user is shown research papers in three cards. Do not list the sources again. Just give a 1-2 sentence summary response to their question and ask what else they would like to know.",
 };

@@ -1,7 +1,7 @@
 import React from "react";
 import { Users } from "lucide-react";
 import type { baseCompetitorFinderTool } from "./base";
-import type { ClientToolConfig } from "@/mcp/types";
+import type { ClientToolConfig } from "@/toolkits/types";
 import { HStack, VStack } from "@/components/ui/stack";
 
 export const exaCompetitorFinderToolConfigClient: ClientToolConfig<
@@ -33,9 +33,11 @@ export const exaCompetitorFinderToolConfigClient: ClientToolConfig<
         </h1>
         <div className="flex flex-col gap-2">
           {result.results.map((item, index) => (
-            <div key={index} className="border-l-2 border-red-200 pl-3">
-              <h3 className="font-medium text-sm">{item.title}</h3>
-              <p className="text-xs text-gray-600 truncate">{item.content}</p>
+            <div key={index} className="border-l-2 pl-2">
+              <h3 className="text-sm font-medium">{item.title}</h3>
+              <p className="text-muted-foreground truncate text-xs">
+                {item.content}
+              </p>
             </div>
           ))}
         </div>

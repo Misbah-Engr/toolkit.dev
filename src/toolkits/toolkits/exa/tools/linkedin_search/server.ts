@@ -1,11 +1,11 @@
-import { type baseGithubSearchTool } from "./base";
+import { type baseLinkedinSearchTool } from "./base";
 import { env } from "@/env";
 import { Exa } from "exa-js";
-import type { ServerToolConfig } from "@/mcp/types";
+import type { ServerToolConfig } from "@/toolkits/types";
 
-export const exaGithubSearchToolConfigServer: ServerToolConfig<
-  typeof baseGithubSearchTool.inputSchema.shape,
-  typeof baseGithubSearchTool.outputSchema.shape
+export const exaLinkedinSearchToolConfigServer: ServerToolConfig<
+  typeof baseLinkedinSearchTool.inputSchema.shape,
+  typeof baseLinkedinSearchTool.outputSchema.shape
 > = {
   callback: async ({ query }) => {
     if (!env.EXA_API_KEY) {
@@ -16,8 +16,8 @@ export const exaGithubSearchToolConfigServer: ServerToolConfig<
 
     const { results } = await exa.searchAndContents(query, {
       livecrawl: "always",
-      numResults: 5,
-      includeDomains: ["github.com"],
+      numResults: 3,
+      includeDomains: ["linkedin.com"],
     });
 
     return {
@@ -34,5 +34,5 @@ export const exaGithubSearchToolConfigServer: ServerToolConfig<
     };
   },
   message:
-    "The user is shown GitHub repositories and accounts. Provide a summary of the development projects and code found.",
+    "The user is shown LinkedIn profiles and company pages. Provide a summary of the professional information found.",
 };

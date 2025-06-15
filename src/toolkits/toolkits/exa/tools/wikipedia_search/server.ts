@@ -1,7 +1,7 @@
 import { type baseWikipediaSearchTool } from "./base";
 import { env } from "@/env";
 import { Exa } from "exa-js";
-import type { ServerToolConfig } from "@/mcp/types";
+import type { ServerToolConfig } from "@/toolkits/types";
 
 export const exaWikipediaSearchToolConfigServer: ServerToolConfig<
   typeof baseWikipediaSearchTool.inputSchema.shape,
