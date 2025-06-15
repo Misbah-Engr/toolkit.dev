@@ -1,14 +1,7 @@
 import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { HStack, VStack } from "@/components/ui/stack";
-import {
-  Calendar,
-  Clock,
-  MapPin,
-  Users,
-  ExternalLink,
-  User,
-} from "lucide-react";
+import { Clock, MapPin, Users, ExternalLink, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
