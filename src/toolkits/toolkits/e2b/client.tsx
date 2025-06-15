@@ -8,10 +8,10 @@ import { baseE2BToolkitConfig } from "./base";
 export const e2bClientToolkit = createClientToolkit(
   baseE2BToolkitConfig,
   {
-    name: "Python Code Execution",
+    name: "Code Interpreter",
     description:
-      "Execute Python code safely in a secure E2B sandbox environment with full package support.",
-    icon: ({ className }) => <Terminal className={className} />,
+      "Execute code in a secure E2B sandbox environment with full package support.",
+    icon: Terminal,
     form: null,
   },
   {

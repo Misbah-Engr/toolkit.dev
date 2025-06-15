@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { HStack } from "@/components/ui/stack";
 import { getClientToolkit } from "@/toolkits/toolkits/client";
 import type { Servers, ServerToolNames } from "@/toolkits/toolkits/shared";
-import type { CreateMessage, ToolInvocation } from "ai";
+import type { CreateMessage, DeepPartial, ToolInvocation } from "ai";
 import { Loader2 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import React, { useState } from "react";
@@ -125,13 +125,16 @@ const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
                 }}
                 style={{ overflow: "hidden" }}
               >
-                <toolConfig.CallComponent
-                  args={
-                    toolInvocation.args as z.infer<
-                      typeof toolConfig.inputSchema
-                    >
-                  }
-                />
+                {toolInvocation.args && (
+                  <toolConfig.CallComponent
+                    args={
+                      toolInvocation.args as DeepPartial<
+                        z.infer<typeof toolConfig.inputSchema>
+                      >
+                    }
+                    isPartial={toolInvocation.state === "partial-call"}
+                  />
+                )}
               </motion.div>
             ) : toolConfig && toolInvocation.state === "result" ? (
               (() => {
@@ -157,6 +160,11 @@ const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
                     <MessageToolResultComponent
                       Component={({ append }) => (
                         <toolConfig.ResultComponent
+                          args={
+                            toolInvocation.args as z.infer<
+                              typeof toolConfig.inputSchema
+                            >
+                          }
                           result={
                             (
                               toolInvocation.result as {

@@ -1,155 +1,269 @@
-import { type CreateMessage } from "ai";
 import { type ClientToolConfig } from "@/toolkits/types";
 import { type baseRunCodeTool } from "./base";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Code, Play, Terminal, AlertCircle } from "lucide-react";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import {
+  AlertCircle,
+  ImageIcon,
+  FileText,
+  Braces,
+  ChartBar,
+  Code,
+  Pi,
+} from "lucide-react";
+import { CodeBlock } from "@/components/ui/code-block";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import type { Result } from "@e2b/code-interpreter";
+import { Markdown } from "@/components/ui/markdown";
+import { HStack } from "@/components/ui/stack";
 
-const CallComponent: React.FC<{
-  args: { code: string };
-}> = ({ args }) => {
-  return (
-    <Card className="w-full">
-      <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2 text-sm">
-          <Play className="h-4 w-4" />
-          Running Python Code
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <Code className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm font-medium">Code to Execute:</span>
-          </div>
-          <SyntaxHighlighter
-            language="python"
-            style={oneDark}
-            className="rounded-md text-sm"
-            customStyle={{
-              margin: 0,
-              padding: '12px',
-              fontSize: '13px',
-            }}
-          >
-            {args.code}
-          </SyntaxHighlighter>
-        </div>
-      </CardContent>
-    </Card>
-  );
-};
+const ResultWrapper: React.FC<{
+  type: string;
+  Icon: React.FC<{ className?: string }>;
+  color: string;
+  children: React.ReactNode;
+  index: number;
+}> = ({ type, Icon, color, children, index }) => (
+  <AccordionItem value={`result-${index}`} className="">
+    <AccordionTrigger className="cursor-pointer p-0 hover:no-underline">
+      {" "}
+      <HStack className="items-center gap-2">
+        <Icon className={`size-4 ${color}`} />
+        <span className="text-muted-foreground text-xs font-medium">
+          {type}
+        </span>
+      </HStack>
+    </AccordionTrigger>
+    <AccordionContent className="bg-muted mt-2 rounded-md p-2">
+      {children}
+    </AccordionContent>
+  </AccordionItem>
+);
 
-const ResultComponent: React.FC<{
-  result: {
-    results: unknown[];
-    logs: {
-      stdout: string[];
-      stderr: string[];
-    };
-  };
-  append: (message: CreateMessage) => void;
-}> = ({ result, append }) => {
-  const hasResults = result.results && result.results.length > 0;
-  const hasStdout = result.logs.stdout.length > 0;
-  const hasStderr = result.logs.stderr.length > 0;
+const ResultItem: React.FC<{ result: Result; index: number }> = ({
+  result,
+  index,
+}) => {
+  const resultRenderers = [
+    {
+      condition: (r: Result) => r.png ?? r.jpeg,
+      render: (r: Result) => (
+        <ResultWrapper
+          type={r.png ? "PNG Image" : "JPEG Image"}
+          color="text-purple-500"
+          Icon={ImageIcon}
+          index={index}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={`data:image/${r.png ? "png" : "jpeg"};base64,${r.png ?? r.jpeg}`}
+            alt={`Result ${index + 1}`}
+            className="h-auto max-w-full rounded-md border"
+          />
+        </ResultWrapper>
+      ),
+    },
+    {
+      condition: (r: Result) => r.svg ?? r.html,
+      render: (r: Result) => (
+        <ResultWrapper
+          type={r.svg ? "SVG" : "HTML"}
+          color={r.svg ? "text-green-500" : "text-orange-500"}
+          Icon={r.svg ? ImageIcon : FileText}
+          index={index}
+        >
+          <div
+            className={`${r.svg ? "bg-muted rounded-md border p-2" : "text-sm"}`}
+            dangerouslySetInnerHTML={{ __html: r.svg ?? r.html ?? "" }}
+          />
+        </ResultWrapper>
+      ),
+    },
+    {
+      condition: (r: Result) => r.markdown ?? r.text ?? r.latex,
+      render: (r: Result) => (
+        <ResultWrapper
+          type={r.markdown ? "Markdown" : r.latex ? "LaTeX" : "Text"}
+          color={
+            r.markdown
+              ? "text-blue-500"
+              : r.latex
+                ? "text-red-500"
+                : "text-gray-500"
+          }
+          Icon={r.latex ? Pi : FileText}
+          index={index}
+        >
+          <Markdown>{r.markdown ?? r.text ?? r.latex ?? ""}</Markdown>
+        </ResultWrapper>
+      ),
+    },
+    {
+      condition: (r: Result) =>
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        r.data ?? r.chart ?? r.json ?? r.javascript ?? r.extra,
+      render: (r: Result) => {
+        const type = r.data
+          ? "Data"
+          : r.chart
+            ? "Chart"
+            : r.json
+              ? "JSON"
+              : r.javascript
+                ? "JavaScript"
+                : "Extra Data";
+        const color = r.data
+          ? "text-cyan-500"
+          : r.chart
+            ? "text-pink-500"
+            : r.json
+              ? "text-yellow-500"
+              : r.javascript
+                ? "text-yellow-600"
+                : "bg-gray-400";
+        const Icon = r.chart ? ChartBar : r.javascript ? Code : Braces;
+        const value =
+          (r.data ?? r.chart)
+            ? JSON.stringify(r.data ?? r.chart, null, 2)
+            : (r.json ??
+              r.javascript ??
+              JSON.stringify(r.extra ?? "", null, 2));
+        const language = r.javascript ? "javascript" : "json";
 
-  const runMore = () => {
-    append({
-      role: "user",
-      content: "Run more Python code for me.",
-    });
-  };
+        return (
+          <ResultWrapper type={type} color={color} Icon={Icon} index={index}>
+            <CodeBlock language={language} value={value} />
+          </ResultWrapper>
+        );
+      },
+    },
+  ];
 
-  return (
-    <Card className="w-full">
-      <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2 text-sm">
-          <Terminal className="h-4 w-4" />
-          Execution Results
-          <Badge variant="outline" className="ml-auto">
-            E2B Sandbox
-          </Badge>
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {hasResults && (
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <Code className="h-4 w-4 text-green-600" />
-              <span className="text-sm font-medium">Results:</span>
-            </div>
-            <div className="bg-muted rounded-md p-3">
-              <SyntaxHighlighter
-                language="json"
-                style={oneDark}
-                className="rounded-md text-sm"
-                customStyle={{
-                  margin: 0,
-                  padding: 0,
-                  background: 'transparent',
-                  fontSize: '13px',
-                }}
-              >
-                {JSON.stringify(result.results, null, 2)}
-              </SyntaxHighlighter>
-            </div>
-          </div>
-        )}
-
-        {hasStdout && (
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <Terminal className="h-4 w-4 text-blue-600" />
-              <span className="text-sm font-medium">Output:</span>
-            </div>
-            <div className="bg-muted rounded-md p-3">
-              <pre className="text-sm whitespace-pre-wrap text-muted-foreground">
-                {result.logs.stdout.join('\n')}
-              </pre>
-            </div>
-          </div>
-        )}
-
-        {hasStderr && (
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <AlertCircle className="h-4 w-4 text-red-600" />
-              <span className="text-sm font-medium">Errors:</span>
-            </div>
-            <div className="bg-red-50 dark:bg-red-950/20 rounded-md p-3">
-              <pre className="text-sm whitespace-pre-wrap text-red-700 dark:text-red-400">
-                {result.logs.stderr.join('\n')}
-              </pre>
-            </div>
-          </div>
-        )}
-
-        {!hasResults && !hasStdout && !hasStderr && (
-          <div className="text-center py-4 text-muted-foreground">
-            <Terminal className="h-8 w-8 mx-auto mb-2 opacity-50" />
-            <p className="text-sm">Code executed successfully with no output</p>
-          </div>
-        )}
-
-        <div className="flex justify-end pt-2">
-          <Button variant="outline" size="sm" onClick={runMore} className="gap-2">
-            <Play className="h-3 w-3" />
-            Run More Code
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
-  );
+  const renderer = resultRenderers.find(({ condition }) => condition(result));
+  return renderer ? renderer.render(result) : null;
 };
 
 export const e2bRunCodeToolConfigClient: ClientToolConfig<
   typeof baseRunCodeTool.inputSchema.shape,
   typeof baseRunCodeTool.outputSchema.shape
 > = {
-  CallComponent,
-  ResultComponent,
+  CallComponent: ({ args, isPartial }) => {
+    return (
+      <div className="w-full space-y-2">
+        <h1 className="text-muted-foreground text-sm font-medium">
+          {isPartial ? "Writing Python Code" : "Executing Python Code"}
+        </h1>
+        {args.code && <CodeBlock language="python" value={args.code} />}
+      </div>
+    );
+  },
+  ResultComponent: ({ result, args: { code } }) => {
+    const hasResults = result.results && result.results.length > 0;
+    const hasLogs =
+      result.logs.stdout.length > 0 || result.logs.stderr.length > 0;
+
+    return (
+      <div className="space-y-2">
+        {hasResults && (
+          <Accordion type="single" collapsible>
+            <AccordionItem value="results" className="space-y-2">
+              <AccordionTrigger className="cursor-pointer p-0 hover:no-underline">
+                <h2 className="text-muted-foreground text-sm font-medium">
+                  Results
+                </h2>
+              </AccordionTrigger>
+              <AccordionContent className="border-l p-0 py-2 pl-2">
+                <Accordion type="multiple">
+                  <div className="space-y-2">
+                    {result.results.map((res, index) => (
+                      <ResultItem key={index} result={res} index={index} />
+                    ))}
+                  </div>
+                </Accordion>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        )}
+
+        {hasLogs && (
+          <Accordion type="single" collapsible>
+            <AccordionItem value="logs">
+              <AccordionTrigger className="cursor-pointer p-0 hover:no-underline">
+                <h3 className="text-primary flex items-center gap-2 text-sm font-medium">
+                  Execution Logs
+                  {result.logs.stdout.length > 0 && (
+                    <Badge variant="outline" className="text-xs">
+                      {result.logs.stdout.length} stdout
+                    </Badge>
+                  )}
+                  {result.logs.stderr.length > 0 && (
+                    <Badge variant="destructive" className="text-xs">
+                      {result.logs.stderr.length} stderr
+                    </Badge>
+                  )}
+                </h3>
+              </AccordionTrigger>
+              <AccordionContent className="p-0 pt-2">
+                <div className="space-y-2">
+                  {result.logs.stdout.length > 0 && (
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-muted-foreground text-xs font-medium">
+                          Standard Output
+                        </span>
+                      </div>
+                      <div className="bg-muted rounded-md p-3">
+                        <pre className="text-muted-foreground text-xs whitespace-pre-wrap">
+                          {result.logs.stdout.join("\n")}
+                        </pre>
+                      </div>
+                    </div>
+                  )}
+
+                  {result.logs.stderr.length > 0 && (
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <AlertCircle className="h-3 w-3 text-red-600" />
+                        <span className="text-muted-foreground text-xs font-medium">
+                          Standard Error
+                        </span>
+                      </div>
+                      <div className="rounded-md bg-red-50 p-3 dark:bg-red-950/20">
+                        <pre className="text-xs whitespace-pre-wrap text-red-700 dark:text-red-400">
+                          {result.logs.stderr.join("\n")}
+                        </pre>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        )}
+
+        {!hasResults && !hasLogs && (
+          <p className="text-muted-foreground text-sm">
+            Code executed successfully with no output
+          </p>
+        )}
+
+        <Accordion type="single" collapsible>
+          <AccordionItem value="args">
+            <AccordionTrigger className="cursor-pointer p-0 hover:no-underline">
+              <h2 className="text-muted-foreground text-sm font-medium">
+                Code
+              </h2>
+            </AccordionTrigger>
+            <AccordionContent className="p-0 pt-2">
+              <CodeBlock language="python" value={code} />
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </div>
+    );
+  },
 };
