@@ -127,7 +127,7 @@ export const CodeBlock: React.FC<Props> = memo(
     return (
       <Card
         className={cn(
-          "codeblock relative w-full overflow-hidden rounded-md py-0 font-sans",
+          "codeblock relative w-full max-w-full gap-0 overflow-hidden overflow-x-auto rounded-md py-0 font-sans",
         )}
       >
         <div
@@ -174,7 +174,7 @@ export const CodeBlock: React.FC<Props> = memo(
                 fontFamily: "var(--font-mono)",
               },
             }}
-            className="rounded-b-md border-0"
+            className="rounded-b-md border-0 p-0"
           >
             {value}
           </SyntaxHighlighter>
@@ -189,7 +189,7 @@ export const CodeBlock: React.FC<Props> = memo(
               margin: 0,
               width: "100%",
               background: "transparent",
-              padding: "1.5rem 1rem",
+              padding: "0.5rem 0.5rem",
               border: "none",
             }}
             lineNumberStyle={{

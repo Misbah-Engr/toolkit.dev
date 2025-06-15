@@ -6,8 +6,6 @@ import {
   githubSearchCodeToolConfigClient,
   githubSearchUsersToolConfigClient,
   githubRepoInfoToolConfigClient,
-  // Keep backwards compatibility
-  githubSearchReposToolConfigClient,
 } from "./tools/client";
 import { SiGithub } from "@icons-pack/react-simple-icons";
 

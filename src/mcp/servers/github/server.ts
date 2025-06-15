@@ -5,8 +5,6 @@ import {
   githubSearchCodeToolConfigServer,
   githubSearchUsersToolConfigServer,
   githubRepoInfoToolConfigServer,
-  // Keep backwards compatibility
-  githubSearchReposToolConfigServer,
 } from "./tools/server";
 import { GithubTools } from "./tools";
 import { api } from "@/trpc/server";
@@ -26,7 +24,8 @@ export const githubToolkitServer = createServerToolkit(
     });
 
     return {
-      [GithubTools.SearchRepos]: githubSearchRepositoriesToolConfigServer(octokit),
+      [GithubTools.SearchRepos]:
+        githubSearchRepositoriesToolConfigServer(octokit),
       [GithubTools.SearchCode]: githubSearchCodeToolConfigServer(octokit),
       [GithubTools.SearchUsers]: githubSearchUsersToolConfigServer(octokit),
       [GithubTools.RepoInfo]: githubRepoInfoToolConfigServer(octokit),

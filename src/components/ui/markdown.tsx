@@ -11,9 +11,15 @@ interface Props {
   children: string;
   headingClassName?: string;
   asSpan?: boolean;
+  className?: string;
 }
 
-const NonMemoizedMarkdown = ({ children, headingClassName, asSpan }: Props) => {
+const NonMemoizedMarkdown = ({
+  children,
+  headingClassName,
+  asSpan,
+  className,
+}: Props) => {
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
@@ -104,7 +110,13 @@ const NonMemoizedMarkdown = ({ children, headingClassName, asSpan }: Props) => {
           const match = /language-(\w+)/.exec(className ?? "");
 
           if (!match) {
-            return <code className={className}>{children}</code>;
+            return (
+              <code
+                className={cn("w-full max-w-full overflow-x-auto", className)}
+              >
+                {children}
+              </code>
+            );
           }
 
           const content = Array.isArray(children)
@@ -114,10 +126,12 @@ const NonMemoizedMarkdown = ({ children, headingClassName, asSpan }: Props) => {
               : "";
 
           return (
-            <CodeBlock
-              language={match[1] ?? "Plain Text"}
-              value={content.replace(/\n$/, "")}
-            />
+            <div className="w-full max-w-full overflow-hidden">
+              <CodeBlock
+                language={match[1] ?? "Plain Text"}
+                value={content.replace(/\n$/, "")}
+              />
+            </div>
           );
         },
         ol({ children }) {
@@ -144,6 +158,11 @@ const NonMemoizedMarkdown = ({ children, headingClassName, asSpan }: Props) => {
         img({ src, alt }) {
           // eslint-disable-next-line @next/next/no-img-element
           return <img src={src} alt={alt} className="mx-auto" />;
+        },
+        pre({ children }) {
+          return (
+            <div className="w-full max-w-full overflow-hidden">{children}</div>
+          );
         },
       }}
     >
