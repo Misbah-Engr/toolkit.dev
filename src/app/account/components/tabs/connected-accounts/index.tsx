@@ -1,4 +1,4 @@
-import { ProviderIcon } from "@/app/_components/navbar/account-button/provider-icon";
+import { AuthProviderIcon } from "@/app/_components/navbar/account-button/provider-icon";
 import { Badge } from "@/components/ui/badge";
 import { HStack } from "@/components/ui/stack";
 import { providers } from "@/server/auth/providers";
@@ -23,7 +23,7 @@ export const ConnectedAccounts = async () => {
             className="w-full justify-between rounded-md border px-4 py-2"
           >
             <HStack className="gap-4">
-              <ProviderIcon provider={provider.name} />
+              <AuthProviderIcon provider={provider.name} />
               <HStack className="gap-2">
                 <h2 className="font-medium">{provider.name}</h2>
                 {account && <Badge variant="success">Connected</Badge>}
