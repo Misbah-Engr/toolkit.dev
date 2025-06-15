@@ -6,6 +6,7 @@ import remarkGfm from "remark-gfm";
 import { CodeBlock } from "./code-block";
 
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 interface Props {
   children: string;
@@ -90,14 +91,14 @@ const NonMemoizedMarkdown = ({ children, headingClassName, asSpan }: Props) => {
         },
         a({ href, children }) {
           return (
-            <a
-              href={href}
-              className="text-brand-500 underline"
+            <Link
+              href={href ?? ""}
+              className="text-primary underline"
               target="_blank"
               rel="noopener noreferrer"
             >
               {children}
-            </a>
+            </Link>
           );
         },
         code({ className, children }) {
