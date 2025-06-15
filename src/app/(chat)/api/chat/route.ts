@@ -33,7 +33,7 @@ import type {
 import type { Chat } from "@prisma/client";
 import { type providers } from "@/ai/registry";
 import { openai } from "@ai-sdk/openai";
-import { getServerToolkit } from "@/mcp/servers/server";
+import { getServerToolkit } from "@/toolkits/toolkits/server";
 
 export const maxDuration = 60;
 
@@ -147,13 +147,6 @@ export async function POST(request: Request) {
               execute: async (args) => {
                 const result = await serverTool.callback(args);
                 if (serverTool.message) {
-                  console.log({
-                    result,
-                    message:
-                      typeof serverTool.message === "function"
-                        ? serverTool.message(result)
-                        : serverTool.message,
-                  });
                   return {
                     result,
                     message:

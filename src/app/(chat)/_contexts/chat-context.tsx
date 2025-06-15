@@ -1,3 +1,5 @@
+"use client";
+
 import { createContext, useContext, useEffect, useState } from "react";
 
 import { useChat } from "@ai-sdk/react";
@@ -21,9 +23,9 @@ import {
   type ImageModel,
   type LanguageModel,
 } from "@/ai/types";
-import type { ClientToolkit } from "@/mcp/types";
+import type { ClientToolkit } from "@/toolkits/types";
 import type { z } from "zod";
-import { clientToolkits } from "@/mcp/servers/client";
+import { clientToolkits } from "@/toolkits/toolkits/client";
 
 interface ChatContextType {
   // Chat state
