@@ -100,6 +100,7 @@ export const messagesRouter = createTRPCRouter({
             ]),
           }),
         ),
+        modelId: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -110,6 +111,7 @@ export const messagesRouter = createTRPCRouter({
           role: input.role,
           parts: input.parts,
           attachments: input.attachments,
+          modelId: input.modelId,
         },
       });
     }),

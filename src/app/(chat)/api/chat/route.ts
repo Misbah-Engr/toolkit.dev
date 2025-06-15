@@ -34,6 +34,7 @@ import type { Chat } from "@prisma/client";
 import { type providers } from "@/ai/registry";
 import { openai } from "@ai-sdk/openai";
 import { getServerToolkit } from "@/toolkits/toolkits/server";
+import { languageModels } from "@/ai/models";
 
 export const maxDuration = 60;
 
@@ -194,6 +195,23 @@ export async function POST(request: Request) {
               console.error(error);
             },
             onFinish: async ({ response }) => {
+              const model = languageModels.find(
+                (model) => model.modelId === selectedChatModel.split(":")[1],
+              );
+
+              if (model) {
+                dataStream.writeMessageAnnotation({
+                  type: "model",
+                  model: {
+                    name: model?.name,
+                    provider: model?.provider,
+                    modelId: model?.modelId,
+                  },
+                });
+              }
+
+              // Send modelId as message annotation
+
               if (session.user?.id) {
                 try {
                   const assistantId = getTrailingMessageId({
@@ -231,6 +249,7 @@ export async function POST(request: Request) {
                             | "image/jpeg",
                         }),
                       ) ?? [],
+                    modelId: selectedChatModel,
                   });
                 } catch (error) {
                   console.error(error);

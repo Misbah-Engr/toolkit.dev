@@ -19,6 +19,9 @@ import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
 
 import type { Message } from "ai";
+import { HStack } from "@/components/ui/stack";
+import { ModelProviderIcon } from "@/components/ui/model-icon";
+import type { Provider } from "@/ai/types";
 
 interface Props {
   message: Message;
@@ -45,6 +48,13 @@ export const PureMessageActions: React.FC<Props> = ({
     },
   });
 
+  // Extract modelId from message annotations
+  const model = message.annotations?.find(
+    (annotation) => (annotation as { type: string }).type === "model",
+  ) as
+    | { model: { name: string; provider: Provider; modelId: string } }
+    | undefined;
+
   if (isLoading) return null;
   if (message.role === "user") return null;
 
@@ -57,12 +67,12 @@ export const PureMessageActions: React.FC<Props> = ({
 
   return (
     <TooltipProvider delayDuration={0}>
-      <div className="flex flex-row gap-2">
+      <div className="flex flex-row items-center gap-2">
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
-              className="text-muted-foreground"
-              variant="outline"
+              className="text-muted-foreground size-fit p-1"
+              variant="ghost"
               size="icon"
               onClick={async () => {
                 const textFromParts = message.parts
@@ -89,8 +99,8 @@ export const PureMessageActions: React.FC<Props> = ({
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
-              className="text-muted-foreground"
-              variant="outline"
+              className="text-muted-foreground size-fit p-1"
+              variant="ghost"
               size="icon"
               onClick={handleBranch}
               disabled={branchChatMutation.isPending}
@@ -100,6 +110,12 @@ export const PureMessageActions: React.FC<Props> = ({
           </TooltipTrigger>
           <TooltipContent>Branch chat from here</TooltipContent>
         </Tooltip>
+        {model && (
+          <HStack>
+            <ModelProviderIcon provider={model.model.provider} />
+            <p className="text-muted-foreground text-xs">{model.model.name}</p>
+          </HStack>
+        )}
       </div>
     </TooltipProvider>
   );
