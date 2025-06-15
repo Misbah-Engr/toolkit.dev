@@ -9,30 +9,31 @@ export const googleCalendarListCalendarsToolConfigServer = (
   typeof listCalendarsTool.outputSchema.shape
 > => {
   return {
-    callback: async ({ maxResults = 100, pageToken }) => {
+    callback: async ({ maxResults, pageToken }) => {
       const auth = new google.auth.OAuth2();
       auth.setCredentials({ access_token: accessToken });
-      
+
       const calendar = google.calendar({ version: "v3", auth });
-      
+
       const response = await calendar.calendarList.list({
-        maxResults,
-        pageToken,
+        maxResults: maxResults,
+        pageToken: pageToken,
       });
-      
-      const calendars = response.data.items?.map((cal) => ({
-        id: cal.id!,
-        summary: cal.summary!,
-        description: cal.description ?? undefined,
-        timeZone: cal.timeZone!,
-        colorId: cal.colorId ?? undefined,
-        backgroundColor: cal.backgroundColor ?? undefined,
-        foregroundColor: cal.foregroundColor ?? undefined,
-        selected: cal.selected ?? undefined,
-        accessRole: cal.accessRole!,
-        primary: cal.primary ?? undefined,
-      })) ?? [];
-      
+
+      const calendars =
+        response.data.items?.map((cal) => ({
+          id: cal.id!,
+          summary: cal.summary!,
+          description: cal.description ?? undefined,
+          timeZone: cal.timeZone!,
+          colorId: cal.colorId ?? undefined,
+          backgroundColor: cal.backgroundColor ?? undefined,
+          foregroundColor: cal.foregroundColor ?? undefined,
+          selected: cal.selected ?? undefined,
+          accessRole: cal.accessRole!,
+          primary: cal.primary ?? undefined,
+        })) ?? [];
+
       return {
         calendars,
         nextPageToken: response.data.nextPageToken ?? undefined,

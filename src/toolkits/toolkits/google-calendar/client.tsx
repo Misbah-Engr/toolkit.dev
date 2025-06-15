@@ -13,17 +13,18 @@ import { Button } from "@/components/ui/button";
 import { signIn } from "next-auth/react";
 import { Loader2 } from "lucide-react";
 
+const calendarScope = "https://www.googleapis.com/auth/calendar";
+
 export const googleCalendarClientToolkit = createClientToolkit(
   baseGoogleCalendarToolkitConfig,
   {
     name: "Google Calendar",
-    description:
-      "Access and manage your Google Calendar events and calendars.",
+    description: "Access and manage your Google Calendar events and calendars.",
     icon: Calendar,
     form: null,
     addToolkitWrapper: ({ children }) => {
-      const { data: hasAccount, isLoading } =
-        api.accounts.hasProviderAccount.useQuery("google");
+      const { data: account, isLoading } =
+        api.accounts.getAccountByProvider.useQuery("google");
 
       if (isLoading) {
         return (
@@ -33,20 +34,56 @@ export const googleCalendarClientToolkit = createClientToolkit(
         );
       }
 
-      if (!hasAccount) {
+      if (!account) {
         return (
           <Button
             variant="outline"
             size="sm"
             onClick={() => {
-              void signIn("google", {
-                callbackUrl: window.location.href,
-                scope: "openid email profile https://www.googleapis.com/auth/calendar.readonly",
-              });
+              void signIn(
+                "google",
+                {
+                  callbackUrl: window.location.href,
+                },
+                {
+                  prompt: "consent",
+                  access_type: "offline",
+                  response_type: "code",
+                  include_granted_scopes: true,
+                  scope: `openid email profile ${calendarScope}`,
+                },
+              );
             }}
           >
             <Calendar className="size-4" />
             Connect
+          </Button>
+        );
+      }
+
+      if (!account?.scope?.includes(calendarScope)) {
+        return (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              void signIn(
+                "google",
+                {
+                  callbackUrl: window.location.href,
+                },
+                {
+                  prompt: "consent",
+                  access_type: "offline",
+                  response_type: "code",
+                  include_granted_scopes: true,
+                  scope: `${account?.scope} ${calendarScope}`,
+                },
+              );
+            }}
+          >
+            <Calendar className="size-4" />
+            Grant Calendar Access
           </Button>
         );
       }
