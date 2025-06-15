@@ -7,6 +7,7 @@ import { api } from "@/trpc/server";
 
 import type { Message } from "@prisma/client";
 import type { Attachment, UIMessage } from "ai";
+import { languageModels } from "@/ai/models";
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
@@ -48,6 +49,28 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
       createdAt: message.createdAt,
       experimental_attachments:
         (message.attachments as unknown as Array<Attachment>) ?? [],
+      annotations: message.modelId
+        ? [
+            {
+              type: "model",
+              model: (() => {
+                const model = languageModels.find(
+                  (model) => model.modelId === message.modelId.split(":")[1],
+                );
+
+                if (!model) {
+                  return null;
+                }
+
+                return {
+                  name: model.name,
+                  provider: model.provider,
+                  modelId: model.modelId,
+                };
+              })(),
+            },
+          ]
+        : undefined,
     }));
   }
 

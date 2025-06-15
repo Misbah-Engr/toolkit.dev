@@ -100,15 +100,18 @@ export const messagesRouter = createTRPCRouter({
             ]),
           }),
         ),
+        modelId: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
       return ctx.db.message.create({
         data: {
+          id: input.id,
           chatId: input.chatId,
           role: input.role,
           parts: input.parts,
           attachments: input.attachments,
+          modelId: input.modelId,
         },
       });
     }),

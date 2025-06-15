@@ -34,6 +34,7 @@ interface Props {
   isLoading: boolean;
   isReadonly: boolean;
   requiresScrollPadding: boolean;
+  chatId: string;
 }
 
 const PurePreviewMessage: React.FC<Props> = ({
@@ -41,6 +42,7 @@ const PurePreviewMessage: React.FC<Props> = ({
   isLoading,
   isReadonly,
   requiresScrollPadding,
+  chatId,
 }) => {
   const [mode, setMode] = useState<"view" | "edit">("view");
 
@@ -164,7 +166,7 @@ const PurePreviewMessage: React.FC<Props> = ({
             })}
 
             {message.role === "assistant" && (
-              <MessageActions message={message} isLoading={isLoading} />
+              <MessageActions message={message} isLoading={isLoading} chatId={chatId} />
             )}
           </div>
         </div>

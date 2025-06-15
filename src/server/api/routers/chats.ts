@@ -1,5 +1,6 @@
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { z } from "zod";
+import type { InputJsonValue } from "@prisma/client/runtime/library";
 
 export const chatsRouter = createTRPCRouter({
   getChats: protectedProcedure
@@ -83,5 +84,70 @@ export const chatsRouter = createTRPCRouter({
       return ctx.db.chat.delete({
         where: { id: input },
       });
+    }),
+
+  branchChat: protectedProcedure
+    .input(
+      z.object({
+        originalChatId: z.string(),
+        messageId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { originalChatId, messageId } = input;
+      const userId = ctx.session.user.id;
+
+      // Get the original chat to verify ownership
+      const originalChat = await ctx.db.chat.findUnique({
+        where: { id: originalChatId, userId },
+      });
+
+      if (!originalChat) {
+        throw new Error("Chat not found or access denied");
+      }
+
+      // Get all messages up to and including the specified message
+      const messagesToCopy = await ctx.db.message.findMany({
+        where: {
+          chatId: originalChatId,
+        },
+        orderBy: {
+          createdAt: "asc",
+        },
+      });
+
+      // Find the index of the target message
+      const messageIndex = messagesToCopy.findIndex(
+        (msg) => msg.id === messageId,
+      );
+      if (messageIndex === -1) {
+        throw new Error("Message not found in chat");
+      }
+
+      // Keep only messages up to and including the target message
+      const messagesToInclude = messagesToCopy.slice(0, messageIndex + 1);
+
+      // Create the new branched chat
+      const newChat = await ctx.db.chat.create({
+        data: {
+          title: originalChat.title,
+          userId: userId,
+          visibility: originalChat.visibility,
+          parentChatId: originalChatId,
+        },
+      });
+
+      // Copy the messages to the new chat
+      await ctx.db.message.createMany({
+        data: messagesToInclude.map((message) => ({
+          chatId: newChat.id,
+          role: message.role,
+          parts: message.parts as InputJsonValue,
+          attachments: message.attachments as InputJsonValue[],
+          modelId: message.modelId,
+        })),
+      });
+
+      return newChat;
     }),
 });
