@@ -1,8 +1,8 @@
 import { AnimatedShinyText } from "@/components/magicui/animated-shiny-text";
 import { Card } from "@/components/ui/card";
 import { HStack } from "@/components/ui/stack";
-import { getClientToolkit } from "@/mcp/servers/client";
-import type { Servers, ServerToolNames } from "@/mcp/servers/shared";
+import { getClientToolkit } from "@/toolkits/toolkits/client";
+import type { Servers, ServerToolNames } from "@/toolkits/toolkits/shared";
 import type { CreateMessage, ToolInvocation } from "ai";
 import { Loader2 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";

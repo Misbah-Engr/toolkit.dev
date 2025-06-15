@@ -53,6 +53,16 @@ export const accountsRouter = createTRPCRouter({
       });
     }),
 
+  hasProviderAccount: protectedProcedure
+    .input(z.string())
+    .query(async ({ ctx, input }) => {
+      const account = await ctx.db.account.findFirst({
+        where: { userId: ctx.session.user.id, provider: input },
+      });
+
+      return !!account;
+    }),
+
   deleteAccount: protectedProcedure
     .input(z.string())
     .mutation(async ({ ctx, input }) => {
