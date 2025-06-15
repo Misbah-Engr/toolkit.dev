@@ -1,11 +1,13 @@
 import React from "react";
 
-import { File, User } from "lucide-react";
+import { File, User, Brain, Image } from "lucide-react";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { ConnectedAccounts } from "./connected-accounts";
 import { Attachments } from "./attachments";
+import { Memories } from "./memories";
+import { Images } from "./images";
 import { HStack } from "@/components/ui/stack";
 
 const tabs = [
@@ -20,6 +22,18 @@ const tabs = [
     value: "attachments",
     component: <Attachments />,
     icon: <File />,
+  },
+  {
+    label: "Memories",
+    value: "memories",
+    component: <Memories />,
+    icon: <Brain />,
+  },
+  {
+    label: "Images Generated",
+    value: "images",
+    component: <Images />,
+    icon: <Image />,
   },
 ];
 

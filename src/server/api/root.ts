@@ -9,6 +9,7 @@ import {
   usersRouter,
   accountsRouter,
   imagesRouter,
+  memoriesRouter,
 } from "./routers";
 
 /**
@@ -25,6 +26,7 @@ export const appRouter = createTRPCRouter({
   users: usersRouter,
   accounts: accountsRouter,
   images: imagesRouter,
+  memories: memoriesRouter,
 });
 
 // export type definition of API
