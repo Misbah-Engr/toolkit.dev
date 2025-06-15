@@ -3,6 +3,7 @@ import { exaToolkitServer } from "./exa/server";
 import { githubToolkitServer } from "./github/server";
 import { imageToolkitServer } from "./image/server";
 import { mem0ToolkitServer } from "./mem0/server";
+import { notionToolkitServer } from "./notion/server";
 import {
   Servers,
   type ServerToolNames,
@@ -18,6 +19,7 @@ export const serverToolkits: ServerToolkits = {
   [Servers.Image]: imageToolkitServer,
   [Servers.Github]: githubToolkitServer,
   [Servers.Memory]: mem0ToolkitServer,
+  [Servers.Notion]: notionToolkitServer,
 };
 
 export function getServerToolkit<T extends Servers>(
