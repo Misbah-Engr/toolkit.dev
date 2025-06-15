@@ -24,6 +24,11 @@ const createAuthSchema = () => {
     authSchema.AUTH_TWITTER_SECRET = z.string();
   }
 
+  if (process.env.AUTH_NOTION_ID && process.env.AUTH_NOTION_SECRET) {
+    authSchema.AUTH_NOTION_ID = z.string();
+    authSchema.AUTH_NOTION_SECRET = z.string();
+  }
+
   if (Object.keys(authSchema).length === 0) {
     throw new Error("No authentication provider configured");
   }
@@ -52,6 +57,16 @@ const authRuntimeEnv = () => {
   if (process.env.AUTH_TWITTER_ID && process.env.AUTH_TWITTER_SECRET) {
     object.AUTH_TWITTER_ID = process.env.AUTH_TWITTER_ID;
     object.AUTH_TWITTER_SECRET = process.env.AUTH_TWITTER_SECRET;
+  }
+
+  if (process.env.AUTH_NOTION_ID && process.env.AUTH_NOTION_SECRET) {
+    object.AUTH_NOTION_ID = process.env.AUTH_NOTION_ID;
+    object.AUTH_NOTION_SECRET = process.env.AUTH_NOTION_SECRET;
+  }
+
+  if (process.env.AUTH_NOTION_ID && process.env.AUTH_NOTION_SECRET) {
+    object.AUTH_NOTION_ID = process.env.AUTH_NOTION_ID;
+    object.AUTH_NOTION_SECRET = process.env.AUTH_NOTION_SECRET;
   }
 
   return object;
