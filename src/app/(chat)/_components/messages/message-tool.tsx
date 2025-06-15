@@ -6,7 +6,7 @@ import type { Servers, ServerToolNames } from "@/toolkits/toolkits/shared";
 import type { CreateMessage, DeepPartial, ToolInvocation } from "ai";
 import { Loader2 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import React, { useState } from "react";
+import React from "react";
 import type z from "zod";
 import { useChatContext } from "../../_contexts/chat-context";
 
@@ -15,7 +15,13 @@ interface Props {
 }
 
 const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
-  const [completeOnFirstMount] = useState(toolInvocation.state === "result");
+  const argsDefined = toolInvocation.args !== undefined;
+  const completeOnFirstMount = toolInvocation.state === "result";
+
+  console.log({
+    argsDefined,
+    completeOnFirstMount,
+  });
 
   const { toolName } = toolInvocation;
 
@@ -31,9 +37,9 @@ const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
 
   const typedServer = server as Servers;
 
-  const mcpServerConfig = getClientToolkit(typedServer);
+  const clientToolkit = getClientToolkit(typedServer);
 
-  if (!mcpServerConfig) {
+  if (!clientToolkit) {
     return (
       <pre className="w-full max-w-full whitespace-pre-wrap">
         {JSON.stringify(toolInvocation, null, 2)}
@@ -42,48 +48,55 @@ const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
   }
 
   const typedTool = tool as ServerToolNames[typeof typedServer];
-  const toolConfig = mcpServerConfig.tools[typedTool];
+  const toolConfig = clientToolkit.tools[typedTool];
 
   return (
     <motion.div
       initial={{
-        opacity: completeOnFirstMount ? 1 : 0,
-        y: completeOnFirstMount ? 0 : 20,
-        scale: completeOnFirstMount ? 1 : 0.95,
+        opacity: argsDefined ? 1 : 0,
+        y: argsDefined ? 0 : 20,
+        scale: argsDefined ? 1 : 0.95,
       }}
-      animate={{
-        opacity: 1,
-        y: 0,
-        scale: 1,
-      }}
+      animate={
+        !argsDefined
+          ? {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+            }
+          : undefined
+      }
       transition={{ duration: 0.4, ease: "easeInOut" }}
-      layout
+      layout={!argsDefined ? true : undefined}
     >
       <Card className="gap-0 overflow-hidden p-0">
         <HStack className="border-b p-2">
-          <mcpServerConfig.icon className="size-4" />
+          <clientToolkit.icon className="size-4" />
           <AnimatePresence mode="wait">
             {toolInvocation.state === "result" ? (
               <motion.span
                 key="completed"
                 initial={{ opacity: 0, y: completeOnFirstMount ? 0 : -5 }}
                 animate={{ opacity: 1, y: completeOnFirstMount ? 0 : 0 }}
-                exit={{ opacity: 0, y: completeOnFirstMount ? 0 : 5 }}
+                // exit={{ opacity: 0, y: completeOnFirstMount ? 0 : 5 }}
                 transition={{ duration: 0.2 }}
                 className="text-lg font-medium"
               >
-                {mcpServerConfig.name} Toolkit
+                {clientToolkit.name} Toolkit
               </motion.span>
             ) : (
               <motion.div
                 key="loading"
-                initial={{ opacity: 0, y: -5 }}
+                initial={{
+                  opacity: argsDefined ? 1 : 0,
+                  y: argsDefined ? 0 : -5,
+                }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 5 }}
+                // exit={{ opacity: 0, y: argsDefined ? 0 : 5 }}
                 transition={{ duration: 0.2 }}
               >
                 <AnimatedShinyText className="text-lg font-medium">
-                  {mcpServerConfig.name} Toolkit
+                  {clientToolkit.name} Toolkit
                 </AnimatedShinyText>
               </motion.div>
             )}
@@ -92,9 +105,12 @@ const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
             {(toolInvocation.state === "call" ||
               toolInvocation.state === "partial-call") && (
               <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
+                initial={{
+                  opacity: argsDefined ? 1 : 0,
+                  scale: argsDefined ? 1 : 0.8,
+                }}
+                animate={{ opacity: 1, scale: argsDefined ? 1 : 1 }}
+                // exit={{ opacity: 0, scale: argsDefined ? 1 : 0.8 }}
                 transition={{ duration: 0.2 }}
               >
                 <Loader2 className="size-4 animate-spin opacity-60" />
@@ -104,7 +120,7 @@ const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
         </HStack>
         <motion.div
           className="p-2"
-          layout
+          layout={!argsDefined ? true : undefined}
           transition={{ duration: 0.3, ease: "easeInOut" }}
         >
           <AnimatePresence mode="wait">
@@ -113,11 +129,11 @@ const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
               <motion.div
                 key="call"
                 initial={{
-                  opacity: 0,
-                  height: completeOnFirstMount ? "auto" : 0,
+                  opacity: argsDefined ? 1 : 0,
+                  height: argsDefined ? "auto" : 0,
                 }}
                 animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
+                // exit={{ opacity: 0, height: 0 }}
                 transition={{
                   duration: 0.3,
                   ease: "easeOut",
@@ -146,10 +162,10 @@ const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
                       height: completeOnFirstMount ? "auto" : 0,
                     }}
                     animate={{ opacity: 1, height: "auto" }}
-                    exit={{
-                      opacity: 0,
-                      height: completeOnFirstMount ? "auto" : 0,
-                    }}
+                    // exit={{
+                    //   opacity: 0,
+                    //   height: completeOnFirstMount ? "auto" : 0,
+                    // }}
                     transition={{
                       duration: 0.3,
                       ease: "easeOut",
@@ -187,10 +203,10 @@ const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
                   height: completeOnFirstMount ? "auto" : 0,
                 }}
                 animate={{ opacity: 1, height: "auto" }}
-                exit={{
-                  opacity: 0,
-                  height: completeOnFirstMount ? "auto" : 0,
-                }}
+                // exit={{
+                //   opacity: 0,
+                //   height: completeOnFirstMount ? "auto" : 0,
+                // }}
                 transition={{
                   duration: 0.3,
                   ease: "easeOut",

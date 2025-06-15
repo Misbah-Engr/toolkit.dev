@@ -168,8 +168,20 @@ export const e2bRunCodeToolConfigClient: ClientToolConfig<
 
     return (
       <div className="space-y-2">
+        <Accordion type="single" collapsible>
+          <AccordionItem value="args">
+            <AccordionTrigger className="cursor-pointer p-0 hover:no-underline">
+              <h2 className="text-muted-foreground text-sm font-medium">
+                Code
+              </h2>
+            </AccordionTrigger>
+            <AccordionContent className="p-0 pt-2">
+              <CodeBlock language="python" value={code} />
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
         {hasResults && (
-          <Accordion type="single" collapsible>
+          <Accordion type="single" collapsible defaultValue="results">
             <AccordionItem value="results" className="space-y-2">
               <AccordionTrigger className="cursor-pointer p-0 hover:no-underline">
                 <h2 className="text-muted-foreground text-sm font-medium">
@@ -177,7 +189,12 @@ export const e2bRunCodeToolConfigClient: ClientToolConfig<
                 </h2>
               </AccordionTrigger>
               <AccordionContent className="border-l p-0 py-2 pl-2">
-                <Accordion type="multiple">
+                <Accordion
+                  type="multiple"
+                  defaultValue={result.results.map(
+                    (_, index) => `result-${index}`,
+                  )}
+                >
                   <div className="space-y-2">
                     {result.results.map((res, index) => (
                       <ResultItem key={index} result={res} index={index} />
@@ -250,19 +267,6 @@ export const e2bRunCodeToolConfigClient: ClientToolConfig<
             Code executed successfully with no output
           </p>
         )}
-
-        <Accordion type="single" collapsible>
-          <AccordionItem value="args">
-            <AccordionTrigger className="cursor-pointer p-0 hover:no-underline">
-              <h2 className="text-muted-foreground text-sm font-medium">
-                Code
-              </h2>
-            </AccordionTrigger>
-            <AccordionContent className="p-0 pt-2">
-              <CodeBlock language="python" value={code} />
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
       </div>
     );
   },
