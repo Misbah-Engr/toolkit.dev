@@ -9,6 +9,6 @@ export const baseAddMemoryTool = createBaseTool({
   }),
   outputSchema: z.object({
     success: z.boolean(),
-    message: z.string(),
+    content: z.string(),
   }),
 });

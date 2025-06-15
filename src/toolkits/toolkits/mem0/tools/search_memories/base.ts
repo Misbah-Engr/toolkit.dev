@@ -7,7 +7,6 @@ export const baseSearchMemoriesTool = createBaseTool({
   inputSchema: z.object({
     query: z
       .string()
-      .min(1)
       .describe(
         "The search query. This is the query that the user has asked for. Example: 'What did I tell you about the weather last week?' or 'What did I tell you about my friend John?'",
       ),
@@ -20,6 +19,6 @@ export const baseSearchMemoriesTool = createBaseTool({
         metadata: z.record(z.any()).optional(),
       }),
     ),
-    message: z.string(),
+    query: z.string(),
   }),
 });

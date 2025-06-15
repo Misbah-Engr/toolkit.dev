@@ -25,16 +25,13 @@ export const mem0SearchMemoriesToolConfigServer = (
           score: result.score ?? 0,
           metadata: result.metadata as object,
         })),
-        message:
-          results.length > 0
-            ? `Found ${results.length} relevant memories`
-            : "No memories found matching your query",
+        query,
       };
     } catch (error) {
       console.error("Error searching memories:", error);
       return {
         memories: [],
-        message: `Failed to search memories: ${error instanceof Error ? error.message : String(error)}`,
+        query,
       };
     }
   },

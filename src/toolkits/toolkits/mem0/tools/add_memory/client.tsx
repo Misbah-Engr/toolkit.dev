@@ -3,7 +3,8 @@ import { Plus } from "lucide-react";
 
 import type { baseAddMemoryTool } from "./base";
 import type { ClientToolConfig } from "@/toolkits/types";
-import { ToolCallDisplay } from "../../components";
+import { ToolCallDisplay } from "../../components/tool-call-display";
+import { HStack, VStack } from "@/components/ui/stack";
 
 export const mem0AddMemoryToolConfigClient: ClientToolConfig<
   typeof baseAddMemoryTool.inputSchema.shape,
@@ -22,17 +23,27 @@ export const mem0AddMemoryToolConfigClient: ClientToolConfig<
   },
   ResultComponent: ({ result }) => {
     return (
-      <div className="flex items-center gap-2 rounded-lg border p-3">
+      <div className="flex items-center gap-2">
         {result.success ? (
-          <div className="flex items-center gap-2 text-green-600">
-            <Plus className="h-4 w-4" />
-            <span className="text-sm font-medium">{result.message}</span>
-          </div>
+          <HStack className="text-primary flex items-center gap-2">
+            <Plus className="size-4" />
+            <VStack className="items-start gap-0">
+              <span className="text-xs font-medium">Memory Added</span>
+              <span className="text-muted-foreground text-sm">
+                {result.content}
+              </span>
+            </VStack>
+          </HStack>
         ) : (
-          <div className="flex items-center gap-2 text-red-600">
-            <Plus className="h-4 w-4" />
-            <span className="text-sm font-medium">{result.message}</span>
-          </div>
+          <HStack className="text-destructive flex items-center gap-2">
+            <Plus className="size-4" />
+            <VStack className="items-start gap-0">
+              <span className="text-xs font-medium">Failed to add memory</span>
+              <span className="text-muted-foreground text-sm">
+                {result.content}
+              </span>
+            </VStack>
+          </HStack>
         )}
       </div>
     );

@@ -14,8 +14,6 @@ export const mem0AddMemoryToolConfigServer = (
       throw new Error("MEM0_API_KEY is not set");
     }
 
-    console.log("MEM0_API_KEY", env.MEM0_API_KEY);
-
     const memoryClient = new MemoryClient({ apiKey: env.MEM0_API_KEY });
 
     try {
@@ -28,13 +26,13 @@ export const mem0AddMemoryToolConfigServer = (
 
       return {
         success: true,
-        message: "Memory added successfully",
+        content,
       };
     } catch (error) {
       console.error("Error adding memory:", error);
       return {
         success: false,
-        message: `Failed to add memory: ${error instanceof Error ? error.message : String(error)}`,
+        content: `Failed to add memory: ${error instanceof Error ? error.message : String(error)}`,
       };
     }
   },
