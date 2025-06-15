@@ -1,6 +1,7 @@
 import type { ServerToolkit } from "../types";
 import { exaToolkitServer } from "./exa/server";
 import { githubToolkitServer } from "./github/server";
+import { googleCalendarToolkitServer } from "./google-calendar/server";
 import { imageToolkitServer } from "./image/server";
 import { mem0ToolkitServer } from "./mem0/server";
 import {
@@ -17,6 +18,7 @@ export const serverToolkits: ServerToolkits = {
   [Servers.Exa]: exaToolkitServer,
   [Servers.Image]: imageToolkitServer,
   [Servers.Github]: githubToolkitServer,
+  [Servers.GoogleCalendar]: googleCalendarToolkitServer,
   [Servers.Memory]: mem0ToolkitServer,
 };
 
