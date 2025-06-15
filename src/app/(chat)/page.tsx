@@ -28,6 +28,7 @@ export default async function Page() {
       isReadonly={false}
       session={session}
       autoResume={false}
+      hasInitialMessages={false}
     />
   );
 }

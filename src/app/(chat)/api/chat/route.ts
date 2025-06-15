@@ -85,11 +85,11 @@ export async function POST(request: Request) {
       return new ChatSDKError("unauthorized:chat").toResponse();
     }
 
-    const messageCount = await api.messages.getMessageCountByUserId();
+    // const messageCount = await api.messages.getMessageCountByUserId();
 
-    if (messageCount > 100) {
-      return new ChatSDKError("rate_limit:chat").toResponse();
-    }
+    // if (messageCount > 100) {
+    //   return new ChatSDKError("rate_limit:chat").toResponse();
+    // }
 
     const chat = await api.chats.getChat(id);
 
