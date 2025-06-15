@@ -2,6 +2,7 @@ import type { ServerToolkit } from "../types";
 import { exaToolkitServer } from "./exa/server";
 import { githubToolkitServer } from "./github/server";
 import { imageToolkitServer } from "./image/server";
+import { mem0ToolkitServer } from "./mem0/server";
 import {
   Servers,
   type ServerToolNames,
@@ -16,6 +17,7 @@ export const serverToolkits: ServerToolkits = {
   [Servers.Exa]: exaToolkitServer,
   [Servers.Image]: imageToolkitServer,
   [Servers.Github]: githubToolkitServer,
+  [Servers.Memory]: mem0ToolkitServer,
 };
 
 export function getServerToolkit<T extends Servers>(

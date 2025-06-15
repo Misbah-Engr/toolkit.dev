@@ -4,7 +4,7 @@ import { Brain, Star } from "lucide-react";
 export interface MemoryData {
   memory: string;
   score: number;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 interface MemoryListProps {
@@ -16,8 +16,8 @@ interface MemoryListProps {
 export function MemoryList({ memories, title, emptyMessage }: MemoryListProps) {
   if (memories.length === 0) {
     return (
-      <div className="text-center py-6 text-muted-foreground">
-        <Brain className="h-8 w-8 mx-auto mb-2 opacity-50" />
+      <div className="text-muted-foreground py-6 text-center">
+        <Brain className="mx-auto mb-2 h-8 w-8 opacity-50" />
         <p className="text-sm">{emptyMessage}</p>
       </div>
     );
@@ -25,7 +25,7 @@ export function MemoryList({ memories, title, emptyMessage }: MemoryListProps) {
 
   return (
     <div className="space-y-4">
-      <h3 className="text-sm font-medium flex items-center gap-2">
+      <h3 className="flex items-center gap-2 text-sm font-medium">
         <Brain className="h-4 w-4" />
         {title} ({memories.length})
       </h3>
@@ -44,21 +44,21 @@ interface MemoryItemProps {
 
 function MemoryItem({ memory }: MemoryItemProps) {
   return (
-    <div className="p-3 rounded-lg border bg-card">
-      <div className="flex items-start justify-between gap-2 mb-2">
-        <p className="text-sm flex-1">{memory.memory}</p>
-        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+    <div className="bg-card rounded-lg border p-3">
+      <div className="mb-2 flex items-start justify-between gap-2">
+        <p className="flex-1 text-sm">{memory.memory}</p>
+        <div className="text-muted-foreground flex items-center gap-1 text-xs">
           <Star className="h-3 w-3" />
           <span>{(memory.score * 100).toFixed(0)}%</span>
         </div>
       </div>
       {memory.metadata && Object.keys(memory.metadata).length > 0 && (
-        <div className="text-xs text-muted-foreground">
+        <div className="text-muted-foreground text-xs">
           <details>
-            <summary className="cursor-pointer hover:text-foreground">
+            <summary className="hover:text-foreground cursor-pointer">
               View metadata
             </summary>
-            <pre className="mt-1 p-2 bg-muted rounded text-xs overflow-auto">
+            <pre className="bg-muted mt-1 overflow-auto rounded p-2 text-xs">
               {JSON.stringify(memory.metadata, null, 2)}
             </pre>
           </details>

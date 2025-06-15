@@ -1,5 +1,5 @@
 import React from "react";
-import { Search, User, Brain } from "lucide-react";
+import { Search } from "lucide-react";
 
 import type { baseSearchMemoriesTool } from "./base";
 import type { ClientToolConfig } from "@/toolkits/types";
@@ -12,8 +12,11 @@ export const mem0SearchMemoriesToolConfigClient: ClientToolConfig<
   CallComponent: ({ args }) => {
     return (
       <div className="space-y-2">
-        <ToolCallDisplay icon={Search} label="Search Query" value={args.query} />
-        <ToolCallDisplay icon={User} label="User ID" value={args.userId} />
+        <ToolCallDisplay
+          icon={Search}
+          label="Search Query"
+          value={args.query}
+        />
       </div>
     );
   },

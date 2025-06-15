@@ -132,6 +132,7 @@ export const env = createEnv({
     ...createAuthSchema(),
     ...createLlmSchema(),
     EXA_API_KEY: z.string().optional(),
+    MEM0_API_KEY: z.string().optional(),
   },
 
   /**
@@ -155,6 +156,7 @@ export const env = createEnv({
     ...authRuntimeEnv(),
     ...llmRuntimeEnv(),
     EXA_API_KEY: process.env.EXA_API_KEY,
+    MEM0_API_KEY: process.env.MEM0_API_KEY,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

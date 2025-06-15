@@ -1,5 +1,5 @@
 import React from "react";
-import { Plus, User } from "lucide-react";
+import { Plus } from "lucide-react";
 
 import type { baseAddMemoryTool } from "./base";
 import type { ClientToolConfig } from "@/toolkits/types";
@@ -12,14 +12,17 @@ export const mem0AddMemoryToolConfigClient: ClientToolConfig<
   CallComponent: ({ args }) => {
     return (
       <div className="space-y-2">
-        <ToolCallDisplay icon={Plus} label="Adding Memory" value={args.content} />
-        <ToolCallDisplay icon={User} label="User ID" value={args.userId} />
+        <ToolCallDisplay
+          icon={Plus}
+          label="Adding Memory"
+          value={args.content}
+        />
       </div>
     );
   },
   ResultComponent: ({ result }) => {
     return (
-      <div className="flex items-center gap-2 p-3 rounded-lg border">
+      <div className="flex items-center gap-2 rounded-lg border p-3">
         {result.success ? (
           <div className="flex items-center gap-2 text-green-600">
             <Plus className="h-4 w-4" />

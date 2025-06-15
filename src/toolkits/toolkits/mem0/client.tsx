@@ -9,12 +9,10 @@ import { baseMem0ToolkitConfig } from "./base";
 export const mem0ClientToolkit = createClientToolkit(
   baseMem0ToolkitConfig,
   {
-    name: "Mem0 Memory",
+    name: "Memory",
     description:
-      "Mem0 is a memory toolkit that allows you to store and retrieve memories for personalized conversations. It can remember user preferences, past conversations, and context for better interactions.",
-    icon: ({ className }) => (
-      <Brain className={className} />
-    ),
+      "Memory is a memory toolkit that allows you to store and retrieve memories for personalized conversations. It can remember user preferences, past conversations, and context for better interactions.",
+    icon: ({ className }) => <Brain className={className} />,
     form: null,
   },
   {
