@@ -16,7 +16,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Check, Globe, Lock, MoreHorizontal, Share, Trash } from "lucide-react";
+import { Check, Globe, Lock, MoreHorizontal, Share, Trash, ArrowUpRight } from "lucide-react";
 import { useUpdateChatVisibility } from "@/app/_hooks/use-chat-visibility";
 
 import type { Chat } from "@prisma/client";
@@ -38,7 +38,12 @@ const PureChatItem = ({
     <SidebarMenuItem>
       <SidebarMenuButton asChild isActive={isActive}>
         <Link href={`/chat/${chat.id}`} onClick={() => setOpenMobile(false)}>
-          <span>{chat.title}</span>
+          <div className="flex items-center gap-2">
+            {chat.parentChatId && (
+              <ArrowUpRight className="size-3 text-muted-foreground" />
+            )}
+            <span>{chat.title}</span>
+          </div>
         </Link>
       </SidebarMenuButton>
 

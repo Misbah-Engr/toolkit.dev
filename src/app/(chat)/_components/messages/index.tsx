@@ -46,6 +46,7 @@ const PureMessages: React.FC<Props> = ({
           requiresScrollPadding={
             hasSentMessage && index === messages.length - 1
           }
+          chatId={chatId}
         />
       ))}
 

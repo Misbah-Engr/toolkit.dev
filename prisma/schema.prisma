@@ -74,7 +74,10 @@ model Chat {
     title      String
     userId     String
     visibility Visibility @default(private)
+    parentChatId String?  // For branched chats
     user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+    parentChat Chat?      @relation("ChatBranch", fields: [parentChatId], references: [id], onDelete: Cascade)
+    branches   Chat[]     @relation("ChatBranch")
     messages   Message[]
     stream     Stream[]
 }
@@ -85,6 +88,7 @@ model Message {
     role        String
     parts       Json
     attachments Json[]
+    modelId     String?      // For tracking which model generated the message
     createdAt   DateTime     @default(now())
     chat        Chat         @relation(fields: [chatId], references: [id], onDelete: Cascade)
 }
