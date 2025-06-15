@@ -35,7 +35,7 @@ const PureMessages: React.FC<Props> = ({
   return (
     <div
       ref={containerRef}
-      className="relative flex h-full min-w-0 flex-1 flex-col gap-6 overflow-y-scroll py-8"
+      className="relative mb-20 flex h-full min-w-0 flex-1 flex-col gap-6 overflow-y-scroll py-8"
     >
       {messages.map((message, index) => (
         <PreviewMessage

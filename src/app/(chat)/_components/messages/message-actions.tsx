@@ -4,7 +4,7 @@ import { toast } from "sonner";
 
 import { useCopyToClipboard } from "usehooks-ts";
 
-import { Copy, Share } from "lucide-react";
+import { Copy, GitBranch } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -26,12 +26,18 @@ interface Props {
   chatId: string;
 }
 
-export const PureMessageActions: React.FC<Props> = ({ message, isLoading, chatId }) => {
+export const PureMessageActions: React.FC<Props> = ({
+  message,
+  isLoading,
+  chatId,
+}) => {
   const [, copyToClipboard] = useCopyToClipboard();
   const router = useRouter();
+  const utils = api.useUtils();
   const branchChatMutation = api.chats.branchChat.useMutation({
     onSuccess: (newChat) => {
       toast.success("Chat branched successfully!");
+      void utils.chats.getChats.invalidate();
       router.push(`/chat/${newChat.id}`);
     },
     onError: (error) => {
@@ -43,20 +49,9 @@ export const PureMessageActions: React.FC<Props> = ({ message, isLoading, chatId
   if (message.role === "user") return null;
 
   const handleBranch = () => {
-    const textFromParts = message.parts
-      ?.filter((part) => part.type === "text")
-      .map((part) => part.text)
-      .join(" ")
-      .trim();
-
-    const branchTitle = textFromParts
-      ? `Branch: ${textFromParts.slice(0, 50)}${textFromParts.length > 50 ? "..." : ""}`
-      : "Branched Chat";
-
     branchChatMutation.mutate({
       originalChatId: chatId,
       messageId: message.id,
-      title: branchTitle,
     });
   };
 
@@ -66,8 +61,9 @@ export const PureMessageActions: React.FC<Props> = ({ message, isLoading, chatId
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
-              className="text-muted-foreground h-fit px-2 py-1"
+              className="text-muted-foreground"
               variant="outline"
+              size="icon"
               onClick={async () => {
                 const textFromParts = message.parts
                   ?.filter((part) => part.type === "text")
@@ -93,12 +89,13 @@ export const PureMessageActions: React.FC<Props> = ({ message, isLoading, chatId
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
-              className="text-muted-foreground h-fit px-2 py-1"
+              className="text-muted-foreground"
               variant="outline"
+              size="icon"
               onClick={handleBranch}
               disabled={branchChatMutation.isPending}
             >
-              <Share />
+              <GitBranch />
             </Button>
           </TooltipTrigger>
           <TooltipContent>Branch chat from here</TooltipContent>
