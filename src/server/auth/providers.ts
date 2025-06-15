@@ -8,6 +8,7 @@ import GithubProvider, { type GitHubProfile } from "next-auth/providers/github";
 import TwitterProvider, {
   type TwitterProfile,
 } from "next-auth/providers/twitter";
+import NotionProvider, { type NotionProfile } from "next-auth/providers/notion";
 
 import type { OAuthConfig } from "next-auth/providers";
 
@@ -16,6 +17,7 @@ export const providers: (
   | OAuthConfig<GoogleProfile>
   | OAuthConfig<GitHubProfile>
   | OAuthConfig<TwitterProfile>
+  | OAuthConfig<NotionProfile>
 )[] = [
   ...("AUTH_DISCORD_ID" in env && "AUTH_DISCORD_SECRET" in env
     ? [
@@ -50,6 +52,15 @@ export const providers: (
           clientId: env.AUTH_TWITTER_ID,
           clientSecret: env.AUTH_TWITTER_SECRET,
           allowDangerousEmailAccountLinking: true,
+        }),
+      ]
+    : []),
+  ...("AUTH_NOTION_ID" in env && "AUTH_NOTION_SECRET" in env
+    ? [
+        NotionProvider({
+          clientId: env.AUTH_NOTION_ID,
+          clientSecret: env.AUTH_NOTION_SECRET,
+          redirectUri: `${env.APP_URL}/api/auth/callback/notion`,
         }),
       ]
     : []),
