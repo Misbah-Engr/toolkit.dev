@@ -59,7 +59,7 @@ export const exaSearchToolConfigClient: ClientToolConfig<
                     )}
                   </div>
                   <VStack className="group flex w-full cursor-pointer items-start gap-0">
-                    <h3 className="line-clamp-2 transition-colors group-hover:text-blue-600">
+                    <h3 className="group-hover:text-primary line-clamp-2 transition-colors">
                       {result.title}
                     </h3>
                     <p className="text-muted-foreground text-xs">
@@ -97,7 +97,7 @@ export const exaSearchToolConfigClient: ClientToolConfig<
                       href={result.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-600 hover:text-blue-800"
+                      className="text-primary hover:text-blue-800"
                     >
                       Read full article →
                     </a>

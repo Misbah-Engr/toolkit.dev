@@ -4,7 +4,7 @@ import { createBaseTool } from "@/mcp/create-tool";
 export const baseCrawlingTool = createBaseTool({
   description: "Extract content from specific URLs",
   inputSchema: z.object({
-    url: z.string().url(),
+    urls: z.array(z.string()),
   }),
   outputSchema: z.object({
     results: z.array(

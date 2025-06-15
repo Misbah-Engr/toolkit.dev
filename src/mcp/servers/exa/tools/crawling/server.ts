@@ -7,14 +7,14 @@ export const exaCrawlingToolConfigServer: ServerToolConfig<
   typeof baseCrawlingTool.inputSchema.shape,
   typeof baseCrawlingTool.outputSchema.shape
 > = {
-  callback: async ({ url }) => {
+  callback: async ({ urls }) => {
     if (!env.EXA_API_KEY) {
       throw new Error("EXA_API_KEY is not set");
     }
 
     const exa = new Exa(env.EXA_API_KEY);
 
-    const { results } = await exa.getContents([url]);
+    const { results } = await exa.getContents(urls);
 
     return {
       results: results.map((result) => ({

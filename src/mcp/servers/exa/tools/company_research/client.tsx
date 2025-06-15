@@ -34,9 +34,14 @@ export const exaCompanyResearchToolConfigClient: ClientToolConfig<
         <div className="flex flex-col gap-2">
           {result.results.map((item, index) => (
             <div key={index} className="border-l-2 border-blue-200 pl-3">
-              <h3 className="font-medium text-sm">{item.title}</h3>
-              <p className="text-xs text-gray-600 truncate">{item.content}</p>
-              <a href={item.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 text-xs">
+              <h3 className="text-sm font-medium">{item.title}</h3>
+              <p className="truncate text-xs text-gray-600">{item.content}</p>
+              <a
+                href={item.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary text-xs"
+              >
                 Read more →
               </a>
             </div>
