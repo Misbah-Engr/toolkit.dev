@@ -25,6 +25,7 @@ import { api } from "@/trpc/react";
 import { useDeleteChat } from "@/app/_hooks/use-delete-chat";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
+import type { Chat } from "@prisma/client";
 
 export const NavChats = () => {
   return (
@@ -42,8 +43,10 @@ export const NavChats = () => {
 const NavChatsBody = () => {
   const pathname = usePathname();
 
+  const [, type, resourceId] = pathname.split("/");
+
   const workbenchId =
-    pathname.split("/")[2] === "new" ? undefined : pathname.split("/")[2];
+    type === "workbench" && resourceId !== "new" ? resourceId : undefined;
 
   const { setOpenMobile } = useSidebar();
 
@@ -86,7 +89,7 @@ const NavChatsBody = () => {
           <ChatItem
             key={chat.id}
             chat={chat}
-            isActive={false}
+            isActive={pathname.includes(chat.id)}
             onDelete={() => {
               setDeleteId(chat.id);
               setShowDeleteDialog(true);

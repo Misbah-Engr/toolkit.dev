@@ -63,7 +63,7 @@ export function WorkbenchSelect() {
               <SidebarMenuButton
                 size="lg"
                 className={cn(
-                  "bg-muted/80 hover:bg-muted cursor-pointer justify-between transition-colors duration-300",
+                  "bg-sidebar-accent text-sidebar-accent-foreground cursor-pointer justify-between transition-colors duration-300",
                   !open && "justify-center",
                 )}
               >
