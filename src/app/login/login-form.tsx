@@ -21,14 +21,20 @@ interface LoginFormProps {
   }[];
 }
 
-export function LoginForm({ providers, className, ...props }: LoginFormProps & React.ComponentProps<"div">) {
+export function LoginForm({
+  providers,
+  className,
+  ...props
+}: LoginFormProps & React.ComponentProps<"div">) {
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">Welcome back</CardTitle>
+          <CardTitle className="text-primary text-xl">
+            Welcome to Toolkit
+          </CardTitle>
           <CardDescription>
-            Sign in with your preferred account
+            Sign in with your preferred account to continue
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -49,17 +55,6 @@ export function LoginForm({ providers, className, ...props }: LoginFormProps & R
           </div>
         </CardContent>
       </Card>
-      <div className="text-muted-foreground text-center text-xs text-balance">
-        By clicking continue, you agree to our{" "}
-        <a href="#" className="underline underline-offset-4 hover:text-primary">
-          Terms of Service
-        </a>{" "}
-        and{" "}
-        <a href="#" className="underline underline-offset-4 hover:text-primary">
-          Privacy Policy
-        </a>
-        .
-      </div>
     </div>
   );
 }
