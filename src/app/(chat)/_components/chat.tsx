@@ -13,6 +13,7 @@ import { ChatProvider } from "../_contexts/chat-context";
 import type { UIMessage } from "ai";
 import type { Session } from "next-auth";
 import type { Workbench } from "@prisma/client";
+import { Logo } from "@/components/ui/logo";
 
 interface Props {
   id: string;
@@ -91,25 +92,25 @@ const ChatContent = ({
                 enter: { delay: 0.1, duration: 0.3 },
                 exit: { delay: 0, duration: 0.05 },
               }}
-              className="overflow-hidden text-center"
+              className="flex flex-col items-center gap-2 overflow-hidden text-center"
             >
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
                 transition={{ delay: 0.2, duration: 0.3 }}
-                className="text-3xl font-semibold md:text-4xl"
+                className="flex items-center justify-center"
               >
-                Hello there!
+                <Logo className="size-16" />
               </motion.div>
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
                 transition={{ delay: 0.3, duration: 0.3 }}
-                className="mt-2 text-xl text-zinc-500 md:text-2xl"
+                className="text-xl font-semibold md:text-2xl"
               >
-                How can I help you today?
+                Welcome to Toolkit.dev
               </motion.div>
             </motion.div>
           )}

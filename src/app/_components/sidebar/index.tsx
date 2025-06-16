@@ -42,9 +42,25 @@ export async function AppSidebar({
           <div className="flex items-center gap-2 p-2">
             <Logo className="size-6" />
             <h1 className="overflow-hidden text-xl font-bold whitespace-nowrap group-data-[collapsible=icon]:hidden">
-              <span className="text-primary">Toolkit</span>
+              <span className="text-primary">Toolkit.dev</span>
             </h1>
           </div>
+          <SidebarMenuButton asChild className="h-fit w-full">
+            <Link
+              href="https://github.com/jasonhedman/open-chat"
+              target="_blank"
+            >
+              <HStack>
+                <SiGithub className="size-4" />
+                <VStack className="items-start gap-0">
+                  <h3 className="font-medium">Contribute</h3>
+                  <p className="text-[10px]">
+                    Looking for more toolkit developers!
+                  </p>
+                </VStack>
+              </HStack>
+            </Link>
+          </SidebarMenuButton>
         </SidebarHeader>
         <SidebarContent>
           <NavMain />
@@ -61,22 +77,6 @@ export async function AppSidebar({
               }}
             />
           )}
-          <SidebarMenuButton asChild className="h-fit w-full">
-            <Link
-              href="https://github.com/jasonhedman/open-chat"
-              target="_blank"
-            >
-              <HStack>
-                <SiGithub className="size-8" />
-                <VStack className="items-start gap-0">
-                  <h3 className="text-primary font-bold">Contribute</h3>
-                  <p className="text-[10px]">
-                    Looking for more toolkit developers!
-                  </p>
-                </VStack>
-              </HStack>
-            </Link>
-          </SidebarMenuButton>
         </SidebarFooter>
         <SidebarRail />
       </Sidebar>

@@ -49,7 +49,6 @@ interface Props {
 
 const PureMultimodalInput: React.FC<Props> = ({
   chatId,
-  isAtBottom,
   scrollToBottom,
   className,
 }) => {
@@ -63,6 +62,7 @@ const PureMultimodalInput: React.FC<Props> = ({
     setMessages,
     handleSubmit,
     selectedChatModel,
+    workbench,
   } = useChatContext();
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -147,7 +147,15 @@ const PureMultimodalInput: React.FC<Props> = ({
       return;
     }
 
-    window.history.replaceState({}, "", `/chat/${chatId}`);
+    if (workbench) {
+      window.history.replaceState(
+        {},
+        "",
+        `/workbench/${workbench.id}/chat/${chatId}`,
+      );
+    } else {
+      window.history.replaceState({}, "", `/chat/${chatId}`);
+    }
 
     handleSubmit(undefined, {
       experimental_attachments: attachments,
