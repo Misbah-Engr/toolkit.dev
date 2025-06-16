@@ -1,14 +1,11 @@
-import { Calendar } from "lucide-react";
+import { HardDrive } from "lucide-react";
 
-import { GoogleCalendarTools } from "./tools";
+import { GoogleDriveTools } from "./tools";
 import { createClientToolkit } from "@/toolkits/create-toolkit";
-import { baseGoogleCalendarToolkitConfig } from "./base";
+import { baseGoogleDriveToolkitConfig } from "./base";
 import {
-  googleCalendarListCalendarsToolConfigClient,
-  googleCalendarGetCalendarToolConfigClient,
-  googleCalendarListEventsToolConfigClient,
-  googleCalendarGetEventToolConfigClient,
-  googleCalendarSearchEventsToolConfigClient,
+  googleDriveSearchFilesToolConfigClient,
+  googleDriveReadFileToolConfigClient,
 } from "./tools/client";
 import { api } from "@/trpc/react";
 import { Button } from "@/components/ui/button";
@@ -22,16 +19,16 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import Link from "next/link";
-import { SiGooglecalendar } from "@icons-pack/react-simple-icons";
+import { SiGoogledrive } from "@icons-pack/react-simple-icons";
 
-const calendarScope = "https://www.googleapis.com/auth/calendar";
+const driveScope = "https://www.googleapis.com/auth/drive.readonly";
 
-export const googleCalendarClientToolkit = createClientToolkit(
-  baseGoogleCalendarToolkitConfig,
+export const googleDriveClientToolkit = createClientToolkit(
+  baseGoogleDriveToolkitConfig,
   {
-    name: "Google Calendar",
-    description: "Find availability and schedule meetings",
-    icon: SiGooglecalendar,
+    name: "Google Drive",
+    description: "Search and read files from your Google Drive.",
+    icon: SiGoogledrive,
     form: null,
     addToolkitWrapper: ({ children }) => {
       const { data: account, isLoading: isLoadingAccount } =
@@ -39,7 +36,7 @@ export const googleCalendarClientToolkit = createClientToolkit(
 
       const { data: hasAccess, isLoading: isLoadingAccess } =
         api.features.hasFeature.useQuery({
-          feature: "google-calendar",
+          feature: "google-drive",
         });
 
       if (isLoadingAccount || isLoadingAccess) {
@@ -91,18 +88,18 @@ export const googleCalendarClientToolkit = createClientToolkit(
                   access_type: "offline",
                   response_type: "code",
                   include_granted_scopes: true,
-                  scope: `openid email profile ${calendarScope}`,
+                  scope: `openid email profile ${driveScope}`,
                 },
               );
             }}
           >
-            <Calendar className="size-4" />
+            <HardDrive className="size-4" />
             Connect
           </Button>
         );
       }
 
-      if (!account?.scope?.includes(calendarScope)) {
+      if (!account?.scope?.includes(driveScope)) {
         return (
           <Button
             variant="outline"
@@ -118,7 +115,7 @@ export const googleCalendarClientToolkit = createClientToolkit(
                   access_type: "offline",
                   response_type: "code",
                   include_granted_scopes: true,
-                  scope: `${account?.scope} ${calendarScope}`,
+                  scope: `${account?.scope} ${driveScope}`,
                 },
               );
             }}
@@ -132,13 +129,7 @@ export const googleCalendarClientToolkit = createClientToolkit(
     },
   },
   {
-    [GoogleCalendarTools.ListCalendars]:
-      googleCalendarListCalendarsToolConfigClient,
-    [GoogleCalendarTools.GetCalendar]:
-      googleCalendarGetCalendarToolConfigClient,
-    [GoogleCalendarTools.ListEvents]: googleCalendarListEventsToolConfigClient,
-    [GoogleCalendarTools.GetEvent]: googleCalendarGetEventToolConfigClient,
-    [GoogleCalendarTools.SearchEvents]:
-      googleCalendarSearchEventsToolConfigClient,
+    [GoogleDriveTools.SearchFiles]: googleDriveSearchFilesToolConfigClient,
+    [GoogleDriveTools.ReadFile]: googleDriveReadFileToolConfigClient,
   },
 );

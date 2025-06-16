@@ -38,7 +38,7 @@ export async function AppSidebar({
           <div className="flex items-center gap-2 p-2">
             <Logo className="size-6" />
             <h1 className="overflow-hidden text-xl font-bold whitespace-nowrap group-data-[collapsible=icon]:hidden">
-              <span className="text-primary">Open</span>Chat
+              <span className="text-primary">Toolkit</span>
             </h1>
           </div>
         </SidebarHeader>

@@ -38,6 +38,9 @@ importers:
       '@modelcontextprotocol/sdk':
         specifier: ^1.12.0
         version: 1.12.2
+      '@notionhq/client':
+        specifier: ^3.1.3
+        version: 3.1.3
       '@prisma/client':
         specifier: ^6.5.0
         version: 6.9.0(prisma@6.9.0(typescript@5.8.3))(typescript@5.8.3)
@@ -876,6 +879,10 @@ packages:
   '@nolyfill/is-core-module@1.0.39':
     resolution: {integrity: sha512-nn5ozdjYQpUCZlWGuxcJY/KpxkWQs4DcbMCmKojjyrYDEAGy4Ce19NN4v5MduafTwJlbKc99UA8YhSVqq9yPZA==}
     engines: {node: '>=12.4.0'}
+
+  '@notionhq/client@3.1.3':
+    resolution: {integrity: sha512-M2gVWoo1dIvBeX/Yc4fvQCVh2g3HQjOxKBWX472Qzma2VNMJV3cPLi0J0A4dmOlkcfNQLVXmhuh54zGHpptZ7g==}
+    engines: {node: '>=18'}
 
   '@npmcli/fs@1.1.1':
     resolution: {integrity: sha512-8KG5RD0GVP4ydEzRn/I4BNDuxDtqVbOdm8675T49OIG/NGhaK0pjPX7ZcDlvKYbA+ulvVK3ztfcF4uBdOxuJbQ==}
@@ -5688,6 +5695,8 @@ snapshots:
       fastq: 1.19.1
 
   '@nolyfill/is-core-module@1.0.39': {}
+
+  '@notionhq/client@3.1.3': {}
 
   '@npmcli/fs@1.1.1':
     dependencies:
