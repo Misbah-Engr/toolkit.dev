@@ -5,6 +5,7 @@ import { googleCalendarToolkitServer } from "./google-calendar/server";
 import { googleDriveToolkitServer } from "./google-drive/server";
 import { imageToolkitServer } from "./image/server";
 import { mem0ToolkitServer } from "./mem0/server";
+import { notionToolkitServer } from "./notion/server";
 import { e2bToolkitServer } from "./e2b/server";
 import {
   Servers,
@@ -23,6 +24,7 @@ export const serverToolkits: ServerToolkits = {
   [Servers.GoogleCalendar]: googleCalendarToolkitServer,
   [Servers.GoogleDrive]: googleDriveToolkitServer,
   [Servers.Memory]: mem0ToolkitServer,
+  [Servers.Notion]: notionToolkitServer,
   [Servers.E2B]: e2bToolkitServer,
 };
 

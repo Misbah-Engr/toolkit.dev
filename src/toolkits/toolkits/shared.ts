@@ -10,6 +10,8 @@ import type { imageParameters } from "./image/base";
 import type { ImageTools } from "./image/tools/tools";
 import type { mem0Parameters } from "./mem0/base";
 import type { Mem0Tools } from "./mem0/tools/tools";
+import type { notionParameters } from "./notion/base";
+import type { NotionTools } from "./notion/tools";
 import type { e2bParameters } from "./e2b/base";
 import type { E2BTools } from "./e2b/tools/tools";
 
@@ -20,6 +22,7 @@ export enum Servers {
   GoogleCalendar = "google-calendar",
   GoogleDrive = "google-drive",
   Memory = "memory",
+  Notion = "notion",
   E2B = "e2b",
 }
 
@@ -30,6 +33,7 @@ export type ServerToolNames = {
   [Servers.GoogleCalendar]: GoogleCalendarTools;
   [Servers.GoogleDrive]: GoogleDriveTools;
   [Servers.Memory]: Mem0Tools;
+  [Servers.Notion]: NotionTools;
   [Servers.E2B]: E2BTools;
 };
 
@@ -40,5 +44,6 @@ export type ServerToolParameters = {
   [Servers.GoogleCalendar]: typeof googleCalendarParameters.shape;
   [Servers.GoogleDrive]: typeof googleDriveParameters.shape;
   [Servers.Memory]: typeof mem0Parameters.shape;
+  [Servers.Notion]: typeof notionParameters.shape;
   [Servers.E2B]: typeof e2bParameters.shape;
 };
