@@ -46,7 +46,7 @@ export const workbenchesRouter = createTRPCRouter({
     .input(z.string())
     .query(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
-      
+
       return ctx.db.workbench.findUnique({
         where: {
           id: input,
@@ -78,7 +78,7 @@ export const workbenchesRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
-      
+
       return ctx.db.workbench.create({
         data: {
           name: input.name,
@@ -100,7 +100,7 @@ export const workbenchesRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
-      
+
       return ctx.db.workbench.update({
         where: {
           id: input.id,
@@ -118,7 +118,7 @@ export const workbenchesRouter = createTRPCRouter({
     .input(z.string())
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
-      
+
       return ctx.db.workbench.delete({
         where: {
           id: input,
@@ -137,7 +137,7 @@ export const workbenchesRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
-      
+
       // Verify workbench ownership
       const workbench = await ctx.db.workbench.findUnique({
         where: {
@@ -145,11 +145,11 @@ export const workbenchesRouter = createTRPCRouter({
           userId,
         },
       });
-      
+
       if (!workbench) {
         throw new Error("Workbench not found or access denied");
       }
-      
+
       return ctx.db.chat.create({
         data: {
           title: input.title,
@@ -179,7 +179,7 @@ export const workbenchesRouter = createTRPCRouter({
           userId,
         },
       });
-      
+
       if (!workbench) {
         throw new Error("Workbench not found or access denied");
       }
@@ -211,18 +211,18 @@ export const workbenchesRouter = createTRPCRouter({
     .input(z.string())
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
-      
+
       const originalWorkbench = await ctx.db.workbench.findUnique({
         where: {
           id: input,
           userId,
         },
       });
-      
+
       if (!originalWorkbench) {
         throw new Error("Workbench not found or access denied");
       }
-      
+
       return ctx.db.workbench.create({
         data: {
           name: `${originalWorkbench.name} (Copy)`,
