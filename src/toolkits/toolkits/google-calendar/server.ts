@@ -41,12 +41,13 @@ export const googleCalendarToolkitServer = createServerToolkit(
     return {
       [GoogleCalendarTools.ListCalendars]:
         googleCalendarListCalendarsToolConfigServer(account.access_token),
-      [GoogleCalendarTools.GetCalendar]: 
+      [GoogleCalendarTools.GetCalendar]:
         googleCalendarGetCalendarToolConfigServer(account.access_token),
       [GoogleCalendarTools.ListEvents]:
         googleCalendarListEventsToolConfigServer(account.access_token),
-      [GoogleCalendarTools.GetEvent]:
-        googleCalendarGetEventToolConfigServer(account.access_token),
+      [GoogleCalendarTools.GetEvent]: googleCalendarGetEventToolConfigServer(
+        account.access_token,
+      ),
       [GoogleCalendarTools.SearchEvents]:
         googleCalendarSearchEventsToolConfigServer(account.access_token),
     };
