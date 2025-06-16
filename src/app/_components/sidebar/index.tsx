@@ -15,7 +15,6 @@ import { NavMain } from "./main";
 import { NavChats } from "./chats";
 import { NavUser } from "./user";
 import { Logo } from "@/components/ui/logo";
-import { ColorModeToggle } from "../navbar/color-mode-toggle";
 
 export async function AppSidebar({
   ...props
@@ -45,20 +44,13 @@ export async function AppSidebar({
         </SidebarContent>
         <SidebarFooter>
           {session?.user && (
-            <>
-              <div className="group-data-[collapsible=icon]:hidden">
-                <NavUser
-                  user={{
-                    name: session.user.name ?? "User",
-                    email: session.user.email ?? "",
-                    avatar: session.user.image ?? "",
-                  }}
-                />
-              </div>
-              <div className="flex justify-center">
-                <ColorModeToggle />
-              </div>
-            </>
+            <NavUser
+              user={{
+                name: session.user.name ?? "User",
+                email: session.user.email ?? "",
+                avatar: session.user.image ?? "",
+              }}
+            />
           )}
         </SidebarFooter>
         <SidebarRail />
