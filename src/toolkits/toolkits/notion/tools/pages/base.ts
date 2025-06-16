@@ -30,3 +30,29 @@ export const searchPagesTool = createBaseTool({
     next_cursor: z.string().optional(),
   }),
 });
+
+export const createPageTool = createBaseTool({
+  description:
+    "Create a new page in Notion workspace or as a child of another page",
+  inputSchema: z.object({
+    parent_page_id: z
+      .string()
+      .describe(
+        "ID of parent page (if creating a child page, leave blank if creating a page under a database)",
+      ),
+    parent_database_id: z
+      .string()
+      .describe(
+        "ID of parent database (if creating a database entry, leave blank if creating a page under a page)",
+      ),
+    title: z.string().describe("Title of the new page"),
+    content: z
+      .string()
+      .describe(
+        "Markdown content to add to the page (empty string for no content)",
+      ),
+  }),
+  outputSchema: z.object({
+    page: z.custom<PageObjectResponse>(),
+  }),
+});

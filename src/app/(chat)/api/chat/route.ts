@@ -146,18 +146,31 @@ export async function POST(request: Request) {
               description: serverTool.description,
               parameters: serverTool.inputSchema,
               execute: async (args) => {
-                const result = await serverTool.callback(args);
-                if (serverTool.message) {
+                try {
+                  const result = await serverTool.callback(args);
+                  if (serverTool.message) {
+                    return {
+                      result,
+                      message:
+                        typeof serverTool.message === "function"
+                          ? serverTool.message(result)
+                          : serverTool.message,
+                    };
+                  } else {
+                    return {
+                      result,
+                    };
+                  }
+                } catch (error) {
+                  console.error(error);
                   return {
-                    result,
-                    message:
-                      typeof serverTool.message === "function"
-                        ? serverTool.message(result)
-                        : serverTool.message,
-                  };
-                } else {
-                  return {
-                    result,
+                    isError: true,
+                    result: {
+                      error:
+                        error instanceof Error
+                          ? error.message
+                          : "An error occurred while executing the tool",
+                    },
                   };
                 }
               },

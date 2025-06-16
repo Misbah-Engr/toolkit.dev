@@ -1,7 +1,7 @@
 import React from "react";
 import type { ClientToolConfig } from "@/toolkits/types";
-import type { getPageTool, searchPagesTool } from "./base";
-import { FileText, Search } from "lucide-react";
+import type { getPageTool, searchPagesTool, createPageTool } from "./base";
+import { FileText, Search, Plus } from "lucide-react";
 import { ToolCallDisplay } from "../../components";
 import { NotionPage } from "../../components/page";
 
@@ -77,6 +77,39 @@ export const notionSearchPagesToolConfigClient: ClientToolConfig<
             More pages available...
           </p>
         )}
+      </div>
+    );
+  },
+};
+
+export const notionCreatePageToolConfigClient: ClientToolConfig<
+  typeof createPageTool.inputSchema.shape,
+  typeof createPageTool.outputSchema.shape
+> = {
+  CallComponent: ({ args }) => {
+    return (
+      <ToolCallDisplay
+        icon={Plus}
+        label="Create Page"
+        value={`"${args.title ?? ""}"`}
+      />
+    );
+  },
+  ResultComponent: ({ result: { page }, append }) => {
+    return (
+      <div className="">
+        <h1 className="text-muted-foreground text-sm font-medium">
+          Page Created
+        </h1>
+        <NotionPage
+          page={page}
+          onClick={() => {
+            void append({
+              role: "user",
+              content: `Get the content of page ${page.id}`,
+            });
+          }}
+        />
       </div>
     );
   },

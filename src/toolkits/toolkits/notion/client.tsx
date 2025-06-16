@@ -4,9 +4,12 @@ import { baseNotionToolkitConfig } from "./base";
 import {
   notionListDatabasesToolConfigClient,
   notionQueryDatabaseToolConfigClient,
+  notionCreateDatabaseToolConfigClient,
   notionGetPageToolConfigClient,
   notionSearchPagesToolConfigClient,
+  notionCreatePageToolConfigClient,
   notionGetBlocksToolConfigClient,
+  notionAppendBlocksToolConfigClient,
   notionListUsersToolConfigClient,
 } from "./tools/client";
 import { SiNotion } from "@icons-pack/react-simple-icons";
@@ -57,9 +60,12 @@ export const notionClientToolkit = createClientToolkit(
   {
     [NotionTools.ListDatabases]: notionListDatabasesToolConfigClient,
     [NotionTools.QueryDatabase]: notionQueryDatabaseToolConfigClient,
+    [NotionTools.CreateDatabase]: notionCreateDatabaseToolConfigClient,
     [NotionTools.GetPage]: notionGetPageToolConfigClient,
     [NotionTools.SearchPages]: notionSearchPagesToolConfigClient,
+    [NotionTools.CreatePage]: notionCreatePageToolConfigClient,
     [NotionTools.GetBlocks]: notionGetBlocksToolConfigClient,
+    [NotionTools.AppendBlocks]: notionAppendBlocksToolConfigClient,
     [NotionTools.ListUsers]: notionListUsersToolConfigClient,
   },
 );
