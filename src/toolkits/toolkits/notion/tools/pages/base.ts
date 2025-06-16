@@ -21,10 +21,13 @@ export const searchPagesTool = createBaseTool({
   description: "Search for pages by title or content",
   inputSchema: z.object({
     query: z.string().describe("Search query to find pages"),
-    filter: z.record(z.unknown()).optional().describe("Additional filter criteria"),
-    sort: z.record(z.unknown()).optional().describe("Sort criteria"),
-    start_cursor: z.string().optional().describe("Pagination cursor to start from"),
-    page_size: z.number().max(100).optional().describe("Number of results per page (max 100)"),
+    start_cursor: z
+      .string()
+      .describe("Pagination cursor to start from (blank for first page)"),
+    page_size: z
+      .number()
+      .max(100)
+      .describe("Number of results per page (max 100, default 10)"),
   }),
   outputSchema: z.object({
     results: z.array(
@@ -35,7 +38,7 @@ export const searchPagesTool = createBaseTool({
         last_edited_time: z.string(),
         url: z.string(),
         archived: z.boolean(),
-      })
+      }),
     ),
     has_more: z.boolean(),
     next_cursor: z.string().optional(),

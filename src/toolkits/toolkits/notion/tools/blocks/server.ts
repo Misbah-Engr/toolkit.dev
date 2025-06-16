@@ -1,4 +1,4 @@
-import type { Client } from "@notionhq/client";
+import type { BlockObjectResponse, Client } from "@notionhq/client";
 import type { ServerToolConfig } from "@/toolkits/types";
 import type { getBlocksTool } from "./base";
 
@@ -13,19 +13,21 @@ export const notionGetBlocksToolConfigServer = (
       try {
         const response = await notion.blocks.children.list({
           block_id,
-          start_cursor,
+          start_cursor: start_cursor || undefined,
           page_size,
         });
 
-        const results = response.results.map((block: any) => ({
-          id: block.id,
-          type: block.type,
-          created_time: block.created_time,
-          last_edited_time: block.last_edited_time,
-          has_children: block.has_children,
-          archived: block.archived,
-          content: block[block.type] || {},
-        }));
+        const results = response.results
+          .filter((block) => "type" in block)
+          .map((block: BlockObjectResponse) => ({
+            id: block.id,
+            type: block.type,
+            created_time: block.created_time,
+            last_edited_time: block.last_edited_time,
+            has_children: block.has_children,
+            archived: block.archived,
+            content: block[block.type as keyof BlockObjectResponse] || {},
+          }));
 
         return {
           results,

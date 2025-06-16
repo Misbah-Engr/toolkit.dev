@@ -20,6 +20,9 @@ export const notionToolkitServer = createServerToolkit(
     if (!account) {
       throw new Error("No Notion account found");
     }
+    if (!account.access_token) {
+      throw new Error("No Notion access token found");
+    }
 
     const notion = new Client({
       auth: account.access_token,

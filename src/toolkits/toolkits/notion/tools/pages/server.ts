@@ -15,14 +15,24 @@ export const notionGetPageToolConfigServer = (
           page_id,
         });
 
+        if (
+          response.object !== "page" ||
+          !("created_time" in response) ||
+          !("last_edited_time" in response) ||
+          !("url" in response) ||
+          !("archived" in response)
+        ) {
+          throw new Error("Page not found");
+        }
+
         return {
           id: response.id,
           created_time: response.created_time,
           last_edited_time: response.last_edited_time,
           url: response.url,
           archived: response.archived,
-          properties: (response as any).properties,
-          parent: (response as any).parent,
+          properties: response.properties,
+          parent: response.parent,
         };
       } catch (error) {
         console.error("Notion API error:", error);
@@ -40,23 +50,27 @@ export const notionSearchPagesToolConfigServer = (
   typeof searchPagesTool.outputSchema.shape
 > => {
   return {
-    callback: async ({ query, filter, sort, start_cursor, page_size = 100 }) => {
+    callback: async ({ query, start_cursor, page_size = 100 }) => {
       try {
         const response = await notion.search({
           query,
           filter: {
             value: "page",
             property: "object",
-            ...filter,
           },
-          sort,
-          start_cursor,
+          sort: {
+            direction: "ascending",
+            timestamp: "last_edited_time",
+          },
+          start_cursor: start_cursor || undefined,
           page_size,
         });
 
+        console.log(response.results);
+
         const results = response.results
-          .filter((item) => item.object === "page")
-          .map((page: any) => ({
+          .filter((item) => item.object === "page" && "properties" in item)
+          .map((page) => ({
             id: page.id,
             properties: page.properties,
             created_time: page.created_time,

@@ -1,4 +1,4 @@
-import type { Client } from "@notionhq/client";
+import type { Client, UserObjectResponse } from "@notionhq/client";
 import type { ServerToolConfig } from "@/toolkits/types";
 import type { listUsersTool } from "./base";
 
@@ -16,13 +16,18 @@ export const notionListUsersToolConfigServer = (
           page_size,
         });
 
-        const results = response.results.map((user: any) => ({
+        const results = response.results.map((user: UserObjectResponse) => ({
           id: user.id,
           type: user.type,
           name: user.name,
           avatar_url: user.avatar_url,
-          person: user.person,
-          bot: user.bot,
+          person: user.type === "person" ? user.person : undefined,
+          bot:
+            user.type === "bot"
+              ? Object.keys(user.bot).length > 0
+                ? user.bot
+                : undefined
+              : undefined,
         }));
 
         return {

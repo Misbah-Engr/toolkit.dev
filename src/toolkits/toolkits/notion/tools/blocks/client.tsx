@@ -17,7 +17,7 @@ export const notionGetBlocksToolConfigClient: ClientToolConfig<
           <span className="text-muted-foreground/80 text-xs font-medium">
             Get Blocks
           </span>
-          <span className="text-sm">{args.block_id.slice(0, 8)}...</span>
+          <span className="text-sm">{args.block_id?.slice(0, 8)}...</span>
         </VStack>
       </HStack>
     );
@@ -36,10 +36,12 @@ export const notionGetBlocksToolConfigClient: ClientToolConfig<
           {result.results.map((block, index) => (
             <VStack
               key={block.id}
-              className="w-full items-start py-2 border-b last:border-b-0"
+              className="w-full items-start border-b py-2 last:border-b-0"
             >
-              <HStack className="items-center gap-2 w-full">
-                <span className="text-muted-foreground text-xs">#{index + 1}</span>
+              <HStack className="w-full items-center gap-2">
+                <span className="text-muted-foreground text-xs">
+                  #{index + 1}
+                </span>
                 <Badge variant="outline" className="text-xs">
                   {block.type}
                 </Badge>
@@ -57,21 +59,22 @@ export const notionGetBlocksToolConfigClient: ClientToolConfig<
                   </Badge>
                 )}
               </HStack>
-              
+
               <VStack className="items-start gap-1">
-                <h3 className="font-medium text-sm">
+                <h3 className="text-sm font-medium">
                   {block.id.slice(0, 8)}...
                 </h3>
                 <p className="text-muted-foreground/60 text-xs">
-                  Updated {new Date(block.last_edited_time).toLocaleDateString()}
+                  Updated{" "}
+                  {new Date(block.last_edited_time).toLocaleDateString()}
                 </p>
-                
+
                 {block.content && Object.keys(block.content).length > 0 && (
                   <div className="w-full">
-                    <p className="text-muted-foreground text-xs font-medium mb-1">
+                    <p className="text-muted-foreground mb-1 text-xs font-medium">
                       Content Preview
                     </p>
-                    <div className="bg-muted/30 rounded p-2 text-xs font-mono">
+                    <div className="bg-muted/30 rounded p-2 font-mono text-xs">
                       {JSON.stringify(block.content, null, 2).slice(0, 100)}
                       {JSON.stringify(block.content).length > 100 && "..."}
                     </div>
@@ -82,7 +85,7 @@ export const notionGetBlocksToolConfigClient: ClientToolConfig<
           ))}
         </div>
         {result.has_more && (
-          <p className="text-muted-foreground text-xs mt-2">
+          <p className="text-muted-foreground mt-2 text-xs">
             More blocks available...
           </p>
         )}

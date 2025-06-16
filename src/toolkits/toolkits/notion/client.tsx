@@ -46,7 +46,6 @@ export const notionClientToolkit = createClientToolkit(
               });
             }}
           >
-            <SiNotion className="size-4" />
             Connect
           </Button>
         );

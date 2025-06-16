@@ -1,4 +1,8 @@
-import type { Client } from "@notionhq/client";
+import type {
+  Client,
+  DatabaseObjectResponse,
+  PageObjectResponse,
+} from "@notionhq/client";
 import type { ServerToolConfig } from "@/toolkits/types";
 import type { listDatabasesTool, queryDatabaseTool } from "./base";
 
@@ -16,13 +20,13 @@ export const notionListDatabasesToolConfigServer = (
             value: "database",
             property: "object",
           },
-          start_cursor,
+          start_cursor: start_cursor || undefined,
           page_size,
         });
 
         const databases = response.results
-          .filter((item) => item.object === "database")
-          .map((db: any) => ({
+          .filter((item) => item.object === "database" && "title" in item)
+          .map((db: DatabaseObjectResponse) => ({
             id: db.id,
             title: db.title?.[0]?.plain_text ?? "Untitled Database",
             description: db.description?.[0]?.plain_text,
@@ -53,23 +57,23 @@ export const notionQueryDatabaseToolConfigServer = (
   typeof queryDatabaseTool.outputSchema.shape
 > => {
   return {
-    callback: async ({ database_id, filter, sorts, start_cursor, page_size = 100 }) => {
+    callback: async ({ database_id, start_cursor, page_size = 100 }) => {
       try {
         const response = await notion.databases.query({
           database_id,
-          filter,
-          sorts,
-          start_cursor,
+          start_cursor: start_cursor ?? undefined,
           page_size,
         });
 
-        const results = response.results.map((page: any) => ({
-          id: page.id,
-          properties: page.properties,
-          created_time: page.created_time,
-          last_edited_time: page.last_edited_time,
-          url: page.url,
-        }));
+        const results = response.results
+          .filter((page) => page.object === "page" && "properties" in page)
+          .map((page: PageObjectResponse) => ({
+            id: page.id,
+            properties: page.properties,
+            created_time: page.created_time,
+            last_edited_time: page.last_edited_time,
+            url: page.url,
+          }));
 
         return {
           results,
