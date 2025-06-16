@@ -5,6 +5,8 @@ import { useChatContext } from "@/app/_contexts/chat-context";
 import { Toolkits } from "@/toolkits/toolkits/shared";
 import { useMemo } from "react";
 import { clientToolkits } from "@/toolkits/toolkits/client";
+import { ToolkitIcons } from "@/components/toolkit/toolkit-icons";
+import { HStack } from "@/components/ui/stack";
 
 // Dynamic starter prompts with toolkit associations
 interface StarterPrompt {
@@ -434,39 +436,33 @@ export const StarterPrompts = () => {
   }
 
   return (
-    <div className="mx-auto grid max-w-2xl grid-cols-1 gap-2 sm:grid-cols-2">
-      {relevantPrompts.map((prompt, index) => (
-        <motion.button
-          key={`${prompt.title}-${selectedToolkitIds.size}`} // Key includes toolkit state for proper re-animation
-          initial={{ opacity: 0, y: 10, height: "auto" }}
-          animate={{ opacity: 1, y: 0, height: "auto" }}
-          exit={{ opacity: 0, y: 10, height: 0 }}
-          transition={{
-            enter: { delay: 0.1 + index * 0.1 },
-            exit: { delay: 0, duration: 0.1 },
-          }}
-          onClick={() => handlePromptClick(prompt.prompt)}
-          className="bg-muted hover:bg-muted/80 text-muted-foreground hover:text-foreground group relative rounded-xl border p-3 text-left text-sm transition-colors"
-          title={prompt.description}
-        >
-          <div className="flex gap-2">
-            <div className="flex flex-col items-center pt-2">
-              {prompt.toolkitIds.map((toolkit) => {
-                const toolkitConfig = clientToolkits[toolkit];
-                return (
-                  <div
-                    className="bg-muted -mt-2 rounded-full border p-1"
-                    key={toolkit}
-                  >
-                    <toolkitConfig.icon className="text-primary size-4" />
-                  </div>
-                );
-              })}
-            </div>
-            <p className="text-sm leading-relaxed">{prompt.title}</p>
-          </div>
-        </motion.button>
-      ))}
+    <div className="relative">
+      <div className="from-background absolute top-0 left-0 z-10 hidden h-full w-4 bg-gradient-to-r to-transparent md:block" />
+      <div className="no-scrollbar flex max-w-full flex-col gap-2 overflow-x-auto px-4 md:flex-row">
+        {relevantPrompts.map((prompt, index) => (
+          <motion.button
+            key={`${prompt.title}-${selectedToolkitIds.size}`} // Key includes toolkit state for proper re-animation
+            initial={{ opacity: 0, height: "auto" }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{
+              enter: { delay: 0.1 + index * 0.1 },
+              exit: { delay: 0, duration: 0.1 },
+            }}
+            onClick={() => handlePromptClick(prompt.prompt)}
+            className="hover:bg-muted/80 text-muted-foreground hover:text-foreground group relative rounded-xl border p-2 text-left text-sm transition-colors"
+            title={prompt.description}
+          >
+            <HStack className="gap-2">
+              <ToolkitIcons toolkits={prompt.toolkitIds} />
+              <p className="text-sm leading-relaxed whitespace-nowrap">
+                {prompt.title}
+              </p>
+            </HStack>
+          </motion.button>
+        ))}
+      </div>
+      <div className="from-background absolute top-0 right-0 z-10 hidden h-full w-4 bg-gradient-to-l to-transparent md:block" />
     </div>
   );
 };
