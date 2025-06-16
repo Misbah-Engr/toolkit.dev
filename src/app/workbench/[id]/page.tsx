@@ -6,32 +6,16 @@ import { Chat } from "../../(chat)/_components/chat";
 import { api } from "@/trpc/server";
 import { WorkbenchHeader } from "@/components/workbench/workbench-header";
 
-import type { Message } from "@prisma/client";
-import type { Attachment, UIMessage } from "ai";
-import { languageModels } from "@/ai/models";
-
-type WorkbenchData = {
-  id: string;
-  name: string;
-  systemPrompt: string;
-  toolkitIds: string[];
-  userId: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-export default async function WorkbenchPage(props: { params: Promise<{ id: string }> }) {
+export default async function WorkbenchPage(props: {
+  params: Promise<{ id: string }>;
+}) {
   const params = await props.params;
   const { id } = params;
 
   const session = await auth();
 
-  if (!session?.user?.id) {
-    redirect("/api/auth/guest");
-  }
-
   try {
-    const workbench = (await api.workbenches.getWorkbench(id)) as WorkbenchData | null;
+    const workbench = await api.workbenches.getWorkbench(id);
 
     if (!workbench) {
       notFound();
@@ -49,7 +33,7 @@ export default async function WorkbenchPage(props: { params: Promise<{ id: strin
     const chatModelFromCookie = cookieStore.get("chat-model");
 
     return (
-      <div className="h-full flex flex-col">
+      <div className="flex h-full flex-col">
         <WorkbenchHeader workbench={workbench} />
         <div className="flex-1 overflow-hidden">
           <Chat
