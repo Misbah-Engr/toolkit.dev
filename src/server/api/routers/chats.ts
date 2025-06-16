@@ -43,6 +43,9 @@ export const chatsRouter = createTRPCRouter({
         where: {
           id: input,
         },
+        include: {
+          workbench: true,
+        },
       });
     }),
 
@@ -53,6 +56,7 @@ export const chatsRouter = createTRPCRouter({
         title: z.string(),
         visibility: z.enum(["public", "private"]),
         userId: z.string(),
+        workbenchId: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {

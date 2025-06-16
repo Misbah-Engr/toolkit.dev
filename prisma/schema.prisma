@@ -6,12 +6,8 @@ generator client {
 }
 
 datasource db {
-    provider = "postgresql"
-    // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-    // Further reading:
-    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
-    url      = env("DATABASE_URL")
+    provider = "sqlite"
+    url      = "file:./dev.db"
 }
 
 // Necessary for Next auth
@@ -21,12 +17,12 @@ model Account {
     type                     String
     provider                 String
     providerAccountId        String
-    refresh_token            String? // @db.Text
-    access_token             String? // @db.Text
+    refresh_token            String?
+    access_token             String?
     expires_at               Int?
     token_type               String?
     scope                    String?
-    id_token                 String? // @db.Text
+    id_token                 String?
     session_state            String?
     user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
     refresh_token_expires_in Int?
@@ -54,6 +50,7 @@ model User {
     files         File[]
     images        Image[]
     userFeatures  UserFeature[]
+    workbenches   Workbench[]
 }
 
 model VerificationToken {
@@ -70,17 +67,19 @@ enum Visibility {
 }
 
 model Chat {
-    id         String     @id @default(uuid())
-    createdAt  DateTime   @default(now())
-    title      String
-    userId     String
-    visibility Visibility @default(private)
-    parentChatId String?  // For branched chats
-    user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-    parentChat Chat?      @relation("ChatBranch", fields: [parentChatId], references: [id], onDelete: Cascade)
-    branches   Chat[]     @relation("ChatBranch")
-    messages   Message[]
-    stream     Stream[]
+    id           String     @id @default(uuid())
+    createdAt    DateTime   @default(now())
+    title        String
+    userId       String
+    visibility   Visibility @default(private)
+    parentChatId String?    // For branched chats
+    workbenchId  String?    // Optional association with workbench
+    user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+    parentChat   Chat?      @relation("ChatBranch", fields: [parentChatId], references: [id], onDelete: Cascade)
+    branches     Chat[]     @relation("ChatBranch")
+    messages     Message[]
+    stream       Stream[]
+    workbench    Workbench? @relation(fields: [workbenchId], references: [id], onDelete: SetNull)
 }
 
 model Message {
@@ -88,7 +87,7 @@ model Message {
     chatId      String
     role        String
     parts       Json
-    attachments Json[]
+    attachments String       // Comma-separated JSON strings instead of Json[]
     modelId     String      @default("openai:gpt-4o") // For tracking which model generated the message
     createdAt   DateTime     @default(now())
     chat        Chat         @relation(fields: [chatId], references: [id], onDelete: Cascade)
@@ -140,4 +139,16 @@ model UserFeature {
     feature   Feature  @relation(fields: [featureId], references: [id], onDelete: Cascade)
 
     @@unique([userId, featureId])
+}
+
+model Workbench {
+    id           String   @id @default(uuid())
+    name         String
+    systemPrompt String
+    toolkitIds   String   // Comma-separated toolkit IDs instead of String[]
+    userId       String
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @updatedAt
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    chats        Chat[]
 }

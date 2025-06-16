@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { Edit } from "lucide-react";
+import { Edit, Settings } from "lucide-react";
 
 import {
   SidebarGroup,
@@ -13,6 +13,11 @@ const items = [
     title: "New Chat",
     url: "/",
     icon: Edit,
+  },
+  {
+    title: "Workbenches",
+    url: "/workbenches",
+    icon: Settings,
   },
 ];
 
