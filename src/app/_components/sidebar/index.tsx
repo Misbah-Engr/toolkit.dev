@@ -8,6 +8,7 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
+  SidebarMenuButton,
   SidebarRail,
 } from "@/components/ui/sidebar";
 
@@ -15,6 +16,9 @@ import { NavMain } from "./main";
 import { NavChats } from "./chats";
 import { NavUser } from "./user";
 import { Logo } from "@/components/ui/logo";
+import Link from "next/link";
+import { HStack, VStack } from "@/components/ui/stack";
+import { SiGithub } from "@icons-pack/react-simple-icons";
 
 export async function AppSidebar({
   ...props
@@ -42,7 +46,7 @@ export async function AppSidebar({
           <NavMain />
           {session?.user.id && <NavChats />}
         </SidebarContent>
-        <SidebarFooter>
+        <SidebarFooter className="flex flex-col gap-0">
           {session?.user && (
             <NavUser
               user={{
@@ -52,6 +56,22 @@ export async function AppSidebar({
               }}
             />
           )}
+          <SidebarMenuButton asChild className="h-fit w-full">
+            <Link
+              href="https://github.com/jasonhedman/open-chat"
+              target="_blank"
+            >
+              <HStack>
+                <SiGithub className="size-8" />
+                <VStack className="items-start gap-0">
+                  <h3 className="text-primary font-bold">Contribute</h3>
+                  <p className="text-[10px]">
+                    Looking for more toolkit developers!
+                  </p>
+                </VStack>
+              </HStack>
+            </Link>
+          </SidebarMenuButton>
         </SidebarFooter>
         <SidebarRail />
       </Sidebar>
