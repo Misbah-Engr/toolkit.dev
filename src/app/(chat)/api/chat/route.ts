@@ -182,6 +182,14 @@ export async function POST(request: Request) {
       }),
     );
 
+    // Collect toolkit system prompts
+    const toolkitSystemPrompts = await Promise.all(
+      toolkits.map(async ({ id }) => {
+        const toolkit = getServerToolkit(id);
+        return toolkit.systemPrompt;
+      }),
+    );
+
     const tools = toolkitTools.reduce(
       (acc, toolkitTools) => {
         return {
@@ -194,12 +202,21 @@ export async function POST(request: Request) {
 
     const isOpenAi = selectedChatModel.startsWith("openai");
 
+    // Build comprehensive system prompt
+    const baseSystemPrompt = `You are a helpful assistant. The current date and time is ${new Date().toLocaleString()}.`;
+    
+    const toolkitInstructions = toolkitSystemPrompts.length > 0 
+      ? `\n\n## Available Toolkits\n\nYou have access to the following toolkits and their capabilities:\n\n${toolkitSystemPrompts.join('\n\n---\n\n')}`
+      : '';
+
+    const fullSystemPrompt = baseSystemPrompt + toolkitInstructions;
+
     const stream = createDataStream({
       execute: (dataStream) => {
         const result = streamText(
           getModelId(selectedChatModel, useNativeSearch),
           {
-            system: `You are a helpful assistant. The current date and time is ${new Date().toLocaleString()}.`,
+            system: fullSystemPrompt,
             messages: convertToCoreMessages(messages),
             maxSteps: 5,
             toolCallStreaming: true,
