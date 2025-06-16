@@ -36,6 +36,13 @@ export const notionToolkitServer = createServerToolkit(
 4. **Content Analysis**: Use Search Pages to find relevant pages, then Get Page and Get Blocks to extract detailed content
 5. **Collaborative Workflows**: Use List Users to understand workspace collaboration, then query/create content with appropriate permissions
 
+
+Pages and databases must be created under another page or database. So if the user asks you to create a page or database, search the pages and databases to find a parent and confirm with the user before creating.
+
+If the user also has the memory toolkit, you can use it to store information about the user's workspace and use it to answer questions. If they have memory enabled, you can ask them if they want to save the default page or database under which you should create the page or database.
+
+If the user has memory enabled and they ask you to make content, check the memory tool to see if you have enough information to make the content. If you don't, ask the user for more information.
+
 **Best Practices:**
 - Start with broad searches (List Databases, Search Pages) before drilling down to specific content
 - Use Query Database with filters for precise data retrieval from structured databases

@@ -25,7 +25,9 @@ export const mem0ToolkitServer = createServerToolkit(
 - Store user preferences, important dates, ongoing projects, and frequently referenced information
 - Update memories when information changes rather than storing duplicate or conflicting data
 
-This toolkit enables persistent, personalized interactions by maintaining a knowledge base specific to each user.`,
+This toolkit enables persistent, personalized interactions by maintaining a knowledge base specific to each user.
+
+You can also ask the user for more information if you don't have enough information after a search to answer a question.`,
   async () => {
     const session = await auth();
 

@@ -12,7 +12,7 @@ import { ExaTools } from "./tools/tools";
 
 export const exaToolkitServer = createServerToolkit(
   baseExaToolkitConfig,
-  `You have access to the Exa search toolkit, which provides powerful web search capabilities across different domains and platforms. This toolkit contains the following tools:
+  `You have access to the Exa search toolkit, which provides web search capabilities across different domains and platforms. This toolkit contains the following tools:
 
 - **Search**: General web search with neural ranking
 - **Research Paper Search**: Specialized academic paper search  

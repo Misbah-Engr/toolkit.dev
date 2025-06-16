@@ -22,7 +22,7 @@ export const githubToolkitServer = createServerToolkit(
 **Tool Sequencing Strategies:**
 1. **Repository Discovery**: Start with Search Repositories to find relevant projects, then use Repository Info for detailed analysis
 2. **Code Investigation**: Use Search Code to find specific implementations, patterns, or solutions across repositories
-3. **Developer Research**: Use Search Users to find contributors, then Search Repositories to see their projects
+3. **Developer Research**: Use Search Users to find contributors or organizations, then Search Repositories to see their projects
 4. **Project Analysis**: Combine Repository Info with Search Code to understand project structure and implementation details
 
 **Best Practices:**
