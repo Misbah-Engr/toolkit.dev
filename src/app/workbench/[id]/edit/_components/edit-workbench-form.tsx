@@ -37,10 +37,13 @@ export function EditWorkbenchForm({ workbench }: EditWorkbenchFormProps) {
     }),
   );
 
+  const utils = api.useUtils();
   const updateMutation = api.workbenches.updateWorkbench.useMutation({
     onSuccess: () => {
       toast.success("Workbench updated successfully");
-      router.push("/workbenches");
+      void utils.workbenches.getWorkbench.invalidate(workbench.id);
+      void utils.workbenches.getWorkbenches.invalidate();
+      router.push(`/workbench/${workbench.id}`);
     },
     onError: (error) => {
       toast.error(error.message);

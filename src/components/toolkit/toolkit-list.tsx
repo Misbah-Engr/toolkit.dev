@@ -88,13 +88,19 @@ const ToolkitItem = ({
       size="sm"
       onClick={() => onRemoveToolkit(id)}
       className="bg-transparent"
+      type="button"
     >
       Active
     </Button>
   ) : needsConfiguration ? (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="sm" className="bg-transparent">
+        <Button
+          variant="outline"
+          size="sm"
+          className="bg-transparent"
+          type="button"
+        >
           Add
           <Plus className="size-4" />
         </Button>
@@ -114,6 +120,7 @@ const ToolkitItem = ({
       size="sm"
       onClick={() => onAddToolkit({ id, toolkit, parameters: {} })}
       className="bg-transparent"
+      type="button"
     >
       Add
       <Plus className="size-4" />
