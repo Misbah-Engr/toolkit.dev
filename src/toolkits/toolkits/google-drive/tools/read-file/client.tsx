@@ -7,7 +7,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { FileText, Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { toast } from "sonner";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 export const googleDriveReadFileToolConfigClient: ClientToolConfig<
   typeof readFileTool.inputSchema.shape,
@@ -18,35 +24,35 @@ export const googleDriveReadFileToolConfigClient: ClientToolConfig<
       <ToolCallComponent
         action="Reading File"
         primaryText={`File ID: ${args.fileId}`}
-        secondaryText={args.exportFormat ? `Export format: ${args.exportFormat}` : undefined}
+        secondaryText={
+          args.exportFormat ? `Export format: ${args.exportFormat}` : undefined
+        }
         icon={FileText}
       />
     );
   },
   ResultComponent: ({ result }) => {
     const { content, mimeType, fileName, size, encoding } = result;
-    const [copied, setCopied] = useState(false);
 
     const handleCopy = async () => {
       try {
         await navigator.clipboard.writeText(content);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
+        toast.success("Copied to clipboard");
       } catch (err) {
-        console.error('Failed to copy content:', err);
+        toast.error("Failed to copy content");
       }
     };
 
-    const isTextContent = encoding !== 'base64';
-    const displayContent = isTextContent 
-      ? content.length > 1000 
-        ? content.substring(0, 1000) + '...' 
+    const isTextContent = encoding !== "base64";
+    const displayContent = isTextContent
+      ? content.length > 1000
+        ? content.substring(0, 1000) + "..."
         : content
       : `[Binary content - ${encoding} encoded]`;
 
     return (
-      <VStack className="items-start gap-3 w-full">
-        <HStack className="items-center justify-between w-full">
+      <VStack className="w-full items-start gap-3">
+        <HStack className="w-full items-center justify-between">
           <h3 className="text-sm font-medium">{fileName}</h3>
           <HStack className="gap-2">
             <Badge variant="secondary" className="text-xs">
@@ -54,11 +60,11 @@ export const googleDriveReadFileToolConfigClient: ClientToolConfig<
             </Badge>
             {size && (
               <Badge variant="outline" className="text-xs">
-                {size > 1024 * 1024 
+                {size > 1024 * 1024
                   ? `${(size / (1024 * 1024)).toFixed(1)} MB`
                   : size > 1024
-                  ? `${(size / 1024).toFixed(1)} KB` 
-                  : `${size} B`}
+                    ? `${(size / 1024).toFixed(1)} KB`
+                    : `${size} B`}
               </Badge>
             )}
             {encoding && (
@@ -69,41 +75,27 @@ export const googleDriveReadFileToolConfigClient: ClientToolConfig<
           </HStack>
         </HStack>
 
-        <Card className="w-full">
-          <CardContent className="p-3">
-            <VStack className="items-start gap-2">
-              <HStack className="items-center justify-between w-full">
-                <span className="text-muted-foreground text-xs font-medium">
-                  File Content
-                </span>
-                {isTextContent && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleCopy}
-                    className="h-6 px-2"
-                  >
-                    {copied ? (
-                      <Check className="size-3" />
-                    ) : (
-                      <Copy className="size-3" />
-                    )}
-                  </Button>
-                )}
-              </HStack>
+        <Accordion type="single" collapsible className="w-full">
+          <AccordionItem value="content">
+            <AccordionTrigger className="cursor-pointer py-1 hover:no-underline">
+              <span className="text-muted-foreground text-xs font-medium">
+                File Content
+              </span>
+            </AccordionTrigger>
+            <AccordionContent className="pt-2 pb-0">
               <div className="w-full">
-                <pre className="text-xs bg-muted rounded p-2 overflow-auto max-h-96 whitespace-pre-wrap">
+                <pre className="bg-muted overflow-auto rounded p-2 text-xs whitespace-pre-wrap">
                   {displayContent}
                 </pre>
                 {content.length > 1000 && isTextContent && (
-                  <span className="text-muted-foreground text-xs mt-1 block">
+                  <span className="text-muted-foreground mt-1 block text-xs">
                     Content truncated. Full content available for AI processing.
                   </span>
                 )}
               </div>
-            </VStack>
-          </CardContent>
-        </Card>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
       </VStack>
     );
   },

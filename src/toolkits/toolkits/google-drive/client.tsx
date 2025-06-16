@@ -19,6 +19,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import Link from "next/link";
+import { SiGoogledrive } from "@icons-pack/react-simple-icons";
 
 const driveScope = "https://www.googleapis.com/auth/drive.readonly";
 
@@ -27,7 +28,7 @@ export const googleDriveClientToolkit = createClientToolkit(
   {
     name: "Google Drive",
     description: "Search and read files from your Google Drive.",
-    icon: HardDrive,
+    icon: SiGoogledrive,
     form: null,
     addToolkitWrapper: ({ children }) => {
       const { data: account, isLoading: isLoadingAccount } =
@@ -119,8 +120,7 @@ export const googleDriveClientToolkit = createClientToolkit(
               );
             }}
           >
-            <HardDrive className="size-4" />
-            Grant Drive Access
+            Grant Access
           </Button>
         );
       }
@@ -129,9 +129,7 @@ export const googleDriveClientToolkit = createClientToolkit(
     },
   },
   {
-    [GoogleDriveTools.SearchFiles]:
-      googleDriveSearchFilesToolConfigClient,
-    [GoogleDriveTools.ReadFile]:
-      googleDriveReadFileToolConfigClient,
+    [GoogleDriveTools.SearchFiles]: googleDriveSearchFilesToolConfigClient,
+    [GoogleDriveTools.ReadFile]: googleDriveReadFileToolConfigClient,
   },
 );

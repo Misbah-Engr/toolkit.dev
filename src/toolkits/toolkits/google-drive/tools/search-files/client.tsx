@@ -15,7 +15,9 @@ export const googleDriveSearchFilesToolConfigClient: ClientToolConfig<
       <ToolCallComponent
         action="Searching Files"
         primaryText={`"${args.query}" (${args.pageSize ?? 10} files)`}
-        secondaryText={args.mimeType ? `MIME type: ${args.mimeType}` : "All file types"}
+        secondaryText={
+          args.mimeType ? `MIME type: ${args.mimeType}` : "All file types"
+        }
         icon={Search}
       />
     );
@@ -52,7 +54,7 @@ export const googleDriveSearchFilesToolConfigClient: ClientToolConfig<
 
         {nextPageToken && (
           <span className="text-muted-foreground text-xs">
-            More results available (next page token: {nextPageToken})
+            More results available
           </span>
         )}
       </VStack>

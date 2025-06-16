@@ -22,6 +22,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import Link from "next/link";
+import { SiGooglecalendar } from "@icons-pack/react-simple-icons";
 
 const calendarScope = "https://www.googleapis.com/auth/calendar";
 
@@ -30,7 +31,7 @@ export const googleCalendarClientToolkit = createClientToolkit(
   {
     name: "Google Calendar",
     description: "Access and manage your Google Calendar events and calendars.",
-    icon: Calendar,
+    icon: SiGooglecalendar,
     form: null,
     addToolkitWrapper: ({ children }) => {
       const { data: account, isLoading: isLoadingAccount } =
@@ -122,8 +123,7 @@ export const googleCalendarClientToolkit = createClientToolkit(
               );
             }}
           >
-            <Calendar className="size-4" />
-            Grant Calendar Access
+            Grant Access
           </Button>
         );
       }

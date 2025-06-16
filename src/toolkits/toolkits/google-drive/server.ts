@@ -16,11 +16,17 @@ export const googleDriveToolkitServer = createServerToolkit(
       throw new Error("No Google account found or access token missing");
     }
 
+    if (!account.scope?.includes("drive.readonly")) {
+      throw new Error("Google account does not have drive.readonly scope");
+    }
+
     return {
-      [GoogleDriveTools.SearchFiles]:
-        googleDriveSearchFilesToolConfigServer(account.access_token),
-      [GoogleDriveTools.ReadFile]: 
-        googleDriveReadFileToolConfigServer(account.access_token),
+      [GoogleDriveTools.SearchFiles]: googleDriveSearchFilesToolConfigServer(
+        account.access_token,
+      ),
+      [GoogleDriveTools.ReadFile]: googleDriveReadFileToolConfigServer(
+        account.access_token,
+      ),
     };
   },
 );

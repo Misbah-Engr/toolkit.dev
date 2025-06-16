@@ -7,16 +7,17 @@ export const searchFilesTool = createBaseTool({
     query: z.string().describe("Search query to find files"),
     pageToken: z
       .string()
-      .optional()
-      .describe("Token for the next page of results"),
+      .describe(
+        "Token for the next page of results (leave blank for first page)",
+      ),
     pageSize: z
       .number()
-      .optional()
       .describe("Number of results per page (max 100, default: 10)"),
     mimeType: z
       .string()
-      .optional()
-      .describe("Filter by MIME type (e.g., 'application/pdf', 'image/jpeg')"),
+      .describe(
+        "Filter by MIME type (e.g., 'application/pdf', 'image/jpeg') (leave blank for all types)",
+      ),
   }),
   outputSchema: z.object({
     files: z.array(
@@ -38,10 +39,7 @@ export const searchFilesTool = createBaseTool({
           )
           .optional()
           .describe("File owners"),
-        parents: z
-          .array(z.string())
-          .optional()
-          .describe("Parent folder IDs"),
+        parents: z.array(z.string()).optional().describe("Parent folder IDs"),
       }),
     ),
     nextPageToken: z

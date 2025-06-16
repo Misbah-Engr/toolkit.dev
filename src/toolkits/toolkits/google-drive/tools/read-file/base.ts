@@ -7,8 +7,9 @@ export const readFileTool = createBaseTool({
     fileId: z.string().describe("ID of the file to read"),
     exportFormat: z
       .string()
-      .optional()
-      .describe("Export format for Google Workspace files (e.g., 'text/plain', 'text/csv', 'text/markdown')")
+      .describe(
+        "Export format for Google Workspace files (e.g., 'text/plain', 'text/csv', 'text/markdown') (leave blank for auto-detection)",
+      ),
   }),
   outputSchema: z.object({
     content: z.string().describe("File content as text"),
