@@ -16,11 +16,11 @@ This directory contains the main landing page components for the app, showcasing
 - Uses real code examples from the toolkit creation system
 - Aims to encourage developers to create their own toolkits
 
-### 3. ToolkitSynergySection (`toolkit-synergy-section.tsx`)
-- Emphasizes how toolkits can work together
-- Similar to the starter prompts functionality
-- Shows example workflows combining multiple toolkits
-- Demonstrates the power of toolkit combinations
+### 3. WorkbenchSection (`workbench-section.tsx`)
+- Showcases workbench configurations that combine toolkits with system prompts
+- Uses animated beams to visualize how toolkits connect within workbenches
+- Shows example workbenches: Research Assistant, Data Analyst, Project Manager
+- Demonstrates the concept of specialized AI assistants for specific use cases
 
 ### 4. ToolkitDemoList (`toolkit-demo-list.tsx`)
 - Animated list showing realistic toolkit interaction sequence
@@ -45,7 +45,7 @@ Or import individual sections:
 import { 
   HeroSection, 
   ToolkitCreationSection, 
-  ToolkitSynergySection,
+  WorkbenchSection,
   ToolkitDemoList 
 } from '@/app/_components/landing-page/components';
 
@@ -55,7 +55,7 @@ export default function CustomPage() {
       <HeroSection />
       {/* Your custom content */}
       <ToolkitCreationSection />
-      <ToolkitSynergySection />
+      <WorkbenchSection />
     </div>
   );
 }
@@ -65,6 +65,7 @@ export default function CustomPage() {
 
 - `@/toolkits/toolkits/client` - For accessing available toolkits
 - `@/components/magicui/animated-list` - For the demo conversation animation
+- `@/components/magicui/animated-beam` - For workbench toolkit connections
 - `@/components/ui/logo` - For the AI assistant avatar
 - Motion components for animations
 - Various UI components (Card, Badge, Button, etc.)
@@ -72,6 +73,7 @@ export default function CustomPage() {
 ## Key Features
 
 - **Realistic Demo**: Shows actual toolkit interactions with proper message styling
+- **Workbench Visualizations**: Animated beams show how toolkits connect in workbenches
 - **Responsive Design**: Works on all screen sizes
 - **Smooth Animations**: Uses Framer Motion and AnimatedList for engaging animations  
 - **Real Data**: Pulls actual toolkit information from the system
@@ -90,4 +92,12 @@ The `ToolkitDemoList` shows a realistic workflow:
 6. **Image Toolkit**: Generates infographic
 7. **Memory Toolkit**: Stores key insights
 
-This demonstrates the power of multi-toolkit collaboration in a realistic use case.
+## Workbench Examples
+
+The `WorkbenchSection` showcases three specialized workbenches:
+
+1. **Research Assistant** - Combines Exa, GitHub, Image, Notion, and Memory toolkits
+2. **Data Analyst** - Uses Notion, Google Drive, E2B, and Image toolkits  
+3. **Project Manager** - Integrates Google Calendar, Notion, Google Drive, and Memory toolkits
+
+Each workbench shows animated beams connecting toolkits to demonstrate how they work together under a unified system prompt.
