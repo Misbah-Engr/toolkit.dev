@@ -1,55 +1,12 @@
 "use client";
 
-import React, { useRef } from "react";
+import React from "react";
 import { motion } from "motion/react";
-import { clientToolkits } from "@/toolkits/toolkits/client";
-import { Logo } from "@/components/ui/logo";
-import { AnimatedBeam } from "@/components/magicui/animated-beam";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import { cn } from "@/lib/utils";
-
-interface ToolkitCardProps {
-  toolkit: any;
-  delay: number;
-  cardRef: React.RefObject<HTMLDivElement>;
-}
-
-const ToolkitCard: React.FC<ToolkitCardProps> = ({ toolkit, delay, cardRef }) => {
-  const IconComponent = toolkit.icon;
-  
-  return (
-    <motion.div
-      ref={cardRef}
-      initial={{ opacity: 0, scale: 0.8, y: 20 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      transition={{ delay, duration: 0.5, ease: "backOut" }}
-      className="relative rounded-xl border border-border/50 bg-card/50 backdrop-blur-sm p-4 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-    >
-      <div className="flex items-center gap-3">
-        <div className="rounded-lg bg-primary/10 p-2 flex items-center justify-center">
-          <IconComponent className="h-5 w-5 text-primary" />
-        </div>
-        <div>
-          <h3 className="font-semibold text-sm text-foreground">{toolkit.name}</h3>
-          <p className="text-xs text-muted-foreground line-clamp-2">{toolkit.description}</p>
-        </div>
-      </div>
-    </motion.div>
-  );
-};
+import { ToolkitDemoList } from "./toolkit-demo-list";
 
 export const HeroSection: React.FC = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const logoRef = useRef<HTMLDivElement>(null);
-  
-  // Create refs for each toolkit card
-  const toolkitRefs = Object.keys(clientToolkits).map(() => 
-    React.createRef<HTMLDivElement>()
-  );
-
-  const toolkitEntries = Object.entries(clientToolkits);
-
   return (
     <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background/95 to-muted/20 overflow-hidden">
       {/* Background pattern */}
@@ -81,7 +38,7 @@ export const HeroSection: React.FC = () => {
               </h1>
               
               <p className="text-lg md:text-xl text-muted-foreground max-w-lg leading-relaxed">
-                Write workflows in normal async code and we'll handle the
+                Write workflows in normal async code and we&apos;ll handle the
                 rest, from queues to elastic scaling. No timeouts, retries,
                 observability, and zero infrastructure to manage.
               </p>
@@ -103,61 +60,31 @@ export const HeroSection: React.FC = () => {
             </motion.div>
           </div>
 
-          {/* Right Column - Toolkit Visualization */}
-          <div className="relative" ref={containerRef}>
-            <div className="relative w-full h-[600px] flex items-center justify-center">
-              {/* Central Logo */}
-              <motion.div
-                ref={logoRef}
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.3, duration: 0.8, ease: "backOut" }}
-                className="absolute z-20 rounded-2xl bg-background border-2 border-primary/20 p-6 shadow-2xl"
-              >
-                <Logo className="h-12 w-12" />
-              </motion.div>
-
-              {/* Toolkit Cards arranged in a circle */}
-              {toolkitEntries.map(([id, toolkit], index) => {
-                const angle = (index / toolkitEntries.length) * 2 * Math.PI;
-                const radius = 220;
-                const x = Math.cos(angle) * radius;
-                const y = Math.sin(angle) * radius;
-
-                return (
-                  <div
-                    key={id}
-                    className="absolute transform -translate-x-1/2 -translate-y-1/2"
-                    style={{
-                      left: `calc(50% + ${x}px)`,
-                      top: `calc(50% + ${y}px)`,
-                    }}
-                  >
-                    <ToolkitCard
-                      toolkit={toolkit}
-                      delay={0.5 + index * 0.1}
-                      cardRef={toolkitRefs[index]}
-                    />
+          {/* Right Column - Toolkit Demo */}
+          <div className="relative flex justify-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.8 }}
+              className="w-full max-w-lg"
+            >
+              <div className="relative">
+                {/* Demo container with subtle background */}
+                <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-2xl p-6 shadow-2xl">
+                  <div className="text-center mb-6">
+                    <h3 className="text-lg font-semibold mb-2">See It In Action</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Watch toolkits work together seamlessly
+                    </p>
                   </div>
-                );
-              })}
-
-              {/* Animated Beams */}
-              {toolkitRefs.map((ref, index) => (
-                <AnimatedBeam
-                  key={index}
-                  containerRef={containerRef}
-                  fromRef={ref}
-                  toRef={logoRef}
-                  curvature={-50}
-                  duration={3 + Math.random() * 2}
-                  delay={1 + index * 0.2}
-                  pathOpacity={0.3}
-                  gradientStartColor="#3b82f6"
-                  gradientStopColor="#8b5cf6"
-                />
-              ))}
-            </div>
+                  
+                  <ToolkitDemoList />
+                </div>
+                
+                {/* Glow effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/10 rounded-2xl blur-xl -z-10" />
+              </div>
+            </motion.div>
           </div>
         </div>
       </div>
