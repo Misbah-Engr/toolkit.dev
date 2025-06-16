@@ -44,6 +44,7 @@ export const chatsRouter = createTRPCRouter({
       return ctx.db.chat.findUnique({
         where: {
           id: input,
+          OR: [{ userId: ctx.session.user.id }, { visibility: "public" }],
         },
         include: {
           workbench: true,

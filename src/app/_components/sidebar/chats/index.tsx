@@ -25,7 +25,6 @@ import { api } from "@/trpc/react";
 import { useDeleteChat } from "@/app/_hooks/use-delete-chat";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
-import type { Chat } from "@prisma/client";
 
 export const NavChats = () => {
   return (
