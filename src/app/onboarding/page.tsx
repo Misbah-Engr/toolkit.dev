@@ -21,7 +21,7 @@ export default function OnboardingPage() {
       id: Toolkits.Image,
       toolkit: getClientToolkit(Toolkits.Image) as ClientToolkit,
       parameters: {
-        model: "xai:xai:grok-2-image",
+        model: "xai:grok-2-image",
       },
     },
     {
