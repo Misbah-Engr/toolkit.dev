@@ -1,4 +1,4 @@
-import type { Client } from "@notionhq/client";
+import type { BlockObjectRequest, Client } from "@notionhq/client";
 import type { ServerToolConfig } from "@/toolkits/types";
 import type { getBlocksTool, appendBlocksTool } from "./base";
 
@@ -41,71 +41,71 @@ export const notionAppendBlocksToolConfigServer = (
   typeof appendBlocksTool.outputSchema.shape
 > => {
   return {
-    callback: async ({ block_id, content, block_type = 'paragraph' }) => {
+    callback: async ({ block_id, content, block_type = "paragraph" }) => {
       try {
         // Convert content to blocks based on block_type
-        const lines = content.split('\n').filter(line => line.trim());
-        const blocks = lines.map(line => {
+        const lines = content.split("\n").filter((line) => line.trim());
+        const blocks = lines.map((line) => {
           const richText = [{ type: "text" as const, text: { content: line } }];
-          
+
           switch (block_type) {
-            case 'heading_1':
+            case "heading_1":
               return {
                 object: "block" as const,
                 type: "heading_1" as const,
-                heading_1: { rich_text: richText }
+                heading_1: { rich_text: richText },
               };
-            case 'heading_2':
+            case "heading_2":
               return {
                 object: "block" as const,
                 type: "heading_2" as const,
-                heading_2: { rich_text: richText }
+                heading_2: { rich_text: richText },
               };
-            case 'heading_3':
+            case "heading_3":
               return {
                 object: "block" as const,
                 type: "heading_3" as const,
-                heading_3: { rich_text: richText }
+                heading_3: { rich_text: richText },
               };
-            case 'bulleted_list_item':
+            case "bulleted_list_item":
               return {
                 object: "block" as const,
                 type: "bulleted_list_item" as const,
-                bulleted_list_item: { rich_text: richText }
+                bulleted_list_item: { rich_text: richText },
               };
-            case 'numbered_list_item':
+            case "numbered_list_item":
               return {
                 object: "block" as const,
                 type: "numbered_list_item" as const,
-                numbered_list_item: { rich_text: richText }
+                numbered_list_item: { rich_text: richText },
               };
-            case 'to_do':
+            case "to_do":
               return {
                 object: "block" as const,
                 type: "to_do" as const,
-                to_do: { rich_text: richText, checked: false }
+                to_do: { rich_text: richText, checked: false },
               };
-            case 'code':
+            case "code":
               return {
                 object: "block" as const,
                 type: "code" as const,
-                code: { 
+                code: {
                   rich_text: richText,
-                  language: "plain text"
-                }
+                  language: "plain text",
+                },
               };
             default: // paragraph
               return {
                 object: "block" as const,
                 type: "paragraph" as const,
-                paragraph: { rich_text: richText }
+                paragraph: { rich_text: richText },
               };
           }
         });
 
         const response = await notion.blocks.children.append({
           block_id,
-          children: blocks,
+          children: blocks as BlockObjectRequest[],
         });
 
         const results = response.results.filter((block) => "type" in block);

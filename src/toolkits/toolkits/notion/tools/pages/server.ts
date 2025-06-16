@@ -1,4 +1,4 @@
-import type { Client } from "@notionhq/client";
+import type { Client, CreatePageParameters } from "@notionhq/client";
 import type { ServerToolConfig } from "@/toolkits/types";
 import type { getPageTool, searchPagesTool, createPageTool } from "./base";
 
@@ -87,51 +87,47 @@ export const notionCreatePageToolConfigServer = (
   typeof createPageTool.outputSchema.shape
 > => {
   return {
-    callback: async ({ parent_page_id, parent_database_id, title, content, properties = {} }) => {
+    callback: async ({
+      parent_page_id,
+      parent_database_id,
+      title,
+      content,
+    }) => {
       try {
         // Determine parent type and create appropriate parent object
-        let parent: any;
+        let parent: CreatePageParameters["parent"];
         if (parent_database_id) {
           parent = { database_id: parent_database_id };
         } else if (parent_page_id) {
           parent = { page_id: parent_page_id };
         } else {
-          throw new Error("Either parent_page_id or parent_database_id must be provided");
-        }
-
-        // Create page properties based on whether it's a database page or regular page
-        const pageProperties: any = {};
-        if (parent_database_id) {
-          // For database pages, use the provided properties
-          Object.assign(pageProperties, properties);
-          // Ensure title property exists for database pages
-          if (!pageProperties.Name && !pageProperties.Title && !pageProperties.title) {
-            pageProperties.Name = {
-              title: [{ text: { content: title } }]
-            };
-          }
-        } else {
-          // For regular pages, set the title
-          pageProperties.title = {
-            title: [{ text: { content: title } }]
-          };
+          throw new Error(
+            "Either parent_page_id or parent_database_id must be provided",
+          );
         }
 
         // Create the page
         const response = await notion.pages.create({
           parent,
-          properties: pageProperties,
+          properties: {
+            title: {
+              title: [{ text: { content: title } }],
+            },
+          },
         });
 
         // If content is provided, add it as blocks
         if (content && "id" in response) {
-          const blocks = content.split('\n').filter(line => line.trim()).map(line => ({
-            object: "block" as const,
-            type: "paragraph" as const,
-            paragraph: {
-              rich_text: [{ type: "text" as const, text: { content: line } }]
-            }
-          }));
+          const blocks = content
+            .split("\n")
+            .filter((line) => line.trim())
+            .map((line) => ({
+              object: "block" as const,
+              type: "paragraph" as const,
+              paragraph: {
+                rich_text: [{ type: "text" as const, text: { content: line } }],
+              },
+            }));
 
           if (blocks.length > 0) {
             await notion.blocks.children.append({

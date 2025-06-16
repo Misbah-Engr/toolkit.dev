@@ -14,14 +14,21 @@ interface Props {
   toolInvocation: ToolInvocation;
 }
 
+type ToolResult<T extends z.ZodType> =
+  | {
+      isError: true;
+      result: {
+        error: string;
+      };
+    }
+  | {
+      isError: false;
+      result: z.infer<T>;
+    };
+
 const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
   const argsDefined = toolInvocation.args !== undefined;
   const completeOnFirstMount = toolInvocation.state === "result";
-
-  console.log({
-    argsDefined,
-    completeOnFirstMount,
-  });
 
   const { toolName } = toolInvocation;
 
@@ -72,35 +79,15 @@ const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
       <Card className="gap-0 overflow-hidden p-0">
         <HStack className="border-b p-2">
           <clientToolkit.icon className="size-4" />
-          <AnimatePresence mode="wait">
-            {toolInvocation.state === "result" ? (
-              <motion.span
-                key="completed"
-                initial={{ opacity: 0, y: completeOnFirstMount ? 0 : -5 }}
-                animate={{ opacity: 1, y: completeOnFirstMount ? 0 : 0 }}
-                // exit={{ opacity: 0, y: completeOnFirstMount ? 0 : 5 }}
-                transition={{ duration: 0.2 }}
-                className="text-lg font-medium"
-              >
-                {clientToolkit.name} Toolkit
-              </motion.span>
-            ) : (
-              <motion.div
-                key="loading"
-                initial={{
-                  opacity: argsDefined ? 1 : 0,
-                  y: argsDefined ? 0 : -5,
-                }}
-                animate={{ opacity: 1, y: 0 }}
-                // exit={{ opacity: 0, y: argsDefined ? 0 : 5 }}
-                transition={{ duration: 0.2 }}
-              >
-                <AnimatedShinyText className="text-lg font-medium">
-                  {clientToolkit.name} Toolkit
-                </AnimatedShinyText>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {toolInvocation.state === "result" ? (
+            <span className="text-lg font-medium">
+              {clientToolkit.name} Toolkit
+            </span>
+          ) : (
+            <AnimatedShinyText className="text-lg font-medium">
+              {clientToolkit.name} Toolkit
+            </AnimatedShinyText>
+          )}
           <AnimatePresence>
             {(toolInvocation.state === "call" ||
               toolInvocation.state === "partial-call") && (
@@ -154,6 +141,20 @@ const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
               </motion.div>
             ) : toolConfig && toolInvocation.state === "result" ? (
               (() => {
+                const result = toolInvocation.result as ToolResult<
+                  typeof toolConfig.outputSchema
+                >;
+
+                if (result.isError) {
+                  return (
+                    <div className="w-full max-w-full whitespace-pre-wrap">
+                      <p className="text-destructive">
+                        Error: {result.result.error}
+                      </p>
+                    </div>
+                  );
+                }
+
                 return (
                   <motion.div
                     key="result"
@@ -162,10 +163,6 @@ const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
                       height: completeOnFirstMount ? "auto" : 0,
                     }}
                     animate={{ opacity: 1, height: "auto" }}
-                    // exit={{
-                    //   opacity: 0,
-                    //   height: completeOnFirstMount ? "auto" : 0,
-                    // }}
                     transition={{
                       duration: 0.3,
                       ease: "easeOut",
@@ -181,13 +178,7 @@ const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
                               typeof toolConfig.inputSchema
                             >
                           }
-                          result={
-                            (
-                              toolInvocation.result as {
-                                result: z.infer<typeof toolConfig.outputSchema>;
-                              }
-                            ).result
-                          }
+                          result={result.result}
                           append={append}
                         />
                       )}

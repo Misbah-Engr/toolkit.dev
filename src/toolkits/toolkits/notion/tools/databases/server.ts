@@ -1,6 +1,10 @@
 import type { Client } from "@notionhq/client";
 import type { ServerToolConfig } from "@/toolkits/types";
-import type { listDatabasesTool, queryDatabaseTool, createDatabaseTool } from "./base";
+import type {
+  listDatabasesTool,
+  queryDatabaseTool,
+  createDatabaseTool,
+} from "./base";
 
 export const notionListDatabasesToolConfigServer = (
   notion: Client,
@@ -81,29 +85,8 @@ export const notionCreateDatabaseToolConfigServer = (
   typeof createDatabaseTool.outputSchema.shape
 > => {
   return {
-    callback: async ({ parent_page_id, title, description, properties = {} }) => {
+    callback: async ({ parent_page_id, title, description }) => {
       try {
-        // Create default properties if none provided
-        const defaultProperties = Object.keys(properties).length === 0 ? {
-          Name: {
-            title: {}
-          },
-          Tags: {
-            multi_select: {
-              options: []
-            }
-          },
-          Status: {
-            select: {
-              options: [
-                { name: "Not started", color: "red" },
-                { name: "In progress", color: "yellow" },
-                { name: "Done", color: "green" }
-              ]
-            }
-          }
-        } : properties;
-
         const response = await notion.databases.create({
           parent: {
             page_id: parent_page_id,
@@ -116,15 +99,17 @@ export const notionCreateDatabaseToolConfigServer = (
               },
             },
           ],
-          description: description ? [
-            {
-              type: "text",
-              text: {
-                content: description,
-              },
-            },
-          ] : [],
-          properties: defaultProperties,
+          description: description
+            ? [
+                {
+                  type: "text",
+                  text: {
+                    content: description,
+                  },
+                },
+              ]
+            : [],
+          properties: {},
         });
 
         if (
