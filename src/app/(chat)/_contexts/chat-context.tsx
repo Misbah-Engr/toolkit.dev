@@ -26,6 +26,7 @@ import {
 import type { ClientToolkit } from "@/toolkits/types";
 import type { z } from "zod";
 import { clientToolkits } from "@/toolkits/toolkits/client";
+import type { SelectedToolkit } from "@/components/toolkit/types";
 
 interface ChatContextType {
   // Chat state
@@ -47,16 +48,8 @@ interface ChatContextType {
   imageGenerationModel: ImageModel | undefined;
   setImageGenerationModel: (model: ImageModel | undefined) => void;
 
-  toolkits: Array<{
-    id: string;
-    toolkit: ClientToolkit;
-    parameters: z.infer<ClientToolkit["parameters"]>;
-  }>;
-  addToolkit: (
-    id: string,
-    toolkit: ClientToolkit,
-    parameters: z.infer<ClientToolkit["parameters"]>,
-  ) => void;
+  toolkits: Array<SelectedToolkit>;
+  addToolkit: (toolkit: SelectedToolkit) => void;
   removeToolkit: (id: string) => void;
 
   // Chat actions
@@ -92,13 +85,7 @@ export function ChatProvider({
     ImageModel | undefined
   >(undefined);
   const [attachments, setAttachments] = useState<Array<Attachment>>([]);
-  const [toolkits, setToolkitsState] = useState<
-    Array<{
-      id: string;
-      toolkit: ClientToolkit;
-      parameters: z.infer<ClientToolkit["parameters"]>;
-    }>
-  >([]);
+  const [toolkits, setToolkitsState] = useState<Array<SelectedToolkit>>([]);
 
   // Load preferences from localStorage on mount
   useEffect(() => {
@@ -172,15 +159,8 @@ export function ChatProvider({
     localStorageUtils.setToolkits(newToolkits);
   };
 
-  const addToolkit = (
-    id: string,
-    toolkit: ClientToolkit,
-    parameters: z.infer<ClientToolkit["parameters"]>,
-  ) => {
-    setToolkits([
-      ...toolkits.filter((t) => t.id !== id),
-      { id, toolkit, parameters },
-    ]);
+  const addToolkit = (toolkit: SelectedToolkit) => {
+    setToolkits([...toolkits.filter((t) => t.id !== toolkit.id), toolkit]);
   };
 
   const removeToolkit = (id: string) => {
