@@ -8,15 +8,17 @@ export const chatsRouter = createTRPCRouter({
       z.object({
         limit: z.number().min(1).max(100).default(10),
         cursor: z.string().nullish(),
+        workbenchId: z.string().nullish(),
       }),
     )
     .query(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
-      const { limit, cursor } = input;
+      const { limit, cursor, workbenchId } = input;
 
       const items = await ctx.db.chat.findMany({
         where: {
           userId,
+          workbenchId,
         },
         orderBy: {
           createdAt: "desc",
