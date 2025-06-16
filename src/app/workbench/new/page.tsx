@@ -12,8 +12,18 @@ import { ToolkitList } from "@/components/toolkit/toolkit-list";
 import type { SelectedToolkit } from "@/components/toolkit/types";
 import type { Toolkits } from "@/toolkits/toolkits/shared";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
+import {
+  Dialog,
+  DialogDescription,
+  DialogTitle,
+  DialogHeader,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Anvil, Plus } from "lucide-react";
+import { ToolkitIcons } from "@/components/toolkit/toolkit-icons";
+import { clientToolkits } from "@/toolkits/toolkits/client";
 
 export default function NewWorkbenchPage() {
   const router = useRouter();
@@ -58,18 +68,11 @@ export default function NewWorkbenchPage() {
   };
 
   return (
-    <div className="mx-auto max-w-4xl p-6">
-      <VStack className="gap-6">
-        <HStack className="items-start justify-between">
+    <div className="mx-auto w-full max-w-2xl py-8">
+      <VStack className="w-full items-start gap-8">
+        <VStack className="items-start gap-2">
+          <Anvil className="text-primary size-16" />
           <VStack className="gap-2">
-            <HStack className="items-center gap-2">
-              <Link href="/workbenches">
-                <Button variant="ghost" size="sm">
-                  <ArrowLeft className="size-4" />
-                  Back to Workbenches
-                </Button>
-              </Link>
-            </HStack>
             <div>
               <h1 className="text-3xl font-bold">Create New Workbench</h1>
               <p className="text-muted-foreground">
@@ -78,12 +81,12 @@ export default function NewWorkbenchPage() {
               </p>
             </div>
           </VStack>
-        </HStack>
+        </VStack>
 
-        <form onSubmit={handleSubmit} className="space-y-8">
-          <VStack className="gap-6">
+        <form onSubmit={handleSubmit} className="w-full space-y-8">
+          <VStack className="w-full items-start gap-6">
             {/* Name Field */}
-            <VStack className="gap-2">
+            <VStack className="w-full items-start gap-2">
               <Label htmlFor="name" className="text-base font-semibold">
                 Workbench Name
               </Label>
@@ -95,13 +98,13 @@ export default function NewWorkbenchPage() {
                 required
                 maxLength={100}
               />
-              <p className="text-muted-foreground text-sm">
+              <p className="text-muted-foreground text-xs">
                 Give your workbench a descriptive name (1-100 characters).
               </p>
             </VStack>
 
             {/* System Prompt Field */}
-            <VStack className="gap-2">
+            <VStack className="w-full items-start gap-2">
               <Label htmlFor="systemPrompt" className="text-base font-semibold">
                 System Prompt
               </Label>
@@ -114,43 +117,81 @@ export default function NewWorkbenchPage() {
                 className="resize-none"
                 maxLength={10000}
               />
-              <p className="text-muted-foreground text-sm">
+              <p className="text-muted-foreground text-xs">
                 This prompt will instruct the AI on how to behave in this
                 workbench (max 10,000 characters).
               </p>
             </VStack>
 
             {/* Toolkit Selection */}
-            <VStack className="gap-2">
-              <Label className="text-base font-semibold">
-                Available Toolkits
-              </Label>
-              <p className="text-muted-foreground text-sm">
+            <VStack className="w-full items-start gap-2">
+              <Label className="text-base font-semibold">Select Toolkits</Label>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start px-2"
+                  >
+                    {selectedToolkits.length > 0 ? (
+                      <HStack className="w-full">
+                        <ToolkitIcons
+                          toolkits={selectedToolkits.map(
+                            (toolkit) => toolkit.id,
+                          )}
+                        />
+                        <p className="text-muted-foreground text-xs">
+                          {selectedToolkits.length} Toolkit
+                          {selectedToolkits.length !== 1 ? "s" : ""} selected
+                        </p>
+                      </HStack>
+                    ) : (
+                      <HStack className="w-full justify-between">
+                        <HStack className="flex items-center gap-2">
+                          <Plus className="text-muted-foreground size-4" />
+                          <p className="text-muted-foreground text-xs">
+                            Select toolkits...
+                          </p>
+                        </HStack>
+                        <ToolkitIcons
+                          toolkits={Object.keys(clientToolkits) as Toolkits[]}
+                          iconContainerClassName="bg-background"
+                          iconClassName="text-muted-foreground"
+                        />
+                      </HStack>
+                    )}
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-h-[80vh] max-w-lg gap-2 overflow-hidden">
+                  <DialogHeader className="gap-1">
+                    <DialogTitle>Select Toolkits</DialogTitle>
+                    <DialogDescription>
+                      Choose the toolkits that will be available in this
+                      workbench.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="flex-1 overflow-y-auto">
+                    <ToolkitList
+                      selectedToolkits={selectedToolkits}
+                      onAddToolkit={handleAddToolkit}
+                      onRemoveToolkit={handleRemoveToolkit}
+                    />
+                  </div>
+                </DialogContent>
+              </Dialog>
+              <p className="text-muted-foreground text-xs">
                 Select the toolkits that will be available in this workbench.
               </p>
-              <div className="bg-muted/30 rounded-lg border p-4">
-                <ToolkitList
-                  selectedToolkits={selectedToolkits}
-                  onAddToolkit={handleAddToolkit}
-                  onRemoveToolkit={handleRemoveToolkit}
-                />
-              </div>
-              {selectedToolkits.length > 0 && (
-                <p className="text-muted-foreground text-sm">
-                  {selectedToolkits.length} toolkit
-                  {selectedToolkits.length !== 1 ? "s" : ""} selected
-                </p>
-              )}
             </VStack>
           </VStack>
 
           {/* Form Actions */}
-          <div className="flex justify-end space-x-3 border-t pt-6">
-            <Link href="/workbenches">
+          <div className="flex w-full gap-2">
+            <Link href="/" className="flex-1">
               <Button
                 type="button"
                 variant="outline"
                 disabled={createMutation.isPending}
+                className="w-full"
               >
                 Cancel
               </Button>
@@ -158,6 +199,7 @@ export default function NewWorkbenchPage() {
             <Button
               type="submit"
               disabled={createMutation.isPending || !name.trim()}
+              className="flex-1"
             >
               {createMutation.isPending ? "Creating..." : "Create Workbench"}
             </Button>

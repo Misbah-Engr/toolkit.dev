@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { Edit, Settings } from "lucide-react";
+import { Anvil, Edit, Settings } from "lucide-react";
 
 import {
   SidebarGroup,
@@ -17,7 +17,7 @@ const items = [
   {
     title: "New Workbench",
     url: "/workbench/new",
-    icon: Settings,
+    icon: Anvil,
   },
 ];
 

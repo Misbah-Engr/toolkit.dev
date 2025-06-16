@@ -29,6 +29,11 @@ import { clientToolkits } from "@/toolkits/toolkits/client";
 import type { SelectedToolkit } from "@/components/toolkit/types";
 import type { Toolkits } from "@/toolkits/toolkits/shared";
 import type { Workbench } from "@prisma/client";
+import { openAiLanguageModels } from "@/ai/models/openai";
+
+const DEFAULT_CHAT_MODEL = openAiLanguageModels.find(
+  (model) => model.modelId === "gpt-4.1",
+)!;
 
 interface ChatContextType {
   // Chat state
@@ -53,6 +58,8 @@ interface ChatContextType {
   toolkits: Array<SelectedToolkit>;
   addToolkit: (toolkit: SelectedToolkit) => void;
   removeToolkit: (id: Toolkits) => void;
+
+  workbench?: Workbench;
 
   // Chat actions
   handleSubmit: UseChatHelpers["handleSubmit"];
@@ -93,6 +100,22 @@ export function ChatProvider({
 
   // Load preferences from localStorage on mount
   useEffect(() => {
+    const preferences = localStorageUtils.getPreferences();
+
+    if (preferences.selectedChatModel) {
+      setSelectedChatModelState(preferences.selectedChatModel);
+    } else {
+      setSelectedChatModelState(DEFAULT_CHAT_MODEL);
+    }
+
+    if (preferences.imageGenerationModel) {
+      setImageGenerationModelState(preferences.imageGenerationModel);
+    }
+
+    if (typeof preferences.useNativeSearch === "boolean") {
+      setUseNativeSearchState(preferences.useNativeSearch);
+    }
+
     // If this is a workbench chat, initialize with workbench toolkits
     if (workbench) {
       const workbenchToolkits = workbench.toolkitIds
@@ -120,20 +143,6 @@ export function ChatProvider({
 
       setToolkitsState(workbenchToolkits);
       return;
-    }
-
-    const preferences = localStorageUtils.getPreferences();
-
-    if (preferences.selectedChatModel) {
-      setSelectedChatModelState(preferences.selectedChatModel);
-    }
-
-    if (preferences.imageGenerationModel) {
-      setImageGenerationModelState(preferences.imageGenerationModel);
-    }
-
-    if (typeof preferences.useNativeSearch === "boolean") {
-      setUseNativeSearchState(preferences.useNativeSearch);
     }
 
     // Restore toolkits by matching persisted ones with available client toolkits
@@ -282,6 +291,7 @@ export function ChatProvider({
     toolkits,
     addToolkit,
     removeToolkit,
+    workbench,
   };
 
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;

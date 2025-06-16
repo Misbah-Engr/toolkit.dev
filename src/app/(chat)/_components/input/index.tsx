@@ -9,7 +9,7 @@ import React, {
   useMemo,
 } from "react";
 
-import { ArrowUp, Paperclip, Octagon, ArrowDown } from "lucide-react";
+import { ArrowUp, Paperclip, Octagon } from "lucide-react";
 
 import { AnimatePresence, motion } from "motion/react";
 
@@ -271,34 +271,6 @@ const PureMultimodalInput: React.FC<Props> = ({
 
   return (
     <div className="relative flex w-full flex-col">
-      <AnimatePresence>
-        {!isAtBottom && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
-            transition={{ type: "spring", stiffness: 300, damping: 20 }}
-            className={cn(
-              "absolute -top-12 left-1/2 z-50 -translate-x-1/2",
-              submitDisabledString && "bottom-32",
-            )}
-          >
-            <Button
-              data-testid="scroll-to-bottom-button"
-              className="bg-muted dark:bg-muted rounded-full"
-              size="icon"
-              variant="outline"
-              onClick={(event) => {
-                event.preventDefault();
-                scrollToBottom();
-              }}
-            >
-              <ArrowDown />
-            </Button>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       <input
         type="file"
         className="pointer-events-none fixed -top-4 -left-4 size-0.5"

@@ -14,8 +14,12 @@ import { useState } from "react";
 import { ToolkitList } from "@/components/toolkit/toolkit-list";
 
 export const ToolsSelect = () => {
-  const { toolkits, addToolkit, removeToolkit } = useChatContext();
+  const { toolkits, addToolkit, removeToolkit, workbench } = useChatContext();
   const [isOpen, setIsOpen] = useState(false);
+
+  if (workbench) {
+    return null;
+  }
 
   return (
     <TooltipProvider>

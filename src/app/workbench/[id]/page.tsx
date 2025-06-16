@@ -1,4 +1,3 @@
-import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 
 import { auth } from "@/server/auth";
@@ -28,16 +27,12 @@ export default async function WorkbenchPage(props: {
 
     const chatId = generateUUID();
 
-    const cookieStore = await cookies();
-    const modelIdFromCookie = cookieStore.get("chat-model");
-
     return (
       <div className="flex h-full flex-col">
         <WorkbenchHeader workbench={workbench} />
         <div className="flex-1 overflow-hidden">
           <Chat
             id={chatId}
-            initialChatModel={modelIdFromCookie?.value ?? "openai:gpt-4o"}
             isReadonly={false}
             initialMessages={[]}
             initialVisibilityType="private"

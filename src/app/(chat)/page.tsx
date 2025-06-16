@@ -1,5 +1,3 @@
-import { cookies } from "next/headers";
-
 import { Chat } from "./_components/chat";
 
 import { auth } from "@/server/auth";
@@ -15,15 +13,11 @@ export default async function Page() {
 
   const id = generateUUID();
 
-  const cookieStore = await cookies();
-  const modelIdFromCookie = cookieStore.get("chat-model");
-
   return (
     <Chat
       key={id}
       id={id}
       initialMessages={[]}
-      initialChatModel={modelIdFromCookie?.value ?? "gpt-4o"}
       initialVisibilityType="private"
       isReadonly={false}
       session={session}

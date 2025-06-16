@@ -17,7 +17,6 @@ import type { Workbench } from "@prisma/client";
 interface Props {
   id: string;
   initialMessages: Array<UIMessage>;
-  initialChatModel: string;
   initialVisibilityType: "public" | "private";
   isReadonly: boolean;
   session: Session;
