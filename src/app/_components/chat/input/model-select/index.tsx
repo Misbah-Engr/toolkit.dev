@@ -55,7 +55,7 @@ export const ModelSelect: React.FC = () => {
         <DropdownMenuTrigger asChild>
           <Button
             variant="outline"
-            className="justify-start bg-transparent"
+            className="w-fit justify-start bg-transparent md:w-auto"
             disabled={isLoading && !selectedChatModel}
             onClick={(event) => {
               const target = event.target as HTMLElement;
@@ -70,7 +70,7 @@ export const ModelSelect: React.FC = () => {
             {isLoading && !selectedChatModel ? (
               <>
                 <Loader2 className="size-4 animate-spin" />
-                <span className="flex-1 truncate text-left">
+                <span className="hidden flex-1 truncate text-left md:block">
                   Loading Models
                 </span>
               </>
@@ -80,13 +80,8 @@ export const ModelSelect: React.FC = () => {
                   provider={selectedChatModel.provider}
                   className="size-4"
                 />
-                <span className="flex-1 truncate text-left">
+                <span className="hidden flex-1 truncate text-left md:block">
                   {selectedChatModel.name}
-                  {selectedChatModel.isNew && (
-                    <Badge variant="secondary" className="ml-1.5 h-5 text-xs">
-                      New
-                    </Badge>
-                  )}
                 </span>
                 <NativeSearchToggle />
               </>
@@ -98,7 +93,11 @@ export const ModelSelect: React.FC = () => {
             )}
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-lg p-0" align="start" sideOffset={8}>
+        <DropdownMenuContent
+          className="w-xs overflow-hidden p-0 md:w-lg"
+          align="start"
+          sideOffset={8}
+        >
           <div className="bg-background sticky top-0 z-10 border-b p-2">
             <h2 className="mb-2 text-sm font-bold">Model Selector</h2>
             <div className="relative mb-2">
@@ -163,18 +162,18 @@ export const ModelSelect: React.FC = () => {
               </div>
             </div>
           </div>
-          <div className="max-h-96 overflow-y-auto">
+          <div className="max-h-32 w-full max-w-full overflow-x-hidden overflow-y-auto md:max-h-48">
             {models?.map((model) => (
               <DropdownMenuItem
                 key={model.modelId}
                 className={cn(
-                  "hover:bg-accent/50 flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 transition-colors",
+                  "hover:bg-accent/50 flex w-full max-w-full cursor-pointer items-center gap-2 rounded-md px-3 py-2 transition-colors",
                   selectedChatModel?.modelId === model.modelId && "bg-accent",
                 )}
                 onClick={() => handleModelSelect(model)}
               >
                 {/* Name, provider, new badge stack */}
-                <div className="flex min-w-0 flex-shrink-0 items-center gap-2">
+                <div className="flex max-w-full min-w-0 flex-1 flex-shrink-0 items-center gap-2 overflow-hidden">
                   <ModelProviderIcon
                     provider={model.provider}
                     className="size-4 flex-shrink-0"

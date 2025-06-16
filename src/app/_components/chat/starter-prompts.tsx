@@ -453,9 +453,9 @@ export const StarterPrompts = () => {
             className="hover:bg-muted/80 text-muted-foreground hover:text-foreground group relative rounded-xl border p-2 text-left text-sm transition-colors"
             title={prompt.description}
           >
-            <HStack className="gap-2">
+            <HStack className="gap-2 overflow-hidden">
               <ToolkitIcons toolkits={prompt.toolkitIds} />
-              <p className="text-sm leading-relaxed whitespace-nowrap">
+              <p className="flex-1 truncate text-sm leading-relaxed whitespace-nowrap">
                 {prompt.title}
               </p>
             </HStack>

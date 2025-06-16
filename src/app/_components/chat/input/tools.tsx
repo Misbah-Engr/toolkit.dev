@@ -15,6 +15,7 @@ import { ToolkitList } from "@/components/toolkit/toolkit-list";
 import { useRouter } from "next/navigation";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
+import { ToolkitIcons } from "@/components/toolkit/toolkit-icons";
 
 export const ToolsSelect = () => {
   const { toolkits, addToolkit, removeToolkit, workbench } = useChatContext();
@@ -45,22 +46,16 @@ export const ToolsSelect = () => {
     <TooltipProvider>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
-          <Button variant={"outline"} className="bg-transparent">
+          <Button
+            variant={"outline"}
+            className="w-fit justify-start bg-transparent md:w-auto md:px-2"
+          >
             {toolkits.length > 0 ? (
-              <div className="flex items-center">
-                {toolkits.map((toolkit) => (
-                  <div
-                    className="bg-muted -ml-2 rounded-full border p-1"
-                    key={toolkit.id}
-                  >
-                    <toolkit.toolkit.icon className="text-primary size-4" />
-                  </div>
-                ))}
-              </div>
+              <ToolkitIcons toolkits={toolkits.map((toolkit) => toolkit.id)} />
             ) : (
               <Wrench />
             )}
-            <span>
+            <span className="hidden md:block">
               {toolkits.length > 0
                 ? `${toolkits.length} Toolkit${toolkits.length > 1 ? "s" : ""}`
                 : "Add Toolkits"}
