@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { api } from "@/trpc/react";
 import { ModelProviderIcon } from "@/components/ui/model-icon";
 import { HStack } from "@/components/ui/stack";
+import { ToolkitGroups } from "@/toolkits/types";
 
 export const imageClientToolkit = createClientToolkit<
   ImageTools,
@@ -48,6 +49,7 @@ export const imageClientToolkit = createClientToolkit<
         </div>
       );
     },
+    type: ToolkitGroups.Native,
   },
   {
     [ImageTools.Generate]: generateToolConfigClient,

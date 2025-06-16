@@ -8,28 +8,31 @@ import { mem0ToolkitServer } from "./mem0/server";
 import { notionToolkitServer } from "./notion/server";
 import { e2bToolkitServer } from "./e2b/server";
 import {
-  Servers,
-  type ServerToolNames,
-  type ServerToolParameters,
+  Toolkits,
+  type ServerToolkitNames,
+  type ServerToolkitParameters,
 } from "./shared";
 
 type ServerToolkits = {
-  [K in Servers]: ServerToolkit<ServerToolNames[K], ServerToolParameters[K]>;
+  [K in Toolkits]: ServerToolkit<
+    ServerToolkitNames[K],
+    ServerToolkitParameters[K]
+  >;
 };
 
 export const serverToolkits: ServerToolkits = {
-  [Servers.Exa]: exaToolkitServer,
-  [Servers.Image]: imageToolkitServer,
-  [Servers.Github]: githubToolkitServer,
-  [Servers.GoogleCalendar]: googleCalendarToolkitServer,
-  [Servers.GoogleDrive]: googleDriveToolkitServer,
-  [Servers.Memory]: mem0ToolkitServer,
-  [Servers.Notion]: notionToolkitServer,
-  [Servers.E2B]: e2bToolkitServer,
+  [Toolkits.Exa]: exaToolkitServer,
+  [Toolkits.Image]: imageToolkitServer,
+  [Toolkits.Github]: githubToolkitServer,
+  [Toolkits.GoogleCalendar]: googleCalendarToolkitServer,
+  [Toolkits.GoogleDrive]: googleDriveToolkitServer,
+  [Toolkits.Memory]: mem0ToolkitServer,
+  [Toolkits.Notion]: notionToolkitServer,
+  [Toolkits.E2B]: e2bToolkitServer,
 };
 
-export function getServerToolkit<T extends Servers>(
+export function getServerToolkit<T extends Toolkits>(
   server: T,
-): ServerToolkit<ServerToolNames[T], ServerToolParameters[T]> {
+): ServerToolkit<ServerToolkitNames[T], ServerToolkitParameters[T]> {
   return serverToolkits[server];
 }

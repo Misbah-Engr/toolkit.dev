@@ -3,30 +3,14 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { Plus, Wrench, Info } from "lucide-react";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { Wrench } from "lucide-react";
 import { useChatContext } from "@/app/(chat)/_contexts/chat-context";
-import { HStack } from "@/components/ui/stack";
-import { clientToolkits } from "@/toolkits/toolkits/client";
-import type { ClientToolkit } from "@/toolkits/types";
 import { useState } from "react";
-import type z from "zod";
-import type { Servers, ServerToolParameters } from "@/toolkits/toolkits/shared";
 import { ToolkitList } from "@/components/toolkit/toolkit-list";
 
 export const ToolsSelect = () => {
@@ -61,8 +45,8 @@ export const ToolsSelect = () => {
         </DialogTrigger>
 
         <DialogContent className="max-h-[80vh] max-w-2xl gap-6 overflow-hidden">
-          <DialogHeader>
-            <DialogTitle>Manage Toolkits</DialogTitle>
+          <DialogHeader className="gap-0">
+            <DialogTitle className="text-xl">Manage Toolkits</DialogTitle>
             <DialogDescription>
               Add or remove tools to enhance your chat experience
             </DialogDescription>
@@ -73,15 +57,6 @@ export const ToolsSelect = () => {
             onAddToolkit={addToolkit}
             onRemoveToolkit={removeToolkit}
           />
-          <DialogFooter>
-            <Button
-              className="w-full"
-              onClick={() => setIsOpen(false)}
-              variant={"outline"}
-            >
-              Close
-            </Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
     </TooltipProvider>

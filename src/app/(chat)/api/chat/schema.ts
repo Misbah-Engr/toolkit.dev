@@ -3,7 +3,7 @@ import { z } from "zod";
 import { languageModels } from "@/ai/models";
 
 import type { providers } from "@/ai/registry";
-import { Servers } from "@/toolkits/toolkits/shared";
+import { Toolkits } from "@/toolkits/toolkits/shared";
 import { clientToolkits } from "@/toolkits/toolkits/client";
 
 const textPartSchema = z.object({
@@ -45,7 +45,7 @@ export const postRequestBodySchema = z.object({
   toolkits: z.array(
     z
       .object({
-        id: z.nativeEnum(Servers),
+        id: z.nativeEnum(Toolkits),
         parameters: z.record(z.string(), z.any()),
       })
       .refine((toolkit) => {

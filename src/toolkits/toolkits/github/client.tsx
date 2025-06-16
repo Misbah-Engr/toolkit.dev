@@ -12,6 +12,7 @@ import { api } from "@/trpc/react";
 import { Button } from "@/components/ui/button";
 import { signIn } from "next-auth/react";
 import { Loader2 } from "lucide-react";
+import { ToolkitGroups } from "@/toolkits/types";
 
 export const githubClientToolkit = createClientToolkit(
   baseGithubToolkitConfig,
@@ -51,6 +52,7 @@ export const githubClientToolkit = createClientToolkit(
 
       return children;
     },
+    type: ToolkitGroups.DataSource,
   },
   {
     [GithubTools.SearchRepos]: githubSearchReposToolConfigClient,

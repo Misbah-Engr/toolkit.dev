@@ -2,7 +2,7 @@ import { AnimatedShinyText } from "@/components/magicui/animated-shiny-text";
 import { Card } from "@/components/ui/card";
 import { HStack } from "@/components/ui/stack";
 import { getClientToolkit } from "@/toolkits/toolkits/client";
-import type { Servers, ServerToolNames } from "@/toolkits/toolkits/shared";
+import type { Toolkits, ServerToolkitNames } from "@/toolkits/toolkits/shared";
 import type { CreateMessage, DeepPartial, ToolInvocation } from "ai";
 import { Loader2 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
@@ -42,7 +42,7 @@ const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
     );
   }
 
-  const typedServer = server as Servers;
+  const typedServer = server as Toolkits;
 
   const clientToolkit = getClientToolkit(typedServer);
 
@@ -54,7 +54,7 @@ const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
     );
   }
 
-  const typedTool = tool as ServerToolNames[typeof typedServer];
+  const typedTool = tool as ServerToolkitNames[typeof typedServer];
   const toolConfig = clientToolkit.tools[typedTool];
 
   return (

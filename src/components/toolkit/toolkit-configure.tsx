@@ -2,13 +2,16 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import type z from "zod";
-import type { Servers, ServerToolParameters } from "@/toolkits/toolkits/shared";
+import type {
+  Toolkits,
+  ServerToolkitParameters,
+} from "@/toolkits/toolkits/shared";
 import type { ClientToolkit } from "@/toolkits/types";
 import type { SelectedToolkit } from "./types";
 
 interface ClientToolkitConfigureProps {
   toolkit: ClientToolkit;
-  id: Servers;
+  id: Toolkits;
   schema: z.ZodObject<z.ZodRawShape>;
   onAdd: (toolkit: SelectedToolkit) => void;
 }
@@ -19,9 +22,9 @@ export const ClientToolkitConfigure: React.FC<ClientToolkitConfigureProps> = ({
   schema,
   onAdd,
 }) => {
-  const [parameters, setParameters] = useState<ServerToolParameters[typeof id]>(
-    {} as ServerToolParameters[typeof id],
-  );
+  const [parameters, setParameters] = useState<
+    ServerToolkitParameters[typeof id]
+  >({} as ServerToolkitParameters[typeof id]);
 
   const handleSubmit = () => {
     onAdd({ id, toolkit, parameters });

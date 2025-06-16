@@ -70,6 +70,7 @@ export type ClientToolkitConifg<Parameters extends ZodRawShape = ZodRawShape> =
     addToolkitWrapper?: React.ComponentType<{
       children: React.ReactNode;
     }>;
+    type: ToolkitGroups;
   };
 
 export type ClientToolkit<
@@ -103,3 +104,21 @@ export type McpServerConfigServer<ToolNames extends string> =
 
 export type McpServerConfigClient<ToolNames extends string = string> =
   McpServerConfigBase<ToolNames, ClientTool>;
+
+export type SelectedToolkit = {
+  id: string;
+  toolkit: ClientToolkit;
+  parameters: z.infer<ClientToolkit["parameters"]>;
+};
+
+export type ToolkitGroup = {
+  id: ToolkitGroups;
+  name: string;
+  icon: React.FC<{ className?: string }>;
+};
+
+export enum ToolkitGroups {
+  Native = "native",
+  KnowledgeBase = "knowledge-base",
+  DataSource = "data-source",
+}

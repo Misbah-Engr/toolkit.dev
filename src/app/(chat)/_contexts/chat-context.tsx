@@ -27,6 +27,7 @@ import type { ClientToolkit } from "@/toolkits/types";
 import type { z } from "zod";
 import { clientToolkits } from "@/toolkits/toolkits/client";
 import type { SelectedToolkit } from "@/components/toolkit/types";
+import type { Toolkits } from "@/toolkits/toolkits/shared";
 
 interface ChatContextType {
   // Chat state
@@ -50,7 +51,7 @@ interface ChatContextType {
 
   toolkits: Array<SelectedToolkit>;
   addToolkit: (toolkit: SelectedToolkit) => void;
-  removeToolkit: (id: string) => void;
+  removeToolkit: (id: Toolkits) => void;
 
   // Chat actions
   handleSubmit: UseChatHelpers["handleSubmit"];
@@ -122,7 +123,7 @@ export function ChatProvider({
           (
             toolkit,
           ): toolkit is {
-            id: string;
+            id: Toolkits;
             toolkit: ClientToolkit;
             parameters: z.infer<ClientToolkit["parameters"]>;
           } => toolkit !== null,
@@ -148,13 +149,7 @@ export function ChatProvider({
     localStorageUtils.setImageGenerationModel(model);
   };
 
-  const setToolkits = (
-    newToolkits: Array<{
-      id: string;
-      toolkit: ClientToolkit;
-      parameters: z.infer<ClientToolkit["parameters"]>;
-    }>,
-  ) => {
+  const setToolkits = (newToolkits: Array<SelectedToolkit>) => {
     setToolkitsState(newToolkits);
     localStorageUtils.setToolkits(newToolkits);
   };
@@ -163,7 +158,7 @@ export function ChatProvider({
     setToolkits([...toolkits.filter((t) => t.id !== toolkit.id), toolkit]);
   };
 
-  const removeToolkit = (id: string) => {
+  const removeToolkit = (id: Toolkits) => {
     setToolkits(toolkits.filter((t) => t.id !== id));
   };
 

@@ -2,14 +2,14 @@
 
 import { motion } from "motion/react";
 import { useChatContext } from "../_contexts/chat-context";
-import { Servers } from "@/toolkits/toolkits/shared";
+import { Toolkits } from "@/toolkits/toolkits/shared";
 import { useMemo } from "react";
 import { clientToolkits } from "@/toolkits/toolkits/client";
 
 // Dynamic starter prompts with toolkit associations
 interface StarterPrompt {
   content: string;
-  toolkitIds: Servers[];
+  toolkitIds: Toolkits[];
   description?: string;
 }
 
@@ -18,7 +18,12 @@ const DYNAMIC_STARTER_PROMPTS: StarterPrompt[] = [
   {
     content:
       "Create a comprehensive project dashboard by analyzing my Notion database, GitHub repositories, and generating visual progress charts with memory of key insights",
-    toolkitIds: [Servers.Notion, Servers.Github, Servers.Image, Servers.Memory],
+    toolkitIds: [
+      Toolkits.Notion,
+      Toolkits.Github,
+      Toolkits.Image,
+      Toolkits.Memory,
+    ],
     description:
       "Ultimate project management combining workspace data, code analysis, visualization, and persistent insights",
   },
@@ -26,11 +31,11 @@ const DYNAMIC_STARTER_PROMPTS: StarterPrompt[] = [
     content:
       "Research market trends, analyze competitor GitHub repos, create infographics, and store findings in Notion with persistent memory",
     toolkitIds: [
-      Servers.Exa,
-      Servers.Github,
-      Servers.Image,
-      Servers.Notion,
-      Servers.Memory,
+      Toolkits.Exa,
+      Toolkits.Github,
+      Toolkits.Image,
+      Toolkits.Notion,
+      Toolkits.Memory,
     ],
     description:
       "Complete competitive intelligence workflow with research, analysis, visualization, documentation, and memory",
@@ -39,10 +44,10 @@ const DYNAMIC_STARTER_PROMPTS: StarterPrompt[] = [
     content:
       "Schedule team meetings based on calendar availability, prepare agenda from Notion pages and Drive documents, and remember meeting preferences",
     toolkitIds: [
-      Servers.GoogleCalendar,
-      Servers.Notion,
-      Servers.GoogleDrive,
-      Servers.Memory,
+      Toolkits.GoogleCalendar,
+      Toolkits.Notion,
+      Toolkits.GoogleDrive,
+      Toolkits.Memory,
     ],
     description:
       "Intelligent meeting coordination with multi-source document preparation and learning preferences",
@@ -51,10 +56,10 @@ const DYNAMIC_STARTER_PROMPTS: StarterPrompt[] = [
     content:
       "Analyze my Notion task database with Python, create productivity visualizations, and schedule optimization based on calendar patterns",
     toolkitIds: [
-      Servers.Notion,
-      Servers.E2B,
-      Servers.Image,
-      Servers.GoogleCalendar,
+      Toolkits.Notion,
+      Toolkits.E2B,
+      Toolkits.Image,
+      Toolkits.GoogleCalendar,
     ],
     description:
       "Data-driven productivity optimization with computational analysis and visual insights",
@@ -64,70 +69,70 @@ const DYNAMIC_STARTER_PROMPTS: StarterPrompt[] = [
   {
     content:
       "Research my competitors and create a comprehensive analysis with visual charts stored in memory for future reference",
-    toolkitIds: [Servers.Exa, Servers.Image, Servers.Memory],
+    toolkitIds: [Toolkits.Exa, Toolkits.Image, Toolkits.Memory],
     description:
       "Uses web search, image generation, and memory for comprehensive competitor analysis",
   },
   {
     content:
       "Analyze this GitHub repository, create a visual architecture diagram, and execute code examples to understand the implementation",
-    toolkitIds: [Servers.Github, Servers.Image, Servers.E2B],
+    toolkitIds: [Toolkits.Github, Toolkits.Image, Toolkits.E2B],
     description:
       "Combines GitHub analysis, code execution, and visual diagram generation",
   },
   {
     content:
       "Find research papers on AI, summarize key findings with code analysis, and remember important insights for future conversations",
-    toolkitIds: [Servers.Exa, Servers.Memory, Servers.E2B],
+    toolkitIds: [Toolkits.Exa, Toolkits.Memory, Toolkits.E2B],
     description:
       "Research papers with data analysis and persistent memory storage",
   },
   {
     content:
       "Create a knowledge base by analyzing my Notion pages, generating visual summaries, and storing key insights in memory",
-    toolkitIds: [Servers.Notion, Servers.Image, Servers.Memory],
+    toolkitIds: [Toolkits.Notion, Toolkits.Image, Toolkits.Memory],
     description:
       "Notion content analysis with visual summaries and persistent knowledge storage",
   },
   {
     content:
       "Build a data visualization dashboard by analyzing my Google Drive spreadsheets with Python and creating interactive charts",
-    toolkitIds: [Servers.GoogleDrive, Servers.E2B, Servers.Image],
+    toolkitIds: [Toolkits.GoogleDrive, Toolkits.E2B, Toolkits.Image],
     description:
       "Data processing with computational analysis and visual output generation",
   },
   {
     content:
       "Research industry trends, generate infographics, and organize findings in my Notion workspace",
-    toolkitIds: [Servers.Exa, Servers.Image, Servers.Notion],
+    toolkitIds: [Toolkits.Exa, Toolkits.Image, Toolkits.Notion],
     description:
       "Market research with visual content creation and organized documentation",
   },
   {
     content:
       "Find GitHub repositories for my project idea, create a technical roadmap visualization, and document in Notion",
-    toolkitIds: [Servers.Github, Servers.Image, Servers.Notion],
+    toolkitIds: [Toolkits.Github, Toolkits.Image, Toolkits.Notion],
     description:
       "Repository discovery with comprehensive visual planning and documentation",
   },
   {
     content:
       "Query my Notion database, perform statistical analysis with Python, and create data visualizations",
-    toolkitIds: [Servers.Notion, Servers.E2B, Servers.Image],
+    toolkitIds: [Toolkits.Notion, Toolkits.E2B, Toolkits.Image],
     description:
       "Database analysis with computational processing and visual reporting",
   },
   {
     content:
       "Analyze my calendar patterns, research productivity techniques, and create a time management visualization",
-    toolkitIds: [Servers.GoogleCalendar, Servers.Exa, Servers.Image],
+    toolkitIds: [Toolkits.GoogleCalendar, Toolkits.Exa, Toolkits.Image],
     description:
       "Calendar analysis with research-backed productivity optimization",
   },
   {
     content:
       "Search my Google Drive for project files, execute analysis scripts, and remember key findings",
-    toolkitIds: [Servers.GoogleDrive, Servers.E2B, Servers.Memory],
+    toolkitIds: [Toolkits.GoogleDrive, Toolkits.E2B, Toolkits.Memory],
     description:
       "Document analysis with computational processing and insight storage",
   },
@@ -136,90 +141,90 @@ const DYNAMIC_STARTER_PROMPTS: StarterPrompt[] = [
   {
     content:
       "Analyze my Notion database and create beautiful data visualizations and reports",
-    toolkitIds: [Servers.Notion, Servers.Image],
+    toolkitIds: [Toolkits.Notion, Toolkits.Image],
     description: "Notion database analysis with visual reporting",
   },
   {
     content:
       "Query my Notion workspace and perform advanced data analysis with Python",
-    toolkitIds: [Servers.Notion, Servers.E2B],
+    toolkitIds: [Toolkits.Notion, Toolkits.E2B],
     description: "Notion data processing with computational analysis",
   },
   {
     content:
       "Search my Notion pages and remember important information for future conversations",
-    toolkitIds: [Servers.Notion, Servers.Memory],
+    toolkitIds: [Toolkits.Notion, Toolkits.Memory],
     description: "Notion content search with persistent memory storage",
   },
   {
     content:
       "Analyze my calendar patterns and create a time management visualization",
-    toolkitIds: [Servers.GoogleCalendar, Servers.Image],
+    toolkitIds: [Toolkits.GoogleCalendar, Toolkits.Image],
     description: "Calendar analysis with visual insights",
   },
   {
     content:
       "Search for machine learning papers and execute code examples to test concepts",
-    toolkitIds: [Servers.Exa, Servers.E2B],
+    toolkitIds: [Toolkits.Exa, Toolkits.E2B],
     description: "Research with hands-on code experimentation",
   },
   {
     content:
       "Find competitors in my industry and remember their key strategies",
-    toolkitIds: [Servers.Exa, Servers.Memory],
+    toolkitIds: [Toolkits.Exa, Toolkits.Memory],
     description: "Competitive intelligence with persistent insights",
   },
   {
     content:
       "Analyze my GitHub contributions and generate a portfolio showcase image",
-    toolkitIds: [Servers.Github, Servers.Image],
+    toolkitIds: [Toolkits.Github, Toolkits.Image],
     description: "Code portfolio visualization",
   },
   {
     content:
       "Search my Google Drive for project files and run analysis scripts on the data",
-    toolkitIds: [Servers.GoogleDrive, Servers.E2B],
+    toolkitIds: [Toolkits.GoogleDrive, Toolkits.E2B],
     description: "Document analysis with computational processing",
   },
   {
     content:
       "Remember my meeting preferences and schedule optimization based on calendar analysis",
-    toolkitIds: [Servers.GoogleCalendar, Servers.Memory],
+    toolkitIds: [Toolkits.GoogleCalendar, Toolkits.Memory],
     description: "Smart scheduling with learning preferences",
   },
   {
     content: "Create stunning visualizations of research data and trends",
-    toolkitIds: [Servers.Exa, Servers.Image],
+    toolkitIds: [Toolkits.Exa, Toolkits.Image],
     description: "Research visualization and infographic creation",
   },
   {
     content:
       "Analyze GitHub repositories and remember coding patterns for future projects",
-    toolkitIds: [Servers.Github, Servers.Memory],
+    toolkitIds: [Toolkits.Github, Toolkits.Memory],
     description: "Code analysis with pattern recognition and memory",
   },
   {
     content:
       "Search my Google Drive documents and organize findings in my Notion workspace",
-    toolkitIds: [Servers.GoogleDrive, Servers.Notion],
+    toolkitIds: [Toolkits.GoogleDrive, Toolkits.Notion],
     description: "Document search with organized knowledge management",
   },
   {
     content:
       "Analyze my Notion team database and schedule coordination meetings",
-    toolkitIds: [Servers.Notion, Servers.GoogleCalendar],
+    toolkitIds: [Toolkits.Notion, Toolkits.GoogleCalendar],
     description: "Team management with intelligent scheduling",
   },
   {
     content:
       "Research GitHub projects and document findings in my Notion knowledge base",
-    toolkitIds: [Servers.Github, Servers.Notion],
+    toolkitIds: [Toolkits.Github, Toolkits.Notion],
     description: "Code research with organized documentation",
   },
   {
     content:
       "Search for industry insights and organize them in my Notion workspace",
-    toolkitIds: [Servers.Exa, Servers.Notion],
+    toolkitIds: [Toolkits.Exa, Toolkits.Notion],
     description: "Research with structured knowledge organization",
   },
 
@@ -227,51 +232,51 @@ const DYNAMIC_STARTER_PROMPTS: StarterPrompt[] = [
   {
     content:
       "Search for the latest developments in artificial intelligence and machine learning",
-    toolkitIds: [Servers.Exa],
+    toolkitIds: [Toolkits.Exa],
     description: "Comprehensive web research and information gathering",
   },
   {
     content:
       "Generate a beautiful infographic, chart, or custom image for my presentation",
-    toolkitIds: [Servers.Image],
+    toolkitIds: [Toolkits.Image],
     description:
       "Custom visual content creation with AI-powered image generation",
   },
   {
     content:
       "Find and analyze interesting GitHub repositories, users, and code patterns in my field",
-    toolkitIds: [Servers.Github],
+    toolkitIds: [Toolkits.Github],
     description: "Repository discovery, code analysis, and developer insights",
   },
   {
     content:
       "Help me organize and optimize my calendar schedule with smart scheduling suggestions",
-    toolkitIds: [Servers.GoogleCalendar],
+    toolkitIds: [Toolkits.GoogleCalendar],
     description: "Intelligent calendar management and scheduling assistance",
   },
   {
     content:
       "Search and analyze documents in my Google Drive with content extraction",
-    toolkitIds: [Servers.GoogleDrive],
+    toolkitIds: [Toolkits.GoogleDrive],
     description: "Document discovery, analysis, and content extraction",
   },
   {
     content:
       "Remember important information from our conversation for future reference and context",
-    toolkitIds: [Servers.Memory],
+    toolkitIds: [Toolkits.Memory],
     description: "Persistent memory storage and intelligent context management",
   },
   {
     content:
       "Analyze my Notion workspace, databases, and pages to extract insights and organize information",
-    toolkitIds: [Servers.Notion],
+    toolkitIds: [Toolkits.Notion],
     description:
       "Comprehensive Notion workspace analysis and knowledge extraction",
   },
   {
     content:
       "Execute Python code to analyze data, create visualizations, or solve complex computational problems",
-    toolkitIds: [Servers.E2B],
+    toolkitIds: [Toolkits.E2B],
     description:
       "Secure code execution, data analysis, and algorithmic problem solving",
   },
@@ -320,7 +325,7 @@ export const StarterPrompts = () => {
 
   // Get currently selected toolkit IDs
   const selectedToolkitIds = useMemo(() => {
-    return new Set(toolkits.map((t) => t.id as Servers));
+    return new Set(toolkits.map((t) => t.id));
   }, [toolkits]);
 
   // Filter and sort prompts based on selected toolkits

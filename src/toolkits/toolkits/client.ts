@@ -1,8 +1,8 @@
 import type { ClientToolkit } from "../types";
 import {
-  Servers,
-  type ServerToolNames,
-  type ServerToolParameters,
+  Toolkits,
+  type ServerToolkitNames,
+  type ServerToolkitParameters,
 } from "./shared";
 import { exaClientToolkit } from "./exa/client";
 import { imageClientToolkit } from "./image/client";
@@ -14,22 +14,25 @@ import { notionClientToolkit } from "./notion/client";
 import { e2bClientToolkit } from "./e2b/client";
 
 type ClientToolkits = {
-  [K in Servers]: ClientToolkit<ServerToolNames[K], ServerToolParameters[K]>;
+  [K in Toolkits]: ClientToolkit<
+    ServerToolkitNames[K],
+    ServerToolkitParameters[K]
+  >;
 };
 
 export const clientToolkits: ClientToolkits = {
-  [Servers.Exa]: exaClientToolkit,
-  [Servers.Image]: imageClientToolkit,
-  [Servers.Github]: githubClientToolkit,
-  [Servers.GoogleCalendar]: googleCalendarClientToolkit,
-  [Servers.GoogleDrive]: googleDriveClientToolkit,
-  [Servers.Memory]: mem0ClientToolkit,
-  [Servers.Notion]: notionClientToolkit,
-  [Servers.E2B]: e2bClientToolkit,
+  [Toolkits.E2B]: e2bClientToolkit,
+  [Toolkits.Memory]: mem0ClientToolkit,
+  [Toolkits.Image]: imageClientToolkit,
+  [Toolkits.Exa]: exaClientToolkit,
+  [Toolkits.Github]: githubClientToolkit,
+  [Toolkits.GoogleCalendar]: googleCalendarClientToolkit,
+  [Toolkits.GoogleDrive]: googleDriveClientToolkit,
+  [Toolkits.Notion]: notionClientToolkit,
 };
 
-export function getClientToolkit<T extends Servers>(
+export function getClientToolkit<T extends Toolkits>(
   server: T,
-): ClientToolkit<ServerToolNames[T], ServerToolParameters[T]> {
+): ClientToolkit<ServerToolkitNames[T], ServerToolkitParameters[T]> {
   return clientToolkits[server];
 }

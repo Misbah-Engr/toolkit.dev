@@ -11,17 +11,18 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Plus, Info } from "lucide-react";
-import { HStack } from "@/components/ui/stack";
+import { HStack, VStack } from "@/components/ui/stack";
 import { clientToolkits } from "@/toolkits/toolkits/client";
 import type { ClientToolkit } from "@/toolkits/types";
-import type { Servers } from "@/toolkits/toolkits/shared";
+import type { Toolkits } from "@/toolkits/toolkits/shared";
 import { ClientToolkitConfigure } from "@/components/toolkit/toolkit-configure";
 import type { SelectedToolkit } from "./types";
+import { toolkitGroups } from "@/toolkits/toolkit-groups";
 
 interface ToolkitListProps {
   selectedToolkits: SelectedToolkit[];
   onAddToolkit: (toolkit: SelectedToolkit) => void;
-  onRemoveToolkit: (id: string) => void;
+  onRemoveToolkit: (id: Toolkits) => void;
 }
 
 export const ToolkitList: React.FC<ToolkitListProps> = ({
@@ -29,119 +30,135 @@ export const ToolkitList: React.FC<ToolkitListProps> = ({
   onAddToolkit,
   onRemoveToolkit,
 }) => {
-  const addToolkitButtons = (
-    id: Servers,
-    toolkit: ClientToolkit,
-    isSelected: boolean,
-    needsConfiguration: boolean,
-  ) =>
-    isSelected ? (
-      <Button
-        variant="primaryOutline"
-        size="sm"
-        onClick={() => onRemoveToolkit(id)}
-      >
-        Active
-      </Button>
-    ) : needsConfiguration ? (
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="outline" size="sm">
-            <Plus className="size-4" />
-            Add
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-80">
-          <ClientToolkitConfigure
-            toolkit={toolkit}
-            id={id}
-            schema={toolkit.parameters}
-            onAdd={onAddToolkit}
-          />
-        </PopoverContent>
-      </Popover>
-    ) : (
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => onAddToolkit({ id, toolkit, parameters: {} })}
-      >
-        <Plus className="size-4" />
-        Add
-      </Button>
-    );
-
   return (
     <TooltipProvider>
-      <div>
-        {Object.entries(clientToolkits).map(([id, toolkit]) => {
-          const isSelected = selectedToolkits.some((t) => t.id === id);
-          const needsConfiguration =
-            Object.keys(toolkit.parameters.shape).length > 0;
-
+      <VStack className="w-full items-start gap-4">
+        {toolkitGroups.map((group) => {
           return (
-            <div
-              key={id}
-              className="border-border/50 border-b py-2 first:pt-0 last:border-b-0 last:pb-0"
-            >
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex flex-1 flex-col">
-                  <HStack className="gap-3">
-                    <toolkit.icon className="size-4" />
-                    <h3 className="font-medium">{toolkit.name}</h3>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Info className="text-muted-foreground size-4 cursor-pointer" />
-                      </TooltipTrigger>
-                      <TooltipContent side="right" className="max-w-64">
-                        <div className="space-y-2">
-                          <p className="text-sm font-medium">Available Tools</p>
-                          <ul className="space-y-1">
-                            {Object.entries(toolkit.tools).map(
-                              ([name, tool]) => (
-                                <li
-                                  key={name}
-                                  className="flex items-start gap-2"
-                                >
-                                  <div className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-current" />
-                                  <p className="text-xs">{tool.description}</p>
-                                </li>
-                              ),
-                            )}
-                          </ul>
-                        </div>
-                      </TooltipContent>
-                    </Tooltip>
-                  </HStack>
-                  <p className="text-muted-foreground text-xs">
-                    {toolkit.description}
-                  </p>
-                </div>
-
-                <div className="flex w-28 justify-end gap-2">
-                  {toolkit.addToolkitWrapper ? (
-                    <toolkit.addToolkitWrapper>
-                      {addToolkitButtons(
-                        id as Servers,
-                        toolkit as ClientToolkit,
-                        isSelected,
-                        needsConfiguration,
-                      )}
-                    </toolkit.addToolkitWrapper>
-                  ) : (
-                    addToolkitButtons(
-                      id as Servers,
-                      toolkit as ClientToolkit,
-                      isSelected,
-                      needsConfiguration,
-                    )
-                  )}
-                </div>
+            <VStack key={group.id} className="w-full items-start">
+              <HStack className="gap-2">
+                <group.icon className="size-4" />
+                <h3 className="text-lg font-bold">{group.name}</h3>
+              </HStack>
+              <div className="bg-muted/50 w-full rounded-md border">
+                {Object.entries(clientToolkits)
+                  .filter(([, toolkit]) => toolkit.type === group.id)
+                  .map(([id, toolkit]) => {
+                    return (
+                      <ToolkitItem
+                        key={id}
+                        id={id as Toolkits}
+                        toolkit={toolkit as ClientToolkit}
+                        selectedToolkits={selectedToolkits}
+                        onAddToolkit={onAddToolkit}
+                        onRemoveToolkit={onRemoveToolkit}
+                      />
+                    );
+                  })}
               </div>
-            </div>
+            </VStack>
           );
         })}
-      </div>
+      </VStack>
     </TooltipProvider>
+  );
+};
+
+interface ToolkitItemProps {
+  id: Toolkits;
+  toolkit: ClientToolkit;
+  selectedToolkits: SelectedToolkit[];
+  onAddToolkit: (toolkit: SelectedToolkit) => void;
+  onRemoveToolkit: (id: Toolkits) => void;
+}
+
+const ToolkitItem = ({
+  id,
+  toolkit,
+  selectedToolkits,
+  onAddToolkit,
+  onRemoveToolkit,
+}: ToolkitItemProps) => {
+  const isSelected = selectedToolkits.some((t) => t.id === id);
+  const needsConfiguration = Object.keys(toolkit.parameters.shape).length > 0;
+
+  const addToolkitButtons = isSelected ? (
+    <Button
+      variant="primaryOutline"
+      size="sm"
+      onClick={() => onRemoveToolkit(id)}
+      className="bg-transparent"
+    >
+      Active
+    </Button>
+  ) : needsConfiguration ? (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button variant="outline" size="sm" className="bg-transparent">
+          Add
+          <Plus className="size-4" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-80">
+        <ClientToolkitConfigure
+          toolkit={toolkit}
+          id={id}
+          schema={toolkit.parameters}
+          onAdd={onAddToolkit}
+        />
+      </PopoverContent>
+    </Popover>
+  ) : (
+    <Button
+      variant="outline"
+      size="sm"
+      onClick={() => onAddToolkit({ id, toolkit, parameters: {} })}
+      className="bg-transparent"
+    >
+      Add
+      <Plus className="size-4" />
+    </Button>
+  );
+
+  return (
+    <div key={id} className="border-border/50 border-b p-2 last:border-b-0">
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-1 flex-col">
+          <HStack>
+            <toolkit.icon className="size-4" />
+            <h3 className="font-medium">{toolkit.name}</h3>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Info className="text-muted-foreground size-4 cursor-pointer" />
+              </TooltipTrigger>
+              <TooltipContent side="right" className="max-w-64">
+                <div className="space-y-2">
+                  <p className="text-sm font-medium">Available Tools</p>
+                  <ul className="space-y-1">
+                    {Object.entries(toolkit.tools).map(([name, tool]) => (
+                      <li key={name} className="flex items-start gap-2">
+                        <div className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-current" />
+                        <p className="text-xs">{tool.description}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </TooltipContent>
+            </Tooltip>
+          </HStack>
+          <p className="text-muted-foreground text-xs">{toolkit.description}</p>
+        </div>
+
+        <div className="flex w-28 justify-end gap-2">
+          {toolkit.addToolkitWrapper ? (
+            <toolkit.addToolkitWrapper>
+              {addToolkitButtons}
+            </toolkit.addToolkitWrapper>
+          ) : (
+            addToolkitButtons
+          )}
+        </div>
+      </div>
+    </div>
   );
 };

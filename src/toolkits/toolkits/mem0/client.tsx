@@ -5,6 +5,7 @@ import { createClientToolkit } from "@/toolkits/create-toolkit";
 import { mem0AddMemoryToolConfigClient } from "./tools/add_memory/client";
 import { mem0SearchMemoriesToolConfigClient } from "./tools/search_memories/client";
 import { baseMem0ToolkitConfig } from "./base";
+import { ToolkitGroups } from "@/toolkits/types";
 
 export const mem0ClientToolkit = createClientToolkit(
   baseMem0ToolkitConfig,
@@ -13,6 +14,7 @@ export const mem0ClientToolkit = createClientToolkit(
     description: "Personalize your experience with each conversation.",
     icon: ({ className }) => <Brain className={className} />,
     form: null,
+    type: ToolkitGroups.Native,
   },
   {
     [Mem0Tools.AddMemory]: mem0AddMemoryToolConfigClient,

@@ -11,6 +11,7 @@ import { exaLinkedinSearchToolConfigClient } from "./tools/linkedin_search/clien
 import { exaWikipediaSearchToolConfigClient } from "./tools/wikipedia_search/client";
 import { exaGithubSearchToolConfigClient } from "./tools/github_search/client";
 import { baseExaToolkitConfig } from "./base";
+import { ToolkitGroups } from "@/toolkits/types";
 
 export const exaClientToolkit = createClientToolkit(
   baseExaToolkitConfig,
@@ -19,6 +20,7 @@ export const exaClientToolkit = createClientToolkit(
     description: "Find articles, research papers, companies, and more",
     icon: Search,
     form: null,
+    type: ToolkitGroups.DataSource,
   },
   {
     [ExaTools.Search]: exaSearchToolConfigClient,

@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/tooltip";
 import Link from "next/link";
 import { SiGooglecalendar } from "@icons-pack/react-simple-icons";
+import { ToolkitGroups } from "@/toolkits/types";
 
 const calendarScope = "https://www.googleapis.com/auth/calendar";
 
@@ -130,6 +131,7 @@ export const googleCalendarClientToolkit = createClientToolkit(
 
       return children;
     },
+    type: ToolkitGroups.DataSource,
   },
   {
     [GoogleCalendarTools.ListCalendars]:
