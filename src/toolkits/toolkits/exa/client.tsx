@@ -15,9 +15,8 @@ import { baseExaToolkitConfig } from "./base";
 export const exaClientToolkit = createClientToolkit(
   baseExaToolkitConfig,
   {
-    name: "Search",
-    description:
-      "Search for information across the web, including research papers, companies, social media, and more.",
+    name: "Web Search",
+    description: "Find articles, research papers, companies, and more",
     icon: Search,
     form: null,
   },

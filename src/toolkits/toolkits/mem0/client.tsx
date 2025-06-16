@@ -10,8 +10,7 @@ export const mem0ClientToolkit = createClientToolkit(
   baseMem0ToolkitConfig,
   {
     name: "Memory",
-    description:
-      "Stores and retrieves user context to enhance conversation quality.",
+    description: "Personalize your experience with each conversation.",
     icon: ({ className }) => <Brain className={className} />,
     form: null,
   },

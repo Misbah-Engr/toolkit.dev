@@ -29,7 +29,7 @@ export const googleCalendarClientToolkit = createClientToolkit(
   baseGoogleCalendarToolkitConfig,
   {
     name: "Google Calendar",
-    description: "Access and manage your Google Calendar events and calendars.",
+    description: "Find availability and schedule meetings",
     icon: Calendar,
     form: null,
     addToolkitWrapper: ({ children }) => {

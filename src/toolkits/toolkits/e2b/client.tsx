@@ -9,8 +9,7 @@ export const e2bClientToolkit = createClientToolkit(
   baseE2BToolkitConfig,
   {
     name: "Code Interpreter",
-    description:
-      "Execute code in a secure E2B sandbox environment with full package support.",
+    description: "Execute python code in a secure sandbox environment",
     icon: Terminal,
     form: null,
   },

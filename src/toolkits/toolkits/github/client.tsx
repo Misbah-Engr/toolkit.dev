@@ -17,8 +17,7 @@ export const githubClientToolkit = createClientToolkit(
   baseGithubToolkitConfig,
   {
     name: "GitHub",
-    description:
-      "Find and analyze repositories, users, and organizations on GitHub.",
+    description: "Find and analyze repositories, users, and organizations",
     icon: SiGithub,
     form: null,
     addToolkitWrapper: ({ children }) => {

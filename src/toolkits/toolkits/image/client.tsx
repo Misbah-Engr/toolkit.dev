@@ -16,7 +16,7 @@ export const imageClientToolkit = createClientToolkit<
   baseImageToolkitConfig,
   {
     name: "Image Generation",
-    description: "Image Generation is a tool that can generate images",
+    description: "Let your creativity flow",
     icon: ImageIcon,
     form: ({ parameters, setParameters }) => {
       const { data: imageModels } = api.models.getImageModels.useQuery();
