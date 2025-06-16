@@ -128,7 +128,7 @@ const ChatContent = ({
         <AnimatePresence>
           {!hasMessages && !hasInitialMessages && (
             <motion.div
-              initial={{ opacity: 0, y: 10, marginTop: "1rem", height: "auto" }}
+              initial={{ opacity: 0, marginTop: "1rem", height: "auto" }}
               animate={{
                 opacity: 1,
                 y: 0,
