@@ -17,13 +17,13 @@ import { api } from "@/trpc/react";
 import { Button } from "@/components/ui/button";
 import { signIn } from "next-auth/react";
 import { Loader2 } from "lucide-react";
+import { ToolkitGroups } from "@/toolkits/types";
 
 export const notionClientToolkit = createClientToolkit(
   baseNotionToolkitConfig,
   {
     name: "Notion",
-    description:
-      "Access and analyze your Notion workspace, including databases, pages, blocks, and users.",
+    description: "Query and create pages and databases",
     icon: SiNotion,
     form: null,
     addToolkitWrapper: ({ children }) => {
@@ -56,6 +56,7 @@ export const notionClientToolkit = createClientToolkit(
 
       return children;
     },
+    type: ToolkitGroups.KnowledgeBase,
   },
   {
     [NotionTools.ListDatabases]: notionListDatabasesToolConfigClient,

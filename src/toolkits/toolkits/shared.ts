@@ -15,7 +15,7 @@ import type { NotionTools } from "./notion/tools";
 import type { e2bParameters } from "./e2b/base";
 import type { E2BTools } from "./e2b/tools/tools";
 
-export enum Servers {
+export enum Toolkits {
   Exa = "exa",
   Image = "image",
   Github = "github",
@@ -26,24 +26,24 @@ export enum Servers {
   E2B = "e2b",
 }
 
-export type ServerToolNames = {
-  [Servers.Exa]: ExaTools;
-  [Servers.Image]: ImageTools;
-  [Servers.Github]: GithubTools;
-  [Servers.GoogleCalendar]: GoogleCalendarTools;
-  [Servers.GoogleDrive]: GoogleDriveTools;
-  [Servers.Memory]: Mem0Tools;
-  [Servers.Notion]: NotionTools;
-  [Servers.E2B]: E2BTools;
+export type ServerToolkitNames = {
+  [Toolkits.Exa]: ExaTools;
+  [Toolkits.Image]: ImageTools;
+  [Toolkits.Github]: GithubTools;
+  [Toolkits.GoogleCalendar]: GoogleCalendarTools;
+  [Toolkits.GoogleDrive]: GoogleDriveTools;
+  [Toolkits.Memory]: Mem0Tools;
+  [Toolkits.Notion]: NotionTools;
+  [Toolkits.E2B]: E2BTools;
 };
 
-export type ServerToolParameters = {
-  [Servers.Exa]: typeof exaParameters.shape;
-  [Servers.Image]: typeof imageParameters.shape;
-  [Servers.Github]: typeof githubParameters.shape;
-  [Servers.GoogleCalendar]: typeof googleCalendarParameters.shape;
-  [Servers.GoogleDrive]: typeof googleDriveParameters.shape;
-  [Servers.Memory]: typeof mem0Parameters.shape;
-  [Servers.Notion]: typeof notionParameters.shape;
-  [Servers.E2B]: typeof e2bParameters.shape;
+export type ServerToolkitParameters = {
+  [Toolkits.Exa]: typeof exaParameters.shape;
+  [Toolkits.Image]: typeof imageParameters.shape;
+  [Toolkits.Github]: typeof githubParameters.shape;
+  [Toolkits.GoogleCalendar]: typeof googleCalendarParameters.shape;
+  [Toolkits.GoogleDrive]: typeof googleDriveParameters.shape;
+  [Toolkits.Memory]: typeof mem0Parameters.shape;
+  [Toolkits.Notion]: typeof notionParameters.shape;
+  [Toolkits.E2B]: typeof e2bParameters.shape;
 };
