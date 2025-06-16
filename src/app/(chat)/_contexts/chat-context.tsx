@@ -74,6 +74,12 @@ interface ChatProviderProps {
   initialMessages: Array<UIMessage>;
   initialVisibilityType: "public" | "private";
   autoResume: boolean;
+  workbench?: {
+    id: string;
+    name: string;
+    systemPrompt: string;
+    toolkitIds: string[];
+  };
 }
 
 export function ChatProvider({
@@ -82,6 +88,7 @@ export function ChatProvider({
   initialMessages,
   initialVisibilityType,
   autoResume,
+  workbench,
 }: ChatProviderProps) {
   const utils = api.useUtils();
 
@@ -102,6 +109,34 @@ export function ChatProvider({
 
   // Load preferences from localStorage on mount
   useEffect(() => {
+    // If this is a workbench chat, initialize with workbench toolkits
+    if (workbench) {
+      const workbenchToolkits = workbench.toolkitIds
+        .map((toolkitId) => {
+          const clientToolkit = clientToolkits[toolkitId as keyof typeof clientToolkits];
+          if (clientToolkit) {
+            return {
+              id: toolkitId,
+              toolkit: clientToolkit,
+              parameters: {}, // Use default parameters for workbench toolkits
+            };
+          }
+          return null;
+        })
+        .filter(
+          (
+            toolkit,
+          ): toolkit is {
+            id: string;
+            toolkit: ClientToolkit;
+            parameters: z.infer<ClientToolkit["parameters"]>;
+          } => toolkit !== null,
+        );
+
+      setToolkitsState(workbenchToolkits);
+      return;
+    }
+
     const preferences = localStorageUtils.getPreferences();
 
     if (preferences.selectedChatModel) {
@@ -143,7 +178,7 @@ export function ChatProvider({
 
       setToolkitsState(restoredToolkits);
     }
-  }, []);
+  }, [workbench]);
 
   // Wrapper functions that also save to localStorage
   const setSelectedChatModel = (model: LanguageModel) => {
@@ -215,6 +250,7 @@ export function ChatProvider({
         : undefined,
       selectedVisibilityType: initialVisibilityType,
       useNativeSearch,
+      systemPrompt: workbench?.systemPrompt,
       toolkits: toolkits.map((t) => ({
         id: t.id,
         parameters: t.parameters,

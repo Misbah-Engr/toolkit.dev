@@ -42,6 +42,7 @@ export const postRequestBodySchema = z.object({
   ),
   selectedVisibilityType: z.enum(["public", "private"]),
   useNativeSearch: z.boolean(),
+  systemPrompt: z.string().optional(),
   toolkits: z.array(
     z
       .object({

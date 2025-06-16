@@ -22,6 +22,12 @@ interface Props {
   session: Session;
   autoResume: boolean;
   hasInitialMessages: boolean;
+  workbench?: {
+    id: string;
+    name: string;
+    systemPrompt: string;
+    toolkitIds: string[];
+  };
 }
 
 const ChatContent = ({
@@ -156,6 +162,7 @@ export const Chat = ({
   initialVisibilityType,
   isReadonly,
   autoResume,
+  workbench,
 }: Props) => {
   return (
     <ChatProvider
@@ -163,6 +170,7 @@ export const Chat = ({
       initialMessages={initialMessages}
       initialVisibilityType={initialVisibilityType}
       autoResume={autoResume}
+      workbench={workbench}
     >
       <ChatContent
         id={id}
