@@ -97,15 +97,30 @@ export async function POST(request: Request) {
     const chat = await api.chats.getChat(id);
 
     if (!chat) {
-      const title = await generateTitleFromUserMessage(message);
+      // Start title generation in parallel (don't await)
+      const titlePromise = generateTitleFromUserMessage(message);
 
+      // Create chat with temporary title immediately
       await api.chats.createChat({
         id,
         userId: session.user.id,
-        title,
+        title: "New Chat", // Temporary title
         visibility: selectedVisibilityType,
         workbenchId,
       });
+
+      // Update title in the background
+      titlePromise
+        .then(async (generatedTitle) => {
+          try {
+            await api.chats.updateChatTitle({ id, title: generatedTitle });
+          } catch (error) {
+            console.error("Failed to update chat title:", error);
+          }
+        })
+        .catch((error: unknown) => {
+          console.error("Failed to generate chat title:", error);
+        });
     } else {
       if (chat.userId !== session.user.id) {
         return new ChatSDKError("forbidden:chat").toResponse();
@@ -185,6 +200,14 @@ export async function POST(request: Request) {
       }),
     );
 
+    // Collect toolkit system prompts
+    const toolkitSystemPrompts = await Promise.all(
+      toolkits.map(async ({ id }) => {
+        const toolkit = getServerToolkit(id);
+        return toolkit.systemPrompt;
+      }),
+    );
+
     const tools = toolkitTools.reduce(
       (acc, toolkitTools) => {
         return {
@@ -197,16 +220,24 @@ export async function POST(request: Request) {
 
     const isOpenAi = selectedChatModel.startsWith("openai");
 
+    // Build comprehensive system prompt
+    const baseSystemPrompt = `You are a helpful assistant. The current date and time is ${new Date().toLocaleString()}.`;
+
+    const toolkitInstructions =
+      toolkitSystemPrompts.length > 0
+        ? `\n\n## Available Toolkits\n\nYou have access to the following toolkits and their capabilities:\n\n${toolkitSystemPrompts.join("\n\n---\n\n")}\n\n${systemPrompt ?? ""}`
+        : "";
+
+    const fullSystemPrompt = baseSystemPrompt + toolkitInstructions;
+
     const stream = createDataStream({
       execute: (dataStream) => {
         const result = streamText(
           getModelId(selectedChatModel, useNativeSearch),
           {
-            system:
-              systemPrompt ??
-              `You are a helpful assistant. The current date and time is ${new Date().toLocaleString()}.`,
+            system: fullSystemPrompt,
             messages: convertToCoreMessages(messages),
-            maxSteps: 5,
+            maxSteps: 15,
             toolCallStreaming: true,
             experimental_transform: smoothStream({ chunking: "word" }),
             experimental_generateMessageId: generateUUID,

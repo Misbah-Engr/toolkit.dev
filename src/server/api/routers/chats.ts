@@ -85,6 +85,23 @@ export const chatsRouter = createTRPCRouter({
       });
     }),
 
+  updateChatTitle: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        title: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.chat.update({
+        where: {
+          id: input.id,
+          userId: ctx.session.user.id,
+        },
+        data: { title: input.title },
+      });
+    }),
+
   deleteChat: protectedProcedure
     .input(z.string())
     .mutation(async ({ ctx, input }) => {
