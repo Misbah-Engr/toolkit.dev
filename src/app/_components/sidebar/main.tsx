@@ -7,18 +7,12 @@ import {
   SidebarMenu,
   SidebarMenuButton,
 } from "@/components/ui/sidebar";
-import { SiGithub } from "@icons-pack/react-simple-icons";
 
 const items = [
   {
     title: "New Chat",
     url: "/",
     icon: Edit,
-  },
-  {
-    title: "Source Code",
-    url: "https://github.com/jasonhedman/open-chat",
-    icon: SiGithub,
   },
 ];
 
