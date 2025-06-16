@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { ProviderIcon } from "./provider-icon";
+import { AuthProviderIcon } from "./provider-icon";
 
 interface Props {
   providers: {
@@ -36,7 +36,7 @@ export const Unauthenticated: React.FC<Props> = ({ providers }) => {
             key={provider.id}
             onClick={() => signIn(provider.id, { callbackUrl: "/" })}
           >
-            <ProviderIcon provider={provider.name} />
+            <AuthProviderIcon provider={provider.name} />
             Sign In with {provider.name}
           </DropdownMenuItem>
         ))}

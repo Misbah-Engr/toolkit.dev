@@ -43,5 +43,40 @@ export const authConfig = {
         id: user.id,
       },
     }),
+    async signIn({ account }) {
+      console.log({ account });
+      if (account) {
+        const existingAccount = await db.account.findUnique({
+          where: {
+            provider_providerAccountId: {
+              provider: account.provider,
+              providerAccountId: account.providerAccountId,
+            },
+          },
+        });
+
+        if (!existingAccount) {
+          return true;
+        }
+
+        // Update account with new tokens and scopes if they've changed
+        await db.account.update({
+          where: {
+            provider_providerAccountId: {
+              provider: account.provider,
+              providerAccountId: account.providerAccountId,
+            },
+          },
+          data: {
+            access_token: account.access_token,
+            refresh_token: account.refresh_token,
+            scope: account.scope,
+            token_type: account.token_type,
+            expires_at: account.expires_at,
+          },
+        });
+      }
+      return true;
+    },
   },
 } satisfies NextAuthConfig;

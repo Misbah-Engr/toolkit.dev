@@ -1,4 +1,4 @@
-import type { CreateMessage } from "ai";
+import type { CreateMessage, DeepPartial } from "ai";
 import type { z, ZodObject, ZodRawShape } from "zod";
 
 export type BaseTool<
@@ -29,8 +29,12 @@ export type ClientToolConfig<
   Args extends ZodRawShape = ZodRawShape,
   Result extends ZodRawShape = ZodRawShape,
 > = {
-  CallComponent: React.ComponentType<{ args: z.infer<ZodObject<Args>> }>;
+  CallComponent: React.ComponentType<{
+    args: DeepPartial<z.infer<ZodObject<Args>>>;
+    isPartial: boolean;
+  }>;
   ResultComponent: React.ComponentType<{
+    args: z.infer<ZodObject<Args>>;
     result: z.infer<ZodObject<Result>>;
     append: (message: CreateMessage) => void;
   }>;

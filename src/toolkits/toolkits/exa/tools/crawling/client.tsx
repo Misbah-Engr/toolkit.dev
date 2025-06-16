@@ -13,7 +13,7 @@ export const exaCrawlingToolConfigClient: ClientToolConfig<
       <ToolCallDisplay
         icon={Link}
         label="Crawling URLs"
-        value={args.urls.join(", ")}
+        value={args.urls?.join(", ") ?? "..."}
       />
     );
   },

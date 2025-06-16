@@ -43,9 +43,9 @@ export default function RootLayout({
           <ThemeProvider>
             <SidebarProvider>
               <AppSidebar />
-              <SidebarInset className="flex h-dvh flex-col">
+              <SidebarInset className="flex h-dvh flex-col md:pt-8">
                 <Navbar />
-                <div className="h-0 flex-1 overflow-hidden">{children}</div>
+                {children}
               </SidebarInset>
             </SidebarProvider>
           </ThemeProvider>

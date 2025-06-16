@@ -14,7 +14,7 @@ export const exaResearchPaperSearchToolConfigClient: ClientToolConfig<
       <ToolCallDisplay
         icon={BookOpen}
         label="Research Paper Search"
-        value={args.query}
+        value={args.query ?? "..."}
       />
     );
   },

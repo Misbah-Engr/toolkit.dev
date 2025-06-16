@@ -7,8 +7,11 @@ import {
 import { exaClientToolkit } from "./exa/client";
 import { imageClientToolkit } from "./image/client";
 import { githubClientToolkit } from "./github/client";
+import { googleCalendarClientToolkit } from "./google-calendar/client";
+import { googleDriveClientToolkit } from "./google-drive/client";
 import { mem0ClientToolkit } from "./mem0/client";
 import { notionClientToolkit } from "./notion/client";
+import { e2bClientToolkit } from "./e2b/client";
 
 type ClientToolkits = {
   [K in Servers]: ClientToolkit<ServerToolNames[K], ServerToolParameters[K]>;
@@ -18,8 +21,11 @@ export const clientToolkits: ClientToolkits = {
   [Servers.Exa]: exaClientToolkit,
   [Servers.Image]: imageClientToolkit,
   [Servers.Github]: githubClientToolkit,
+  [Servers.GoogleCalendar]: googleCalendarClientToolkit,
+  [Servers.GoogleDrive]: googleDriveClientToolkit,
   [Servers.Memory]: mem0ClientToolkit,
   [Servers.Notion]: notionClientToolkit,
+  [Servers.E2B]: e2bClientToolkit,
 };
 
 export function getClientToolkit<T extends Servers>(
