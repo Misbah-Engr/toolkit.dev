@@ -1,10 +1,6 @@
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { z } from "zod";
 
-// Helper functions to convert between string arrays and comma-separated strings
-const stringArrayToCommaSeparated = (arr: string[]): string => arr.join(',');
-const commaSeparatedToStringArray = (str: string): string[] => str ? str.split(',').filter(Boolean) : [];
-
 export const workbenchesRouter = createTRPCRouter({
   getWorkbenches: protectedProcedure
     .input(
@@ -37,10 +33,7 @@ export const workbenchesRouter = createTRPCRouter({
 
       const nextCursor =
         items.length > limit ? items[items.length - 1]?.id : undefined;
-      const workbenches = items.slice(0, limit).map(item => ({
-        ...item,
-        toolkitIds: commaSeparatedToStringArray(item.toolkitIds),
-      }));
+      const workbenches = items.slice(0, limit);
 
       return {
         items: workbenches,
@@ -54,7 +47,7 @@ export const workbenchesRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
       
-      const workbench = await ctx.db.workbench.findUnique({
+      return ctx.db.workbench.findUnique({
         where: {
           id: input,
           userId,
@@ -73,13 +66,6 @@ export const workbenchesRouter = createTRPCRouter({
           },
         },
       });
-
-      if (!workbench) return null;
-
-      return {
-        ...workbench,
-        toolkitIds: commaSeparatedToStringArray(workbench.toolkitIds),
-      };
     }),
 
   createWorkbench: protectedProcedure
@@ -93,19 +79,14 @@ export const workbenchesRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
       
-      const workbench = await ctx.db.workbench.create({
+      return ctx.db.workbench.create({
         data: {
           name: input.name,
           systemPrompt: input.systemPrompt,
-          toolkitIds: stringArrayToCommaSeparated(input.toolkitIds),
+          toolkitIds: input.toolkitIds,
           userId,
         },
       });
-
-      return {
-        ...workbench,
-        toolkitIds: commaSeparatedToStringArray(workbench.toolkitIds),
-      };
     }),
 
   updateWorkbench: protectedProcedure
@@ -120,7 +101,7 @@ export const workbenchesRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
       
-      const workbench = await ctx.db.workbench.update({
+      return ctx.db.workbench.update({
         where: {
           id: input.id,
           userId,
@@ -128,14 +109,9 @@ export const workbenchesRouter = createTRPCRouter({
         data: {
           name: input.name,
           systemPrompt: input.systemPrompt,
-          toolkitIds: stringArrayToCommaSeparated(input.toolkitIds),
+          toolkitIds: input.toolkitIds,
         },
       });
-
-      return {
-        ...workbench,
-        toolkitIds: commaSeparatedToStringArray(workbench.toolkitIds),
-      };
     }),
 
   deleteWorkbench: protectedProcedure
@@ -247,7 +223,7 @@ export const workbenchesRouter = createTRPCRouter({
         throw new Error("Workbench not found or access denied");
       }
       
-      const newWorkbench = await ctx.db.workbench.create({
+      return ctx.db.workbench.create({
         data: {
           name: `${originalWorkbench.name} (Copy)`,
           systemPrompt: originalWorkbench.systemPrompt,
@@ -255,10 +231,5 @@ export const workbenchesRouter = createTRPCRouter({
           userId,
         },
       });
-
-      return {
-        ...newWorkbench,
-        toolkitIds: commaSeparatedToStringArray(newWorkbench.toolkitIds),
-      };
     }),
 });
