@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { useChatContext } from "@/app/(chat)/_contexts/chat-context";
+import { useChatContext } from "@/app/_contexts/chat-context";
 import { Toolkits } from "@/toolkits/toolkits/shared";
 import { useMemo } from "react";
 import { clientToolkits } from "@/toolkits/toolkits/client";
@@ -190,8 +190,7 @@ const DYNAMIC_STARTER_PROMPTS: StarterPrompt[] = [
   },
   {
     title: "Competitive Intelligence Memory",
-    prompt:
-      "Find competitors in my industry and remember their key strategies",
+    prompt: "Find competitors in my industry and remember their key strategies",
     toolkitIds: [Toolkits.Exa, Toolkits.Memory],
     description: "Competitive intelligence with persistent insights",
   },
