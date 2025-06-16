@@ -12,6 +12,7 @@ import { ChatProvider } from "../_contexts/chat-context";
 
 import type { UIMessage } from "ai";
 import type { Session } from "next-auth";
+import type { Workbench } from "@prisma/client";
 
 interface Props {
   id: string;
@@ -22,12 +23,7 @@ interface Props {
   session: Session;
   autoResume: boolean;
   hasInitialMessages: boolean;
-  workbench?: {
-    id: string;
-    name: string;
-    systemPrompt: string;
-    toolkitIds: string[];
-  };
+  workbench?: Workbench;
 }
 
 const ChatContent = ({

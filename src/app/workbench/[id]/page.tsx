@@ -5,6 +5,7 @@ import { auth } from "@/server/auth";
 import { Chat } from "../../(chat)/_components/chat";
 import { api } from "@/trpc/server";
 import { WorkbenchHeader } from "@/components/workbench/workbench-header";
+import { generateUUID } from "@/lib/utils";
 
 export default async function WorkbenchPage(props: {
   params: Promise<{ id: string }>;
@@ -21,16 +22,14 @@ export default async function WorkbenchPage(props: {
       notFound();
     }
 
-    // Check if user owns this workbench
-    if (session.user.id !== workbench.userId) {
-      notFound();
+    if (!session?.user?.id) {
+      redirect("/api/auth/guest");
     }
 
-    // Create a new chat ID for this workbench session
-    const chatId = `workbench-${id}-${Date.now()}`;
+    const chatId = generateUUID();
 
     const cookieStore = await cookies();
-    const chatModelFromCookie = cookieStore.get("chat-model");
+    const modelIdFromCookie = cookieStore.get("chat-model");
 
     return (
       <div className="flex h-full flex-col">
@@ -38,19 +37,20 @@ export default async function WorkbenchPage(props: {
         <div className="flex-1 overflow-hidden">
           <Chat
             id={chatId}
-            initialMessages={[]}
-            initialChatModel={chatModelFromCookie?.value ?? "gpt-4o"}
-            initialVisibilityType="private"
+            initialChatModel={modelIdFromCookie?.value ?? "openai:gpt-4o"}
             isReadonly={false}
-            session={session}
-            autoResume={false}
+            initialMessages={[]}
+            initialVisibilityType="private"
+            autoResume={true}
             hasInitialMessages={false}
             workbench={workbench}
+            session={session}
           />
         </div>
       </div>
     );
   } catch (error) {
+    console.error(error);
     notFound();
   }
 }

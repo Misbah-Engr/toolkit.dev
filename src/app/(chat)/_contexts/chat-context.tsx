@@ -28,6 +28,7 @@ import type { z } from "zod";
 import { clientToolkits } from "@/toolkits/toolkits/client";
 import type { SelectedToolkit } from "@/components/toolkit/types";
 import type { Toolkits } from "@/toolkits/toolkits/shared";
+import type { Workbench } from "@prisma/client";
 
 interface ChatContextType {
   // Chat state
@@ -68,12 +69,7 @@ interface ChatProviderProps {
   initialMessages: Array<UIMessage>;
   initialVisibilityType: "public" | "private";
   autoResume: boolean;
-  workbench?: {
-    id: string;
-    name: string;
-    systemPrompt: string;
-    toolkitIds: string[];
-  };
+  workbench?: Workbench;
 }
 
 export function ChatProvider({
@@ -101,7 +97,8 @@ export function ChatProvider({
     if (workbench) {
       const workbenchToolkits = workbench.toolkitIds
         .map((toolkitId) => {
-          const clientToolkit = clientToolkits[toolkitId as keyof typeof clientToolkits];
+          const clientToolkit =
+            clientToolkits[toolkitId as keyof typeof clientToolkits];
           if (clientToolkit) {
             return {
               id: toolkitId,
@@ -115,7 +112,7 @@ export function ChatProvider({
           (
             toolkit,
           ): toolkit is {
-            id: string;
+            id: Toolkits;
             toolkit: ClientToolkit;
             parameters: z.infer<ClientToolkit["parameters"]>;
           } => toolkit !== null,

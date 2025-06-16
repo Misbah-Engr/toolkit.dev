@@ -19,6 +19,7 @@ import { Logo } from "@/components/ui/logo";
 import Link from "next/link";
 import { HStack, VStack } from "@/components/ui/stack";
 import { SiGithub } from "@icons-pack/react-simple-icons";
+import { NavWorkbenches } from "./workbenches";
 
 export async function AppSidebar({
   ...props
@@ -27,6 +28,9 @@ export async function AppSidebar({
 
   if (session?.user) {
     void api.chats.getChats.prefetchInfinite({
+      limit: 10,
+    });
+    void api.workbenches.getWorkbenches.prefetchInfinite({
       limit: 10,
     });
   }
@@ -44,6 +48,7 @@ export async function AppSidebar({
         </SidebarHeader>
         <SidebarContent>
           <NavMain />
+          {session?.user.id && <NavWorkbenches />}
           {session?.user.id && <NavChats />}
         </SidebarContent>
         <SidebarFooter className="flex flex-col gap-0">

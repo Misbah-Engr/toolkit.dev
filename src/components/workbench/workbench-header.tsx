@@ -1,8 +1,8 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getClientToolkit } from "@/toolkits/toolkits/client";
+import type { Toolkits } from "@/toolkits/toolkits/shared";
 import type { Workbench } from "@prisma/client";
 import { Settings, ArrowLeft } from "lucide-react";
 import Link from "next/link";

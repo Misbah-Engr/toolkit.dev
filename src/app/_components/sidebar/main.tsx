@@ -15,8 +15,8 @@ const items = [
     icon: Edit,
   },
   {
-    title: "Workbenches",
-    url: "/workbenches",
+    title: "New Workbench",
+    url: "/workbench/new",
     icon: Settings,
   },
 ];
