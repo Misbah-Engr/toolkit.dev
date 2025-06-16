@@ -4,24 +4,19 @@ import type { listUsersTool } from "./base";
 import { HStack, VStack } from "@/components/ui/stack";
 import { Users, User, Bot, Mail } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { ToolCallDisplay } from "../../components";
 
 export const notionListUsersToolConfigClient: ClientToolConfig<
   typeof listUsersTool.inputSchema.shape,
   typeof listUsersTool.outputSchema.shape
 > = {
-  CallComponent: ({ args }) => {
+  CallComponent: () => {
     return (
-      <HStack className="gap-2">
-        <Users className="text-muted-foreground size-4" />
-        <VStack className="items-start gap-0">
-          <span className="text-muted-foreground/80 text-xs font-medium">
-            List Users
-          </span>
-          {args.page_size && (
-            <span className="text-xs">Limit: {args.page_size}</span>
-          )}
-        </VStack>
-      </HStack>
+      <ToolCallDisplay
+        icon={Users}
+        label="List Users"
+        value="Fetching workspace users..."
+      />
     );
   },
   ResultComponent: ({ result }) => {
@@ -40,59 +35,54 @@ export const notionListUsersToolConfigClient: ClientToolConfig<
               key={user.id}
               className="w-full items-center border-b py-2 last:border-b-0 last:pb-0"
             >
-              <div className="size-8 shrink-0 flex items-center justify-center rounded-full bg-blue-100">
-                {user.type === "bot" ? (
-                  <Bot className="size-4 text-blue-600" />
+              <div className="size-6 shrink-0 overflow-hidden">
+                {user.avatar_url ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={user.avatar_url}
+                    alt={user.name ?? "User avatar"}
+                    className="size-full rounded-full object-cover"
+                  />
+                ) : user.type === "bot" ? (
+                  <Bot className="size-full" />
                 ) : (
-                  <User className="size-4 text-blue-600" />
+                  <User className="size-full" />
                 )}
               </div>
-              
-              <VStack className="flex w-full items-start gap-1">
+
+              <VStack className="flex w-full items-start gap-0">
                 <HStack className="items-center gap-2">
                   <h3 className="font-medium">
                     {user.name ?? `User ${index + 1}`}
                   </h3>
                   <Badge
                     variant={user.type === "bot" ? "secondary" : "primary"}
-                    className="text-xs"
+                    className="py-0 text-xs"
                   >
-                    {user.type}
+                    {user.type?.[0]?.toUpperCase() + user.type?.slice(1)}
                   </Badge>
                 </HStack>
-                
-                {user.person?.email && (
-                  <HStack className="items-center gap-1 text-muted-foreground/80">
+
+                {user.type === "person" && user.person?.email && (
+                  <HStack className="text-muted-foreground/80 items-center gap-1">
                     <Mail className="size-3" />
-                    <span className="text-xs">{user.person.email}</span>
+                    <span className="text-xs">{user.person?.email}</span>
                   </HStack>
                 )}
-                
-                {user.bot?.workspace_name && (
-                  <p className="text-muted-foreground/60 text-xs">
-                    Workspace: {user.bot.workspace_name}
-                  </p>
-                )}
-                
-                <p className="text-muted-foreground/40 text-xs">
-                  ID: {user.id.slice(0, 8)}...
-                </p>
+
+                {user.type === "bot" &&
+                  "bot" in user &&
+                  user.bot?.workspace_name && (
+                    <p className="text-muted-foreground/60 text-xs">
+                      Workspace: {user.bot.workspace_name}
+                    </p>
+                  )}
               </VStack>
-              
-              {user.avatar_url && (
-                <div className="size-6 shrink-0 overflow-hidden rounded-full bg-gray-200">
-                  <img 
-                    src={user.avatar_url} 
-                    alt={user.name ?? "User avatar"}
-                    className="size-full object-cover"
-                  />
-                </div>
-              )}
             </HStack>
           ))}
         </div>
         {result.has_more && (
-          <p className="text-muted-foreground text-xs mt-2">
+          <p className="text-muted-foreground mt-2 text-xs">
             More users available...
           </p>
         )}

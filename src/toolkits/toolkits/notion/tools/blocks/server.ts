@@ -1,4 +1,4 @@
-import type { BlockObjectResponse, Client } from "@notionhq/client";
+import type { Client } from "@notionhq/client";
 import type { ServerToolConfig } from "@/toolkits/types";
 import type { getBlocksTool } from "./base";
 
@@ -17,17 +17,7 @@ export const notionGetBlocksToolConfigServer = (
           page_size,
         });
 
-        const results = response.results
-          .filter((block) => "type" in block)
-          .map((block: BlockObjectResponse) => ({
-            id: block.id,
-            type: block.type,
-            created_time: block.created_time,
-            last_edited_time: block.last_edited_time,
-            has_children: block.has_children,
-            archived: block.archived,
-            content: block[block.type as keyof BlockObjectResponse] || {},
-          }));
+        const results = response.results.filter((block) => "type" in block);
 
         return {
           results,
@@ -39,6 +29,7 @@ export const notionGetBlocksToolConfigServer = (
         throw new Error("Failed to retrieve blocks from Notion");
       }
     },
-    message: "Successfully retrieved block contents.",
+    message:
+      "Successfully retrieved block contents. The user is shown the responses in the UI. Do not reiterate them. If you called this tool because the user asked a question, answer the question.",
   };
 };

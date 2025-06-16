@@ -3,11 +3,8 @@ import { type readFileTool } from "./base";
 import type { ClientToolConfig } from "@/toolkits/types";
 import { HStack, VStack } from "@/components/ui/stack";
 import { ToolCallComponent } from "../../components/tool-call";
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { FileText, Copy, Check } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import { FileText } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -33,15 +30,6 @@ export const googleDriveReadFileToolConfigClient: ClientToolConfig<
   },
   ResultComponent: ({ result }) => {
     const { content, mimeType, fileName, size, encoding } = result;
-
-    const handleCopy = async () => {
-      try {
-        await navigator.clipboard.writeText(content);
-        toast.success("Copied to clipboard");
-      } catch (err) {
-        toast.error("Failed to copy content");
-      }
-    };
 
     const isTextContent = encoding !== "base64";
     const displayContent = isTextContent

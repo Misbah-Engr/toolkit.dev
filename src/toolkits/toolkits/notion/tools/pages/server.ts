@@ -26,20 +26,15 @@ export const notionGetPageToolConfigServer = (
         }
 
         return {
-          id: response.id,
-          created_time: response.created_time,
-          last_edited_time: response.last_edited_time,
-          url: response.url,
-          archived: response.archived,
-          properties: response.properties,
-          parent: response.parent,
+          page: response,
         };
       } catch (error) {
         console.error("Notion API error:", error);
         throw new Error("Failed to retrieve page from Notion");
       }
     },
-    message: "Successfully retrieved page details.",
+    message:
+      "Successfully retrieved page details. The user is shown the responses in the UI. Do not reiterate them. If you called this tool because the user asked a question, answer the question.",
   };
 };
 
@@ -66,18 +61,9 @@ export const notionSearchPagesToolConfigServer = (
           page_size,
         });
 
-        console.log(response.results);
-
         const results = response.results
           .filter((item) => item.object === "page" && "properties" in item)
-          .map((page) => ({
-            id: page.id,
-            properties: page.properties,
-            created_time: page.created_time,
-            last_edited_time: page.last_edited_time,
-            url: page.url,
-            archived: page.archived,
-          }));
+          .map((page) => page);
 
         return {
           results,
@@ -89,6 +75,7 @@ export const notionSearchPagesToolConfigServer = (
         throw new Error("Failed to search pages in Notion");
       }
     },
-    message: "Successfully searched pages in your Notion workspace.",
+    message:
+      "Successfully searched pages in your Notion workspace. The user is shown the responses in the UI. Do not reiterate them. If you called this tool because the user asked a question, answer the question.",
   };
 };

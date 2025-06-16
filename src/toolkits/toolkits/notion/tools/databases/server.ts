@@ -1,8 +1,4 @@
-import type {
-  Client,
-  DatabaseObjectResponse,
-  PageObjectResponse,
-} from "@notionhq/client";
+import type { Client } from "@notionhq/client";
 import type { ServerToolConfig } from "@/toolkits/types";
 import type { listDatabasesTool, queryDatabaseTool } from "./base";
 
@@ -24,17 +20,9 @@ export const notionListDatabasesToolConfigServer = (
           page_size,
         });
 
-        const databases = response.results
-          .filter((item) => item.object === "database" && "title" in item)
-          .map((db: DatabaseObjectResponse) => ({
-            id: db.id,
-            title: db.title?.[0]?.plain_text ?? "Untitled Database",
-            description: db.description?.[0]?.plain_text,
-            created_time: db.created_time,
-            last_edited_time: db.last_edited_time,
-            url: db.url,
-            properties: db.properties,
-          }));
+        const databases = response.results.filter(
+          (item) => item.object === "database" && "title" in item,
+        );
 
         return {
           databases,
@@ -46,7 +34,8 @@ export const notionListDatabasesToolConfigServer = (
         throw new Error("Failed to fetch databases from Notion");
       }
     },
-    message: "Successfully retrieved databases from your Notion workspace.",
+    message:
+      "Successfully retrieved databases from your Notion workspace. The user is shown the responses in the UI. Do not reiterate them. If you called this tool because the user asked a question, answer the question.",
   };
 };
 
@@ -61,20 +50,15 @@ export const notionQueryDatabaseToolConfigServer = (
       try {
         const response = await notion.databases.query({
           database_id,
-          start_cursor: start_cursor ?? undefined,
+          start_cursor: start_cursor || undefined,
           page_size,
         });
 
-        const results = response.results
-          .filter((page) => page.object === "page" && "properties" in page)
-          .map((page: PageObjectResponse) => ({
-            id: page.id,
-            properties: page.properties,
-            created_time: page.created_time,
-            last_edited_time: page.last_edited_time,
-            url: page.url,
-          }));
-
+        const results = response.results.filter(
+          (result) =>
+            (result.object === "page" && "properties" in result) ||
+            (result.object === "database" && "title" in result),
+        );
         return {
           results,
           has_more: response.has_more,
@@ -85,6 +69,7 @@ export const notionQueryDatabaseToolConfigServer = (
         throw new Error("Failed to query database from Notion");
       }
     },
-    message: "Successfully queried the database.",
+    message:
+      "Successfully queried the database. The user is shown the responses in the UI. Do not reiterate them. If you called this tool because the user asked a question, answer the question.",
   };
 };

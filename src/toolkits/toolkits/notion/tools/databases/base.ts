@@ -1,6 +1,9 @@
 import { z } from "zod";
 import { createBaseTool } from "@/toolkits/create-tool";
-import type { QueryDatabaseParameters } from "@notionhq/client/build/src/api-endpoints";
+import type {
+  PageObjectResponse,
+  DatabaseObjectResponse,
+} from "@notionhq/client/build/src/api-endpoints";
 
 export const listDatabasesTool = createBaseTool({
   description: "List all databases the integration has access to",
@@ -14,17 +17,7 @@ export const listDatabasesTool = createBaseTool({
       .describe("Number of results per page (max 100)"),
   }),
   outputSchema: z.object({
-    databases: z.array(
-      z.object({
-        id: z.string(),
-        title: z.string(),
-        description: z.string().optional(),
-        created_time: z.string(),
-        last_edited_time: z.string(),
-        url: z.string(),
-        properties: z.record(z.unknown()),
-      }),
-    ),
+    databases: z.array(z.custom<DatabaseObjectResponse>()),
     has_more: z.boolean(),
     next_cursor: z.string().optional(),
   }),
@@ -45,13 +38,10 @@ export const queryDatabaseTool = createBaseTool({
   }),
   outputSchema: z.object({
     results: z.array(
-      z.object({
-        id: z.string(),
-        properties: z.record(z.unknown()),
-        created_time: z.string(),
-        last_edited_time: z.string(),
-        url: z.string(),
-      }),
+      z.union([
+        z.custom<PageObjectResponse>(),
+        z.custom<DatabaseObjectResponse>(),
+      ]),
     ),
     has_more: z.boolean(),
     next_cursor: z.string().optional(),

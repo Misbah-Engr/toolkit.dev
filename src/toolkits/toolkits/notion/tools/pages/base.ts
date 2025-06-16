@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { createBaseTool } from "@/toolkits/create-tool";
+import type { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 
 export const getPageTool = createBaseTool({
   description: "Retrieve page content and metadata by page ID",
@@ -7,13 +8,7 @@ export const getPageTool = createBaseTool({
     page_id: z.string().describe("The ID of the page to retrieve"),
   }),
   outputSchema: z.object({
-    id: z.string(),
-    created_time: z.string(),
-    last_edited_time: z.string(),
-    url: z.string(),
-    archived: z.boolean(),
-    properties: z.record(z.unknown()),
-    parent: z.record(z.unknown()),
+    page: z.custom<PageObjectResponse>(),
   }),
 });
 
@@ -30,16 +25,7 @@ export const searchPagesTool = createBaseTool({
       .describe("Number of results per page (max 100, default 10)"),
   }),
   outputSchema: z.object({
-    results: z.array(
-      z.object({
-        id: z.string(),
-        properties: z.record(z.unknown()),
-        created_time: z.string(),
-        last_edited_time: z.string(),
-        url: z.string(),
-        archived: z.boolean(),
-      }),
-    ),
+    results: z.array(z.custom<PageObjectResponse>()),
     has_more: z.boolean(),
     next_cursor: z.string().optional(),
   }),

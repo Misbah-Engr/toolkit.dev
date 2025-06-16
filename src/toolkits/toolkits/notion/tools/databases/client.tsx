@@ -1,27 +1,22 @@
 import React from "react";
 import type { ClientToolConfig } from "@/toolkits/types";
 import type { listDatabasesTool, queryDatabaseTool } from "./base";
-import { HStack, VStack } from "@/components/ui/stack";
 import { Database, Search } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { ToolCallDisplay } from "../../components";
+import { NotionDatabase } from "../../components/database";
+import { NotionPage } from "../../components/page";
 
 export const notionListDatabasesToolConfigClient: ClientToolConfig<
   typeof listDatabasesTool.inputSchema.shape,
   typeof listDatabasesTool.outputSchema.shape
 > = {
-  CallComponent: ({ args }) => {
+  CallComponent: ({}) => {
     return (
-      <HStack className="gap-2">
-        <Database className="text-muted-foreground size-4" />
-        <VStack className="items-start gap-0">
-          <span className="text-muted-foreground/80 text-xs font-medium">
-            List Databases
-          </span>
-          {args.page_size && (
-            <span className="text-xs">Limit: {args.page_size}</span>
-          )}
-        </VStack>
-      </HStack>
+      <ToolCallDisplay
+        icon={Database}
+        label="List Databases"
+        value="Fetching databases..."
+      />
     );
   },
   ResultComponent: ({ result, append }) => {
@@ -36,35 +31,20 @@ export const notionListDatabasesToolConfigClient: ClientToolConfig<
         </h1>
         <div className="flex flex-col">
           {result.databases.map((db) => (
-            <HStack
+            <NotionDatabase
               key={db.id}
-              className="group w-full cursor-pointer items-center border-b py-2 last:border-b-0 last:pb-0"
+              database={db}
               onClick={() => {
                 void append({
                   role: "user",
-                  content: `Query the database "${db.title}" for its content`,
+                  content: `Query the database "${db.title?.[0]?.plain_text ?? "Untitled Database"}" for its content`,
                 });
               }}
-            >
-              <Database className="text-blue-500 size-5 shrink-0" />
-              <VStack className="group flex w-full cursor-pointer items-start gap-0">
-                <h3 className="group-hover:text-primary line-clamp-2 transition-colors">
-                  {db.title}
-                </h3>
-                {db.description && (
-                  <p className="text-muted-foreground text-xs">
-                    {db.description}
-                  </p>
-                )}
-                <p className="text-muted-foreground/60 text-xs">
-                  Updated {new Date(db.last_edited_time).toLocaleDateString()}
-                </p>
-              </VStack>
-            </HStack>
+            />
           ))}
         </div>
         {result.has_more && (
-          <p className="text-muted-foreground text-xs mt-2">
+          <p className="text-muted-foreground mt-2 text-xs">
             More databases available...
           </p>
         )}
@@ -79,18 +59,14 @@ export const notionQueryDatabaseToolConfigClient: ClientToolConfig<
 > = {
   CallComponent: ({ args }) => {
     return (
-      <HStack className="gap-2">
-        <Search className="text-muted-foreground size-4" />
-        <VStack className="items-start gap-0">
-          <span className="text-muted-foreground/80 text-xs font-medium">
-            Query Database
-          </span>
-          <span className="text-sm">{args.database_id.slice(0, 8)}...</span>
-        </VStack>
-      </HStack>
+      <ToolCallDisplay
+        icon={Search}
+        label="Query Database"
+        value={`${(args.database_id ?? "").slice(0, 8)}...`}
+      />
     );
   },
-  ResultComponent: ({ result }) => {
+  ResultComponent: ({ result, append }) => {
     if (!result.results.length) {
       return <div className="text-muted-foreground">No results found</div>;
     }
@@ -101,43 +77,34 @@ export const notionQueryDatabaseToolConfigClient: ClientToolConfig<
           Database Query Results
         </h1>
         <div className="flex flex-col">
-          {result.results.map((page, index) => (
-            <VStack
-              key={page.id}
-              className="group w-full items-start py-2 last:pb-0"
-            >
-              <HStack className="items-center gap-2">
-                <span className="text-muted-foreground text-xs">#{index + 1}</span>
-                <h3 className="line-clamp-1 font-medium transition-colors">
-                  {page.id.slice(0, 8)}...
-                </h3>
-              </HStack>
-              <div className="text-muted-foreground/60 text-xs">
-                Updated {new Date(page.last_edited_time).toLocaleDateString()}
-              </div>
-              {Object.keys(page.properties).length > 0 && (
-                <div className="flex flex-wrap gap-1 mt-1">
-                  {Object.keys(page.properties).slice(0, 3).map((prop) => (
-                    <Badge
-                      key={prop}
-                      variant="secondary"
-                      className="text-xs"
-                    >
-                      {prop}
-                    </Badge>
-                  ))}
-                  {Object.keys(page.properties).length > 3 && (
-                    <Badge variant="outline" className="text-xs">
-                      +{Object.keys(page.properties).length - 3}
-                    </Badge>
-                  )}
-                </div>
-              )}
-            </VStack>
-          ))}
+          {result.results.map((result) =>
+            result.object === "page" ? (
+              <NotionPage
+                key={result.id}
+                page={result}
+                onClick={() => {
+                  void append({
+                    role: "user",
+                    content: `Get the content of page ${result.id}`,
+                  });
+                }}
+              />
+            ) : (
+              <NotionDatabase
+                key={result.id}
+                database={result}
+                onClick={() => {
+                  void append({
+                    role: "user",
+                    content: `Query the database "${result.title?.[0]?.plain_text ?? "Untitled Database"}" for its content`,
+                  });
+                }}
+              />
+            ),
+          )}
         </div>
         {result.has_more && (
-          <p className="text-muted-foreground text-xs mt-2">
+          <p className="text-muted-foreground mt-2 text-xs">
             More results available...
           </p>
         )}

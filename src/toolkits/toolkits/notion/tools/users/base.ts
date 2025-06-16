@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { createBaseTool } from "@/toolkits/create-tool";
+import type { UserObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 
 export const listUsersTool = createBaseTool({
   description: "List all users in the workspace",
@@ -13,25 +14,7 @@ export const listUsersTool = createBaseTool({
       .describe("Number of results per page (max 100, default 10)"),
   }),
   outputSchema: z.object({
-    results: z.array(
-      z.object({
-        id: z.string(),
-        type: z.enum(["person", "bot"]),
-        name: z.string().nullish(),
-        avatar_url: z.string().nullish(),
-        person: z
-          .object({
-            email: z.string().optional(),
-          })
-          .optional(),
-        bot: z
-          .object({
-            owner: z.record(z.unknown()).nullish(),
-            workspace_name: z.string().nullish(),
-          })
-          .optional(),
-      }),
-    ),
+    results: z.array(z.custom<UserObjectResponse>()),
     has_more: z.boolean(),
     next_cursor: z.string().optional(),
   }),

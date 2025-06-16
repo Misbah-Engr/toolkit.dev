@@ -1,4 +1,4 @@
-import type { Client, UserObjectResponse } from "@notionhq/client";
+import type { Client } from "@notionhq/client";
 import type { ServerToolConfig } from "@/toolkits/types";
 import type { listUsersTool } from "./base";
 
@@ -12,26 +12,12 @@ export const notionListUsersToolConfigServer = (
     callback: async ({ start_cursor, page_size = 100 }) => {
       try {
         const response = await notion.users.list({
-          start_cursor,
+          start_cursor: start_cursor || undefined,
           page_size,
         });
 
-        const results = response.results.map((user: UserObjectResponse) => ({
-          id: user.id,
-          type: user.type,
-          name: user.name,
-          avatar_url: user.avatar_url,
-          person: user.type === "person" ? user.person : undefined,
-          bot:
-            user.type === "bot"
-              ? Object.keys(user.bot).length > 0
-                ? user.bot
-                : undefined
-              : undefined,
-        }));
-
         return {
-          results,
+          results: response.results,
           has_more: response.has_more,
           next_cursor: response.next_cursor ?? undefined,
         };
@@ -40,6 +26,7 @@ export const notionListUsersToolConfigServer = (
         throw new Error("Failed to retrieve users from Notion");
       }
     },
-    message: "Successfully retrieved workspace users.",
+    message:
+      "Successfully retrieved workspace users. The user is shown the responses in the UI. Do not reiterate them. If you called this tool because the user asked a question, answer the question.",
   };
 };
