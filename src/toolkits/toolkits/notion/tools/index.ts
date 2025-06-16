@@ -1,13 +1,16 @@
 export enum NotionTools {
   ListDatabases = "list-databases",
   QueryDatabase = "query-database", 
+  CreateDatabase = "create-database",
   GetPage = "get-page",
-  GetBlocks = "get-blocks",
   SearchPages = "search-pages",
+  CreatePage = "create-page",
+  GetBlocks = "get-blocks",
+  AppendBlocks = "append-blocks",
   ListUsers = "list-users",
 }
 
-export * from "./databases/base";
-export * from "./pages/base";
-export * from "./blocks/base";
-export * from "./users/base";
+export { listDatabasesTool, queryDatabaseTool, createDatabaseTool } from "./databases/base";
+export { getPageTool, searchPagesTool, createPageTool } from "./pages/base";
+export { getBlocksTool, appendBlocksTool } from "./blocks/base";
+export { listUsersTool } from "./users/base";

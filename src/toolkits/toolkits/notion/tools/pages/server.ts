@@ -1,6 +1,6 @@
 import type { Client } from "@notionhq/client";
 import type { ServerToolConfig } from "@/toolkits/types";
-import type { getPageTool, searchPagesTool } from "./base";
+import type { getPageTool, searchPagesTool, createPageTool } from "./base";
 
 export const notionGetPageToolConfigServer = (
   notion: Client,
@@ -77,5 +77,89 @@ export const notionSearchPagesToolConfigServer = (
     },
     message:
       "Successfully searched pages in your Notion workspace. The user is shown the responses in the UI. Do not reiterate them. If you called this tool because the user asked a question, answer the question.",
+  };
+};
+
+export const notionCreatePageToolConfigServer = (
+  notion: Client,
+): ServerToolConfig<
+  typeof createPageTool.inputSchema.shape,
+  typeof createPageTool.outputSchema.shape
+> => {
+  return {
+    callback: async ({ parent_page_id, parent_database_id, title, content, properties = {} }) => {
+      try {
+        // Determine parent type and create appropriate parent object
+        let parent: any;
+        if (parent_database_id) {
+          parent = { database_id: parent_database_id };
+        } else if (parent_page_id) {
+          parent = { page_id: parent_page_id };
+        } else {
+          throw new Error("Either parent_page_id or parent_database_id must be provided");
+        }
+
+        // Create page properties based on whether it's a database page or regular page
+        const pageProperties: any = {};
+        if (parent_database_id) {
+          // For database pages, use the provided properties
+          Object.assign(pageProperties, properties);
+          // Ensure title property exists for database pages
+          if (!pageProperties.Name && !pageProperties.Title && !pageProperties.title) {
+            pageProperties.Name = {
+              title: [{ text: { content: title } }]
+            };
+          }
+        } else {
+          // For regular pages, set the title
+          pageProperties.title = {
+            title: [{ text: { content: title } }]
+          };
+        }
+
+        // Create the page
+        const response = await notion.pages.create({
+          parent,
+          properties: pageProperties,
+        });
+
+        // If content is provided, add it as blocks
+        if (content && "id" in response) {
+          const blocks = content.split('\n').filter(line => line.trim()).map(line => ({
+            object: "block" as const,
+            type: "paragraph" as const,
+            paragraph: {
+              rich_text: [{ type: "text" as const, text: { content: line } }]
+            }
+          }));
+
+          if (blocks.length > 0) {
+            await notion.blocks.children.append({
+              block_id: response.id,
+              children: blocks,
+            });
+          }
+        }
+
+        if (
+          response.object !== "page" ||
+          !("created_time" in response) ||
+          !("last_edited_time" in response) ||
+          !("url" in response) ||
+          !("archived" in response)
+        ) {
+          throw new Error("Invalid page response");
+        }
+
+        return {
+          page: response,
+        };
+      } catch (error) {
+        console.error("Notion API error:", error);
+        throw new Error("Failed to create page in Notion");
+      }
+    },
+    message:
+      "Successfully created a new page in Notion. The user is shown the page details in the UI. Do not reiterate them.",
   };
 };

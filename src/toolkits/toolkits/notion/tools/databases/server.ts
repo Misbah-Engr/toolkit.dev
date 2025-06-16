@@ -1,6 +1,6 @@
 import type { Client } from "@notionhq/client";
 import type { ServerToolConfig } from "@/toolkits/types";
-import type { listDatabasesTool, queryDatabaseTool } from "./base";
+import type { listDatabasesTool, queryDatabaseTool, createDatabaseTool } from "./base";
 
 export const notionListDatabasesToolConfigServer = (
   notion: Client,
@@ -71,5 +71,81 @@ export const notionQueryDatabaseToolConfigServer = (
     },
     message:
       "Successfully queried the database. The user is shown the responses in the UI. Do not reiterate them. If you called this tool because the user asked a question, answer the question.",
+  };
+};
+
+export const notionCreateDatabaseToolConfigServer = (
+  notion: Client,
+): ServerToolConfig<
+  typeof createDatabaseTool.inputSchema.shape,
+  typeof createDatabaseTool.outputSchema.shape
+> => {
+  return {
+    callback: async ({ parent_page_id, title, description, properties = {} }) => {
+      try {
+        // Create default properties if none provided
+        const defaultProperties = Object.keys(properties).length === 0 ? {
+          Name: {
+            title: {}
+          },
+          Tags: {
+            multi_select: {
+              options: []
+            }
+          },
+          Status: {
+            select: {
+              options: [
+                { name: "Not started", color: "red" },
+                { name: "In progress", color: "yellow" },
+                { name: "Done", color: "green" }
+              ]
+            }
+          }
+        } : properties;
+
+        const response = await notion.databases.create({
+          parent: {
+            page_id: parent_page_id,
+          },
+          title: [
+            {
+              type: "text",
+              text: {
+                content: title,
+              },
+            },
+          ],
+          description: description ? [
+            {
+              type: "text",
+              text: {
+                content: description,
+              },
+            },
+          ] : [],
+          properties: defaultProperties,
+        });
+
+        if (
+          response.object !== "database" ||
+          !("created_time" in response) ||
+          !("last_edited_time" in response) ||
+          !("url" in response) ||
+          !("archived" in response)
+        ) {
+          throw new Error("Invalid database response");
+        }
+
+        return {
+          database: response,
+        };
+      } catch (error) {
+        console.error("Notion API error:", error);
+        throw new Error("Failed to create database in Notion");
+      }
+    },
+    message:
+      "Successfully created a new database in Notion. The user is shown the database details in the UI. Do not reiterate them.",
   };
 };

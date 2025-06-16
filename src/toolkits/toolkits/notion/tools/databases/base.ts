@@ -47,3 +47,16 @@ export const queryDatabaseTool = createBaseTool({
     next_cursor: z.string().optional(),
   }),
 });
+
+export const createDatabaseTool = createBaseTool({
+  description: "Create a new database in Notion workspace or as a child of a page",
+  inputSchema: z.object({
+    parent_page_id: z.string().describe("ID of parent page where the database will be created"),
+    title: z.string().describe("Title of the new database"),
+    description: z.string().optional().describe("Description of the database"),
+    properties: z.record(z.any()).optional().describe("Database properties schema (columns)"),
+  }),
+  outputSchema: z.object({
+    database: z.custom<DatabaseObjectResponse>(),
+  }),
+});

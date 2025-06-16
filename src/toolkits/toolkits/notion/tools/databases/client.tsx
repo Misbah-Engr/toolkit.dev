@@ -1,7 +1,7 @@
 import React from "react";
 import type { ClientToolConfig } from "@/toolkits/types";
-import type { listDatabasesTool, queryDatabaseTool } from "./base";
-import { Database, Search } from "lucide-react";
+import type { listDatabasesTool, queryDatabaseTool, createDatabaseTool } from "./base";
+import { Database, Search, Plus } from "lucide-react";
 import { ToolCallDisplay } from "../../components";
 import { NotionDatabase } from "../../components/database";
 import { NotionPage } from "../../components/page";
@@ -108,6 +108,39 @@ export const notionQueryDatabaseToolConfigClient: ClientToolConfig<
             More results available...
           </p>
         )}
+      </div>
+    );
+  },
+};
+
+export const notionCreateDatabaseToolConfigClient: ClientToolConfig<
+  typeof createDatabaseTool.inputSchema.shape,
+  typeof createDatabaseTool.outputSchema.shape
+> = {
+  CallComponent: ({ args }) => {
+    return (
+      <ToolCallDisplay
+        icon={Plus}
+        label="Create Database"
+        value={`"${args.title ?? ""}"`}
+      />
+    );
+  },
+  ResultComponent: ({ result: { database }, append }) => {
+    return (
+      <div className="">
+        <h1 className="text-muted-foreground text-sm font-medium">
+          Database Created
+        </h1>
+        <NotionDatabase
+          database={database}
+          onClick={() => {
+            void append({
+              role: "user",
+              content: `Query the database "${database.title?.[0]?.plain_text ?? "Untitled Database"}" for its content`,
+            });
+          }}
+        />
       </div>
     );
   },

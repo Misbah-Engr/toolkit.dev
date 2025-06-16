@@ -4,9 +4,12 @@ import { NotionTools } from "./tools";
 import {
   listDatabasesTool,
   queryDatabaseTool,
+  createDatabaseTool,
   getPageTool,
-  getBlocksTool,
   searchPagesTool,
+  createPageTool,
+  getBlocksTool,
+  appendBlocksTool,
   listUsersTool,
 } from "./tools";
 
@@ -19,9 +22,12 @@ export const baseNotionToolkitConfig: ToolkitConfig<
   tools: {
     [NotionTools.ListDatabases]: listDatabasesTool,
     [NotionTools.QueryDatabase]: queryDatabaseTool,
+    [NotionTools.CreateDatabase]: createDatabaseTool,
     [NotionTools.GetPage]: getPageTool,
-    [NotionTools.GetBlocks]: getBlocksTool,
     [NotionTools.SearchPages]: searchPagesTool,
+    [NotionTools.CreatePage]: createPageTool,
+    [NotionTools.GetBlocks]: getBlocksTool,
+    [NotionTools.AppendBlocks]: appendBlocksTool,
     [NotionTools.ListUsers]: listUsersTool,
   },
   parameters: notionParameters,
