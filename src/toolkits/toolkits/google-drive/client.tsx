@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/tooltip";
 import Link from "next/link";
 import { SiGoogledrive } from "@icons-pack/react-simple-icons";
+import { ToolkitGroups } from "@/toolkits/types";
 
 const driveScope = "https://www.googleapis.com/auth/drive.readonly";
 
@@ -127,6 +128,7 @@ export const googleDriveClientToolkit = createClientToolkit(
 
       return children;
     },
+    type: ToolkitGroups.KnowledgeBase,
   },
   {
     [GoogleDriveTools.SearchFiles]: googleDriveSearchFilesToolConfigClient,
