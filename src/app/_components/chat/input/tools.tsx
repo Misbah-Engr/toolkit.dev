@@ -8,14 +8,38 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { Save, Wrench } from "lucide-react";
+import { Loader2, Save, Wrench } from "lucide-react";
 import { useChatContext } from "@/app/_contexts/chat-context";
 import { useState } from "react";
 import { ToolkitList } from "@/components/toolkit/toolkit-list";
+import { useRouter } from "next/navigation";
+import { api } from "@/trpc/react";
+import { toast } from "sonner";
 
 export const ToolsSelect = () => {
   const { toolkits, addToolkit, removeToolkit, workbench } = useChatContext();
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
+
+  const { mutate: updateWorkbench, isPending } =
+    api.workbenches.updateWorkbench.useMutation({
+      onSuccess: () => {
+        toast.success("Workbench updated successfully");
+        router.refresh();
+        setIsOpen(false);
+      },
+    });
+
+  const handleSave = () => {
+    if (workbench) {
+      updateWorkbench({
+        id: workbench.id,
+        name: workbench.name,
+        systemPrompt: workbench.systemPrompt,
+        toolkitIds: toolkits.map((toolkit) => toolkit.id),
+      });
+    }
+  };
 
   return (
     <TooltipProvider>
@@ -59,8 +83,13 @@ export const ToolsSelect = () => {
             />
           </div>
           {workbench !== undefined && (
-            <Button variant={"outline"} className="bg-transparent">
-              <Save />
+            <Button
+              variant={"outline"}
+              className="bg-transparent"
+              onClick={handleSave}
+              disabled={isPending}
+            >
+              {isPending ? <Loader2 className="animate-spin" /> : <Save />}
               Save
             </Button>
           )}
