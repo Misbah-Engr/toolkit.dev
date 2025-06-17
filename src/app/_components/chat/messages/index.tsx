@@ -32,8 +32,6 @@ const PureMessages: React.FC<Props> = ({
     scrollToBottom,
   });
 
-  console.log(messages);
-
   return (
     <div
       ref={containerRef}
@@ -52,9 +50,13 @@ const PureMessages: React.FC<Props> = ({
         />
       ))}
 
-      {status === "submitted" &&
+      {((status === "submitted" &&
         messages.length > 0 &&
-        messages[messages.length - 1]?.role === "user" && <ThinkingMessage />}
+        (messages[messages.length - 1]?.role === "user" ||
+          messages[messages.length - 1]?.parts?.length === 0)) ||
+        (messages[messages.length - 1]?.parts?.length === 1 &&
+          messages[messages.length - 1]?.parts?.[0]?.type ===
+            "step-start")) && <ThinkingMessage />}
 
       <motion.div
         ref={endRef}
