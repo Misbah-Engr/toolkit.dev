@@ -11,26 +11,56 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>("light");
+// Cookie utility functions for client-side
+function setCookie(name: string, value: string, days = 365) {
+  const expires = new Date();
+  expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+  document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Lax`;
+}
+
+function getCookie(name: string): string | null {
+  const nameEQ = name + "=";
+  const cookies = document.cookie.split(";");
+
+  for (const cookie of cookies) {
+    const trimmedCookie = cookie.trim();
+    if (trimmedCookie.startsWith(nameEQ)) {
+      return trimmedCookie.substring(nameEQ.length);
+    }
+  }
+  return null;
+}
+
+export function ThemeProvider({
+  children,
+  initialTheme = "light",
+}: {
+  children: React.ReactNode;
+  initialTheme?: Theme;
+}) {
+  const [theme, setTheme] = useState<Theme>(initialTheme);
 
   useEffect(() => {
-    // Check local storage for saved theme
-    const savedTheme = localStorage.getItem("theme") as Theme;
-    if (savedTheme) {
-      setTheme(savedTheme);
-      document.documentElement.classList.toggle("dark", savedTheme === "dark");
-    } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      // If no saved theme, check system preference
-      setTheme("dark");
-      document.documentElement.classList.add("dark");
+    // Apply the initial theme to the document
+    document.documentElement.classList.toggle("dark", theme === "dark");
+
+    // If no theme cookie exists on client, check system preference and set cookie
+    const savedTheme = getCookie("theme") as Theme;
+    if (!savedTheme) {
+      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
+        .matches
+        ? "dark"
+        : "light";
+      setTheme(systemTheme);
+      setCookie("theme", systemTheme);
+      document.documentElement.classList.toggle("dark", systemTheme === "dark");
     }
-  }, []);
+  }, [theme]);
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
-    localStorage.setItem("theme", newTheme);
+    setCookie("theme", newTheme);
     document.documentElement.classList.toggle("dark", newTheme === "dark");
   };
 

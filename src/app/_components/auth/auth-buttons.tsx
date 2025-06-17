@@ -19,7 +19,7 @@ export const AuthButtons = ({ providers }: AuthButtonsProps) => {
           key={provider.id}
           variant="outline"
           className="w-full"
-          onClick={() => signIn(provider.id, { callbackUrl: "/onboarding" })}
+          onClick={() => signIn(provider.id)}
         >
           <AuthProviderIcon provider={provider.name} />
           Sign in with {provider.name}

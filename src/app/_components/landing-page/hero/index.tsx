@@ -1,23 +1,22 @@
-"use client";
-
 import React from "react";
-import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { ToolkitDemoList } from "./toolkit-demo-list";
 import { SiGithub } from "@icons-pack/react-simple-icons";
 import { Badge } from "@/components/ui/badge";
 import { VStack } from "@/components/ui/stack";
+import { MotionContainer } from "./motion-container";
+import { AuthModal } from "../auth-modal";
 
 export const HeroSection: React.FC = () => {
   return (
     <section className="relative flex h-[calc(100vh-53px)] items-center overflow-hidden border-b">
       <div className="container mx-auto flex h-full flex-col items-center md:flex-row">
         <div className="w-1/2 p-16">
-          <motion.div
+          <MotionContainer
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.8 }}
             className="flex flex-col items-center gap-6 md:items-end"
           >
             <VStack className="items-end">
@@ -48,29 +47,31 @@ export const HeroSection: React.FC = () => {
                   Contribute
                 </span>
               </Button>
-              <Button
-                size="lg"
-                className="user-message text-base font-semibold"
-              >
-                Try it Out
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
+              <AuthModal>
+                <Button
+                  size="lg"
+                  className="user-message text-base font-semibold"
+                >
+                  Try it Out
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </AuthModal>
             </div>
-          </motion.div>
+          </MotionContainer>
         </div>
 
         {/* Right Column - Toolkit Demo */}
         <div className="relative h-full w-1/2 overflow-hidden">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.8 }}
+          <MotionContainer
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
             className="flex h-full flex-1 items-center justify-center"
           >
             <div className="size-full w-full overflow-y-hidden rounded-none border-l py-16 pl-14">
               <ToolkitDemoList />
             </div>
-          </motion.div>
+          </MotionContainer>
         </div>
       </div>
     </section>

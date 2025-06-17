@@ -38,22 +38,26 @@ export const DependenciesSection: React.FC = () => {
         >
           {/* First row - normal direction */}
           <Marquee className="gap-2 py-1" pauseOnHover>
-            {dependencies.map((dependency, index) => (
-              <DependencyCard
-                key={`${dependency.name}-${index}`}
-                dependency={dependency}
-              />
-            ))}
+            {dependencies
+              .slice(0, Math.ceil(dependencies.length / 2))
+              .map((dependency, index) => (
+                <DependencyCard
+                  key={`${dependency.name}-${index}`}
+                  dependency={dependency}
+                />
+              ))}
           </Marquee>
 
           {/* Second row - reverse direction */}
           <Marquee className="gap-2 py-0" pauseOnHover reverse>
-            {dependencies.map((dependency, index) => (
-              <DependencyCard
-                key={`${dependency.name}-reverse-${index}`}
-                dependency={dependency}
-              />
-            ))}
+            {dependencies
+              .slice(Math.ceil(dependencies.length / 2))
+              .map((dependency, index) => (
+                <DependencyCard
+                  key={`${dependency.name}-reverse-${index}`}
+                  dependency={dependency}
+                />
+              ))}
           </Marquee>
 
           {/* Gradient overlays */}
