@@ -4,7 +4,6 @@ import { motion } from "motion/react";
 import { useChatContext } from "@/app/_contexts/chat-context";
 import { Toolkits } from "@/toolkits/toolkits/shared";
 import { useMemo } from "react";
-import { clientToolkits } from "@/toolkits/toolkits/client";
 import { ToolkitIcons } from "@/components/toolkit/toolkit-icons";
 import { HStack } from "@/components/ui/stack";
 
@@ -450,7 +449,7 @@ export const StarterPrompts = () => {
               exit: { delay: 0, duration: 0.1 },
             }}
             onClick={() => handlePromptClick(prompt.prompt)}
-            className="hover:bg-muted/80 text-muted-foreground hover:text-foreground group relative rounded-xl border p-2 text-left text-sm transition-colors"
+            className="hover:bg-muted/80 text-muted-foreground hover:text-foreground group relative cursor-pointer rounded-xl border p-2 text-left text-sm transition-colors"
             title={prompt.description}
           >
             <HStack className="gap-2 overflow-hidden">

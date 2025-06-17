@@ -1,6 +1,7 @@
 import { api } from "@/trpc/server";
 import { WorkbenchHeader } from "./_components/header";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+import { auth } from "@/server/auth";
 
 export default async function WorkbenchLayout({
   children,
@@ -10,6 +11,12 @@ export default async function WorkbenchLayout({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+
+  const session = await auth();
+
+  if (!session) {
+    redirect("/login?redirect=/workbench/${id}");
+  }
 
   const workbench = await api.workbenches.getWorkbench(id);
 

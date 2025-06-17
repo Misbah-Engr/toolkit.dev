@@ -187,36 +187,39 @@ const PureMultimodalInput: React.FC<Props> = ({
     workbench,
   ]);
 
-  const uploadFile = async (file: File): Promise<Attachment | undefined> => {
-    const formData = new FormData();
-    formData.append("file", file);
+  const uploadFile = useCallback(
+    async (file: File): Promise<Attachment | undefined> => {
+      const formData = new FormData();
+      formData.append("file", file);
 
-    try {
-      const response = await fetch("/api/files/upload", {
-        method: "POST",
-        body: formData,
-      });
+      try {
+        const response = await fetch("/api/files/upload", {
+          method: "POST",
+          body: formData,
+        });
 
-      if (response.ok) {
-        const data = (await response.json()) as DbFile;
+        if (response.ok) {
+          const data = (await response.json()) as DbFile;
 
-        const { url, name, contentType } = data;
+          const { url, name, contentType } = data;
 
-        return {
-          url,
-          name,
-          contentType,
-        };
+          return {
+            url,
+            name,
+            contentType,
+          };
+        }
+        const { error } = (await response.json()) as { error: string };
+        toast.error(error);
+        return undefined;
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to upload file, please try again!");
+        return undefined;
       }
-      const { error } = (await response.json()) as { error: string };
-      toast.error(error);
-      return undefined;
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to upload file, please try again!");
-      return undefined;
-    }
-  };
+    },
+    [],
+  );
 
   const handleFileChange = useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -241,7 +244,7 @@ const PureMultimodalInput: React.FC<Props> = ({
         setUploadQueue([]);
       }
     },
-    [setAttachments],
+    [setAttachments, uploadFile],
   );
 
   useEffect(() => {
@@ -303,19 +306,17 @@ const PureMultimodalInput: React.FC<Props> = ({
               ...successfullyUploadedAttachments,
             ]);
 
-            if (successfullyUploadedAttachments.length > 0) {
-              toast.success(
-                `Pasted ${successfullyUploadedAttachments.length} image(s)`,
-              );
-            }
-          })
-          .catch((error) => {
-            console.error("Error uploading pasted images!", error);
-            toast.error("Failed to upload pasted images");
-          })
-          .finally(() => {
-            setUploadQueue([]);
-          });
+          if (successfullyUploadedAttachments.length > 0) {
+            toast.success(
+              `Pasted ${successfullyUploadedAttachments.length} image(s)`,
+            );
+          }
+        } catch (error) {
+          console.error("Error uploading pasted images!", error);
+          toast.error("Failed to upload pasted images");
+        } finally {
+          setUploadQueue([]);
+        }
       }
     },
     [supportsImages, setAttachments, uploadFile],
@@ -324,9 +325,13 @@ const PureMultimodalInput: React.FC<Props> = ({
   useEffect(() => {
     const textarea = textareaRef.current;
     if (textarea) {
-      textarea.addEventListener("paste", handlePaste);
+      const pasteHandler = (event: ClipboardEvent) => {
+        void handlePaste(event);
+      };
+
+      textarea.addEventListener("paste", pasteHandler);
       return () => {
-        textarea.removeEventListener("paste", handlePaste);
+        textarea.removeEventListener("paste", pasteHandler);
       };
     }
   }, [handlePaste]);

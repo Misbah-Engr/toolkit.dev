@@ -19,6 +19,11 @@ import { useCopyToClipboard } from "usehooks-ts";
 interface Props {
   language: string;
   value: string;
+  heading?: string;
+  showLineNumbers?: boolean;
+  allowCopy?: boolean;
+  headerClassName?: string;
+  headingClassName?: string;
 }
 
 type LanguageMap = Record<ProgrammingLanguages, string | undefined>;
@@ -109,7 +114,15 @@ export const generateRandomString = (length: number, lowercase = false) => {
 };
 
 export const CodeBlock: React.FC<Props> = memo(
-  ({ language, value }: Props) => {
+  ({
+    language,
+    value,
+    heading,
+    showLineNumbers = true,
+    allowCopy = true,
+    headerClassName,
+    headingClassName,
+  }: Props) => {
     const [isCopied, setIsCopied] = useState(false);
     const [, copyToClipboard] = useCopyToClipboard();
 
@@ -133,23 +146,26 @@ export const CodeBlock: React.FC<Props> = memo(
         <div
           className={cn(
             "flex w-full items-center justify-between bg-neutral-100 py-1 pr-2 pl-4 dark:bg-neutral-700",
+            headerClassName,
           )}
         >
-          <span className="text-xs font-semibold">
-            {markdownLanguages[language] ?? language}
+          <span className={cn("text-xs font-semibold", headingClassName)}>
+            {heading ?? markdownLanguages[language] ?? language}
           </span>
           <div className="flex items-center gap-2">
-            <span
-              className="h-fit w-fit cursor-pointer rounded-md p-2 text-xs transition-colors duration-200 hover:bg-neutral-200 focus-visible:ring-offset-0 dark:hover:bg-neutral-600"
-              onClick={onCopy}
-            >
-              {isCopied ? (
-                <Check className="h-4 w-4" />
-              ) : (
-                <Copy className="h-4 w-4" />
-              )}
-              <span className="sr-only">Copy code</span>
-            </span>
+            {allowCopy && (
+              <span
+                className="h-fit w-fit cursor-pointer rounded-md p-2 text-xs transition-colors duration-200 hover:bg-neutral-200 focus-visible:ring-offset-0 dark:hover:bg-neutral-600"
+                onClick={onCopy}
+              >
+                {isCopied ? (
+                  <Check className="h-4 w-4" />
+                ) : (
+                  <Copy className="h-4 w-4" />
+                )}
+                <span className="sr-only">Copy code</span>
+              </span>
+            )}
           </div>
         </div>
         <div className="dark:hidden">
@@ -157,7 +173,7 @@ export const CodeBlock: React.FC<Props> = memo(
             language={language}
             style={vs}
             PreTag="div"
-            showLineNumbers
+            showLineNumbers={showLineNumbers}
             customStyle={{
               margin: 0,
               width: "100%",
@@ -184,7 +200,7 @@ export const CodeBlock: React.FC<Props> = memo(
             language={language}
             style={vscDarkPlus}
             PreTag="div"
-            showLineNumbers
+            showLineNumbers={showLineNumbers}
             customStyle={{
               margin: 0,
               width: "100%",

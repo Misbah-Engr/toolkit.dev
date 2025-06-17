@@ -17,13 +17,13 @@ const AccountPage = async ({
   const session = await auth();
 
   if (!session) {
-    redirect("/login");
+    redirect("/login?redirect=/account");
   }
 
   const user = await api.users.getCurrentUser();
 
   if (!user) {
-    redirect("/login");
+    redirect("/login?redirect=/account");
   }
 
   return (

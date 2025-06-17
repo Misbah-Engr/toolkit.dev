@@ -35,6 +35,10 @@ declare module "next-auth" {
 export const authConfig = {
   providers,
   adapter: PrismaAdapter(db),
+  pages: {
+    newUser: "/?welcome=true",
+    signOut: "/",
+  },
   callbacks: {
     session: ({ session, user }) => ({
       ...session,
@@ -44,7 +48,6 @@ export const authConfig = {
       },
     }),
     async signIn({ account }) {
-      console.log({ account });
       if (account) {
         const existingAccount = await db.account.findUnique({
           where: {

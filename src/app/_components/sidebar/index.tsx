@@ -46,7 +46,7 @@ export async function AppSidebar({
 
   return (
     <HydrateClient>
-      <Sidebar collapsible="icon" className="sidebar-glow relative" {...props}>
+      <Sidebar collapsible="icon" className="relative" {...props}>
         <SidebarHeader className="border-sidebar-border border-b p-3 group-data-[collapsible=icon]:p-2">
           <Link
             href="/"
@@ -68,6 +68,26 @@ export async function AppSidebar({
           <NavChats />
         </SidebarContent>
         <SidebarFooter className="flex flex-col gap-2 p-3 group-data-[collapsible=icon]:p-2">
+          <SidebarMenuButton
+            asChild
+            className="hover:bg-sidebar-accent/50 h-fit w-full rounded-lg p-2 transition-colors group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-2"
+          >
+            <Link
+              href="https://github.com/jasonhedman/open-chat"
+              target="_blank"
+              className="flex items-center gap-3 px-3 transition-all group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:gap-0"
+            >
+              <SiGithub className="text-sidebar-accent-foreground !size-6 group-data-[collapsible=icon]:mx-auto" />
+              <VStack className="items-start gap-0 overflow-hidden transition-all group-data-[collapsible=icon]:w-0">
+                <h3 className="shimmer-text text-sidebar-foreground truncate font-medium">
+                  Contribute
+                </h3>
+                <p className="text-sidebar-muted-foreground truncate text-xs">
+                  Join the toolkit developers!
+                </p>
+              </VStack>
+            </Link>
+          </SidebarMenuButton>
           <NavUser
             user={{
               name: session.user.name ?? "User",
@@ -75,26 +95,6 @@ export async function AppSidebar({
               avatar: session.user.image ?? "",
             }}
           />
-          <SidebarMenuButton
-            asChild
-            className="blue-outline hover:bg-sidebar-accent/50 h-fit w-full rounded-lg p-3 transition-colors group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-2"
-          >
-            <Link
-              href="https://github.com/jasonhedman/open-chat"
-              target="_blank"
-              className="flex items-center gap-3 group-data-[collapsible=icon]:justify-center"
-            >
-              <SiGithub className="text-sidebar-accent-foreground size-6 group-data-[collapsible=icon]:mx-auto" />
-              <VStack className="items-start gap-0 group-data-[collapsible=icon]:hidden">
-                <h3 className="shimmer-text text-sidebar-foreground font-medium">
-                  Contribute
-                </h3>
-                <p className="text-sidebar-muted-foreground text-xs">
-                  Join the toolkit developers!
-                </p>
-              </VStack>
-            </Link>
-          </SidebarMenuButton>
         </SidebarFooter>
         <SidebarRail />
       </Sidebar>

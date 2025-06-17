@@ -56,10 +56,10 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   --animate-aurora: aurora 8s ease-in-out infinite alternate;
-  
+
   /* Keep the sidebar glow animation */
   --animate-sidebar-glow: sidebar-glow 6s ease-in-out infinite;
-  
+
   @keyframes aurora {
     0% {
       background-position: 0% 50%;
@@ -131,6 +131,24 @@
       background-position: calc(100% + var(--shiny-width)) 0;
     }
   }
+  --animate-marquee: marquee var(--duration) infinite linear;
+  --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(calc(-100% - var(--gap)));
+    }
+  }
+  @keyframes marquee-vertical {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(calc(-100% - var(--gap)));
+    }
+  }
 }
 
 @keyframes gradient-move {
@@ -159,8 +177,8 @@ body {
   --secondary-foreground: oklch(0.3211 0 0);
   --muted: oklch(0.9067 0 0);
   --muted-foreground: oklch(0.5103 0 0);
-  --accent: #63b3ed;
-  --accent-foreground: #1a365d;
+  --accent: oklch(0.94 0 0);
+  --accent-foreground: oklch(0 0 0);
   --destructive: oklch(0.5594 0.19 25.8625);
   --destructive-foreground: oklch(1 0 0);
   --border: oklch(0.8576 0 0);
@@ -210,8 +228,8 @@ body {
   --secondary-foreground: oklch(0.8853 0 0);
   --muted: oklch(0.285 0 0);
   --muted-foreground: oklch(0.5999 0 0);
-  --accent: #4299e1;
-  --accent-foreground: #e2e8f0;
+  --accent: oklch(0.32 0 0);
+  --accent-foreground: oklch(1 0 0);
   --destructive: oklch(0.6591 0.153 22.1703);
   --destructive-foreground: oklch(1 0 0);
   --border: oklch(0.329 0 0);
@@ -266,37 +284,14 @@ body {
   display: none;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  background: linear-gradient(45deg, #777 0%, #555 50%, #666 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.dark h1,
-.dark h2,
-.dark h3,
-.dark h4,
-.dark h5,
-.dark h6 {
-  background: linear-gradient(45deg, #eee 0%, #ccc 50%, #aaa 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
 /* SHIMMER EFFECT - The glowing animated text you loved! */
 .shimmer-text {
-  background: linear-gradient(135deg, 
-    #2d3748 0%, 
-    #4a5568 25%, 
-    #63b3ed 50%, 
-    #4a5568 75%, 
+  background: linear-gradient(
+    135deg,
+    #2d3748 0%,
+    #4a5568 25%,
+    #63b3ed 50%,
+    #4a5568 75%,
     #2d3748 100%
   );
   background-size: 200% 100%;
@@ -309,11 +304,12 @@ h6 {
 }
 
 .dark .shimmer-text {
-  background: linear-gradient(135deg, 
-    #cbd5e0 0%, 
-    #e2e8f0 25%, 
-    #63b3ed 50%, 
-    #e2e8f0 75%, 
+  background: linear-gradient(
+    135deg,
+    #cbd5e0 0%,
+    #e2e8f0 25%,
+    #63b3ed 50%,
+    #e2e8f0 75%,
     #cbd5e0 100%
   );
   background-size: 200% 100%;
@@ -334,13 +330,9 @@ h6 {
 
 /* PREMIUM USER CHAT BUBBLES */
 .user-message {
-  background: linear-gradient(135deg, 
-    #4299e1 0%, 
-    #63b3ed 50%, 
-    #4299e1 100%
-  );
+  background: linear-gradient(135deg, #4299e1 0%, #63b3ed 50%, #4299e1 100%);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 
+  box-shadow:
     0 4px 12px rgba(66, 153, 225, 0.25),
     0 2px 4px rgba(0, 0, 0, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.3),
@@ -350,13 +342,14 @@ h6 {
 }
 
 .user-message::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg,
+  background: linear-gradient(
+    90deg,
     transparent 0%,
     rgba(255, 255, 255, 0.2) 50%,
     transparent 100%
@@ -365,13 +358,9 @@ h6 {
 }
 
 .dark .user-message {
-  background: linear-gradient(135deg, 
-    #404e67 0%, 
-    #345980 50%, 
-    #404e67 100%
-  );
+  background: linear-gradient(135deg, #4299e1 0%, #63b3ed 50%, #4299e1 100%);
   border: 1px solid rgba(99, 179, 237, 0.4);
-  box-shadow: 
+  box-shadow:
     0 4px 12px rgba(99, 179, 237, 0.3),
     0 2px 4px rgba(0, 0, 0, 0.3),
     inset 0 1px 0 rgba(99, 179, 237, 0.2),
@@ -379,7 +368,8 @@ h6 {
 }
 
 @keyframes message-shimmer {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateX(-100%);
     opacity: 0;
   }
@@ -391,17 +381,18 @@ h6 {
 
 /* Keep only the sidebar glow effect and blue outlines */
 .sidebar-glow::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   right: 0;
   width: 1px;
   height: 100%;
-  background: linear-gradient(180deg, 
-    transparent 0%, 
-    rgba(99, 179, 237, 0.6) 30%, 
-    rgba(99, 179, 237, 0.8) 50%, 
-    rgba(99, 179, 237, 0.6) 70%, 
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(99, 179, 237, 0.6) 30%,
+    rgba(99, 179, 237, 0.8) 50%,
+    rgba(99, 179, 237, 0.6) 70%,
     transparent 100%
   );
   animation: sidebar-glow 6s ease-in-out infinite;
