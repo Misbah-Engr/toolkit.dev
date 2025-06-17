@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { Chat } from "@/app/_components/chat/chat";
 import { api } from "@/trpc/server";
@@ -13,6 +13,10 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
   const { id } = params;
 
   const session = await auth();
+
+  if (!session) {
+    redirect(`/login?redirect=/${id}`);
+  }
 
   const chat = await api.chats.getChat(id);
 

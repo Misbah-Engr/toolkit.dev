@@ -1,7 +1,5 @@
 import { Chat } from "@/app/_components/chat/chat";
-
 import { auth } from "@/server/auth";
-
 import { generateUUID } from "@/lib/utils";
 import LandingPage from "./_components/landing-page";
 

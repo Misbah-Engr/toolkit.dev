@@ -14,6 +14,8 @@ import type { UIMessage } from "ai";
 import type { Workbench } from "@prisma/client";
 import { Logo } from "@/components/ui/logo";
 import { ChatLayout } from "./layout";
+import { useSearchParams } from "next/navigation";
+import { WelcomeDialog } from "../welcome-dialog";
 
 interface Props {
   id: string;
@@ -159,6 +161,9 @@ export const Chat = ({
   autoResume,
   workbench,
 }: Props) => {
+  const searchParams = useSearchParams();
+  const welcome = searchParams.get("welcome") === "true";
+
   return (
     <ChatLayout>
       <ChatProvider
@@ -173,6 +178,7 @@ export const Chat = ({
           isReadonly={isReadonly}
           hasInitialMessages={initialMessages.length > 0}
         />
+        {welcome && <WelcomeDialog />}
       </ChatProvider>
     </ChatLayout>
   );

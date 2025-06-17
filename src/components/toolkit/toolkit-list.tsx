@@ -84,10 +84,9 @@ const ToolkitItem = ({
 
   const addToolkitButtons = isSelected ? (
     <Button
-      variant="primaryOutline"
       size="sm"
       onClick={() => onRemoveToolkit(id)}
-      className="bg-transparent"
+      className="user-message"
       type="button"
     >
       Active

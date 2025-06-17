@@ -33,7 +33,7 @@ export const ToolkitIcons = ({
         return (
           <div
             className={cn(
-              "bg-primary rounded-full border p-1",
+              "border-primary bg-muted rounded-full border p-1",
               iconContainerClassName,
               {
                 "-mt-2": orientation === "vertical",
@@ -42,9 +42,7 @@ export const ToolkitIcons = ({
             )}
             key={toolkit}
           >
-            <Icon
-              className={cn("text-primary-foreground size-4", iconClassName)}
-            />
+            <Icon className={cn("text-primary size-4", iconClassName)} />
           </div>
         );
       })}

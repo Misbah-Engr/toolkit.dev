@@ -9,9 +9,10 @@ interface AuthButtonsProps {
     name: string;
     id: string;
   }[];
+  redirect?: string;
 }
 
-export const AuthButtons = ({ providers }: AuthButtonsProps) => {
+export const AuthButtons = ({ providers, redirect }: AuthButtonsProps) => {
   return (
     <div className="flex flex-col gap-2">
       {providers.map((provider) => (
@@ -19,7 +20,7 @@ export const AuthButtons = ({ providers }: AuthButtonsProps) => {
           key={provider.id}
           variant="outline"
           className="w-full"
-          onClick={() => signIn(provider.id)}
+          onClick={() => signIn(provider.id, { redirectTo: redirect })}
         >
           <AuthProviderIcon provider={provider.name} />
           Sign in with {provider.name}
