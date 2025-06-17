@@ -15,7 +15,7 @@ import type { Metadata } from "next";
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
-  title: "Toolkit",
+  title: "Toolkit.dev",
   description: "A highly-configurable open-source chat client",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
