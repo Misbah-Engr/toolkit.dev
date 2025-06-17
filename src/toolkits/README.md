@@ -6,6 +6,30 @@ Welcome to the OpenChat toolkit system! This guide will help you understand how 
 
 Toolkits are extensible collections of AI tools that provide specific capabilities to the chat interface. Each toolkit contains multiple related tools (e.g., a "Web Search" toolkit might include general search, company research, and Wikipedia search tools).
 
+## Integration
+
+Once you've created your toolkit, integrating it into the OpenChat system is straightforward. The toolkit system uses an automatic registration process that makes your tools available in the UI without any additional configuration.
+
+### Automatic Registration
+
+When you create a toolkit following the standard structure, it's automatically discovered and registered by the system. This means:
+
+- Your tools will appear in the UI automatically
+- No manual configuration is needed
+- The system handles all the routing and state management
+
+### How It Works
+
+The registration process happens through the toolkit factory functions (`createClientToolkit` and `createServerToolkit`). When you create a toolkit using these factories:
+
+1. The system validates your toolkit structure
+2. Registers your tools in the global registry
+3. Makes them available to the UI components
+4. Sets up all necessary routing and state management
+
+This automatic registration system ensures that your tools are immediately available while maintaining type safety and proper separation of concerns.
+
+
 ## Architecture Overview
 
 The toolkit system uses a **client/server separation** architecture where each toolkit has both client-side and server-side implementations:
@@ -27,20 +51,10 @@ toolkit/
 
 The separation serves several critical purposes:
 
-### 🔒 **Security & API Key Management**
+### **Security & API Key Management**
 - Server-side code runs in a secure environment with access to API keys
-- Client-side code never exposes sensitive credentials
+- Client-side code never imports server-side code that depends on API keys
 - Prevents API key leakage to the browser
-
-### 🎨 **Rich UI Components**
-- Client-side components can render custom UIs for tool calls and results
-- Real-time feedback during tool execution
-- Interactive forms for tool parameters
-
-### ⚡ **Performance & Scalability**
-- Server-side execution doesn't block the UI
-- Can leverage server resources for compute-intensive operations
-- Enables streaming responses and progress updates
 
 ### 🛡️ **Type Safety**
 - Shared schemas ensure type consistency between client and server
