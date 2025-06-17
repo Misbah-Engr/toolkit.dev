@@ -135,7 +135,7 @@ const PurePreviewMessage: React.FC<Props> = ({
                       <div
                         data-testid="message-content"
                         className={cn("flex w-full max-w-full flex-col gap-4", {
-                          "user-message text-white rounded-xl px-3 py-2":
+                          "user-message rounded-xl px-3 py-2 text-white":
                             message.role === "user",
                         })}
                       >

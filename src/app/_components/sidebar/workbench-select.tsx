@@ -63,12 +63,14 @@ export function WorkbenchSelect() {
                 size="lg"
                 className={cn(
                   "bg-sidebar-accent text-sidebar-accent-foreground cursor-pointer transition-all duration-200 ease-in-out",
-                  open ? "justify-between" : "justify-center min-h-[2.5rem] px-2",
+                  open
+                    ? "justify-between"
+                    : "min-h-[2.5rem] justify-center px-2",
                 )}
               >
                 {open ? (
                   <>
-                    <HStack className="gap-2 flex-1 min-w-0">
+                    <HStack className="min-w-0 flex-1 gap-2">
                       <Anvil className="size-4 flex-shrink-0" />
                       <span className="truncate">
                         {isWorkbench
