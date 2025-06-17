@@ -47,16 +47,16 @@ export async function AppSidebar({
   return (
     <HydrateClient>
       <Sidebar collapsible="icon" className="sidebar-glow relative" {...props}>
-        <SidebarHeader className="border-b border-sidebar-border p-3">
-          <Link href="/" className="rounded-lg p-2 transition-colors hover:bg-sidebar-accent/50">
-            <HStack className="items-center">
-              <Logo className="size-6" />
+        <SidebarHeader className="border-b border-sidebar-border group-data-[collapsible=icon]:p-2 p-3">
+          <Link href="/" className="rounded-lg group-data-[collapsible=icon]:p-2 p-2 transition-colors hover:bg-sidebar-accent/50 group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center">
+            <HStack className="items-center group-data-[collapsible=icon]:justify-center">
+              <Logo className="size-6 group-data-[collapsible=icon]:mx-auto" />
               <h1 className="shimmer-text overflow-hidden text-xl font-bold whitespace-nowrap group-data-[collapsible=icon]:hidden">
                 Toolkit.dev
               </h1>
             </HStack>
           </Link>
-          <div className="mt-2">
+          <div className="mt-2 group-data-[collapsible=icon]:mt-1">
             <WorkbenchSelect />
           </div>
         </SidebarHeader>
@@ -64,7 +64,7 @@ export async function AppSidebar({
           <NavMain />
           <NavChats />
         </SidebarContent>
-        <SidebarFooter className="flex flex-col gap-2 p-3">
+        <SidebarFooter className="flex flex-col gap-2 group-data-[collapsible=icon]:p-2 p-3">
           <NavUser
             user={{
               name: session.user.name ?? "User",
@@ -72,13 +72,13 @@ export async function AppSidebar({
               avatar: session.user.image ?? "",
             }}
           />
-          <SidebarMenuButton asChild className="blue-outline h-fit w-full rounded-lg p-3 transition-colors hover:bg-sidebar-accent/50">
+          <SidebarMenuButton asChild className="blue-outline h-fit w-full rounded-lg group-data-[collapsible=icon]:p-2 p-3 transition-colors hover:bg-sidebar-accent/50 group-data-[collapsible=icon]:justify-center">
             <Link
               href="https://github.com/jasonhedman/open-chat"
               target="_blank"
-              className="flex items-center gap-3"
+              className="flex items-center gap-3 group-data-[collapsible=icon]:justify-center"
             >
-              <SiGithub className="size-6 text-sidebar-accent-foreground" />
+              <SiGithub className="size-6 text-sidebar-accent-foreground group-data-[collapsible=icon]:mx-auto" />
               <VStack className="items-start gap-0 group-data-[collapsible=icon]:hidden">
                 <h3 className="shimmer-text font-medium text-sidebar-foreground">Contribute</h3>
                 <p className="text-xs text-sidebar-muted-foreground">

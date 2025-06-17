@@ -366,11 +366,9 @@ h6 {
 
 .dark .user-message {
   background: linear-gradient(135deg, 
-    #2d3748 0%, 
-    #4a5568 25%, 
-    #63b3ed 50%, 
-    #4a5568 75%, 
-    #2d3748 100%
+    #404e67 0%, 
+    #345980 50%, 
+    #404e67 100%
   );
   border: 1px solid rgba(99, 179, 237, 0.4);
   box-shadow: 
