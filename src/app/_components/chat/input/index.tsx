@@ -270,7 +270,7 @@ const PureMultimodalInput: React.FC<Props> = ({
 
       // Check for image files in clipboard
       for (const item of Array.from(items)) {
-        if (item.type.startsWith('image/')) {
+        if (item.type.startsWith("image/")) {
           const file = item.getAsFile();
           if (file) {
             imageFiles.push(file);
@@ -280,9 +280,11 @@ const PureMultimodalInput: React.FC<Props> = ({
 
       if (imageFiles.length > 0) {
         event.preventDefault();
-        
+
         if (!supportsImages) {
-          toast.error("This model does not support images. Please select a different model.");
+          toast.error(
+            "This model does not support images. Please select a different model.",
+          );
           return;
         }
 
@@ -292,7 +294,8 @@ const PureMultimodalInput: React.FC<Props> = ({
         Promise.all(imageFiles.map((file) => uploadFile(file)))
           .then((uploadedAttachments) => {
             const successfullyUploadedAttachments = uploadedAttachments.filter(
-              (attachment): attachment is Attachment => attachment !== undefined,
+              (attachment): attachment is Attachment =>
+                attachment !== undefined,
             );
 
             setAttachments((currentAttachments: Attachment[]) => [
@@ -301,7 +304,9 @@ const PureMultimodalInput: React.FC<Props> = ({
             ]);
 
             if (successfullyUploadedAttachments.length > 0) {
-              toast.success(`Pasted ${successfullyUploadedAttachments.length} image(s)`);
+              toast.success(
+                `Pasted ${successfullyUploadedAttachments.length} image(s)`,
+              );
             }
           })
           .catch((error) => {
@@ -319,9 +324,9 @@ const PureMultimodalInput: React.FC<Props> = ({
   useEffect(() => {
     const textarea = textareaRef.current;
     if (textarea) {
-      textarea.addEventListener('paste', handlePaste);
+      textarea.addEventListener("paste", handlePaste);
       return () => {
-        textarea.removeEventListener('paste', handlePaste);
+        textarea.removeEventListener("paste", handlePaste);
       };
     }
   }, [handlePaste]);
@@ -397,7 +402,7 @@ const PureMultimodalInput: React.FC<Props> = ({
         </div>
       )}
 
-      <div className="bg-muted relative rounded-2xl focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 focus-within:ring-offset-background transition-all duration-200">
+      <div className="bg-muted focus-within:ring-ring focus-within:ring-offset-background relative rounded-2xl transition-all duration-200 focus-within:ring-2 focus-within:ring-offset-2">
         <Textarea
           data-testid="multimodal-input"
           ref={textareaRef}
@@ -405,7 +410,7 @@ const PureMultimodalInput: React.FC<Props> = ({
           value={input}
           onChange={handleInput}
           className={cn(
-            "bg-transparent h-auto max-h-[calc(75dvh-4rem)] min-h-[48px] resize-none overflow-hidden border-0 px-4 py-3 !text-base shadow-none focus-visible:ring-0",
+            "h-auto max-h-[calc(75dvh-4rem)] min-h-[48px] resize-none overflow-hidden border-0 bg-transparent px-4 py-3 !text-base shadow-none focus-visible:ring-0",
             className,
           )}
           rows={2}
@@ -430,7 +435,7 @@ const PureMultimodalInput: React.FC<Props> = ({
           disabled={!selectedChatModel}
         />
 
-        <div className="flex items-center justify-between border-t border-border/50 p-2">
+        <div className="border-border/50 flex items-center justify-between border-t p-2">
           <div className="flex items-center gap-2">
             <AttachmentsButton
               fileInputRef={fileInputRef}

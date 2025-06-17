@@ -5,10 +5,10 @@
 export const VALIDATION_LIMITS = {
   /** Maximum length for message content and text parts */
   MESSAGE_MAX_LENGTH: 16348,
-  
+
   /** Maximum length for file and attachment names */
   FILE_NAME_MAX_LENGTH: 2000,
-  
+
   /** Maximum file size for uploads (in bytes) */
   FILE_MAX_SIZE: 5 * 1024 * 1024, // 5MB
 } as const;
