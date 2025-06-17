@@ -26,7 +26,7 @@ export const mem0AddMemoryToolConfigClient: ClientToolConfig<
       <div className="flex items-center gap-2">
         {result.success ? (
           <HStack className="text-primary flex items-center gap-2">
-            <Plus className="size-4" />
+            <Plus className="size-4 shrink-0" />
             <VStack className="items-start gap-0">
               <span className="text-xs font-medium">Memory Added</span>
               <span className="text-muted-foreground text-sm">

@@ -10,7 +10,7 @@ import { AuthModal } from "../auth-modal";
 
 export const HeroSection: React.FC = () => {
   return (
-    <section className="relative flex h-[200vh] items-center overflow-hidden border-b md:h-screen">
+    <section className="relative flex h-[200svh] items-center overflow-hidden border-b md:h-screen">
       <div className="container mx-auto flex h-full flex-col items-center pt-[53px] md:flex-row">
         <div className="w-full flex-1 p-2 md:w-1/2 md:p-16">
           <MotionContainer

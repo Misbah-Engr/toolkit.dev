@@ -7,7 +7,7 @@ import React, {
   useCallback,
   useMemo,
 } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, useInView } from "motion/react";
 
 import { demoSequence } from "./data";
 import { MessageItem } from "./message";
@@ -17,6 +17,9 @@ export const ToolkitDemoList: React.FC = () => {
   const [completedItems, setCompletedItems] = useState<Set<string>>(new Set());
   const [isAtBottom, setIsAtBottom] = useState(true);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(scrollContainerRef, {
+    amount: 0.1,
+  });
 
   // Sensitivity threshold in pixels - user is considered "at bottom" if within this range
   const BOTTOM_THRESHOLD = 100;
@@ -66,6 +69,8 @@ export const ToolkitDemoList: React.FC = () => {
   }, [handleScroll]);
 
   useEffect(() => {
+    if (!isInView) return;
+
     if (currentIndex >= demoSequence.length) return;
 
     const currentItem = demoSequence[currentIndex];
@@ -91,7 +96,7 @@ export const ToolkitDemoList: React.FC = () => {
 
       return () => clearTimeout(timer);
     }
-  }, [currentIndex]);
+  }, [currentIndex, isInView]);
 
   const onDone = useMemo(
     () => () => {

@@ -7,14 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import type { repoInfoTool } from "./base";
 import type { ClientToolConfig } from "@/toolkits/types";
 import { HStack, VStack } from "@/components/ui/stack";
-import {
-  GitCommit,
-  GitPullRequest,
-  Globe,
-  Mail,
-  Search,
-  Star,
-} from "lucide-react";
+import { GitCommit, GitPullRequest, Globe, Search, Star } from "lucide-react";
 import { GithubAvatar } from "../../components/user-avatar";
 import { ActivityChart } from "../../components/activity-chart";
 import { SiGithub, SiX } from "@icons-pack/react-simple-icons";
@@ -95,7 +88,7 @@ export const githubRepoInfoToolConfigClient: ClientToolConfig<
               )}
             </HStack>
           </VStack>
-          <div className="grid grid-cols-1 gap-2 rounded-lg p-2">
+          <div className="grid grid-cols-3 gap-0 rounded-lg p-0 md:grid-cols-1 md:gap-2 md:p-2">
             {[
               {
                 icon: GitCommit,
@@ -117,7 +110,9 @@ export const githubRepoInfoToolConfigClient: ClientToolConfig<
                 key={item.label}
                 className="flex-1 items-center justify-between gap-4"
               >
-                <p className="text-muted-foreground text-xs">{item.label}</p>
+                <p className="text-muted-foreground hidden text-xs md:block">
+                  {item.label}
+                </p>
                 <HStack key={item.label} className="gap-1 font-medium">
                   <item.icon className="size-4" />
                   {item.value.toLocaleString()}

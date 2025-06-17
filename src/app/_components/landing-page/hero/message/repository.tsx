@@ -134,7 +134,6 @@ export const RepositoryResult: React.FC = () => {
         topContributors: [
           { prs: 1440, login: "lgrammel", commits: 1217 },
           { prs: 224, login: "shaper", commits: 193 },
-          { prs: 36, login: "jaredpalmer", commits: 156 },
           { prs: 172, login: "nicoalbanese", commits: 142 },
         ],
       }}

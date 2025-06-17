@@ -6,7 +6,6 @@ import {
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { CodeBlock } from "@/components/ui/code-block";
-import { AlertCircle } from "lucide-react";
 
 const code =
   "import requests\n\n# Fetch the actual README from the correct path\nurl = 'https://raw.githubusercontent.com/vercel/ai/main/packages/ai/README.md'\nresponse = requests.get(url)\nreadme_content = response.text\n\n# Print the first 1500 characters for inspection\nprint(readme_content[:1500])";
@@ -27,7 +26,12 @@ export const CodeExecutionCalling: React.FC = () => {
       <h1 className="text-muted-foreground text-sm font-medium">
         Executing Python Code
       </h1>
-      <CodeBlock language="python" value={code} />
+      <CodeBlock
+        language="python"
+        value={code}
+        showLineNumbers={false}
+        headerClassName="hidden"
+      />
     </div>
   );
 };
@@ -39,7 +43,12 @@ export const CodeExecutionResult: React.FC = () => {
         <h1 className="text-muted-foreground text-sm font-medium">
           Executing Python Code
         </h1>
-        <CodeBlock language="python" value={code} />
+        <CodeBlock
+          language="python"
+          value={code}
+          showLineNumbers={false}
+          headerClassName="hidden"
+        />
       </div>
       <Accordion type="single" collapsible>
         <AccordionItem value="logs">
