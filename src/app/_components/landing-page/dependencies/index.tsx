@@ -34,7 +34,7 @@ export const DependenciesSection: React.FC = () => {
           whileInView={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.6 }}
           viewport={{ once: true }}
-          className="relative overflow-hidden"
+          className="relative overflow-x-hidden"
         >
           {/* First row - normal direction */}
           <Marquee className="gap-2 py-1" pauseOnHover>

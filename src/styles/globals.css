@@ -284,30 +284,6 @@ body {
   display: none;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  background: linear-gradient(45deg, #777 0%, #555 50%, #666 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.dark h1,
-.dark h2,
-.dark h3,
-.dark h4,
-.dark h5,
-.dark h6 {
-  background: linear-gradient(45deg, #eee 0%, #ccc 50%, #aaa 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
 /* SHIMMER EFFECT - The glowing animated text you loved! */
 .shimmer-text {
   background: linear-gradient(
@@ -382,7 +358,7 @@ h6 {
 }
 
 .dark .user-message {
-  background: linear-gradient(135deg, #404e67 0%, #345980 50%, #404e67 100%);
+  background: linear-gradient(135deg, #4299e1 0%, #63b3ed 50%, #4299e1 100%);
   border: 1px solid rgba(99, 179, 237, 0.4);
   box-shadow:
     0 4px 12px rgba(99, 179, 237, 0.3),

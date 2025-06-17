@@ -9,6 +9,7 @@ import { Card } from "@/components/ui/card";
 import { AuthProviderIcon } from "@/app/_components/navbar/account-button/provider-icon";
 import { VStack } from "@/components/ui/stack";
 import { Logo } from "@/components/ui/logo";
+import { AuthButtons } from "../_components/auth/auth-buttons";
 
 interface LoginFormProps {
   providers: {
@@ -37,21 +38,7 @@ export function LoginForm({
           <p className="text-muted-foreground text-center text-sm">
             Sign in with your preferred account to continue
           </p>
-          <div className="flex flex-col gap-2">
-            {providers.map((provider) => (
-              <Button
-                key={provider.id}
-                variant="outline"
-                className="w-full"
-                onClick={() =>
-                  signIn(provider.id, { callbackUrl: "/onboarding" })
-                }
-              >
-                <AuthProviderIcon provider={provider.name} />
-                Sign in with {provider.name}
-              </Button>
-            ))}
-          </div>
+          <AuthButtons providers={providers} />
         </Card>
       </VStack>
     </div>

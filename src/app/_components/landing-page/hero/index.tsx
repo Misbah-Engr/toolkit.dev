@@ -12,7 +12,7 @@ import { VStack } from "@/components/ui/stack";
 export const HeroSection: React.FC = () => {
   return (
     <section className="relative flex h-[calc(100vh-53px)] items-center overflow-hidden border-b">
-      <div className="container mx-auto flex h-full items-center">
+      <div className="container mx-auto flex h-full flex-col items-center md:flex-row">
         <div className="w-1/2 p-16">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -67,7 +67,7 @@ export const HeroSection: React.FC = () => {
             transition={{ delay: 0.3, duration: 0.8 }}
             className="flex h-full flex-1 items-center justify-center"
           >
-            <div className="size-full w-full overflow-hidden rounded-none border-l py-16 pr-2 pl-16">
+            <div className="size-full w-full overflow-y-hidden rounded-none border-l py-16 pl-14">
               <ToolkitDemoList />
             </div>
           </motion.div>

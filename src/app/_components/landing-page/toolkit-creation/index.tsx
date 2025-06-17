@@ -1,12 +1,14 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { motion } from "motion/react";
-import { type LucideIcon } from "lucide-react";
+import { Code, type LucideIcon } from "lucide-react";
 import { CardTitle } from "@/components/ui/card";
 import { CodeBlock } from "@/components/ui/code-block";
 import { HStack, VStack } from "@/components/ui/stack";
 import { toolkitCreationSteps } from "./data";
+import { Button } from "@/components/ui/button";
 
 export const ToolkitCreationSection: React.FC = () => {
   return (
@@ -23,11 +25,17 @@ export const ToolkitCreationSection: React.FC = () => {
             Create Custom Toolkits
             <span className="text-primary block">In Minutes, Not Hours</span>
           </h2>
-          <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
+          <p className="text-muted-foreground mx-auto mb-4 max-w-2xl text-lg">
             Building new AI capabilities is as simple as defining your tools.
             Configure server tools and client tools, and it automatically works
             with the entire system.
           </p>
+          <Link href="https://github.com/jasonhedman/open-chat/tree/main/src/toolkits">
+            <Button className="user-message">
+              <Code className="size-4" />
+              Start Building
+            </Button>
+          </Link>
         </motion.div>
 
         <div className="grid grid-cols-1 gap-2 lg:grid-cols-3 lg:gap-4">
@@ -56,7 +64,7 @@ const StepCard: React.FC<{
   >
     <VStack className="h-full items-start gap-4">
       <HStack className="gap-4">
-        <div className="bg-primary/10 rounded-lg p-2">
+        <div className="bg-primary/40 rounded-lg p-2">
           {<Icon className="size-6" />}
         </div>
         <div>
@@ -70,6 +78,8 @@ const StepCard: React.FC<{
         heading={codeTitle}
         showLineNumbers={false}
         allowCopy={false}
+        headerClassName="bg-primary/20 dark:bg-primary/20 py-2"
+        headingClassName="text-base font-bold"
       />
     </VStack>
   </motion.div>

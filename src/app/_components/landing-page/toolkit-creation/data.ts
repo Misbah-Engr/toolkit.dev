@@ -9,17 +9,19 @@ export const toolkitCreationSteps = [
     code: `export const baseToolkit = {
   tools: {
     myAction: {
-      description: "Performs my custom action",
+      description: "Write notes to your workspace",
       inputSchema: z.object({
-        query: z.string(),
+        note: z.string(),
       }),
       outputSchema: z.object({
         result: z.string(),
       }),
     },
   },
+  // user configuration
   parameters: z.object({
-    apiKey: z.string(),
+    workspaceId: z.string(),
+    scopes: z.array(z.string()),
   }),
 };`,
     delay: 0,
@@ -32,17 +34,17 @@ export const toolkitCreationSteps = [
     code: `export const clientToolkit = createClientToolkit(
   baseToolkit,
   {
-    name: "My Custom Toolkit",
-    description: "Does amazing things",
-    icon: MyIcon,
+    name: "Note Taker",
+    description: "Write notes to your workspace",
+    icon: Note,
   },
   {
     myAction: {
       CallComponent: ({ args }) => (
-        <p>Search for {args.query}</p>
+        <p>Writing note to {args.workspaceId}</p>
       ),
       CallButtonComponent: ({ result }) => (
-        <Button>{result.data}</Button>
+        <Button>Save Note</Button>
       ),
     },
   },
@@ -61,12 +63,14 @@ export const toolkitCreationSteps = [
     myAction: {
       callback: async (args) => {
         // Your custom logic here
+        const userToken = await getUserToken();
         const result = await callExternalAPI(
           args.query, 
           params.apiKey
         );
         return { result };
       },
+      aiMessage: "Note saved"
     },
   }),
 );`,

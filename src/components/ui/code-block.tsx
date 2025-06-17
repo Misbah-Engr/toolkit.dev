@@ -22,6 +22,8 @@ interface Props {
   heading?: string;
   showLineNumbers?: boolean;
   allowCopy?: boolean;
+  headerClassName?: string;
+  headingClassName?: string;
 }
 
 type LanguageMap = Record<ProgrammingLanguages, string | undefined>;
@@ -118,6 +120,8 @@ export const CodeBlock: React.FC<Props> = memo(
     heading,
     showLineNumbers = true,
     allowCopy = true,
+    headerClassName,
+    headingClassName,
   }: Props) => {
     const [isCopied, setIsCopied] = useState(false);
     const [, copyToClipboard] = useCopyToClipboard();
@@ -142,9 +146,10 @@ export const CodeBlock: React.FC<Props> = memo(
         <div
           className={cn(
             "flex w-full items-center justify-between bg-neutral-100 py-1 pr-2 pl-4 dark:bg-neutral-700",
+            headerClassName,
           )}
         >
-          <span className="text-xs font-semibold">
+          <span className={cn("text-xs font-semibold", headingClassName)}>
             {heading ?? markdownLanguages[language] ?? language}
           </span>
           <div className="flex items-center gap-2">

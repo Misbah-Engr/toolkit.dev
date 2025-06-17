@@ -1,8 +1,8 @@
 import { Logo } from "@/components/ui/logo";
 import { HStack } from "@/components/ui/stack";
 import { ColorModeToggle } from "../../navbar/color-mode-toggle";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { AuthModal } from "../auth-modal";
 
 export const Navbar = () => {
   return (
@@ -15,9 +15,9 @@ export const Navbar = () => {
           </h1>
         </HStack>
         <HStack>
-          <Link href="/login">
+          <AuthModal>
             <Button className="user-message">Try it Out</Button>
-          </Link>
+          </AuthModal>
           <ColorModeToggle />
         </HStack>
       </HStack>
