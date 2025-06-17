@@ -33,7 +33,7 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
         maxResults: 2500, // Get all events in the range
       });
 
-      const events = response.data.items || [];
+      const events = response.data.items ?? [];
       
       // Filter events that actually have start/end times (not all-day events without times)
       const timedEvents = events.filter(event => 
@@ -42,13 +42,13 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
 
       // Set default working hours if not provided
       const defaultWorkingHours = {
-        startTime: workingHours?.startTime || "09:00",
-        endTime: workingHours?.endTime || "17:00",
-        workingDays: workingHours?.workingDays || [1, 2, 3, 4, 5], // Mon-Fri
+        startTime: workingHours?.startTime ?? "09:00",
+        endTime: workingHours?.endTime ?? "17:00",
+        workingDays: workingHours?.workingDays ?? [1, 2, 3, 4, 5], // Mon-Fri
       };
 
-      const gapMinutes = minGapBetweenEvents || 15;
-      const maxSlots = maxResults || 10;
+      const gapMinutes = minGapBetweenEvents ?? 15;
+      const maxSlots = maxResults ?? 10;
 
       // Find available slots
       const availableSlots: Array<{

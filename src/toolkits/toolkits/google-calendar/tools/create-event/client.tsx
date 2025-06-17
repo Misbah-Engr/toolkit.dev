@@ -12,7 +12,7 @@ export const googleCalendarCreateEventToolConfigClient: ClientToolConfig<
   typeof createEventTool.outputSchema.shape
 > = {
   CallComponent: ({ args }) => {
-    const attendeeCount = args.attendees?.length || 0;
+    const attendeeCount = args.attendees?.length ?? 0;
     const startTime = args.start?.dateTime 
       ? new Date(args.start.dateTime).toLocaleString()
       : args.start?.date 
@@ -22,7 +22,7 @@ export const googleCalendarCreateEventToolConfigClient: ClientToolConfig<
     return (
       <ToolCallComponent
         action="Creating Event"
-        primaryText={args.summary || "New Event"}
+        primaryText={args.summary ?? "New Event"}
         secondaryText={`${startTime} • ${attendeeCount} attendee${attendeeCount !== 1 ? 's' : ''}`}
       />
     );

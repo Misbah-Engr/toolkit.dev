@@ -12,8 +12,8 @@ export const googleCalendarFindAvailabilityToolConfigClient: ClientToolConfig<
   typeof findAvailabilityTool.outputSchema.shape
 > = {
   CallComponent: ({ args }) => {
-    const startDate = new Date(args.timeMin || "").toLocaleDateString();
-    const endDate = new Date(args.timeMax || "").toLocaleDateString();
+    const startDate = new Date(args.timeMin ?? "").toLocaleDateString();
+    const endDate = new Date(args.timeMax ?? "").toLocaleDateString();
     const dateRange = startDate === endDate ? startDate : `${startDate} - ${endDate}`;
 
     return (
@@ -45,7 +45,7 @@ export const googleCalendarFindAvailabilityToolConfigClient: ClientToolConfig<
               <div className="flex w-full flex-col gap-1">
                 {conflictingEvents.slice(0, 3).map((event, index) => (
                   <div key={index} className="text-muted-foreground text-xs p-2 border rounded">
-                    <div className="font-medium">{event.summary || "Untitled Event"}</div>
+                    <div className="font-medium">{event.summary ?? "Untitled Event"}</div>
                     <div className="text-xs">
                       {new Date(event.start).toLocaleString()} - {new Date(event.end).toLocaleString()}
                     </div>
@@ -113,7 +113,7 @@ export const googleCalendarFindAvailabilityToolConfigClient: ClientToolConfig<
             <div className="flex w-full flex-col gap-1">
               {conflictingEvents.slice(0, 2).map((event, index) => (
                 <div key={index} className="text-muted-foreground text-xs p-2 border rounded-md">
-                  <div className="font-medium">{event.summary || "Untitled Event"}</div>
+                  <div className="font-medium">{event.summary ?? "Untitled Event"}</div>
                   <div className="text-xs">
                     {new Date(event.start).toLocaleString()} - {new Date(event.end).toLocaleString()}
                   </div>

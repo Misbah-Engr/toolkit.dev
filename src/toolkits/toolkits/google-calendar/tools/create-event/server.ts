@@ -1,6 +1,14 @@
 import { type createEventTool } from "./base";
 import { google } from "googleapis";
 import type { ServerToolConfig } from "@/toolkits/types";
+import type { calendar_v3 } from "googleapis";
+
+interface GoogleCalendarAttendee {
+  email?: string;
+  displayName?: string;
+  responseStatus?: string;
+  optional?: boolean;
+}
 
 export const googleCalendarCreateEventToolConfigServer = (
   accessToken: string,
@@ -90,7 +98,7 @@ export const googleCalendarCreateEventToolConfigServer = (
               displayName: event.organizer.displayName ?? undefined,
             }
           : undefined,
-        attendees: event.attendees?.map((attendee: any) => ({
+        attendees: event.attendees?.map((attendee: calendar_v3.Schema$EventAttendee) => ({
           email: attendee.email ?? undefined,
           displayName: attendee.displayName ?? undefined,
           responseStatus: attendee.responseStatus ?? undefined,
