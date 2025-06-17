@@ -6,12 +6,13 @@ import { put } from "@vercel/blob";
 
 import { auth } from "@/server/auth";
 import { api } from "@/trpc/server";
+import { FILE_MAX_SIZE } from "@/lib/constants";
 
 // Use Blob instead of File since File is not available in Node.js environment
 const FileSchema = z.object({
   file: z
     .instanceof(Blob)
-    .refine((file) => file.size <= 5 * 1024 * 1024, {
+    .refine((file) => file.size <= FILE_MAX_SIZE, {
       message: "File size should be less than 5MB",
     })
     // Update the file type based on the kind of files you want to accept
