@@ -109,7 +109,7 @@ const ChatContent = ({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
                 transition={{ delay: 0.3, duration: 0.3 }}
-                className="text-xl font-semibold md:text-2xl"
+                className="text-2xl font-bold md:text-3xl"
               >
                 Welcome to Toolkit.dev
               </motion.h1>
