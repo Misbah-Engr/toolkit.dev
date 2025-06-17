@@ -145,7 +145,7 @@ export const CodeBlock: React.FC<Props> = memo(
       >
         <div
           className={cn(
-            "flex w-full items-center justify-between bg-neutral-100 py-1 pr-2 pl-4 dark:bg-neutral-700",
+            "bg-primary/10 flex w-full items-center justify-between py-1 pr-2 pl-4",
             headerClassName,
           )}
         >

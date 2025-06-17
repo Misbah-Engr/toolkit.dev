@@ -24,8 +24,8 @@ export const WorkbenchCard: React.FC<{
       transition={{ delay, duration: 0.5 }}
       viewport={{ once: true }}
     >
-      <Card className="border-border/50 hover:border-primary/20 hover:shadow-l h-full gap-2 transition-all duration-300">
-        <CardHeader>
+      <Card className="border-border/50 hover:border-primary/20 hover:shadow-l h-full gap-2 p-2 transition-all duration-300">
+        <CardHeader className="p-0">
           <CardTitle className="flex items-center gap-3 text-lg">
             <div className={`rounded-lg ${cardColors} p-2`}>
               {workbench.icon}
@@ -38,19 +38,15 @@ export const WorkbenchCard: React.FC<{
             </VStack>
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 p-0">
           {/* System Prompt Preview */}
-          <div className="space-y-2">
+          <div className="flex flex-col gap-2">
             <h4 className="text-sm font-medium">System Prompt</h4>
             <p className="text-muted-foreground border-muted border-l-2 pl-3 text-xs italic">
               &ldquo;{workbench.systemPrompt}&rdquo;
             </p>
           </div>
-
-          {/* Visualization */}
-          <div className="mt-4">
-            <WorkbenchVisualization workbench={workbench} />
-          </div>
+          <WorkbenchVisualization workbench={workbench} />
         </CardContent>
       </Card>
     </motion.div>
