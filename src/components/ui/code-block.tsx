@@ -20,6 +20,8 @@ interface Props {
   language: string;
   value: string;
   heading?: string;
+  showLineNumbers?: boolean;
+  allowCopy?: boolean;
 }
 
 type LanguageMap = Record<ProgrammingLanguages, string | undefined>;
@@ -110,7 +112,13 @@ export const generateRandomString = (length: number, lowercase = false) => {
 };
 
 export const CodeBlock: React.FC<Props> = memo(
-  ({ language, value, heading }: Props) => {
+  ({
+    language,
+    value,
+    heading,
+    showLineNumbers = true,
+    allowCopy = true,
+  }: Props) => {
     const [isCopied, setIsCopied] = useState(false);
     const [, copyToClipboard] = useCopyToClipboard();
 
@@ -140,17 +148,19 @@ export const CodeBlock: React.FC<Props> = memo(
             {heading ?? markdownLanguages[language] ?? language}
           </span>
           <div className="flex items-center gap-2">
-            <span
-              className="h-fit w-fit cursor-pointer rounded-md p-2 text-xs transition-colors duration-200 hover:bg-neutral-200 focus-visible:ring-offset-0 dark:hover:bg-neutral-600"
-              onClick={onCopy}
-            >
-              {isCopied ? (
-                <Check className="h-4 w-4" />
-              ) : (
-                <Copy className="h-4 w-4" />
-              )}
-              <span className="sr-only">Copy code</span>
-            </span>
+            {allowCopy && (
+              <span
+                className="h-fit w-fit cursor-pointer rounded-md p-2 text-xs transition-colors duration-200 hover:bg-neutral-200 focus-visible:ring-offset-0 dark:hover:bg-neutral-600"
+                onClick={onCopy}
+              >
+                {isCopied ? (
+                  <Check className="h-4 w-4" />
+                ) : (
+                  <Copy className="h-4 w-4" />
+                )}
+                <span className="sr-only">Copy code</span>
+              </span>
+            )}
           </div>
         </div>
         <div className="dark:hidden">
@@ -158,16 +168,13 @@ export const CodeBlock: React.FC<Props> = memo(
             language={language}
             style={vs}
             PreTag="div"
-            showLineNumbers
+            showLineNumbers={showLineNumbers}
             customStyle={{
               margin: 0,
               width: "100%",
               background: "transparent",
               padding: "1rem 1rem",
               border: "none",
-            }}
-            lineNumberContainerStyle={{
-              display: "none",
             }}
             lineNumberStyle={{
               userSelect: "none",
@@ -188,7 +195,7 @@ export const CodeBlock: React.FC<Props> = memo(
             language={language}
             style={vscDarkPlus}
             PreTag="div"
-            showLineNumbers
+            showLineNumbers={showLineNumbers}
             customStyle={{
               margin: 0,
               width: "100%",
