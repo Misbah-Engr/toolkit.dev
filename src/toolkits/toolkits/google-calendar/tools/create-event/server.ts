@@ -3,13 +3,6 @@ import { google } from "googleapis";
 import type { ServerToolConfig } from "@/toolkits/types";
 import type { calendar_v3 } from "googleapis";
 
-interface GoogleCalendarAttendee {
-  email?: string;
-  displayName?: string;
-  responseStatus?: string;
-  optional?: boolean;
-}
-
 export const googleCalendarCreateEventToolConfigServer = (
   accessToken: string,
 ): ServerToolConfig<

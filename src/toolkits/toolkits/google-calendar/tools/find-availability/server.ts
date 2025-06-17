@@ -108,7 +108,7 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
         dayEvents.forEach(event => {
           conflictingEvents.push({
             id: event.id!,
-            summary: event.summary || undefined,
+            summary: event.summary ?? undefined,
             start: event.start!.dateTime!,
             end: event.end!.dateTime!,
           });
