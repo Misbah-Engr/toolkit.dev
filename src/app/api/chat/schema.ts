@@ -1,13 +1,14 @@
 import { z } from "zod";
 
 import { languageModels } from "@/ai/models";
+import { MESSAGE_MAX_LENGTH, FILE_NAME_MAX_LENGTH } from "@/lib/constants";
 
 import type { providers } from "@/ai/registry";
 import { Toolkits } from "@/toolkits/toolkits/shared";
 import { clientToolkits } from "@/toolkits/toolkits/client";
 
 const textPartSchema = z.object({
-  text: z.string().min(1).max(2000),
+  text: z.string().min(1).max(MESSAGE_MAX_LENGTH),
   type: z.enum(["text"]),
 });
 
@@ -17,13 +18,13 @@ export const postRequestBodySchema = z.object({
     id: z.string().uuid(),
     createdAt: z.coerce.date(),
     role: z.enum(["user"]),
-    content: z.string().min(1).max(2000),
+    content: z.string().min(1).max(MESSAGE_MAX_LENGTH),
     parts: z.array(textPartSchema),
     experimental_attachments: z
       .array(
         z.object({
           url: z.string().url(),
-          name: z.string().min(1).max(2000),
+          name: z.string().min(1).max(FILE_NAME_MAX_LENGTH),
           contentType: z.enum([
             "image/png",
             "image/jpg",
