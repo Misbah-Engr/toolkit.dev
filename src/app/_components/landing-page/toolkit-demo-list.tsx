@@ -1,10 +1,9 @@
 "use client";
 
-import React from "react";
-import { AnimatedList } from "@/components/magicui/animated-list";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { Card } from "@/components/ui/card";
 import { Logo } from "@/components/ui/logo";
-import { cn } from "@/lib/utils";
 import { clientToolkits } from "@/toolkits/toolkits/client";
 import { Toolkits } from "@/toolkits/toolkits/shared";
 import { AnimatedShinyText } from "@/components/magicui/animated-shiny-text";
@@ -16,7 +15,7 @@ interface MessageItem {
   type: "user" | "assistant" | "tool";
   content: string;
   toolkit?: Toolkits;
-  status?: "loading" | "complete";
+  completedContent?: string; // For tool messages that change from loading to complete
 }
 
 const demoSequence: MessageItem[] = [
@@ -30,69 +29,45 @@ const demoSequence: MessageItem[] = [
     id: "2",
     type: "tool",
     content: "Searching for AI startup trends...",
+    completedContent:
+      "Found 15 relevant articles about AI startup funding and trends",
     toolkit: Toolkits.Exa,
-    status: "loading",
   },
   {
     id: "3",
     type: "tool",
-    content: "Found 15 relevant articles about AI startup funding and trends",
-    toolkit: Toolkits.Exa,
-    status: "complete",
+    content: "Analyzing GitHub repositories for trending AI projects...",
+    completedContent:
+      "Analyzed 25 trending AI repositories and their technologies",
+    toolkit: Toolkits.Github,
   },
   {
     id: "4",
-    type: "tool",
-    content: "Analyzing GitHub repositories for trending AI projects...",
-    toolkit: Toolkits.Github,
-    status: "loading",
-  },
-  {
-    id: "5",
-    type: "tool",
-    content: "Analyzed 25 trending AI repositories and their technologies",
-    toolkit: Toolkits.Github,
-    status: "complete",
-  },
-  {
-    id: "6",
     type: "assistant",
     content:
       "Based on my research, here are the key AI startup trends: Edge AI, Autonomous agents, and Multimodal AI are leading the market...",
   },
   {
-    id: "7",
+    id: "5",
     type: "user",
     content:
       "Create a visual summary and remember the key insights for future reference",
   },
   {
-    id: "8",
+    id: "6",
     type: "tool",
     content: "Generating trend visualization chart...",
+    completedContent:
+      "Created comprehensive AI trends infographic with market data",
     toolkit: Toolkits.Image,
-    status: "loading",
   },
   {
-    id: "9",
-    type: "tool",
-    content: "Created comprehensive AI trends infographic with market data",
-    toolkit: Toolkits.Image,
-    status: "complete",
-  },
-  {
-    id: "10",
+    id: "7",
     type: "tool",
     content: "Storing insights about AI trends and key findings...",
+    completedContent:
+      "Saved key insights: Edge AI adoption up 340%, $12B in funding",
     toolkit: Toolkits.Memory,
-    status: "loading",
-  },
-  {
-    id: "11",
-    type: "tool",
-    content: "Saved key insights: Edge AI adoption up 340%, $12B in funding",
-    toolkit: Toolkits.Memory,
-    status: "complete",
   },
 ];
 
@@ -118,8 +93,9 @@ const AssistantMessage: React.FC<{ content: string }> = ({ content }) => (
 const ToolMessage: React.FC<{
   content: string;
   toolkit: Toolkits;
-  status: "loading" | "complete";
-}> = ({ content, toolkit, status }) => {
+  isCompleted: boolean;
+  completedContent?: string;
+}> = ({ content, toolkit, isCompleted, completedContent }) => {
   const clientToolkit = clientToolkits[toolkit];
   const IconComponent = clientToolkit.icon;
 
@@ -131,7 +107,7 @@ const ToolMessage: React.FC<{
       <Card className="flex-1 overflow-hidden p-0">
         <HStack className="bg-muted/50 border-b p-2">
           <IconComponent className="size-4" />
-          {status === "loading" ? (
+          {!isCompleted ? (
             <AnimatedShinyText className="text-sm font-medium">
               {clientToolkit.name} Toolkit
             </AnimatedShinyText>
@@ -140,21 +116,32 @@ const ToolMessage: React.FC<{
               {clientToolkit.name} Toolkit
             </span>
           )}
-          {status === "loading" ? (
+          {!isCompleted ? (
             <Loader2 className="size-4 animate-spin opacity-60" />
           ) : (
             <CheckCircle className="size-4 text-green-500" />
           )}
         </HStack>
         <div className="p-2">
-          <div className="text-sm">{content}</div>
+          <motion.div
+            key={isCompleted ? "completed" : "loading"}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+            className="text-sm"
+          >
+            {isCompleted && completedContent ? completedContent : content}
+          </motion.div>
         </div>
       </Card>
     </div>
   );
 };
 
-const MessageItem: React.FC<{ item: MessageItem }> = ({ item }) => {
+const MessageItem: React.FC<{
+  item: MessageItem;
+  isCompleted: boolean;
+}> = ({ item, isCompleted }) => {
   switch (item.type) {
     case "user":
       return <UserMessage content={item.content} />;
@@ -165,7 +152,8 @@ const MessageItem: React.FC<{ item: MessageItem }> = ({ item }) => {
         <ToolMessage
           content={item.content}
           toolkit={item.toolkit!}
-          status={item.status!}
+          isCompleted={isCompleted}
+          completedContent={item.completedContent}
         />
       );
     default:
@@ -174,15 +162,63 @@ const MessageItem: React.FC<{ item: MessageItem }> = ({ item }) => {
 };
 
 export const ToolkitDemoList: React.FC = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [completedItems, setCompletedItems] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    if (currentIndex >= demoSequence.length) return;
+
+    const currentItem = demoSequence[currentIndex];
+    if (!currentItem) return;
+
+    // For tool messages, wait 2 seconds then mark as completed
+    if (currentItem.type === "tool") {
+      const timer = setTimeout(() => {
+        setCompletedItems((prev) => new Set(prev).add(currentItem.id));
+
+        // Wait another 1 second before showing next item
+        setTimeout(() => {
+          setCurrentIndex((prev) => prev + 1);
+        }, 1000);
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    } else {
+      // For user and assistant messages, wait 1.5 seconds before next item
+      const timer = setTimeout(() => {
+        setCurrentIndex((prev) => prev + 1);
+      }, 1500);
+
+      return () => clearTimeout(timer);
+    }
+  }, [currentIndex]);
+
+  const visibleItems = demoSequence.slice(0, currentIndex + 1);
+
   return (
-    <div className="mx-auto max-h-96 w-full max-w-md overflow-y-auto">
-      <AnimatedList delay={2000} className="gap-3">
-        {demoSequence.map((item) => (
-          <div key={item.id} className="w-full">
-            <MessageItem item={item} />
-          </div>
-        ))}
-      </AnimatedList>
+    <div className="mx-auto h-96 w-full max-w-md overflow-y-auto p-4">
+      <div className="flex flex-col gap-3">
+        <AnimatePresence>
+          {visibleItems.map((item, index) => (
+            <motion.div
+              key={item.id}
+              initial={{ opacity: 0, scale: 0.8, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{
+                duration: 0.5,
+                ease: "backOut",
+                delay: index === currentIndex ? 0 : 0,
+              }}
+              className="w-full"
+            >
+              <MessageItem
+                item={item}
+                isCompleted={completedItems.has(item.id)}
+              />
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
     </div>
   );
 };
