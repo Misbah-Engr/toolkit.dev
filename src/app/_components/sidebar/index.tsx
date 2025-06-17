@@ -46,23 +46,28 @@ export async function AppSidebar({
 
   return (
     <HydrateClient>
-      <Sidebar collapsible="icon" {...props}>
-        <SidebarHeader className="border-b">
-          <Link href="/">
-            <HStack className="p-2">
-              <Logo className="size-6" />
-              <h1 className="overflow-hidden text-xl font-bold whitespace-nowrap group-data-[collapsible=icon]:hidden">
+      <Sidebar collapsible="icon" className="sidebar-glow relative" {...props}>
+        <SidebarHeader className="border-sidebar-border border-b p-3 group-data-[collapsible=icon]:p-2">
+          <Link
+            href="/"
+            className="hover:bg-sidebar-accent/50 rounded-lg p-2 transition-colors group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-2"
+          >
+            <HStack className="items-center group-data-[collapsible=icon]:justify-center">
+              <Logo className="size-6 group-data-[collapsible=icon]:mx-auto" />
+              <h1 className="shimmer-text overflow-hidden text-xl font-bold whitespace-nowrap group-data-[collapsible=icon]:hidden">
                 Toolkit.dev
               </h1>
             </HStack>
           </Link>
-          <WorkbenchSelect />
+          <div className="mt-2 group-data-[collapsible=icon]:mt-1">
+            <WorkbenchSelect />
+          </div>
         </SidebarHeader>
         <SidebarContent className="gap-0 pt-2">
           <NavMain />
           <NavChats />
         </SidebarContent>
-        <SidebarFooter className="flex flex-col gap-0">
+        <SidebarFooter className="flex flex-col gap-2 p-3 group-data-[collapsible=icon]:p-2">
           <NavUser
             user={{
               name: session.user.name ?? "User",
@@ -70,20 +75,24 @@ export async function AppSidebar({
               avatar: session.user.image ?? "",
             }}
           />
-          <SidebarMenuButton asChild className="h-fit w-full">
+          <SidebarMenuButton
+            asChild
+            className="blue-outline hover:bg-sidebar-accent/50 h-fit w-full rounded-lg p-3 transition-colors group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-2"
+          >
             <Link
               href="https://github.com/jasonhedman/open-chat"
               target="_blank"
+              className="flex items-center gap-3 group-data-[collapsible=icon]:justify-center"
             >
-              <HStack>
-                <SiGithub className="size-8" />
-                <VStack className="items-start gap-0">
-                  <h3 className="font-medium">Contribute</h3>
-                  <p className="text-[10px]">
-                    Looking for more toolkit developers!
-                  </p>
-                </VStack>
-              </HStack>
+              <SiGithub className="text-sidebar-accent-foreground size-6 group-data-[collapsible=icon]:mx-auto" />
+              <VStack className="items-start gap-0 group-data-[collapsible=icon]:hidden">
+                <h3 className="shimmer-text text-sidebar-foreground font-medium">
+                  Contribute
+                </h3>
+                <p className="text-sidebar-muted-foreground text-xs">
+                  Join the toolkit developers!
+                </p>
+              </VStack>
             </Link>
           </SidebarMenuButton>
         </SidebarFooter>

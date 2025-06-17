@@ -261,6 +261,73 @@ const PureMultimodalInput: React.FC<Props> = ({
     [setAttachments],
   );
 
+  const handlePaste = useCallback(
+    async (event: ClipboardEvent) => {
+      const items = event.clipboardData?.items;
+      if (!items) return;
+
+      const imageFiles: File[] = [];
+
+      // Check for image files in clipboard
+      for (const item of Array.from(items)) {
+        if (item.type.startsWith("image/")) {
+          const file = item.getAsFile();
+          if (file) {
+            imageFiles.push(file);
+          }
+        }
+      }
+
+      if (imageFiles.length > 0) {
+        event.preventDefault();
+
+        if (!supportsImages) {
+          toast.error(
+            "This model does not support images. Please select a different model.",
+          );
+          return;
+        }
+
+        setUploadQueue(imageFiles.map((file) => file.name));
+
+        try {
+          const uploadPromises = imageFiles.map((file) => uploadFile(file));
+          const uploadedAttachments = await Promise.all(uploadPromises);
+          const successfullyUploadedAttachments = uploadedAttachments.filter(
+            (attachment): attachment is Attachment => attachment !== undefined,
+          );
+
+          setAttachments((currentAttachments: Attachment[]) => [
+            ...currentAttachments,
+            ...successfullyUploadedAttachments,
+          ]);
+
+          if (successfullyUploadedAttachments.length > 0) {
+            toast.success(
+              `Pasted ${successfullyUploadedAttachments.length} image(s)`,
+            );
+          }
+        } catch (error) {
+          console.error("Error uploading pasted images!", error);
+          toast.error("Failed to upload pasted images");
+        } finally {
+          setUploadQueue([]);
+        }
+      }
+    },
+    [supportsImages, setAttachments, uploadFile],
+  );
+
+  useEffect(() => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.addEventListener("paste", handlePaste);
+      return () => {
+        textarea.removeEventListener("paste", handlePaste);
+      };
+    }
+  }, [handlePaste]);
+
   const acceptedFileTypes = useMemo(() => {
     let acceptedFileTypes: string[] = [];
 
@@ -469,7 +536,7 @@ function PureStopButton({
   return (
     <Button
       data-testid="stop-button"
-      className="h-fit rounded-full border p-1.5"
+      className="user-message h-fit rounded-full border-0 p-1.5 text-white"
       onClick={(event) => {
         event.preventDefault();
         stop();
@@ -499,7 +566,7 @@ const PureSendButton: React.FC<SendButtonProps> = ({
   return (
     <Button
       data-testid="send-button"
-      className="rounded-full border dark:border-zinc-600"
+      className="user-message rounded-full border-0 text-white"
       onClick={(event) => {
         event.preventDefault();
         submitForm();

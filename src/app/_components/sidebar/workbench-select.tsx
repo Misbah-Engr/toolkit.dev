@@ -62,31 +62,27 @@ export function WorkbenchSelect() {
               <SidebarMenuButton
                 size="lg"
                 className={cn(
-                  "bg-sidebar-accent text-sidebar-accent-foreground cursor-pointer justify-between transition-colors duration-300",
-                  !open && "justify-center",
+                  "bg-sidebar-accent text-sidebar-accent-foreground cursor-pointer transition-all duration-200 ease-in-out",
+                  open ? "justify-between" : "justify-center min-h-[2.5rem] px-2",
                 )}
               >
-                <HStack
-                  className={cn(
-                    "gap-2 transition-all duration-300",
-                    !open && "gap-0",
-                  )}
-                >
+                {open ? (
+                  <>
+                    <HStack className="gap-2 flex-1 min-w-0">
+                      <Anvil className="size-4 flex-shrink-0" />
+                      <span className="truncate">
+                        {isWorkbench
+                          ? isLoading
+                            ? "Loading..."
+                            : workbench?.name
+                          : "Default Workbench"}
+                      </span>
+                    </HStack>
+                    <ChevronsUpDown className="ml-auto size-4 flex-shrink-0" />
+                  </>
+                ) : (
                   <Anvil className="size-4" />
-                  <span
-                    className={cn(
-                      "w-auto truncate transition-all duration-300",
-                      !open && "w-0",
-                    )}
-                  >
-                    {isWorkbench
-                      ? isLoading
-                        ? "Loading..."
-                        : workbench?.name
-                      : "Default Workbench"}
-                  </span>
-                </HStack>
-                {open && <ChevronsUpDown className="ml-auto" />}
+                )}
               </SidebarMenuButton>
             </DropdownMenuTrigger>
             <DropdownMenuContent
