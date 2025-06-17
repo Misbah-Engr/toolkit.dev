@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "motion/react";
-import { Code2, Server, Settings, Zap, type LucideIcon } from "lucide-react";
+import { type LucideIcon } from "lucide-react";
 import { CardTitle } from "@/components/ui/card";
 import { CodeBlock } from "@/components/ui/code-block";
 import { HStack, VStack } from "@/components/ui/stack";

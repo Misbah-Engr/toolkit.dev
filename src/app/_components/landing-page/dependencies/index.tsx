@@ -3,11 +3,10 @@
 import React from "react";
 import { motion } from "motion/react";
 import { Marquee } from "@/components/magicui/marquee";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 import type { Dependency } from "./types";
 import { dependencies } from "./data";
-import { HStack, VStack } from "@/components/ui/stack";
+import { HStack } from "@/components/ui/stack";
 
 export const DependenciesSection: React.FC = () => {
   return (

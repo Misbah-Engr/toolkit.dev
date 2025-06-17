@@ -4,7 +4,6 @@ import { motion } from "motion/react";
 import { useChatContext } from "@/app/_contexts/chat-context";
 import { Toolkits } from "@/toolkits/toolkits/shared";
 import { useMemo } from "react";
-import { clientToolkits } from "@/toolkits/toolkits/client";
 import { ToolkitIcons } from "@/components/toolkit/toolkit-icons";
 import { HStack } from "@/components/ui/stack";
 
