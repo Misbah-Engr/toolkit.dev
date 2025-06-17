@@ -67,14 +67,6 @@ const PurePreviewMessage: React.FC<Props> = ({
             },
           )}
         >
-          {message.role === "assistant" && (
-            <div className="ring-border bg-background flex size-8 shrink-0 items-center justify-center rounded-full ring-1">
-              <div className="translate-y-px">
-                <Logo className="size-5" />
-              </div>
-            </div>
-          )}
-
           <div
             className={cn("flex w-full max-w-full flex-col gap-4", {
               "min-h-96": message.role === "assistant" && requiresScrollPadding,

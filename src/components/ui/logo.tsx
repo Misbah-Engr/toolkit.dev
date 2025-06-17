@@ -18,7 +18,7 @@ export const Logo: React.FC<Props> = ({ className }) => {
         className={cn(className, "dark:hidden")}
       />
       <Image
-        src="/logo/dark.svg"
+        src="/logo/light.svg"
         alt="Merit"
         width={100}
         height={100}

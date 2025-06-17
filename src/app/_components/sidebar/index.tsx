@@ -52,7 +52,7 @@ export async function AppSidebar({
             <HStack className="p-2">
               <Logo className="size-6" />
               <h1 className="overflow-hidden text-xl font-bold whitespace-nowrap group-data-[collapsible=icon]:hidden">
-                <span className="text-primary">Toolkit.dev</span>
+                Toolkit.dev
               </h1>
             </HStack>
           </Link>
