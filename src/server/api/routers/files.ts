@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
+import { FILE_NAME_MAX_LENGTH } from "@/lib/constants";
 
 export const filesRouter = createTRPCRouter({
   getUserFiles: protectedProcedure
@@ -63,7 +64,7 @@ export const filesRouter = createTRPCRouter({
   createFile: protectedProcedure
     .input(
       z.object({
-        name: z.string().min(1).max(2000),
+        name: z.string().min(1).max(FILE_NAME_MAX_LENGTH),
         contentType: z.string(),
         url: z.string().url(),
       }),
@@ -85,7 +86,7 @@ export const filesRouter = createTRPCRouter({
     .input(
       z.object({
         fileId: z.string(),
-        name: z.string().min(1).max(2000).optional(),
+        name: z.string().min(1).max(FILE_NAME_MAX_LENGTH).optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
