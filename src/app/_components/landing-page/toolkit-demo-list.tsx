@@ -23,7 +23,8 @@ const demoSequence: MessageItem[] = [
   {
     id: "1",
     type: "user",
-    content: "Research the latest AI startup trends and analyze relevant GitHub repositories",
+    content:
+      "Research the latest AI startup trends and analyze relevant GitHub repositories",
   },
   {
     id: "2",
@@ -56,12 +57,14 @@ const demoSequence: MessageItem[] = [
   {
     id: "6",
     type: "assistant",
-    content: "Based on my research, here are the key AI startup trends: Edge AI, Autonomous agents, and Multimodal AI are leading the market...",
+    content:
+      "Based on my research, here are the key AI startup trends: Edge AI, Autonomous agents, and Multimodal AI are leading the market...",
   },
   {
     id: "7",
     type: "user",
-    content: "Create a visual summary and remember the key insights for future reference",
+    content:
+      "Create a visual summary and remember the key insights for future reference",
   },
   {
     id: "8",
@@ -94,39 +97,39 @@ const demoSequence: MessageItem[] = [
 ];
 
 const UserMessage: React.FC<{ content: string }> = ({ content }) => (
-  <div className="flex justify-end w-full">
-    <div className="bg-primary text-primary-foreground rounded-xl px-3 py-2 max-w-xs text-sm">
+  <div className="flex w-full justify-end">
+    <div className="bg-primary text-primary-foreground max-w-xs rounded-xl px-3 py-2 text-sm">
       {content}
     </div>
   </div>
 );
 
 const AssistantMessage: React.FC<{ content: string }> = ({ content }) => (
-  <div className="flex gap-3 w-full">
+  <div className="flex w-full gap-3">
     <div className="ring-border bg-background flex size-8 shrink-0 items-center justify-center rounded-full ring-1">
       <Logo className="size-4" />
     </div>
-    <div className="bg-card border rounded-xl px-3 py-2 flex-1 text-sm">
+    <div className="bg-card flex-1 rounded-xl border px-3 py-2 text-sm">
       {content}
     </div>
   </div>
 );
 
-const ToolMessage: React.FC<{ 
-  content: string; 
-  toolkit: Toolkits; 
-  status: "loading" | "complete" 
+const ToolMessage: React.FC<{
+  content: string;
+  toolkit: Toolkits;
+  status: "loading" | "complete";
 }> = ({ content, toolkit, status }) => {
   const clientToolkit = clientToolkits[toolkit];
   const IconComponent = clientToolkit.icon;
 
   return (
-    <div className="flex gap-3 w-full">
+    <div className="flex w-full gap-3">
       <div className="ring-border bg-background flex size-8 shrink-0 items-center justify-center rounded-full ring-1">
         <Logo className="size-4" />
       </div>
-      <Card className="flex-1 p-0 overflow-hidden">
-        <HStack className="border-b p-2 bg-muted/50">
+      <Card className="flex-1 overflow-hidden p-0">
+        <HStack className="bg-muted/50 border-b p-2">
           <IconComponent className="size-4" />
           {status === "loading" ? (
             <AnimatedShinyText className="text-sm font-medium">
@@ -159,9 +162,9 @@ const MessageItem: React.FC<{ item: MessageItem }> = ({ item }) => {
       return <AssistantMessage content={item.content} />;
     case "tool":
       return (
-        <ToolMessage 
-          content={item.content} 
-          toolkit={item.toolkit!} 
+        <ToolMessage
+          content={item.content}
+          toolkit={item.toolkit!}
           status={item.status!}
         />
       );
@@ -172,7 +175,7 @@ const MessageItem: React.FC<{ item: MessageItem }> = ({ item }) => {
 
 export const ToolkitDemoList: React.FC = () => {
   return (
-    <div className="w-full max-w-md mx-auto">
+    <div className="mx-auto max-h-96 w-full max-w-md overflow-y-auto">
       <AnimatedList delay={2000} className="gap-3">
         {demoSequence.map((item) => (
           <div key={item.id} className="w-full">
