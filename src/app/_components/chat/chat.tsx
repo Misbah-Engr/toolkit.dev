@@ -91,14 +91,14 @@ const ChatContent = ({
                 enter: { delay: 0.1, duration: 0.3 },
                 exit: { delay: 0, duration: 0.05 },
               }}
-              className="flex flex-col items-center gap-2 overflow-hidden text-center"
+              className="flex flex-col items-center gap-2 pt-2 text-center"
             >
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
                 transition={{ delay: 0.2, duration: 0.3 }}
-                className="flex items-center justify-center"
+                className="bg-card shadow-primary/50 border-primary/50 flex items-center justify-center rounded-full border p-4 shadow-[0_0_16px]"
               >
                 <Logo className="size-16" />
               </motion.div>
