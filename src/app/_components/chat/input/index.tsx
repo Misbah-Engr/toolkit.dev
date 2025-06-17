@@ -139,7 +139,7 @@ const PureMultimodalInput: React.FC<Props> = ({
   const resetHeight = () => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height = "90px";
+      textareaRef.current.style.height = "48px";
     }
   };
 
@@ -262,7 +262,7 @@ const PureMultimodalInput: React.FC<Props> = ({
   );
 
   const handlePaste = useCallback(
-    async (event: ClipboardEvent) => {
+    (event: ClipboardEvent) => {
       const items = event.clipboardData?.items;
       if (!items) return;
 
@@ -288,27 +288,29 @@ const PureMultimodalInput: React.FC<Props> = ({
 
         setUploadQueue(imageFiles.map((file) => file.name));
 
-        try {
-          const uploadPromises = imageFiles.map((file) => uploadFile(file));
-          const uploadedAttachments = await Promise.all(uploadPromises);
-          const successfullyUploadedAttachments = uploadedAttachments.filter(
-            (attachment): attachment is Attachment => attachment !== undefined,
-          );
+        // Handle async upload in non-blocking way
+        Promise.all(imageFiles.map((file) => uploadFile(file)))
+          .then((uploadedAttachments) => {
+            const successfullyUploadedAttachments = uploadedAttachments.filter(
+              (attachment): attachment is Attachment => attachment !== undefined,
+            );
 
-          setAttachments((currentAttachments: Attachment[]) => [
-            ...currentAttachments,
-            ...successfullyUploadedAttachments,
-          ]);
+            setAttachments((currentAttachments: Attachment[]) => [
+              ...currentAttachments,
+              ...successfullyUploadedAttachments,
+            ]);
 
-          if (successfullyUploadedAttachments.length > 0) {
-            toast.success(`Pasted ${successfullyUploadedAttachments.length} image(s)`);
-          }
-        } catch (error) {
-          console.error("Error uploading pasted images!", error);
-          toast.error("Failed to upload pasted images");
-        } finally {
-          setUploadQueue([]);
-        }
+            if (successfullyUploadedAttachments.length > 0) {
+              toast.success(`Pasted ${successfullyUploadedAttachments.length} image(s)`);
+            }
+          })
+          .catch((error) => {
+            console.error("Error uploading pasted images!", error);
+            toast.error("Failed to upload pasted images");
+          })
+          .finally(() => {
+            setUploadQueue([]);
+          });
       }
     },
     [supportsImages, setAttachments, uploadFile],
@@ -395,7 +397,7 @@ const PureMultimodalInput: React.FC<Props> = ({
         </div>
       )}
 
-      <div className="relative">
+      <div className="bg-muted relative rounded-2xl focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 focus-within:ring-offset-background transition-all duration-200">
         <Textarea
           data-testid="multimodal-input"
           ref={textareaRef}
@@ -403,7 +405,7 @@ const PureMultimodalInput: React.FC<Props> = ({
           value={input}
           onChange={handleInput}
           className={cn(
-            "bg-muted h-auto max-h-[calc(75dvh)] min-h-[24px] resize-none overflow-hidden rounded-2xl pb-14 !text-base",
+            "bg-transparent h-auto max-h-[calc(75dvh-4rem)] min-h-[48px] resize-none overflow-hidden border-0 px-4 py-3 !text-base shadow-none focus-visible:ring-0",
             className,
           )}
           rows={2}
@@ -428,27 +430,29 @@ const PureMultimodalInput: React.FC<Props> = ({
           disabled={!selectedChatModel}
         />
 
-        <div className="absolute bottom-0 flex w-fit flex-row justify-start gap-2 p-2">
-          <AttachmentsButton
-            fileInputRef={fileInputRef}
-            status={status}
-            disabledString={fileDisabledString}
-          />
-          <ModelSelect />
-          <ToolsSelect />
-        </div>
-
-        <div className="absolute right-0 bottom-0 flex w-fit flex-row justify-end p-2">
-          {status === "submitted" ? (
-            <StopButton stop={stop} setMessages={setMessages} />
-          ) : (
-            <SendButton
-              input={input}
-              submitForm={submitForm}
-              uploadQueue={uploadQueue}
-              disabled={!selectedChatModel || !!submitDisabledString}
+        <div className="flex items-center justify-between border-t border-border/50 p-2">
+          <div className="flex items-center gap-2">
+            <AttachmentsButton
+              fileInputRef={fileInputRef}
+              status={status}
+              disabledString={fileDisabledString}
             />
-          )}
+            <ModelSelect />
+            <ToolsSelect />
+          </div>
+
+          <div className="flex items-center">
+            {status === "submitted" ? (
+              <StopButton stop={stop} setMessages={setMessages} />
+            ) : (
+              <SendButton
+                input={input}
+                submitForm={submitForm}
+                uploadQueue={uploadQueue}
+                disabled={!selectedChatModel || !!submitDisabledString}
+              />
+            )}
+          </div>
         </div>
       </div>
       <motion.div
