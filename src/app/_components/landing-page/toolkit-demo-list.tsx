@@ -3,12 +3,11 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Card } from "@/components/ui/card";
-import { Logo } from "@/components/ui/logo";
 import { clientToolkits } from "@/toolkits/toolkits/client";
 import { Toolkits } from "@/toolkits/toolkits/shared";
 import { AnimatedShinyText } from "@/components/magicui/animated-shiny-text";
 import { HStack } from "@/components/ui/stack";
-import { CheckCircle, Loader2 } from "lucide-react";
+import { Check, Loader2 } from "lucide-react";
 
 interface MessageItem {
   id: string;
@@ -81,12 +80,7 @@ const UserMessage: React.FC<{ content: string }> = ({ content }) => (
 
 const AssistantMessage: React.FC<{ content: string }> = ({ content }) => (
   <div className="flex w-full gap-3">
-    <div className="ring-border bg-background flex size-8 shrink-0 items-center justify-center rounded-full ring-1">
-      <Logo className="size-4" />
-    </div>
-    <div className="bg-card flex-1 rounded-xl border px-3 py-2 text-sm">
-      {content}
-    </div>
+    <div className="flex-1 text-sm">{content}</div>
   </div>
 );
 
@@ -101,10 +95,7 @@ const ToolMessage: React.FC<{
 
   return (
     <div className="flex w-full gap-3">
-      <div className="ring-border bg-background flex size-8 shrink-0 items-center justify-center rounded-full ring-1">
-        <Logo className="size-4" />
-      </div>
-      <Card className="flex-1 overflow-hidden p-0">
+      <Card className="flex-1 gap-0 overflow-hidden p-0">
         <HStack className="bg-muted/50 border-b p-2">
           <IconComponent className="size-4" />
           {!isCompleted ? (
@@ -119,7 +110,7 @@ const ToolMessage: React.FC<{
           {!isCompleted ? (
             <Loader2 className="size-4 animate-spin opacity-60" />
           ) : (
-            <CheckCircle className="size-4 text-green-500" />
+            <Check className="size-4" />
           )}
         </HStack>
         <div className="p-2">
@@ -196,7 +187,7 @@ export const ToolkitDemoList: React.FC = () => {
   const visibleItems = demoSequence.slice(0, currentIndex + 1);
 
   return (
-    <div className="mx-auto h-96 w-full max-w-md overflow-y-auto p-4">
+    <div className="mx-auto h-96 w-full max-w-md overflow-y-auto">
       <div className="flex flex-col gap-3">
         <AnimatePresence>
           {visibleItems.map((item, index) => (

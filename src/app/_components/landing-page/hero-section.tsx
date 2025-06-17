@@ -31,10 +31,10 @@ export const HeroSection: React.FC = () => {
               className="space-y-6"
             >
               <h1 className="from-foreground to-foreground/80 bg-gradient-to-r bg-clip-text text-4xl leading-tight font-bold text-transparent md:text-6xl">
-                Background jobs
+                Open Source
                 <br />
                 <span className="from-primary to-primary/70 bg-gradient-to-r bg-clip-text text-transparent">
-                  & AI infrastructure
+                  Generative UI Framework
                 </span>
               </h1>
 

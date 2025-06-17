@@ -19,6 +19,7 @@ import { useCopyToClipboard } from "usehooks-ts";
 interface Props {
   language: string;
   value: string;
+  heading?: string;
 }
 
 type LanguageMap = Record<ProgrammingLanguages, string | undefined>;
@@ -109,7 +110,7 @@ export const generateRandomString = (length: number, lowercase = false) => {
 };
 
 export const CodeBlock: React.FC<Props> = memo(
-  ({ language, value }: Props) => {
+  ({ language, value, heading }: Props) => {
     const [isCopied, setIsCopied] = useState(false);
     const [, copyToClipboard] = useCopyToClipboard();
 
@@ -136,7 +137,7 @@ export const CodeBlock: React.FC<Props> = memo(
           )}
         >
           <span className="text-xs font-semibold">
-            {markdownLanguages[language] ?? language}
+            {heading ?? markdownLanguages[language] ?? language}
           </span>
           <div className="flex items-center gap-2">
             <span
@@ -164,6 +165,9 @@ export const CodeBlock: React.FC<Props> = memo(
               background: "transparent",
               padding: "1rem 1rem",
               border: "none",
+            }}
+            lineNumberContainerStyle={{
+              display: "none",
             }}
             lineNumberStyle={{
               userSelect: "none",
