@@ -7,7 +7,7 @@ import { Navbar } from "./navbar";
 
 export const LandingPage: React.FC = () => {
   return (
-    <div className="min-h-screen">
+    <div className="h-fit min-h-screen">
       <Navbar />
       <HeroSection />
       <DependenciesSection />

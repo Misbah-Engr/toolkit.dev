@@ -19,7 +19,7 @@ import { InfoTooltip } from "@/components/ui/info-tooltip";
 
 import { cn } from "@/lib/utils";
 
-const CHART_HEIGHT = 150;
+const CHART_HEIGHT = 100;
 const Y_AXIS_BUFFER = 0;
 const DECAY_RATE = 0.95; // Decay rate for activity score (tune as needed)
 

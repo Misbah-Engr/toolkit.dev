@@ -7,16 +7,28 @@ import { Check, Loader2 } from "lucide-react";
 import { motion } from "motion/react";
 
 import type { Message } from "./types";
+import { Markdown } from "@/components/ui/markdown";
+import { useEffect, useMemo, useState } from "react";
 
 export const MessageItem: React.FC<{
   item: Message;
   isCompleted: boolean;
-}> = ({ item, isCompleted }) => {
+  onDone?: () => void;
+  scrollToBottom?: () => void;
+  isUserScrolling?: boolean;
+}> = ({ item, isCompleted, onDone, scrollToBottom, isUserScrolling }) => {
   switch (item.type) {
     case "user":
       return <UserMessage content={item.content} />;
     case "assistant":
-      return <AssistantMessage content={item.content} />;
+      return (
+        <AssistantMessage
+          content={item.content}
+          onDone={onDone}
+          scrollToBottom={scrollToBottom}
+          isUserScrolling={isUserScrolling}
+        />
+      );
     case "tool":
       return (
         <ToolMessage
@@ -39,13 +51,50 @@ export const UserMessage: React.FC<{ content: string }> = ({ content }) => (
   </div>
 );
 
-export const AssistantMessage: React.FC<{ content: string }> = ({
-  content,
-}) => (
-  <div className="flex w-full gap-3">
-    <div className="flex-1 text-sm">{content}</div>
-  </div>
-);
+export const AssistantMessage: React.FC<{
+  content: string;
+  onDone?: () => void;
+  scrollToBottom?: () => void;
+  isUserScrolling?: boolean;
+}> = ({ content, onDone, scrollToBottom, isUserScrolling }) => {
+  const words = useMemo(() => {
+    return content.split(" ");
+  }, [content]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isComplete, setIsComplete] = useState(false);
+
+  useEffect(() => {
+    if (isComplete) {
+      onDone?.();
+    }
+  }, [isComplete, onDone]);
+
+  useEffect(() => {
+    const streamInterval = setInterval(() => {
+      if (currentIndex < words.length) {
+        setCurrentIndex((prev) => prev + 1);
+        if (!isUserScrolling) {
+          scrollToBottom?.();
+        }
+      } else {
+        clearInterval(streamInterval);
+        setIsComplete(true);
+      }
+    }, 50);
+
+    return () => clearInterval(streamInterval);
+  }, [words, onDone, scrollToBottom, currentIndex, isUserScrolling]);
+
+  const contentToShow = useMemo(() => {
+    return words.slice(0, currentIndex).join(" ");
+  }, [words, currentIndex]);
+
+  return (
+    <div className="flex w-full flex-col gap-1">
+      <Markdown>{contentToShow}</Markdown>
+    </div>
+  );
+};
 
 export const ToolMessage: React.FC<{
   callComponent: React.ReactNode;
