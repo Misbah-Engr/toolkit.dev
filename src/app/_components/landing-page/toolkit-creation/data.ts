@@ -25,6 +25,31 @@ export const toolkitCreationSteps = [
     delay: 0,
   },
   {
+    icon: Code2,
+    title: "Create Client UI",
+    description: "Define a the look and feel",
+    codeTitle: "client.tsx",
+    code: `export const clientToolkit = createClientToolkit(
+  baseToolkit,
+  {
+    name: "My Custom Toolkit",
+    description: "Does amazing things",
+    icon: MyIcon,
+  },
+  {
+    myAction: {
+      CallComponent: ({ args }) => (
+        <p>Search for {args.query}</p>
+      ),
+      CallButtonComponent: ({ result }) => (
+        <Button>{result.data}</Button>
+      ),
+    },
+  },
+);`,
+    delay: 0.1,
+  },
+  {
     icon: Server,
     title: "Add Server Logic",
     description: "Implement the tool execution",
@@ -44,31 +69,6 @@ export const toolkitCreationSteps = [
       },
     },
   }),
-);`,
-    delay: 0.1,
-  },
-  {
-    icon: Code2,
-    title: "Create Client UI",
-    description: "Define a the look and feel",
-    codeTitle: "client.tsx",
-    code: `export const clientToolkit = createClientToolkit(
-  baseMyToolkitConfig,
-  {
-    name: "My Custom Toolkit",
-    description: "Does amazing things",
-    icon: MyIcon,
-  },
-  {
-    myAction: {
-      CallComponent: ({ args }) => (
-        <p>Search for {args.query}</p>
-      ),
-      CallButtonComponent: ({ result }) => (
-        <Button>{result.data}</Button>
-      ),
-    },
-  },
 );`,
     delay: 0.2,
   },

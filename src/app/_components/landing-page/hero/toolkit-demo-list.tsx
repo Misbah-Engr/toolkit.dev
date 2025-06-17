@@ -72,7 +72,7 @@ const demoSequence: MessageItem[] = [
 
 const UserMessage: React.FC<{ content: string }> = ({ content }) => (
   <div className="flex w-full justify-end">
-    <div className="bg-primary text-primary-foreground max-w-xs rounded-xl px-3 py-2 text-sm">
+    <div className="user-message max-w-xs rounded-xl px-3 py-2 text-sm text-white">
       {content}
     </div>
   </div>
@@ -187,7 +187,7 @@ export const ToolkitDemoList: React.FC = () => {
   const visibleItems = demoSequence.slice(0, currentIndex + 1);
 
   return (
-    <div className="mx-auto h-96 w-full max-w-md overflow-y-auto">
+    <div className="mx-auto h-full w-full overflow-y-auto">
       <div className="flex flex-col gap-3">
         <AnimatePresence>
           {visibleItems.map((item, index) => (

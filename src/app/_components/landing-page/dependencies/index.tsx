@@ -10,7 +10,7 @@ import { HStack } from "@/components/ui/stack";
 
 export const DependenciesSection: React.FC = () => {
   return (
-    <section className="py-16">
+    <section className="py-16 lg:py-24">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

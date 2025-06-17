@@ -301,7 +301,7 @@ export const WorkbenchSection: React.FC = () => {
           className="mb-16 text-center"
         >
           <h2 className="mb-4 text-3xl font-bold md:text-4xl">
-            Powerful
+            Create Custom
             <span className="text-primary block">Workbench Configurations</span>
           </h2>
           <p className="text-muted-foreground mx-auto mb-8 max-w-2xl text-lg">
