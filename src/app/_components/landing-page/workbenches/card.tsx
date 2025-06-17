@@ -2,8 +2,7 @@ import { motion } from "motion/react";
 import type { WorkbenchExample } from "./types";
 import { Card, CardContent, CardTitle, CardHeader } from "@/components/ui/card";
 import { WorkbenchVisualization } from "./graphic";
-import { HStack, VStack } from "@/components/ui/stack";
-import { clientToolkits } from "@/toolkits/toolkits/client";
+import { VStack } from "@/components/ui/stack";
 
 export const WorkbenchCard: React.FC<{
   workbench: WorkbenchExample;
