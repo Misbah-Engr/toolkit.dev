@@ -91,7 +91,7 @@ const ChatContent = ({
                 enter: { delay: 0.1, duration: 0.3 },
                 exit: { delay: 0, duration: 0.05 },
               }}
-              className="flex flex-col items-center gap-2 overflow-hidden text-center"
+              className="flex flex-col items-center gap-4 pt-2 text-center"
             >
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
@@ -100,9 +100,9 @@ const ChatContent = ({
                 transition={{ delay: 0.2, duration: 0.3 }}
                 className="flex items-center justify-center"
               >
-                <Logo className="size-16" />
+                <Logo className="size-24" />
               </motion.div>
-              <motion.div
+              <motion.h1
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
@@ -110,7 +110,7 @@ const ChatContent = ({
                 className="text-xl font-semibold md:text-2xl"
               >
                 Welcome to Toolkit.dev
-              </motion.div>
+              </motion.h1>
             </motion.div>
           )}
         </AnimatePresence>
