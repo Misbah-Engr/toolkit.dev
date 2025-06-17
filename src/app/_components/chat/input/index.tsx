@@ -306,17 +306,19 @@ const PureMultimodalInput: React.FC<Props> = ({
               ...successfullyUploadedAttachments,
             ]);
 
-          if (successfullyUploadedAttachments.length > 0) {
-            toast.success(
-              `Pasted ${successfullyUploadedAttachments.length} image(s)`,
-            );
-          }
-        } catch (error) {
-          console.error("Error uploading pasted images!", error);
-          toast.error("Failed to upload pasted images");
-        } finally {
-          setUploadQueue([]);
-        }
+            if (successfullyUploadedAttachments.length > 0) {
+              toast.success(
+                `Pasted ${successfullyUploadedAttachments.length} image(s)`,
+              );
+            }
+          })
+          .catch((error) => {
+            console.error("Error uploading pasted images!", error);
+            toast.error("Failed to upload pasted images");
+          })
+          .finally(() => {
+            setUploadQueue([]);
+          });
       }
     },
     [supportsImages, setAttachments, uploadFile],
