@@ -139,7 +139,7 @@ body {
   --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.9067 0 0);
   --secondary-foreground: oklch(0.3211 0 0);
-  --muted: oklch(0.8853 0 0);
+  --muted: oklch(0.9067 0 0);
   --muted-foreground: oklch(0.5103 0 0);
   --accent: oklch(0.8078 0 0);
   --accent-foreground: oklch(0.3211 0 0);
@@ -157,7 +157,7 @@ body {
   --sidebar-foreground: oklch(0.3211 0 0);
   --sidebar-primary: oklch(0.4891 0 0);
   --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.8078 0 0);
+  --sidebar-accent: oklch(0.9067 0 0);
   --sidebar-accent-foreground: oklch(0.3211 0 0);
   --sidebar-border: oklch(0.8576 0 0);
   --sidebar-ring: oklch(0.4891 0 0);
@@ -208,7 +208,7 @@ body {
   --sidebar-foreground: oklch(0.8853 0 0);
   --sidebar-primary: oklch(0.7058 0 0);
   --sidebar-primary-foreground: oklch(0.2178 0 0);
-  --sidebar-accent: oklch(0.3715 0 0);
+  --sidebar-accent: oklch(0.275 0 0);
   --sidebar-accent-foreground: oklch(0.8853 0 0);
   --sidebar-border: oklch(0.329 0 0);
   --sidebar-ring: oklch(0.7058 0 0);
@@ -246,4 +246,28 @@ body {
 
 .no-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  background: linear-gradient(45deg, #777 0%, #555 50%, #666 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.dark h1,
+.dark h2,
+.dark h3,
+.dark h4,
+.dark h5,
+.dark h6 {
+  background: linear-gradient(45deg, #eee 0%, #ccc 50%, #aaa 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
