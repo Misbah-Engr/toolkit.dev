@@ -532,7 +532,7 @@ function PureStopButton({
   return (
     <Button
       data-testid="stop-button"
-      className="h-fit rounded-full border p-1.5"
+      className="user-message h-fit rounded-full border-0 p-1.5 text-white"
       onClick={(event) => {
         event.preventDefault();
         stop();
@@ -562,7 +562,7 @@ const PureSendButton: React.FC<SendButtonProps> = ({
   return (
     <Button
       data-testid="send-button"
-      className="rounded-full border dark:border-zinc-600"
+      className="user-message rounded-full border-0 text-white"
       onClick={(event) => {
         event.preventDefault();
         submitForm();

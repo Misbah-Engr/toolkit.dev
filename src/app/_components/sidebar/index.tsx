@@ -46,23 +46,25 @@ export async function AppSidebar({
 
   return (
     <HydrateClient>
-      <Sidebar collapsible="icon" {...props}>
-        <SidebarHeader className="border-b">
-          <Link href="/">
-            <HStack className="p-2">
+      <Sidebar collapsible="icon" className="sidebar-glow relative" {...props}>
+        <SidebarHeader className="border-b border-sidebar-border p-3">
+          <Link href="/" className="rounded-lg p-2 transition-colors hover:bg-sidebar-accent/50">
+            <HStack className="items-center">
               <Logo className="size-6" />
-              <h1 className="overflow-hidden text-xl font-bold whitespace-nowrap group-data-[collapsible=icon]:hidden">
+              <h1 className="shimmer-text overflow-hidden text-xl font-bold whitespace-nowrap group-data-[collapsible=icon]:hidden">
                 Toolkit.dev
               </h1>
             </HStack>
           </Link>
-          <WorkbenchSelect />
+          <div className="mt-2">
+            <WorkbenchSelect />
+          </div>
         </SidebarHeader>
         <SidebarContent className="gap-0 pt-2">
           <NavMain />
           <NavChats />
         </SidebarContent>
-        <SidebarFooter className="flex flex-col gap-0">
+        <SidebarFooter className="flex flex-col gap-2 p-3">
           <NavUser
             user={{
               name: session.user.name ?? "User",
@@ -70,20 +72,19 @@ export async function AppSidebar({
               avatar: session.user.image ?? "",
             }}
           />
-          <SidebarMenuButton asChild className="h-fit w-full">
+          <SidebarMenuButton asChild className="blue-outline h-fit w-full rounded-lg p-3 transition-colors hover:bg-sidebar-accent/50">
             <Link
               href="https://github.com/jasonhedman/open-chat"
               target="_blank"
+              className="flex items-center gap-3"
             >
-              <HStack>
-                <SiGithub className="size-8" />
-                <VStack className="items-start gap-0">
-                  <h3 className="font-medium">Contribute</h3>
-                  <p className="text-[10px]">
-                    Looking for more toolkit developers!
-                  </p>
-                </VStack>
-              </HStack>
+              <SiGithub className="size-6 text-sidebar-accent-foreground" />
+              <VStack className="items-start gap-0 group-data-[collapsible=icon]:hidden">
+                <h3 className="shimmer-text font-medium text-sidebar-foreground">Contribute</h3>
+                <p className="text-xs text-sidebar-muted-foreground">
+                  Join the toolkit developers!
+                </p>
+              </VStack>
             </Link>
           </SidebarMenuButton>
         </SidebarFooter>
