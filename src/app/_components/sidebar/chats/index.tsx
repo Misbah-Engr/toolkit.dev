@@ -31,9 +31,7 @@ export const NavChats = () => {
     <SidebarGroup>
       <SidebarGroupLabel>Chats</SidebarGroupLabel>
       <SidebarMenu>
-        <Suspense fallback={<div>Loading...</div>}>
-          <NavChatsBody />
-        </Suspense>
+        <NavChatsBody />
       </SidebarMenu>
     </SidebarGroup>
   );
@@ -52,17 +50,22 @@ const NavChatsBody = () => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  const [chats, { fetchNextPage, hasNextPage, isFetchingNextPage }] =
-    api.chats.getChats.useSuspenseInfiniteQuery(
-      {
-        limit: 10,
-        workbenchId,
-      },
-      {
-        getNextPageParam: (lastPage) =>
-          lastPage.hasMore ? lastPage.nextCursor : undefined,
-      },
-    );
+  const {
+    data: chats,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+  } = api.chats.getChats.useInfiniteQuery(
+    {
+      limit: 10,
+      workbenchId: workbenchId ?? null,
+    },
+    {
+      getNextPageParam: (lastPage) =>
+        lastPage.hasMore ? lastPage.nextCursor : undefined,
+    },
+  );
 
   const deleteChat = useDeleteChat();
 
@@ -73,7 +76,11 @@ const NavChatsBody = () => {
     }
   };
 
-  if (chats.pages.flatMap((page) => page.items).length === 0) {
+  if (isLoading) {
+    return null;
+  }
+
+  if (!chats || chats.pages.flatMap((page) => page.items).length === 0) {
     return (
       <div className="text-muted-foreground overflow-hidden px-2 text-sm whitespace-nowrap group-data-[collapsible=icon]:hidden">
         No chats yet.
@@ -83,7 +90,7 @@ const NavChatsBody = () => {
 
   return (
     <>
-      {chats.pages.flatMap((page) =>
+      {chats?.pages.flatMap((page) =>
         page.items.map((chat) => (
           <ChatItem
             key={chat.id}
