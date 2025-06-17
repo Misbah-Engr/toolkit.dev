@@ -244,7 +244,7 @@ const PureMultimodalInput: React.FC<Props> = ({
         setUploadQueue([]);
       }
     },
-    [setAttachments],
+    [setAttachments, uploadFile],
   );
 
   useEffect(() => {
