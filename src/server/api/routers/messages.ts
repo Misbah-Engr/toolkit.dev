@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
+import { FILE_NAME_MAX_LENGTH } from "@/lib/constants";
 
 const messagePartSchema = z.discriminatedUnion("type", [
   z.object({
@@ -91,7 +92,7 @@ export const messagesRouter = createTRPCRouter({
         attachments: z.array(
           z.object({
             url: z.string().url(),
-            name: z.string().min(1).max(2000),
+            name: z.string().min(1).max(FILE_NAME_MAX_LENGTH),
             contentType: z.enum([
               "image/png",
               "image/jpg",
