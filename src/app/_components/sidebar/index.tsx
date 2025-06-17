@@ -20,25 +20,17 @@ import Link from "next/link";
 import { HStack, VStack } from "@/components/ui/stack";
 import { SiGithub } from "@icons-pack/react-simple-icons";
 import { WorkbenchSelect } from "./workbench-select";
-import { getCurrentPath } from "@/lib/current-path";
 
 export async function AppSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
-  const [session, currentPath] = await Promise.all([auth(), getCurrentPath()]);
+  const [session] = await Promise.all([auth()]);
 
-  if (!session || currentPath === "/onboarding") {
+  if (!session) {
     return null;
   }
 
-  const workbenchId =
-    currentPath.split("/")[2] === "new" ? undefined : currentPath.split("/")[2];
-
   if (session?.user) {
-    void api.chats.getChats.prefetchInfinite({
-      limit: 10,
-      workbenchId,
-    });
     void api.workbenches.getWorkbenches.prefetchInfinite({
       limit: 10,
     });

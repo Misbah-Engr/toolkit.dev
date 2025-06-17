@@ -15,7 +15,7 @@ export function ToolCallDisplay({
 }: ToolCallDisplayProps) {
   return (
     <HStack className="text-muted-foreground flex items-center">
-      <Icon className="size-4" />
+      <Icon className="size-4 shrink-0" />
       <span className="text-sm">
         <strong>{label}:</strong> {value}
       </span>

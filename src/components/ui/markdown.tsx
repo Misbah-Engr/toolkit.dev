@@ -2,6 +2,8 @@ import React, { memo } from "react";
 
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
 
 import { CodeBlock } from "./code-block";
 
@@ -17,7 +19,8 @@ interface Props {
 const NonMemoizedMarkdown = ({ children, headingClassName, asSpan }: Props) => {
   return (
     <ReactMarkdown
-      remarkPlugins={[remarkGfm]}
+      remarkPlugins={[remarkGfm, remarkMath]}
+      rehypePlugins={[rehypeKatex]}
       components={{
         h1({ children }) {
           return (
