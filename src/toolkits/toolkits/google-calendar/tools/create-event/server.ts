@@ -11,59 +11,30 @@ export const googleCalendarCreateEventToolConfigServer = (
 > => {
   return {
     callback: async ({
-      calendarId,
-      summary,
-      description,
-      location,
-      start,
-      end,
-      attendees,
-      visibility,
-      transparency,
-      reminders,
-      sendUpdates,
+      title,
+      startDateTime,
+      endDateTime,
     }) => {
       const auth = new google.auth.OAuth2();
       auth.setCredentials({ access_token: accessToken });
 
       const calendar = google.calendar({ version: "v3", auth });
 
-      // Construct the event object
-      const eventResource = {
-        summary,
-        description,
-        location,
+      // Build the event object with simplified parameters
+      const eventResource: calendar_v3.Schema$Event = {
+        summary: title,
         start: {
-          dateTime: start.dateTime,
-          date: start.date,
-          timeZone: start.timeZone,
+          dateTime: startDateTime,
         },
         end: {
-          dateTime: end.dateTime,
-          date: end.date,
-          timeZone: end.timeZone,
+          dateTime: endDateTime,
         },
-        attendees: attendees?.map((attendee) => ({
-          email: attendee.email,
-          displayName: attendee.displayName,
-          optional: attendee.optional,
-          responseStatus: attendee.responseStatus,
-        })),
-        visibility,
-        transparency,
-        reminders: reminders ? {
-          useDefault: reminders.useDefault,
-          overrides: reminders.overrides?.map((override) => ({
-            method: override.method,
-            minutes: override.minutes,
-          })),
-        } : undefined,
       };
 
       const response = await calendar.events.insert({
-        calendarId,
+        calendarId: "primary", // Use primary calendar by default
         requestBody: eventResource,
-        sendUpdates: sendUpdates || "all",
+        sendNotifications: true, // Send notifications to attendees
       });
 
       const event = response.data;

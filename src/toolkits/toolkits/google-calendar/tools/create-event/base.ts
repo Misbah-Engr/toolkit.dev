@@ -4,70 +4,10 @@ import { createBaseTool } from "@/toolkits/create-tool";
 export const createEventTool = createBaseTool({
   description: "Create a new event in a Google Calendar",
   inputSchema: z.object({
-    calendarId: z
-      .string()
-      .describe("The ID of the calendar to create the event in (use 'primary' for primary calendar)"),
-    summary: z
-      .string()
-      .describe("The title/summary of the event"),
-    description: z
-      .string()
-      .describe("Detailed description of the event"),
-    location: z
-      .string()
-      .describe("Location of the event"),
-    start: z.object({
-      dateTime: z
-        .string()
-        .describe("Start time as RFC3339 timestamp (for timed events)"),
-      date: z
-        .string()
-        .describe("Start date in YYYY-MM-DD format (for all-day events)"),
-      timeZone: z
-        .string()
-        .describe("Time zone for the event (e.g., 'America/New_York')"),
-    }),
-    end: z.object({
-      dateTime: z
-        .string()
-        .describe("End time as RFC3339 timestamp (for timed events)"),
-      date: z
-        .string()
-        .describe("End date in YYYY-MM-DD format (for all-day events)"),
-      timeZone: z
-        .string()
-        .describe("Time zone for the event (e.g., 'America/New_York')"),
-    }),
-    attendees: z
-      .array(z.object({
-        email: z.string().email().describe("Email address of the attendee"),
-        displayName: z.string().describe("Display name of the attendee"),
-        optional: z.boolean().describe("Whether attendance is optional"),
-        responseStatus: z
-          .enum(["needsAction", "declined", "tentative", "accepted"])
-          .describe("Initial response status"),
-      }))
-      .describe("List of attendees to invite"),
-    visibility: z
-      .enum(["default", "public", "private", "confidential"])
-      .describe("Visibility of the event"),
-    transparency: z
-      .enum(["opaque", "transparent"])
-      .describe("Whether the event blocks time on the calendar ('opaque') or not ('transparent')"),
-    reminders: z.object({
-      useDefault: z.boolean().describe("Whether to use default reminders"),
-      overrides: z
-        .array(z.object({
-          method: z.enum(["email", "popup"]).describe("Reminder method"),
-          minutes: z.number().describe("Minutes before the event to send the reminder"),
-        }))
-        .describe("Custom reminder overrides"),
-    })
-    .describe("Event reminders configuration"),
-    sendUpdates: z
-      .enum(["all", "externalOnly", "none"])
-      .describe("Whether to send email notifications to attendees"),
-  }),
+    title: z.string().describe("Event title"),
+    startDateTime: z.string().describe("Start time (RFC3339 timestamp)"),
+    endDateTime: z.string().describe("End time (RFC3339 timestamp)"),
+  }).required(),
   outputSchema: z.object({
     id: z.string().describe("The created event ID"),
     summary: z.string().optional().describe("Event title"),

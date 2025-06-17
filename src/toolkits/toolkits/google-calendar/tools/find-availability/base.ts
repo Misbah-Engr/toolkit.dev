@@ -4,37 +4,11 @@ import { createBaseTool } from "@/toolkits/create-tool";
 export const findAvailabilityTool = createBaseTool({
   description: "Find available time slots in a calendar by analyzing existing events",
   inputSchema: z.object({
-    calendarId: z
-      .string()
-      .describe("The ID of the calendar to check availability for (use 'primary' for primary calendar)"),
-    timeMin: z
-      .string()
-      .describe("Start of time range to check (RFC3339 timestamp)"),
-    timeMax: z
-      .string()
-      .describe("End of time range to check (RFC3339 timestamp)"),
-    duration: z
-      .number()
-      .describe("Duration of the meeting in minutes"),
-    workingHours: z.object({
-      startTime: z
-        .string()
-        .describe("Start of working hours in HH:MM format (default: '09:00')"),
-      endTime: z
-        .string()
-        .describe("End of working hours in HH:MM format (default: '17:00')"),
-      workingDays: z
-        .array(z.number().min(0).max(6))
-        .describe("Working days as numbers (0=Sunday, 1=Monday, etc.) (default: [1,2,3,4,5])"),
-    })
-    .describe("Working hours configuration"),
-    minGapBetweenEvents: z
-      .number()
-      .describe("Minimum gap between events in minutes (default: 15)"),
-    maxResults: z
-      .number()
-      .describe("Maximum number of available slots to return (default: 10)"),
-  }),
+    startDate: z.string().describe("Start date to search (YYYY-MM-DD format)"),
+    endDate: z.string().describe("End date to search (YYYY-MM-DD format)"),
+    durationMinutes: z.number().describe("Meeting duration in minutes"),
+    attendeeNames: z.array(z.string()).optional().describe("List of Notion workspace user names to check availability for"),
+  }).required(),
   outputSchema: z.object({
     availableSlots: z.array(
       z.object({

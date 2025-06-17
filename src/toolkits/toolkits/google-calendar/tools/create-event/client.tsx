@@ -11,23 +11,33 @@ export const googleCalendarCreateEventToolConfigClient: ClientToolConfig<
   typeof createEventTool.inputSchema.shape,
   typeof createEventTool.outputSchema.shape
 > = {
-  CallComponent: ({ args }) => {
-    const attendeeCount = args.attendees?.length ?? 0;
-    const startTime = args.start?.dateTime 
-      ? new Date(args.start.dateTime).toLocaleString()
-      : args.start?.date 
-        ? new Date(args.start.date).toLocaleDateString()
-        : "No time specified";
+  CallComponent: ({ args, isPartial }) => {
+    if (isPartial || !args.title || !args.startDateTime) {
+      return (
+        <ToolCallComponent
+          action="Creating Event"
+          primaryText="New Event"
+          secondaryText="No time specified"
+        />
+      );
+    }
 
     return (
       <ToolCallComponent
         action="Creating Event"
-        primaryText={args.summary ?? "New Event"}
-        secondaryText={`${startTime} • ${attendeeCount} attendee${attendeeCount !== 1 ? 's' : ''}`}
+        primaryText={args.title}
+        secondaryText={new Date(args.startDateTime).toLocaleString()}
       />
     );
   },
   ResultComponent: ({ result }) => {
+    // Transform result to match EventCard requirements
+    const eventForCard = {
+      ...result,
+      start: { dateTime: result.start.dateTime ?? result.start.date ?? new Date().toISOString() },
+      end: { dateTime: result.end.dateTime ?? result.end.date ?? new Date().toISOString() }
+    };
+
     return (
       <VStack className="items-start gap-3">
         <HStack className="items-center gap-2">
@@ -35,7 +45,7 @@ export const googleCalendarCreateEventToolConfigClient: ClientToolConfig<
           <span className="text-sm font-medium text-green-700">Event Created Successfully</span>
         </HStack>
 
-        <EventCard event={result} showDetails={true} />
+        <EventCard event={eventForCard} showDetails={true} />
         
         <HStack className="flex-wrap gap-2">
           <Badge variant="outline" className="text-xs">

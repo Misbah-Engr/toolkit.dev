@@ -1,31 +1,35 @@
 import { type findAvailabilityTool } from "./base";
 import { google } from "googleapis";
 import type { ServerToolConfig } from "@/toolkits/types";
+import { notionListUsersToolConfigServer } from "../../../notion/tools/users/server";
+import type { UserObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 
 export const googleCalendarFindAvailabilityToolConfigServer = (
   accessToken: string,
+  notion: any, // TODO: Type this properly
 ): ServerToolConfig<
   typeof findAvailabilityTool.inputSchema.shape,
   typeof findAvailabilityTool.outputSchema.shape
 > => {
   return {
     callback: async ({
-      calendarId,
-      timeMin,
-      timeMax,
-      duration,
-      workingHours,
-      minGapBetweenEvents,
-      maxResults,
+      startDate,
+      endDate,
+      durationMinutes,
+      attendeeNames,
     }) => {
       const auth = new google.auth.OAuth2();
       auth.setCredentials({ access_token: accessToken });
 
       const calendar = google.calendar({ version: "v3", auth });
 
+      // Convert date strings to RFC3339 timestamps
+      const timeMin = `${startDate}T00:00:00Z`;
+      const timeMax = `${endDate}T23:59:59Z`;
+
       // Fetch existing events in the time range
       const response = await calendar.events.list({
-        calendarId,
+        calendarId: "primary", // Use primary calendar by default
         timeMin,
         timeMax,
         singleEvents: true,
@@ -40,15 +44,62 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
         event.start?.dateTime && event.end?.dateTime
       );
 
-      // Set default working hours if not provided
-      const defaultWorkingHours = {
-        startTime: workingHours?.startTime ?? "09:00",
-        endTime: workingHours?.endTime ?? "17:00",
-        workingDays: workingHours?.workingDays ?? [1, 2, 3, 4, 5], // Mon-Fri
+      // If attendees are specified, get their emails from Notion and check their calendars
+      if (attendeeNames && attendeeNames.length > 0) {
+        // Fetch all Notion users
+        const notionUsers = await notionListUsersToolConfigServer(notion).callback({
+          start_cursor: "",
+          page_size: 100,
+        });
+
+        // Map names to emails
+        const nameToEmail = new Map(
+          notionUsers.results.map((user: UserObjectResponse) => {
+            if (user.type === "person") {
+              return [user.name?.toLowerCase() ?? "", user.person?.email ?? ""];
+            }
+            return [user.name?.toLowerCase() ?? "", ""];
+          })
+        );
+
+        // Get attendee emails
+        const attendeeEmails = attendeeNames
+          .map(name => nameToEmail.get(name.toLowerCase()))
+          .filter((email): email is string => !!email);
+
+        // Check each attendee's calendar
+        for (const email of attendeeEmails) {
+          try {
+            const attendeeResponse = await calendar.events.list({
+              calendarId: email,
+              timeMin,
+              timeMax,
+              singleEvents: true,
+              orderBy: "startTime",
+              maxResults: 2500,
+            });
+            
+            const attendeeEvents = attendeeResponse.data.items ?? [];
+            const attendeeTimedEvents = attendeeEvents.filter(event => 
+              event.start?.dateTime && event.end?.dateTime
+            );
+            
+            timedEvents.push(...attendeeTimedEvents);
+          } catch (error) {
+            console.error(`Failed to fetch calendar for ${email}:`, error);
+          }
+        }
+      }
+
+      // Use sensible defaults for working hours
+      const workingHours = {
+        startTime: "09:00",
+        endTime: "17:00",
+        workingDays: [1, 2, 3, 4, 5], // Mon-Fri
       };
 
-      const gapMinutes = minGapBetweenEvents ?? 15;
-      const maxSlots = maxResults ?? 10;
+      const gapMinutes = 15; // 15 minute buffer between meetings
+      const maxSlots = 10; // Return up to 10 available slots
 
       // Find available slots
       const availableSlots: Array<{
@@ -59,6 +110,7 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
         date: string;
         timeRange: string;
       }> = [];
+
       const conflictingEvents: Array<{
         id: string;
         summary?: string;
@@ -66,28 +118,28 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
         end: string;
       }> = [];
       
-      const startDate = new Date(timeMin);
-      const endDate = new Date(timeMax);
+      const startDateObj = new Date(timeMin);
+      const endDateObj = new Date(timeMax);
       
       // Iterate through each day
-      const currentDate = new Date(startDate);
+      const currentDate = new Date(startDateObj);
       
-      while (currentDate <= endDate && availableSlots.length < maxSlots) {
+      while (currentDate <= endDateObj && availableSlots.length < maxSlots) {
         const dayOfWeek = currentDate.getDay();
         
         // Skip non-working days
-        if (!defaultWorkingHours.workingDays.includes(dayOfWeek)) {
+        if (!workingHours.workingDays.includes(dayOfWeek)) {
           currentDate.setDate(currentDate.getDate() + 1);
           continue;
         }
 
         // Set working hours for this day
         const dayStart = new Date(currentDate);
-        const [startHour, startMin] = defaultWorkingHours.startTime.split(':').map(Number);
+        const [startHour, startMin] = workingHours.startTime.split(':').map(Number);
         dayStart.setHours(startHour ?? 9, startMin ?? 0, 0, 0);
         
         const dayEnd = new Date(currentDate);
-        const [endHour, endMin] = defaultWorkingHours.endTime.split(':').map(Number);
+        const [endHour, endMin] = workingHours.endTime.split(':').map(Number);
         dayEnd.setHours(endHour ?? 17, endMin ?? 0, 0, 0);
 
         // Get events for this day
@@ -125,13 +177,13 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
           const gapEnd = new Date(eventStart.getTime() - gapMinutes * 60 * 1000);
           const availableMinutes = (gapEnd.getTime() - currentSlotStart.getTime()) / (1000 * 60);
           
-          if (availableMinutes >= duration) {
-            const slotEnd = new Date(currentSlotStart.getTime() + duration * 60 * 1000);
+          if (availableMinutes >= durationMinutes) {
+            const slotEnd = new Date(currentSlotStart.getTime() + durationMinutes * 60 * 1000);
             
             availableSlots.push({
               start: currentSlotStart.toISOString(),
               end: slotEnd.toISOString(),
-              duration,
+              duration: durationMinutes,
               dayOfWeek: currentSlotStart.toLocaleDateString('en-US', { weekday: 'long' }),
               date: currentSlotStart.toISOString().split('T')[0]!,
               timeRange: `${currentSlotStart.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${slotEnd.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`,
@@ -147,14 +199,14 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
         // Check for gap after the last event until end of day
         if (availableSlots.length < maxSlots) {
           const availableMinutes = (dayEnd.getTime() - currentSlotStart.getTime()) / (1000 * 60);
-          if (availableMinutes >= duration) {
-            const slotEnd = new Date(currentSlotStart.getTime() + duration * 60 * 1000);
+          if (availableMinutes >= durationMinutes) {
+            const slotEnd = new Date(currentSlotStart.getTime() + durationMinutes * 60 * 1000);
             
             if (slotEnd <= dayEnd) {
               availableSlots.push({
                 start: currentSlotStart.toISOString(),
                 end: slotEnd.toISOString(),
-                duration,
+                duration: durationMinutes,
                 dayOfWeek: currentSlotStart.toLocaleDateString('en-US', { weekday: 'long' }),
                 date: currentSlotStart.toISOString().split('T')[0]!,
                 timeRange: `${currentSlotStart.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${slotEnd.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`,
@@ -172,7 +224,7 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
         searchPeriod: {
           start: timeMin,
           end: timeMax,
-          duration,
+          duration: durationMinutes,
         },
         conflictingEvents,
       };

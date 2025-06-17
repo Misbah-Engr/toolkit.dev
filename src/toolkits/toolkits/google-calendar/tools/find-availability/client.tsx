@@ -12,15 +12,15 @@ export const googleCalendarFindAvailabilityToolConfigClient: ClientToolConfig<
   typeof findAvailabilityTool.outputSchema.shape
 > = {
   CallComponent: ({ args }) => {
-    const startDate = new Date(args.timeMin ?? "").toLocaleDateString();
-    const endDate = new Date(args.timeMax ?? "").toLocaleDateString();
+    const startDate = new Date(`${args.startDate}T00:00:00`).toLocaleDateString();
+    const endDate = new Date(`${args.endDate}T00:00:00`).toLocaleDateString();
     const dateRange = startDate === endDate ? startDate : `${startDate} - ${endDate}`;
 
     return (
       <ToolCallComponent
         action="Finding Availability"
-        primaryText={`${args.duration} minute slots`}
-        secondaryText={`${dateRange} • Calendar: ${args.calendarId}`}
+        primaryText={`${args.durationMinutes} minute slots`}
+        secondaryText={`${dateRange} • Primary Calendar`}
       />
     );
   },
