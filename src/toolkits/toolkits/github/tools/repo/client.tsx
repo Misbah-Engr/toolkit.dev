@@ -42,7 +42,7 @@ export const githubRepoInfoToolConfigClient: ClientToolConfig<
   ResultComponent: ({ result: { repo, commits, topContributors, owner } }) => {
     return (
       <div className="flex flex-col gap-4">
-        <HStack className="gap-4">
+        <div className="flex flex-col gap-4 md:flex-row">
           <VStack className="flex-1 items-start">
             <HStack className="flex-1">
               <GithubAvatar login={repo.owner} className="size-10" />
@@ -93,15 +93,6 @@ export const githubRepoInfoToolConfigClient: ClientToolConfig<
                   </Button>
                 </Link>
               )}
-
-              {owner?.email && (
-                <Link href={`mailto:${owner.email}`} target="_blank">
-                  <Button variant={"outline"} size={"sm"}>
-                    <Mail className="size-4" />
-                    <span>Email</span>
-                  </Button>
-                </Link>
-              )}
             </HStack>
           </VStack>
           <div className="grid grid-cols-1 gap-2 rounded-lg p-2">
@@ -134,7 +125,7 @@ export const githubRepoInfoToolConfigClient: ClientToolConfig<
               </HStack>
             ))}
           </div>
-        </HStack>
+        </div>
         <div className="flex flex-col gap-2">
           <ActivityChart
             data={commits.map((commit) => ({

@@ -39,7 +39,7 @@ export const githubRepoInfoToolConfigServer = (
       const now = new Date();
       const startDate = new Date(repo.created_at);
       const totalTime = now.getTime() - startDate.getTime();
-      const bucketSize = totalTime / numBuckets; // Divide total time into 64 equal buckets
+      const bucketSize = totalTime / numBuckets;
       const buckets = Array.from({ length: numBuckets }, () => 0);
 
       commits.forEach((commit) => {
@@ -49,7 +49,7 @@ export const githubRepoInfoToolConfigServer = (
         const diff = commitDate.getTime() - startDate.getTime();
         const bucketIndex = Math.floor(diff / bucketSize);
 
-        if (bucketIndex >= 0 && bucketIndex < 64) {
+        if (bucketIndex >= 0 && bucketIndex < numBuckets) {
           buckets[bucketIndex]!++;
         }
       });
@@ -78,7 +78,7 @@ export const githubRepoInfoToolConfigServer = (
           const prs = await getTotalPrs(
             octokit,
             `repo:${owner}/${name} author:${contributor.login}`,
-          );
+          ).catch(() => 0);
           return {
             ...contributor,
             prs,

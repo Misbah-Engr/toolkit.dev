@@ -32,6 +32,8 @@ const PureMessages: React.FC<Props> = ({
     scrollToBottom,
   });
 
+  console.log(messages);
+
   return (
     <div
       ref={containerRef}

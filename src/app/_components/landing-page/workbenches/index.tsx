@@ -8,7 +8,7 @@ import { workbenchExamples } from "./data";
 export const WorkbenchSection: React.FC = () => {
   return (
     <section className="from-muted/20 to-background bg-gradient-to-b py-24">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-2 md:px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -27,7 +27,7 @@ export const WorkbenchSection: React.FC = () => {
           </p>
         </motion.div>
 
-        <div className="mb-16 grid grid-cols-1 gap-8 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
           {workbenchExamples.map((workbench, index) => (
             <WorkbenchCard
               key={workbench.title}

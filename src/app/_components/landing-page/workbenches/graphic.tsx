@@ -33,43 +33,47 @@ export const WorkbenchVisualization: React.FC<{
     centerColorClasses[workbench.color as keyof typeof centerColorClasses];
 
   return (
-    <div className="relative h-80 w-full" ref={containerRef}>
+    <div className="relative w-full overflow-hidden" ref={containerRef}>
       {/* Central Workbench Node */}
-      <div className="absolute top-1/2 left-1/2 z-10 -translate-x-1/2 -translate-y-1/2 transform">
-        <div
-          ref={centerRef}
-          className={`rounded-xl border-2 ${centerColors.border} ${centerColors.bg} p-4 shadow-lg`}
-        >
-          {workbench.icon}
+      <div className="flex h-full w-full items-center justify-between gap-2 md:gap-8">
+        {/* Left side toolkits */}
+        <div className="z-8 flex flex-col gap-4">
+          {workbench.toolkits.slice(0, 2).map((toolkit, index) => (
+            <div key={toolkit}>
+              <ToolkitNode
+                toolkit={toolkit}
+                nodeRef={toolkitRefs[index] as React.RefObject<HTMLDivElement>}
+                color={workbench.color}
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* Center node */}
+        <div className="z-10">
+          <div
+            ref={centerRef}
+            className={`rounded-xl border-2 ${centerColors.border} ${centerColors.bg} p-2 shadow-lg md:p-4`}
+          >
+            {workbench.icon}
+          </div>
+        </div>
+
+        {/* Right side toolkits */}
+        <div className="z-8 flex flex-col gap-4">
+          {workbench.toolkits.slice(2, 4).map((toolkit, index) => (
+            <div key={toolkit}>
+              <ToolkitNode
+                toolkit={toolkit}
+                nodeRef={
+                  toolkitRefs[index + 2] as React.RefObject<HTMLDivElement>
+                }
+                color={workbench.color}
+              />
+            </div>
+          ))}
         </div>
       </div>
-
-      {/* Toolkit Nodes arranged in a circle */}
-      {workbench.toolkits.map((toolkit, index) => {
-        const angle = (index / workbench.toolkits.length) * 2 * Math.PI;
-        const radius = 145;
-        // Offset the angle by PI/2 to rotate the circle so no nodes are directly above/below
-        const offsetAngle = angle + Math.PI / 6;
-        const x = Math.cos(offsetAngle) * radius;
-        const y = Math.sin(offsetAngle) * radius;
-
-        return (
-          <div
-            key={toolkit}
-            className="absolute z-5 -translate-x-1/2 -translate-y-1/2 transform"
-            style={{
-              left: `calc(50% + ${x}px)`,
-              top: `calc(50% + ${y}px)`,
-            }}
-          >
-            <ToolkitNode
-              toolkit={toolkit}
-              nodeRef={toolkitRefs[index] as React.RefObject<HTMLDivElement>}
-              color={workbench.color}
-            />
-          </div>
-        );
-      })}
 
       {/* Animated Beams connecting toolkits to center */}
       {toolkitRefs.map((ref, index) => (
@@ -78,10 +82,10 @@ export const WorkbenchVisualization: React.FC<{
           containerRef={containerRef}
           fromRef={ref}
           toRef={centerRef}
-          curvature={45}
           duration={3 + Math.random()}
           delay={index * 0.3}
           pathOpacity={0.4}
+          reverse={index < 2}
           gradientStartColor={
             workbench.color === "blue"
               ? "#3b82f6"
@@ -114,19 +118,19 @@ const ToolkitNode: React.FC<{
     blue: {
       border: "border-blue-200 dark:border-blue-800",
       bg: "bg-blue-50 dark:bg-blue-950",
-      iconBg: "bg-blue-100 dark:bg-blue-900",
+      iconBg: "md:bg-blue-100 md:dark:bg-blue-900",
       iconColor: "text-blue-600 dark:text-blue-400",
     },
     green: {
       border: "border-green-200 dark:border-green-800",
       bg: "bg-green-50 dark:bg-green-950",
-      iconBg: "bg-green-100 dark:bg-green-900",
+      iconBg: "md:bg-green-100 md:dark:bg-green-900",
       iconColor: "text-green-600 dark:text-green-400",
     },
     purple: {
       border: "border-purple-200 dark:border-purple-800",
       bg: "bg-purple-50 dark:bg-purple-950",
-      iconBg: "bg-purple-100 dark:bg-purple-900",
+      iconBg: "md:bg-purple-100 md:dark:bg-purple-900",
       iconColor: "text-purple-600 dark:text-purple-400",
     },
   };
@@ -138,11 +142,11 @@ const ToolkitNode: React.FC<{
       ref={nodeRef}
       className={`relative rounded-lg border-2 ${colors.border} ${colors.bg} p-2 shadow-sm transition-all hover:shadow-md`}
     >
-      <div className="flex items-center gap-2">
-        <div className={`rounded-md ${colors.iconBg} p-1.5`}>
-          <IconComponent className={`h-4 w-4 ${colors.iconColor}`} />
+      <div className="flex flex-col items-center gap-2 md:flex-row">
+        <div className={`rounded-md ${colors.iconBg} p-0 md:p-1.5`}>
+          <IconComponent className={`size-4 ${colors.iconColor}`} />
         </div>
-        <span className="text-xs font-medium whitespace-nowrap">
+        <span className="text-xs font-medium md:whitespace-nowrap">
           {clientToolkit.name}
         </span>
       </div>
