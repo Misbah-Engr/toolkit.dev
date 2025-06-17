@@ -402,7 +402,7 @@ const PureMultimodalInput: React.FC<Props> = ({
         </div>
       )}
 
-      <div className="bg-muted focus-within:ring-ring focus-within:ring-offset-background relative rounded-2xl transition-all duration-200 focus-within:ring-2 focus-within:ring-offset-2">
+             <div className="bg-muted focus-within:ring-ring relative rounded-2xl transition-all duration-200 focus-within:ring-2">
         <Textarea
           data-testid="multimodal-input"
           ref={textareaRef}
