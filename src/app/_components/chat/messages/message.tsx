@@ -26,7 +26,6 @@ import { cn, sanitizeText } from "@/lib/utils";
 import type { UIMessage } from "ai";
 
 import { MessageTool } from "./message-tool";
-import { Logo } from "@/components/ui/logo";
 import { AnimatedShinyText } from "@/components/magicui/animated-shiny-text";
 
 interface Props {

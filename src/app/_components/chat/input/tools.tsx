@@ -34,6 +34,7 @@ export const ToolsSelect = () => {
     ) {
       setIsOpen(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const { mutate: updateWorkbench, isPending } =
