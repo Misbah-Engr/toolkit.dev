@@ -6,6 +6,38 @@ An extensible AI chat application with Generative UI built for the **T3 Cloneath
 
 Every Toolkit includes customizable UI components, enabling rich, interactive, and visually engaging displays for all tool outputs and interactions.
 
+## Table of Contents
+
+- [Features](#features)
+  - [Extensible Toolkit System](#extensible-toolkit-system)
+    - [Web Search & Research](#web-search--research)
+    - [Development & Code](#development--code)
+    - [Productivity & Knowledge](#productivity--knowledge)
+    - [Media & Content](#media--content)
+  - [Multiple LLM Providers](#multiple-llm-providers)
+  - [Flexible Authentication](#flexible-authentication)
+  - [Modern UI/UX](#modern-uiux)
+  - [Security & Type Safety](#security--type-safety)
+- [Built With the T3 Stack](#built-with-the-t3-stack)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [1. Clone the Repository](#1-clone-the-repository)
+  - [2. Install Dependencies](#2-install-dependencies)
+  - [3. Environment Configuration](#3-environment-configuration)
+    - [Required Configuration](#required-configuration)
+    - [Choose at least one Authentication Provider](#choose-at-least-one-authentication-provider)
+    - [Choose at least one LLM Provider](#choose-at-least-one-llm-provider)
+    - [Optional Toolkit API Keys](#optional-toolkit-api-keys)
+  - [4. Database Setup](#4-database-setup)
+  - [5. Start Development Server](#5-start-development-server)
+- [Development](#development)
+  - [Adding New Toolkits](#adding-new-toolkits)
+  - [Project Structure](#project-structure)
+  - [Database Commands](#database-commands)
+- [T3 Cloneathon](#t3-cloneathon)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## Features
 
 ### **Extensible Toolkit System**
