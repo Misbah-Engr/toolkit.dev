@@ -18,6 +18,8 @@ import type { Toolkits } from "@/toolkits/toolkits/shared";
 import { ClientToolkitConfigure } from "@/components/toolkit/toolkit-configure";
 import type { SelectedToolkit } from "./types";
 import { toolkitGroups } from "@/toolkits/toolkit-groups";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 
 interface ToolkitListProps {
   selectedToolkits: SelectedToolkit[];
@@ -30,6 +32,26 @@ export const ToolkitList: React.FC<ToolkitListProps> = ({
   onAddToolkit,
   onRemoveToolkit,
 }) => {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
+
+  useEffect(() => {
+    Object.entries(clientToolkits).forEach(([id, toolkit]) => {
+      if (
+        searchParams.get(id) === "true" &&
+        !selectedToolkits.some((t) => t.id === (id as Toolkits))
+      ) {
+        onAddToolkit({
+          id: id as Toolkits,
+          parameters: {},
+          toolkit: toolkit as ClientToolkit,
+        });
+      }
+    });
+    window.history.replaceState({}, "", pathname);
+  }, [searchParams, onAddToolkit, selectedToolkits, router, pathname]);
+
   return (
     <TooltipProvider>
       <VStack className="w-full items-start gap-4">

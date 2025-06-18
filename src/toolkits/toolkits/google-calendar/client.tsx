@@ -22,6 +22,7 @@ import {
 import Link from "next/link";
 import { SiGooglecalendar } from "@icons-pack/react-simple-icons";
 import { ToolkitGroups } from "@/toolkits/types";
+import { Toolkits } from "../shared";
 
 const calendarScope = "https://www.googleapis.com/auth/calendar";
 
@@ -88,7 +89,7 @@ export const googleCalendarClientToolkit = createClientToolkit(
               void signIn(
                 "google",
                 {
-                  callbackUrl: window.location.href,
+                  callbackUrl: `${window.location.href}?${Toolkits.GoogleCalendar}=true`,
                 },
                 {
                   prompt: "consent",
@@ -115,7 +116,7 @@ export const googleCalendarClientToolkit = createClientToolkit(
               void signIn(
                 "google",
                 {
-                  callbackUrl: window.location.href,
+                  callbackUrl: `${window.location.href}?${Toolkits.GoogleCalendar}=true`,
                 },
                 {
                   prompt: "consent",

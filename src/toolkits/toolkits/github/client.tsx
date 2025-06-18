@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { signIn } from "next-auth/react";
 import { Loader2 } from "lucide-react";
 import { ToolkitGroups } from "@/toolkits/types";
+import { Toolkits } from "../shared";
 
 export const githubClientToolkit = createClientToolkit(
   baseGithubToolkitConfig,
@@ -45,7 +46,7 @@ export const githubClientToolkit = createClientToolkit(
             size="sm"
             onClick={() => {
               void signIn("github", {
-                callbackUrl: window.location.href,
+                callbackUrl: `${window.location.href}?${Toolkits.Github}=true`,
               });
             }}
             className="bg-transparent"

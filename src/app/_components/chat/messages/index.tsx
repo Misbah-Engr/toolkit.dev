@@ -32,31 +32,44 @@ const PureMessages: React.FC<Props> = ({
     scrollToBottom,
   });
 
+  const lastMessage = messages[messages.length - 1];
+
   return (
     <div
       ref={containerRef}
       className="relative mb-20 flex h-full min-w-0 flex-1 flex-col gap-6 overflow-y-scroll py-8"
     >
-      {messages.map((message, index) => (
-        <PreviewMessage
-          key={message.id}
-          message={message}
-          isLoading={status === "streaming" && messages.length - 1 === index}
-          isReadonly={isReadonly}
-          requiresScrollPadding={
-            hasSentMessage && index === messages.length - 1
-          }
-          chatId={chatId}
-        />
-      ))}
+      {messages
+        .filter(
+          (message) =>
+            !(
+              message.parts.length === 0 ||
+              (message.parts?.length === 1 &&
+                message.parts[0]?.type === "step-start")
+            ),
+        )
+        .map((message, index) => (
+          <PreviewMessage
+            key={message.id}
+            message={message}
+            isLoading={status === "streaming" && messages.length - 1 === index}
+            isReadonly={isReadonly}
+            requiresScrollPadding={
+              hasSentMessage && index === messages.length - 1
+            }
+            chatId={chatId}
+          />
+        ))}
 
       {((status === "submitted" &&
         messages.length > 0 &&
-        (messages[messages.length - 1]?.role === "user" ||
-          messages[messages.length - 1]?.parts?.length === 0)) ||
-        (messages[messages.length - 1]?.parts?.length === 1 &&
-          messages[messages.length - 1]?.parts?.[0]?.type ===
-            "step-start")) && <ThinkingMessage />}
+        lastMessage?.role === "user") ||
+        (lastMessage?.role === "assistant" &&
+          (lastMessage?.parts?.length === 0 ||
+            (lastMessage?.parts?.length === 1 &&
+              lastMessage?.parts?.[0]?.type === "step-start")))) && (
+        <ThinkingMessage />
+      )}
 
       <motion.div
         ref={endRef}

@@ -10,17 +10,32 @@ import {
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Loader2, Save, Wrench } from "lucide-react";
 import { useChatContext } from "@/app/_contexts/chat-context";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ToolkitList } from "@/components/toolkit/toolkit-list";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
 import { ToolkitIcons } from "@/components/toolkit/toolkit-icons";
+import { clientToolkits } from "@/toolkits/toolkits/client";
 
 export const ToolsSelect = () => {
   const { toolkits, addToolkit, removeToolkit, workbench } = useChatContext();
-  const [isOpen, setIsOpen] = useState(false);
+  const searchParams = useSearchParams();
+
+  const [isOpen, setIsOpen] = useState(
+    Object.keys(clientToolkits).some((toolkit) => searchParams.get(toolkit)),
+  );
   const router = useRouter();
+
+  useEffect(() => {
+    if (
+      !isOpen &&
+      Object.keys(clientToolkits).some((toolkit) => searchParams.get(toolkit))
+    ) {
+      setIsOpen(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const { mutate: updateWorkbench, isPending } =
     api.workbenches.updateWorkbench.useMutation({
