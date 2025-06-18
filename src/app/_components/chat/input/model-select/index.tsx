@@ -1,6 +1,6 @@
 "use client";
 
-import { X, Search, Loader2 } from "lucide-react";
+import { X, Search } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -32,7 +32,6 @@ export const ModelSelect: React.FC = () => {
 
   const {
     models,
-    isLoading,
     isOpen,
     setIsOpen,
     searchQuery,
@@ -56,7 +55,6 @@ export const ModelSelect: React.FC = () => {
           <Button
             variant="outline"
             className="w-fit justify-start bg-transparent md:w-auto"
-            disabled={isLoading && !selectedChatModel}
             onClick={(event) => {
               const target = event.target as HTMLElement;
               const isNativeSearchToggle = target.closest(
@@ -67,14 +65,7 @@ export const ModelSelect: React.FC = () => {
               }
             }}
           >
-            {isLoading && !selectedChatModel ? (
-              <>
-                <Loader2 className="size-4 animate-spin" />
-                <span className="hidden flex-1 truncate text-left md:block">
-                  Loading Models
-                </span>
-              </>
-            ) : selectedChatModel ? (
+            {selectedChatModel ? (
               <>
                 <ModelProviderIcon
                   provider={selectedChatModel.provider}

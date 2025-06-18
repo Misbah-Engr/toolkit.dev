@@ -9,15 +9,17 @@ import { xaiImageModels, xaiLanguageModels } from "./xai";
 import { perplexityModels } from "./perplexity";
 import { llamaModels } from "./llama";
 import { qwenModels } from "./qwen";
+import { deepseekModels } from "./deepseek";
 
 export const languageModels: LanguageModel[] = [
-  ...("ANTHROPIC_API_KEY" in env ? anthropicModels : []),
-  ...("GOOGLE_GENERATIVE_AI_API_KEY" in env ? googleModels : []),
-  ...("OPENAI_API_KEY" in env ? openAiLanguageModels : []),
-  ...("XAI_API_KEY" in env ? xaiLanguageModels : []),
-  ...("PERPLEXITY_API_KEY" in env ? perplexityModels : []),
-  ...("OPENROUTER_API_KEY" in env ? llamaModels : []),
-  ...("OPENROUTER_API_KEY" in env ? qwenModels : []),
+  ...anthropicModels,
+  ...googleModels,
+  ...openAiLanguageModels,
+  ...xaiLanguageModels,
+  ...perplexityModels,
+  ...llamaModels,
+  ...qwenModels,
+  ...deepseekModels,
 ];
 
 export const imageModels = [

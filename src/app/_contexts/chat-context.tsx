@@ -31,7 +31,9 @@ import type { Toolkits } from "@/toolkits/toolkits/shared";
 import type { Workbench } from "@prisma/client";
 import { anthropicModels } from "@/ai/models/anthropic";
 
-const DEFAULT_CHAT_MODEL = anthropicModels[0];
+const DEFAULT_CHAT_MODEL = anthropicModels.find(
+  (model) => model.modelId === "claude-3-7-sonnet-latest",
+)!;
 
 interface ChatContextType {
   // Chat state

@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { api } from "@/trpc/react";
+import { useMemo, useState } from "react";
 import type { LanguageModel, LanguageModelCapability } from "@/ai/types";
+import { allLanguageModels } from "@/ai/models/all";
 
 interface UseModelSelectProps {
   selectedChatModel: LanguageModel | undefined;
@@ -12,38 +12,6 @@ interface UseModelSelectProps {
 export const useModelSelect = ({
   setSelectedChatModel,
 }: UseModelSelectProps) => {
-  const { data: models, isLoading } = api.models.getLanguageModels.useQuery(
-    undefined,
-    {
-      staleTime: Infinity,
-      select: (data) => {
-        const providers = Array.from(
-          new Set(data.map((model) => model.provider)),
-        );
-        const modelsByProvider = providers.reduce(
-          (acc, provider) => {
-            acc[provider] = data.filter((model) => model.provider === provider);
-            return acc;
-          },
-          {} as Record<string, typeof data>,
-        );
-
-        const result: typeof data = [];
-        let index = 0;
-        while (result.length < data.length) {
-          for (const provider of providers) {
-            const providerModels = modelsByProvider[provider];
-            const model = providerModels?.[index];
-            if (model) {
-              result.push(model);
-            }
-          }
-          index++;
-        }
-        return result;
-      },
-    },
-  );
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCapabilities, setSelectedCapabilities] = useState<
@@ -56,23 +24,54 @@ export const useModelSelect = ({
     setIsOpen(false);
   };
 
-  const filteredModels = models?.filter((model) => {
-    const matchesSearch =
-      model.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      model.description?.toLowerCase().includes(searchQuery.toLowerCase());
+  const sortedModels = useMemo(() => {
+    const providers = Array.from(
+      new Set(allLanguageModels.map((model) => model.provider)),
+    );
+    const modelsByProvider = providers.reduce(
+      (acc, provider) => {
+        acc[provider] = allLanguageModels.filter(
+          (model) => model.provider === provider,
+        );
+        return acc;
+      },
+      {} as Record<string, typeof allLanguageModels>,
+    );
 
-    const matchesCapabilities =
-      selectedCapabilities.length === 0 ||
-      selectedCapabilities.every((capability) =>
-        model.capabilities?.includes(capability),
-      );
+    const result: typeof allLanguageModels = [];
+    let index = 0;
+    while (result.length < allLanguageModels.length) {
+      for (const provider of providers) {
+        const providerModels = modelsByProvider[provider];
+        const model = providerModels?.[index];
+        if (model) {
+          result.push(model);
+        }
+      }
+      index++;
+    }
+    return result;
+  }, []);
 
-    const matchesProviders =
-      selectedProviders.length === 0 ||
-      selectedProviders.includes(model.provider);
+  const filteredModels = useMemo(() => {
+    return sortedModels.filter((model) => {
+      const matchesSearch =
+        model.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        model.description?.toLowerCase().includes(searchQuery.toLowerCase());
 
-    return matchesSearch && matchesCapabilities && matchesProviders;
-  });
+      const matchesCapabilities =
+        selectedCapabilities.length === 0 ||
+        selectedCapabilities.every((capability) =>
+          model.capabilities?.includes(capability),
+        );
+
+      const matchesProviders =
+        selectedProviders.length === 0 ||
+        selectedProviders.includes(model.provider);
+
+      return matchesSearch && matchesCapabilities && matchesProviders;
+    });
+  }, [sortedModels, searchQuery, selectedCapabilities, selectedProviders]);
 
   const toggleCapability = (capability: LanguageModelCapability) => {
     setSelectedCapabilities((prev) =>
@@ -92,7 +91,6 @@ export const useModelSelect = ({
 
   return {
     models: filteredModels,
-    isLoading,
     isOpen,
     setIsOpen,
     searchQuery,
