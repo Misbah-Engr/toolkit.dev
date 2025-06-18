@@ -12,6 +12,15 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
   typeof findAvailabilityTool.outputSchema.shape
 > => {
   return {
+    message: (result) => {
+      if (result.conflictingEvents.length > 0) {
+        return `Found ${result.totalSlotsFound} available slots between ${result.searchPeriod.start} and ${result.searchPeriod.end}. There are ${result.conflictingEvents.length} conflicting events during this period.`;
+      } else if (result.totalSlotsFound > 0) {
+        return `Found ${result.totalSlotsFound} available slots between ${result.searchPeriod.start} and ${result.searchPeriod.end}.`;
+      } else {
+        return `No available slots found between ${result.searchPeriod.start} and ${result.searchPeriod.end}.`;
+      }
+    },
     callback: async ({
       startDate,
       endDate,
@@ -23,9 +32,11 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
 
       const calendar = google.calendar({ version: "v3", auth });
 
-      // Convert date strings to RFC3339 timestamps
-      const timeMin = `${startDate}T00:00:00Z`;
-      const timeMax = `${endDate}T23:59:59Z`;
+      // Convert date strings to RFC3339 timestamps with timezone
+      const timeMin = `${startDate}T00:00:00-04:00`;  // Use Eastern Time
+      const timeMax = `${endDate}T23:59:59-04:00`;    // Use Eastern Time
+
+      console.log('[FindAvailability] Search time range:', { timeMin, timeMax });
 
       // Fetch existing events in the time range
       const response = await calendar.events.list({
@@ -35,14 +46,24 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
         singleEvents: true,
         orderBy: "startTime",
         maxResults: 2500, // Get all events in the range
+        timeZone: 'America/New_York'  // Explicitly set timezone
       });
 
       const events = response.data.items ?? [];
+      
+      console.log('[FindAvailability] Total events found:', events.length);
       
       // Filter events that actually have start/end times (not all-day events without times)
       const timedEvents = events.filter(event => 
         event.start?.dateTime && event.end?.dateTime
       );
+      
+      console.log('[FindAvailability] Timed events:', timedEvents.length);
+      console.log('[FindAvailability] First few timed events:', timedEvents.slice(0, 3).map(e => ({
+        summary: e.summary,
+        start: e.start?.dateTime,
+        end: e.end?.dateTime
+      })));
 
       // If attendees are specified, get their emails from Notion and check their calendars
       if (attendeeNames && attendeeNames.length > 0) {
@@ -96,10 +117,11 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
         startTime: "09:00",
         endTime: "17:00",
         workingDays: [1, 2, 3, 4, 5], // Mon-Fri
+        timeZone: 'America/New_York'  // Explicitly set timezone
       };
 
       const gapMinutes = 15; // 15 minute buffer between meetings
-      const maxSlots = 10; // Return up to 10 available slots
+      const maxSlots = 10;
 
       // Find available slots
       const availableSlots: Array<{
@@ -118,6 +140,14 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
         end: string;
       }> = [];
       
+      console.log('[FindAvailability] Search parameters:', {
+        startDate: timeMin,
+        endDate: timeMax,
+        durationMinutes,
+        workingHours,
+        gapMinutes
+      });
+      
       const startDateObj = new Date(timeMin);
       const endDateObj = new Date(timeMax);
       
@@ -133,7 +163,7 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
           continue;
         }
 
-        // Set working hours for this day
+        // Set working hours for this day in Eastern Time
         const dayStart = new Date(currentDate);
         const [startHour, startMin] = workingHours.startTime.split(':').map(Number);
         dayStart.setHours(startHour ?? 9, startMin ?? 0, 0, 0);
@@ -150,6 +180,15 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
                  (eventEnd >= dayStart && eventEnd <= dayEnd) ||
                  (eventStart <= dayStart && eventEnd >= dayEnd);
         });
+
+        console.log(`[FindAvailability] Day ${currentDate.toISOString().split('T')[0]} events:`, dayEvents.length);
+        if (dayEvents.length > 0) {
+          console.log('[FindAvailability] Day events:', dayEvents.map(e => ({
+            summary: e.summary,
+            start: e.start?.dateTime,
+            end: e.end?.dateTime
+          })));
+        }
 
         // Sort events by start time
         dayEvents.sort((a, b) => 
@@ -180,13 +219,24 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
           if (availableMinutes >= durationMinutes) {
             const slotEnd = new Date(currentSlotStart.getTime() + durationMinutes * 60 * 1000);
             
+            // Convert to Eastern Time for consistency
+            const slotStartET = new Date(currentSlotStart.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+            const slotEndET = new Date(slotEnd.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+            
             availableSlots.push({
-              start: currentSlotStart.toISOString(),
-              end: slotEnd.toISOString(),
+              start: slotStartET.toISOString(),
+              end: slotEndET.toISOString(),
               duration: durationMinutes,
-              dayOfWeek: currentSlotStart.toLocaleDateString('en-US', { weekday: 'long' }),
-              date: currentSlotStart.toISOString().split('T')[0]!,
-              timeRange: `${currentSlotStart.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${slotEnd.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`,
+              dayOfWeek: slotStartET.toLocaleDateString('en-US', { weekday: 'long', timeZone: 'America/New_York' }),
+              date: slotStartET.toLocaleDateString('en-US', { timeZone: 'America/New_York' }),
+              timeRange: `${slotStartET.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'America/New_York' })} - ${slotEndET.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'America/New_York' })}`,
+            });
+            
+            console.log('[FindAvailability] Found available slot:', {
+              start: slotStartET.toISOString(),
+              end: slotEndET.toISOString(),
+              duration: durationMinutes,
+              timeRange: `${slotStartET.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'America/New_York' })} - ${slotEndET.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'America/New_York' })}`
             });
             
             if (availableSlots.length >= maxSlots) break;
@@ -203,13 +253,17 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
             const slotEnd = new Date(currentSlotStart.getTime() + durationMinutes * 60 * 1000);
             
             if (slotEnd <= dayEnd) {
+              // Convert to Eastern Time for consistency
+              const slotStartET = new Date(currentSlotStart.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+              const slotEndET = new Date(slotEnd.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+              
               availableSlots.push({
-                start: currentSlotStart.toISOString(),
-                end: slotEnd.toISOString(),
+                start: slotStartET.toISOString(),
+                end: slotEndET.toISOString(),
                 duration: durationMinutes,
-                dayOfWeek: currentSlotStart.toLocaleDateString('en-US', { weekday: 'long' }),
-                date: currentSlotStart.toISOString().split('T')[0]!,
-                timeRange: `${currentSlotStart.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${slotEnd.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`,
+                dayOfWeek: slotStartET.toLocaleDateString('en-US', { weekday: 'long', timeZone: 'America/New_York' }),
+                date: slotStartET.toLocaleDateString('en-US', { timeZone: 'America/New_York' }),
+                timeRange: `${slotStartET.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'America/New_York' })} - ${slotEndET.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'America/New_York' })}`,
               });
             }
           }
@@ -217,6 +271,12 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
         
         currentDate.setDate(currentDate.getDate() + 1);
       }
+
+      console.log('[FindAvailability] Final results:', {
+        totalSlotsFound: availableSlots.length,
+        firstSlot: availableSlots[0],
+        conflictingEventsCount: conflictingEvents.length
+      });
 
       return {
         availableSlots,

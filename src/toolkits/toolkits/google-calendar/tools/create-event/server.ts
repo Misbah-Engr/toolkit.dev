@@ -20,16 +20,58 @@ export const googleCalendarCreateEventToolConfigServer = (
 
       const calendar = google.calendar({ version: "v3", auth });
 
+      console.log('[CreateEvent] Creating event with parameters:', {
+        title,
+        startDateTime,
+        endDateTime
+      });
+
+      // Convert UTC times to Eastern Time
+      const startDateET = new Date(startDateTime);
+      const endDateET = new Date(endDateTime);
+      
+      // Format as RFC3339 with timezone
+      const startDateTimeET = startDateET.toLocaleString('en-US', { 
+        timeZone: 'America/New_York',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+      }).replace(/(\d+)\/(\d+)\/(\d+),\s(\d+):(\d+):(\d+)/, '$3-$1-$2T$4:$5:$6-04:00');
+
+      const endDateTimeET = endDateET.toLocaleString('en-US', { 
+        timeZone: 'America/New_York',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+      }).replace(/(\d+)\/(\d+)\/(\d+),\s(\d+):(\d+):(\d+)/, '$3-$1-$2T$4:$5:$6-04:00');
+
+      console.log('[CreateEvent] Converted to Eastern Time:', {
+        startDateTimeET,
+        endDateTimeET
+      });
+
       // Build the event object with simplified parameters
       const eventResource: calendar_v3.Schema$Event = {
         summary: title,
         start: {
-          dateTime: startDateTime,
+          dateTime: startDateTimeET,
+          timeZone: 'America/New_York'
         },
         end: {
-          dateTime: endDateTime,
+          dateTime: endDateTimeET,
+          timeZone: 'America/New_York'
         },
       };
+
+      console.log('[CreateEvent] Event resource:', eventResource);
 
       const response = await calendar.events.insert({
         calendarId: "primary", // Use primary calendar by default
@@ -38,6 +80,15 @@ export const googleCalendarCreateEventToolConfigServer = (
       });
 
       const event = response.data;
+
+      console.log('[CreateEvent] Event created successfully:', {
+        id: event.id,
+        summary: event.summary,
+        start: event.start?.dateTime,
+        end: event.end?.dateTime,
+        status: event.status,
+        timeZone: event.start?.timeZone
+      });
 
       return {
         id: event.id!,
