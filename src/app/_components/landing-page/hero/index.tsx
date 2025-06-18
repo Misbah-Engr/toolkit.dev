@@ -20,7 +20,9 @@ export const HeroSection: React.FC = () => {
             className="flex h-full flex-col items-center justify-center gap-6 md:items-end"
           >
             <VStack className="items-center md:items-end">
-              <Badge variant="primary">T3 Cloneathon Project</Badge>
+              <Badge variant="primary" className="text-lg">
+                T3 Cloneathon Project
+              </Badge>
               <h1 className="from-foreground to-foreground/80 bg-gradient-to-r bg-clip-text text-center text-4xl leading-tight font-bold text-transparent md:text-right md:text-6xl">
                 Open Source
                 <br />
@@ -31,9 +33,9 @@ export const HeroSection: React.FC = () => {
             </VStack>
 
             <p className="text-muted-foreground max-w-lg text-center text-lg leading-relaxed md:text-right md:text-xl">
-              Write workflows in normal async code and we&apos;ll handle the
-              rest, from queues to elastic scaling. No timeouts, retries,
-              observability, and zero infrastructure to manage.
+              Configure a custom chatbot with content-rich, togglable toolkits.
+              100% type-safe communication between server tools and client
+              rendering.
             </p>
 
             <div className="flex flex-col-reverse gap-4 sm:flex-row">
