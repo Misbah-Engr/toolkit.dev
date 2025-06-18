@@ -1,5 +1,7 @@
 # [Toolkit.dev](https://toolkit.dev)
 
+![Banner Image](/banner.png)
+
 An extensible AI chat application with Generative UI built for the **T3 Cloneathon** using the [T3 Stack](https://create.t3.gg/). Toolkit.dev features a powerful toolkit system that allow users to toggle sets of AI tools to interact with external services, search the web, manage files, and much more.
 
 Every Toolkit includes customizable UI components, enabling rich, interactive, and visually engaging displays for all tool outputs and interactions.
