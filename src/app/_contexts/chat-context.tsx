@@ -233,10 +233,14 @@ export function ChatProvider({
       selectedVisibilityType: initialVisibilityType,
       useNativeSearch,
       systemPrompt: workbench?.systemPrompt,
-      toolkits: toolkits.map((t) => ({
-        id: t.id,
-        parameters: t.parameters,
-      })),
+      toolkits: selectedChatModel?.capabilities?.includes(
+        LanguageModelCapability.ToolCalling,
+      )
+        ? toolkits.map((t) => ({
+            id: t.id,
+            parameters: t.parameters,
+          }))
+        : [],
       workbenchId: workbench?.id,
     }),
     onFinish: () => {

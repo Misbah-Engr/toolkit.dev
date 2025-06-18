@@ -7,7 +7,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import {
+  TooltipContent,
+  TooltipTrigger,
+  Tooltip,
+  TooltipProvider,
+} from "@/components/ui/tooltip";
 import { Loader2, Save, Wrench } from "lucide-react";
 import { useChatContext } from "@/app/_contexts/chat-context";
 import { useEffect, useState } from "react";
@@ -17,9 +22,11 @@ import { api } from "@/trpc/react";
 import { toast } from "sonner";
 import { ToolkitIcons } from "@/components/toolkit/toolkit-icons";
 import { clientToolkits } from "@/toolkits/toolkits/client";
+import { LanguageModelCapability } from "@/ai/types";
 
 export const ToolsSelect = () => {
-  const { toolkits, addToolkit, removeToolkit, workbench } = useChatContext();
+  const { toolkits, addToolkit, removeToolkit, workbench, selectedChatModel } =
+    useChatContext();
   const searchParams = useSearchParams();
 
   const [isOpen, setIsOpen] = useState(
@@ -57,6 +64,32 @@ export const ToolsSelect = () => {
     }
   };
 
+  if (
+    selectedChatModel &&
+    !selectedChatModel.capabilities?.includes(
+      LanguageModelCapability.ToolCalling,
+    )
+  ) {
+    return (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant={"outline"}
+              className="w-fit cursor-not-allowed justify-start bg-transparent opacity-50 md:w-auto md:px-2"
+            >
+              <Wrench />
+              <span className="hidden md:block">Add Toolkits</span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>This model does not support tool calling</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
+  }
+
   return (
     <TooltipProvider>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -64,6 +97,11 @@ export const ToolsSelect = () => {
           <Button
             variant={"outline"}
             className="w-fit justify-start bg-transparent md:w-auto md:px-2"
+            disabled={
+              !selectedChatModel?.capabilities?.includes(
+                LanguageModelCapability.ToolCalling,
+              )
+            }
           >
             {toolkits.length > 0 ? (
               <ToolkitIcons toolkits={toolkits.map((toolkit) => toolkit.id)} />
@@ -78,14 +116,14 @@ export const ToolsSelect = () => {
           </Button>
         </DialogTrigger>
 
-        <DialogContent className="max-h-[80vh] w-full max-w-2xl gap-4 overflow-hidden">
+        <DialogContent className="flex max-h-[80vh] w-full max-w-2xl flex-col gap-4 overflow-hidden">
           <DialogHeader className="gap-0">
             <DialogTitle className="text-xl">Manage Toolkits</DialogTitle>
             <DialogDescription>
               Add or remove tools to enhance your chat experience
             </DialogDescription>
           </DialogHeader>
-          <div>
+          <div className="h-0 flex-1 overflow-y-auto">
             <ToolkitList
               selectedToolkits={toolkits}
               onAddToolkit={addToolkit}
