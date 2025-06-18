@@ -29,10 +29,10 @@ import { clientToolkits } from "@/toolkits/toolkits/client";
 import type { SelectedToolkit } from "@/components/toolkit/types";
 import type { Toolkits } from "@/toolkits/toolkits/shared";
 import type { Workbench } from "@prisma/client";
-import { openAiLanguageModels } from "@/ai/models/openai";
+import { anthropicModels } from "@/ai/models/anthropic";
 
-const DEFAULT_CHAT_MODEL = openAiLanguageModels.find(
-  (model) => model.modelId === "gpt-4.1",
+const DEFAULT_CHAT_MODEL = anthropicModels.find(
+  (model) => model.modelId === "claude-3-7-sonnet-latest",
 )!;
 
 interface ChatContextType {
