@@ -33,7 +33,7 @@ export const ToolkitCreationSection: React.FC = () => {
             Configure server tools and client tools, and it automatically works
             with the entire system.
           </p>
-          <Link href="https://github.com/jasonhedman/open-chat/tree/main/src/toolkits">
+          <Link href="https://github.com/jasonhedman/toolkit.dev/tree/main/src/toolkits">
             <Button className="user-message">
               <Code className="size-4" />
               Start Building

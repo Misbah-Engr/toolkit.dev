@@ -65,7 +65,7 @@ export async function AppSidebar({
             className="hover:bg-sidebar-accent/50 h-fit w-full rounded-lg p-2 transition-colors group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-2"
           >
             <Link
-              href="https://github.com/jasonhedman/open-chat"
+              href="https://github.com/jasonhedman/toolkit.dev"
               target="_blank"
               className="flex items-center gap-3 px-3 transition-all group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:gap-0"
             >
