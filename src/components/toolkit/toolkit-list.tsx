@@ -37,19 +37,23 @@ export const ToolkitList: React.FC<ToolkitListProps> = ({
   const router = useRouter();
 
   useEffect(() => {
-    Object.entries(clientToolkits).forEach(([id, toolkit]) => {
-      if (
+    const updatedToolkits = Object.entries(clientToolkits).filter(([id]) => {
+      return (
         searchParams.get(id) === "true" &&
         !selectedToolkits.some((t) => t.id === (id as Toolkits))
-      ) {
+      );
+    });
+
+    if (updatedToolkits.length > 0) {
+      updatedToolkits.forEach(([id, toolkit]) => {
         onAddToolkit({
           id: id as Toolkits,
           parameters: {},
           toolkit: toolkit as ClientToolkit,
         });
-      }
-    });
-    window.history.replaceState({}, "", pathname);
+      });
+      window.history.replaceState({}, "", pathname);
+    }
   }, [searchParams, onAddToolkit, selectedToolkits, router, pathname]);
 
   return (
