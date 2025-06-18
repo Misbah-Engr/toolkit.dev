@@ -6,19 +6,19 @@ import {
 
 const xaiLanguageModelData: Omit<LanguageModel, "provider">[] = [
   {
-    name: "Grok 3",
-    modelId: "grok-3",
-    description: "Latest generation Grok model with enhanced capabilities",
-    capabilities: [LanguageModelCapability.ToolCalling],
-    bestFor: ["General purpose", "Real-time information", "Analysis"],
-    contextLength: 128000,
-  },
-  {
     name: "Grok 3 Fast",
     modelId: "grok-3-fast",
     description: "Optimized for speed and efficiency",
     capabilities: [LanguageModelCapability.ToolCalling],
     bestFor: ["Quick responses", "Real-time chat", "Simple tasks"],
+    contextLength: 128000,
+  },
+  {
+    name: "Grok 3",
+    modelId: "grok-3",
+    description: "Latest generation Grok model with enhanced capabilities",
+    capabilities: [LanguageModelCapability.ToolCalling],
+    bestFor: ["General purpose", "Real-time information", "Analysis"],
     contextLength: 128000,
   },
   {

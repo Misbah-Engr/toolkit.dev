@@ -6,6 +6,42 @@ import {
 
 const openAiLanguageModelsData: Omit<LanguageModel, "provider">[] = [
   {
+    name: "GPT-4.1",
+    modelId: "gpt-4.1",
+    description: "Enhanced version with improved capabilities",
+    capabilities: [
+      LanguageModelCapability.Vision,
+      LanguageModelCapability.Pdf,
+      LanguageModelCapability.ToolCalling,
+    ],
+    bestFor: ["General purpose", "Improved performance", "Reliability"],
+    contextLength: 128000,
+  },
+  {
+    name: "GPT-4.1 Mini",
+    modelId: "gpt-4.1-mini",
+    description: "Compact version for efficiency",
+    capabilities: [
+      LanguageModelCapability.Vision,
+      LanguageModelCapability.Pdf,
+      LanguageModelCapability.ToolCalling,
+    ],
+    bestFor: ["Quick responses", "Cost-effective", "Simple tasks"],
+    contextLength: 128000,
+  },
+  {
+    name: "GPT-4.1 Nano",
+    modelId: "gpt-4.1-nano",
+    description: "Ultra-compact model for basic tasks",
+    capabilities: [
+      LanguageModelCapability.Vision,
+      LanguageModelCapability.Pdf,
+      LanguageModelCapability.ToolCalling,
+    ],
+    bestFor: ["Simple queries", "Ultra-fast", "Basic assistance"],
+    contextLength: 32000,
+  },
+  {
     name: "GPT-4o",
     modelId: "gpt-4o",
     description: "Most advanced multimodal model with vision and reasoning",
@@ -44,42 +80,6 @@ const openAiLanguageModelsData: Omit<LanguageModel, "provider">[] = [
     capabilities: [LanguageModelCapability.WebSearch],
     bestFor: ["Research", "Current events", "Fact-checking"],
     contextLength: 128000,
-  },
-  {
-    name: "GPT-4.1",
-    modelId: "gpt-4.1",
-    description: "Enhanced version with improved capabilities",
-    capabilities: [
-      LanguageModelCapability.Vision,
-      LanguageModelCapability.Pdf,
-      LanguageModelCapability.ToolCalling,
-    ],
-    bestFor: ["General purpose", "Improved performance", "Reliability"],
-    contextLength: 128000,
-  },
-  {
-    name: "GPT-4.1 Mini",
-    modelId: "gpt-4.1-mini",
-    description: "Compact version for efficiency",
-    capabilities: [
-      LanguageModelCapability.Vision,
-      LanguageModelCapability.Pdf,
-      LanguageModelCapability.ToolCalling,
-    ],
-    bestFor: ["Quick responses", "Cost-effective", "Simple tasks"],
-    contextLength: 128000,
-  },
-  {
-    name: "GPT-4.1 Nano",
-    modelId: "gpt-4.1-nano",
-    description: "Ultra-compact model for basic tasks",
-    capabilities: [
-      LanguageModelCapability.Vision,
-      LanguageModelCapability.Pdf,
-      LanguageModelCapability.ToolCalling,
-    ],
-    bestFor: ["Simple queries", "Ultra-fast", "Basic assistance"],
-    contextLength: 32000,
   },
   {
     name: "O1",

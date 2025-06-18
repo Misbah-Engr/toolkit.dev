@@ -2,6 +2,19 @@ import { LanguageModelCapability, type LanguageModel } from "@/ai/types";
 
 const googleModelData: Omit<LanguageModel, "provider">[] = [
   {
+    name: "Gemini 2.0 Flash",
+    modelId: "gemini-2.0-flash",
+    description: "Balanced performance with multimodal capabilities",
+    capabilities: [
+      LanguageModelCapability.Vision,
+      LanguageModelCapability.WebSearch,
+      LanguageModelCapability.Pdf,
+      LanguageModelCapability.ToolCalling,
+    ],
+    bestFor: ["Multimodal tasks", "General purpose", "Balanced performance"],
+    contextLength: 1000000,
+  },
+  {
     name: "Gemini 2.5 Pro Preview",
     modelId: "gemini-2.5-pro-preview-05-06",
     description: "Next-generation Gemini with enhanced reasoning",
@@ -27,19 +40,6 @@ const googleModelData: Omit<LanguageModel, "provider">[] = [
       LanguageModelCapability.ToolCalling,
     ],
     bestFor: ["Quick tasks", "Real-time responses", "Efficient processing"],
-    contextLength: 1000000,
-  },
-  {
-    name: "Gemini 2.0 Flash",
-    modelId: "gemini-2.0-flash",
-    description: "Balanced performance with multimodal capabilities",
-    capabilities: [
-      LanguageModelCapability.Vision,
-      LanguageModelCapability.WebSearch,
-      LanguageModelCapability.Pdf,
-      LanguageModelCapability.ToolCalling,
-    ],
-    bestFor: ["Multimodal tasks", "General purpose", "Balanced performance"],
     contextLength: 1000000,
   },
   {
