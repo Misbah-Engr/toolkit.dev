@@ -11,7 +11,6 @@ import { api } from "@/trpc/react";
 import { generateUUID } from "@/lib/utils";
 import { fetchWithErrorHandlers } from "@/lib/fetch";
 import { ChatSDKError } from "@/lib/errors";
-import { localStorageUtils } from "@/lib/local-storage";
 
 import { useAutoResume } from "@/app/_hooks/use-auto-resume";
 
@@ -30,6 +29,8 @@ import type { SelectedToolkit } from "@/components/toolkit/types";
 import type { Toolkits } from "@/toolkits/toolkits/shared";
 import type { Workbench } from "@prisma/client";
 import { anthropicModels } from "@/ai/models/anthropic";
+import type { PersistedToolkit } from "@/lib/cookies/types";
+import { clientCookieUtils } from "@/lib/cookies/client";
 
 const DEFAULT_CHAT_MODEL = anthropicModels.find(
   (model) => model.modelId === "claude-3-7-sonnet-latest",
@@ -77,6 +78,12 @@ interface ChatProviderProps {
   initialVisibilityType: "public" | "private";
   autoResume: boolean;
   workbench?: Workbench;
+  initialPreferences?: {
+    selectedChatModel?: LanguageModel;
+    imageGenerationModel?: ImageModel;
+    useNativeSearch?: boolean;
+    toolkits?: Array<PersistedToolkit>;
+  };
 }
 
 export function ChatProvider({
@@ -86,40 +93,25 @@ export function ChatProvider({
   initialVisibilityType,
   autoResume,
   workbench,
+  initialPreferences,
 }: ChatProviderProps) {
   const utils = api.useUtils();
 
   const [selectedChatModel, setSelectedChatModelState] =
-    useState<LanguageModel>();
-  const [useNativeSearch, setUseNativeSearchState] = useState(false);
+    useState<LanguageModel>(
+      initialPreferences?.selectedChatModel ?? DEFAULT_CHAT_MODEL,
+    );
+  const [useNativeSearch, setUseNativeSearchState] = useState(
+    initialPreferences?.useNativeSearch ?? false,
+  );
   const [imageGenerationModel, setImageGenerationModelState] = useState<
     ImageModel | undefined
-  >(undefined);
+  >(initialPreferences?.imageGenerationModel);
   const [attachments, setAttachments] = useState<Array<Attachment>>([]);
-  const [toolkits, setToolkitsState] = useState<Array<SelectedToolkit>>([]);
-  const [hasInvalidated, setHasInvalidated] = useState(false);
-
-  // Load preferences from localStorage on mount
-  useEffect(() => {
-    const preferences = localStorageUtils.getPreferences();
-
-    if (preferences.selectedChatModel) {
-      setSelectedChatModelState(preferences.selectedChatModel);
-    } else {
-      setSelectedChatModelState(DEFAULT_CHAT_MODEL);
-    }
-
-    if (preferences.imageGenerationModel) {
-      setImageGenerationModelState(preferences.imageGenerationModel);
-    }
-
-    if (typeof preferences.useNativeSearch === "boolean") {
-      setUseNativeSearchState(preferences.useNativeSearch);
-    }
-
+  const [toolkits, setToolkitsState] = useState<Array<SelectedToolkit>>(() => {
     // If this is a workbench chat, initialize with workbench toolkits
     if (workbench) {
-      const workbenchToolkits = workbench.toolkitIds
+      return workbench.toolkitIds
         .map((toolkitId) => {
           const clientToolkit =
             clientToolkits[toolkitId as keyof typeof clientToolkits];
@@ -141,14 +133,14 @@ export function ChatProvider({
             parameters: z.infer<ClientToolkit["parameters"]>;
           } => toolkit !== null,
         );
-
-      setToolkitsState(workbenchToolkits);
-      return;
     }
 
     // Restore toolkits by matching persisted ones with available client toolkits
-    if (preferences.toolkits && preferences.toolkits.length > 0) {
-      const restoredToolkits = preferences.toolkits
+    if (
+      initialPreferences?.toolkits &&
+      initialPreferences.toolkits.length > 0
+    ) {
+      return initialPreferences.toolkits
         .map((persistedToolkit) => {
           const clientToolkit =
             clientToolkits[persistedToolkit.id as keyof typeof clientToolkits];
@@ -170,30 +162,31 @@ export function ChatProvider({
             parameters: z.infer<ClientToolkit["parameters"]>;
           } => toolkit !== null,
         );
-
-      setToolkitsState(restoredToolkits);
     }
-  }, [workbench]);
 
-  // Wrapper functions that also save to localStorage
+    return [];
+  });
+  const [hasInvalidated, setHasInvalidated] = useState(false);
+
+  // Wrapper functions that also save to cookies
   const setSelectedChatModel = (model: LanguageModel) => {
     setSelectedChatModelState(model);
-    localStorageUtils.setSelectedChatModel(model);
+    clientCookieUtils.setSelectedChatModel(model);
   };
 
   const setUseNativeSearch = (enabled: boolean) => {
     setUseNativeSearchState(enabled);
-    localStorageUtils.setUseNativeSearch(enabled);
+    clientCookieUtils.setUseNativeSearch(enabled);
   };
 
   const setImageGenerationModel = (model: ImageModel | undefined) => {
     setImageGenerationModelState(model);
-    localStorageUtils.setImageGenerationModel(model);
+    clientCookieUtils.setImageGenerationModel(model);
   };
 
   const setToolkits = (newToolkits: Array<SelectedToolkit>) => {
     setToolkitsState(newToolkits);
-    localStorageUtils.setToolkits(newToolkits);
+    clientCookieUtils.setToolkits(newToolkits);
   };
 
   const addToolkit = (toolkit: SelectedToolkit) => {

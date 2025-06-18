@@ -5,6 +5,11 @@ import { ChatLayout } from "./layout";
 import type { Attachment, UIMessage } from "ai";
 import { languageModels } from "@/ai/models";
 import { ChatContent } from "./chat";
+import { serverCookieUtils } from "@/lib/cookies/server";
+import { clientToolkits } from "@/toolkits/toolkits/client";
+import type { ClientToolkit } from "@/toolkits/types";
+import type { z } from "zod";
+import type { PersistedToolkit } from "@/lib/cookies/types";
 
 interface Props {
   id: string;
@@ -31,6 +36,37 @@ export const Chat = async ({
           createdAt: "asc",
         },
       });
+
+  // Fetch user preferences from server-side cookies
+  const serverPreferences = await serverCookieUtils.getPreferences();
+
+  // Convert server preferences to the format expected by ChatProvider
+  const initialPreferences = {
+    selectedChatModel: serverPreferences.selectedChatModel,
+    imageGenerationModel: serverPreferences.imageGenerationModel,
+    useNativeSearch: serverPreferences.useNativeSearch,
+    toolkits: serverPreferences.toolkits
+      ?.map((persistedToolkit: PersistedToolkit) => {
+        const clientToolkit =
+          clientToolkits[persistedToolkit.id as keyof typeof clientToolkits];
+        if (clientToolkit) {
+          return {
+            id: persistedToolkit.id,
+            parameters: persistedToolkit.parameters,
+          };
+        }
+        return null;
+      })
+      .filter(
+        (
+          toolkit,
+        ): toolkit is {
+          id: string;
+          toolkit: ClientToolkit;
+          parameters: z.infer<ClientToolkit["parameters"]>;
+        } => toolkit !== null,
+      ),
+  };
 
   const convertToUIMessages = (messages: Array<Message>): Array<UIMessage> => {
     return messages.map((message) => ({
@@ -75,6 +111,7 @@ export const Chat = async ({
         initialVisibilityType={initialVisibilityType}
         autoResume={!isNew}
         workbench={workbench}
+        initialPreferences={initialPreferences}
       >
         <ChatContent
           id={id}
