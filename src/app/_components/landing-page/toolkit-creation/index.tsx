@@ -12,7 +12,10 @@ import { Button } from "@/components/ui/button";
 
 export const ToolkitCreationSection: React.FC = () => {
   return (
-    <section className="from-background to-muted/20 bg-gradient-to-b py-24">
+    <section
+      className="from-background to-muted/20 bg-gradient-to-b py-24"
+      id="toolkit-creation"
+    >
       <div className="container mx-auto px-2 md:px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
