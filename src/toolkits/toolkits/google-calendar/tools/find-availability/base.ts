@@ -2,10 +2,10 @@ import { z } from "zod";
 import { createBaseTool } from "@/toolkits/create-tool";
 
 export const findAvailabilityTool = createBaseTool({
-  description: "Find available time slots in a calendar by analyzing existing events",
+  description: "Find available time slots in a calendar by analyzing existing events. When looking for availability on a specific day, use the same date for both startDate and endDate.",
   inputSchema: z.object({
-    startDate: z.string().describe("Start date to search (YYYY-MM-DD format)"),
-    endDate: z.string().describe("End date to search (YYYY-MM-DD format)"),
+    startDate: z.string().describe("Start date to search (YYYY-MM-DD format). For single-day searches, use the same date as endDate."),
+    endDate: z.string().describe("End date to search (YYYY-MM-DD format). For single-day searches, use the same date as startDate."),
     durationMinutes: z.number().describe("Meeting duration in minutes"),
     attendeeNames: z.array(z.string()).optional().describe("List of Notion workspace user names to check availability for"),
   }).required(),

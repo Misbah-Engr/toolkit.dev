@@ -35,6 +35,16 @@ export const googleCalendarFindAvailabilityToolConfigClient: ClientToolConfig<
       });
     };
 
+    // Group slots by day for better organization
+    const slotsByDay = availableSlots.reduce((acc, slot) => {
+      const dayKey = `${slot.dayOfWeek}, ${slot.date}`;
+      if (!acc[dayKey]) {
+        acc[dayKey] = [];
+      }
+      acc[dayKey].push(slot);
+      return acc;
+    }, {} as Record<string, typeof availableSlots>);
+
     if (availableSlots.length === 0) {
       return (
         <VStack className="items-start gap-3">
@@ -76,7 +86,7 @@ export const googleCalendarFindAvailabilityToolConfigClient: ClientToolConfig<
     }
 
     return (
-      <VStack className="items-start gap-3">
+      <VStack className="items-start gap-4">
         <HStack className="items-center justify-between w-full">
           <HStack className="items-center gap-2">
             <CheckCircle className="size-4 text-primary" />
@@ -97,39 +107,61 @@ export const googleCalendarFindAvailabilityToolConfigClient: ClientToolConfig<
           </HStack>
         </HStack>
 
-        <div className="grid w-full gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {availableSlots.map((slot, index) => (
-            <Card 
-              key={index} 
-              className="border-l-4 border-l-primary hover:border-l-primary/80 transition-colors cursor-pointer"
-              onClick={() => handleSlotSelect(slot)}
-            >
-              <CardContent className="p-3">
-                <VStack className="items-start gap-1">
-                  <HStack className="items-center justify-between w-full">
-                    <span className="text-sm font-medium">{slot.dayOfWeek}</span>
-                    <Badge variant="secondary" className="text-xs">
-                      {slot.duration}min
-                    </Badge>
-                  </HStack>
-                  <p className="text-muted-foreground text-xs">{slot.date}</p>
-                  <p className="text-sm font-medium">{slot.timeRange}</p>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="mt-1 w-full text-primary hover:text-primary/80"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleSlotSelect(slot);
-                    }}
+        {/* Show slots grouped by day */}
+        <VStack className="w-full items-start gap-6">
+          {Object.entries(slotsByDay).map(([dayKey, daySlots]) => (
+            <VStack key={dayKey} className="w-full items-start gap-4">
+              <div className="grid w-full gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {daySlots.map((slot, index) => (
+                  <Card 
+                    key={`${dayKey}-${index}`}
+                    className="py-0 border-l-4 border-l-primary hover:border-l-primary/80 transition-all duration-200 cursor-pointer hover:shadow-lg hover:scale-[1.02] group"
+                    onClick={() => handleSlotSelect(slot)}
                   >
-                    Select this slot
-                  </Button>
-                </VStack>
-              </CardContent>
-            </Card>
+                    <CardContent className="p-3">
+                      <div className="flex flex-col space-y-6">
+                        {/* Header with Day and Date */}
+                        <div className="text-left">
+                          <div className="text-sm font-semibold text-foreground leading-none">
+                            {slot.dayOfWeek}
+                          </div>
+                          <div className="text-xs text-muted-foreground mt-1 leading-none">
+                            {new Date(slot.date).toLocaleDateString('en-US', { 
+                              month: 'long', 
+                              day: 'numeric' 
+                            })}
+                          </div>
+                        </div>
+                        
+                        {/* Time Display */}
+                        <div className="flex-1 flex items-center justify-center py-2">
+                          <div className="text-center">
+                            <p className="text-xl font-bold text-foreground leading-tight tracking-tight group-hover:text-primary transition-colors duration-200">
+                              {slot.timeRange}
+                            </p>
+                          </div>
+                        </div>
+                        
+                        {/* Select Button */}
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="w-full text-primary border-primary/20 hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all duration-200 font-medium py-3 dark:hover:bg-primary/80"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleSlotSelect(slot);
+                          }}
+                        >
+                          Select Time
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </VStack>
           ))}
-        </div>
+        </VStack>
 
         {conflictingEvents.length > 0 && (
           <VStack className="w-full items-start gap-2 mt-2">
