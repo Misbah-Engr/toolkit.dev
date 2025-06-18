@@ -8,6 +8,7 @@ import {
   SiPerplexity,
   SiX,
   SiMeta,
+  SiAlibabacloud,
 } from "@icons-pack/react-simple-icons";
 
 import { LanguageModelCapability, type Provider } from "@/ai/types";
@@ -53,6 +54,7 @@ export const modelProviderNames: Record<Provider, string> = {
   perplexity: "Perplexity",
   xai: "xAI",
   llama: "Llama",
+  qwen: "Qwen",
 };
 
 export const modelIcons: Record<
@@ -65,4 +67,5 @@ export const modelIcons: Record<
   perplexity: SiPerplexity,
   xai: SiX,
   llama: SiMeta,
+  qwen: SiAlibabacloud,
 };

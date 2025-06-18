@@ -19,7 +19,7 @@ import {
   capabilityLabels,
   modelProviderNames,
 } from "./utils";
-import { LanguageModelCapability } from "@/ai/types";
+import { LanguageModelCapability, type Provider } from "@/ai/types";
 
 import { useModelSelect } from "./use-model-select";
 

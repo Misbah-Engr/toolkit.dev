@@ -73,7 +73,7 @@ export const useModelSelect = ({
 
     const matchesProviders =
       selectedProviders.length === 0 ||
-      selectedProviders.includes(model.provider);
+      selectedProviders.includes(model.provider as Provider);
 
     return matchesSearch && matchesCapabilities && matchesProviders;
   });

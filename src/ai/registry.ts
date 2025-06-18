@@ -6,6 +6,7 @@ import { llama } from "./providers/llama";
 import { perplexity } from "@ai-sdk/perplexity";
 import { anthropic } from "@ai-sdk/anthropic";
 import { xai } from "@ai-sdk/xai";
+import { qwen } from "./providers/qwen";
 
 import { env } from "@/env";
 
@@ -16,6 +17,7 @@ export const providers = {
   ...(env.GOOGLE_GENERATIVE_AI_API_KEY ? { google } : {}),
   ...(env.PERPLEXITY_API_KEY ? { perplexity } : {}),
   ...(env.GROQ_API_KEY ? { llama } : {}),
+  ...(env.GROQ_API_KEY ? { qwen } : {}),
 };
 
 export const registry = createProviderRegistry({
@@ -25,4 +27,5 @@ export const registry = createProviderRegistry({
   google,
   perplexity,
   llama,
+  qwen,
 });

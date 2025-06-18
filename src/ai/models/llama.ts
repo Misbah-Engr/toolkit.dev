@@ -73,7 +73,7 @@ const llamaModelData: Omit<LanguageModel, "provider">[] = [
   },
 ];
 
-export const llamaModels = llamaModelData.map((model) => ({
+export const llamaModels: LanguageModel[] = llamaModelData.map((model) => ({
   ...model,
   provider: "llama",
 }));

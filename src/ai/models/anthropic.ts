@@ -75,5 +75,3 @@ export const anthropicModels: LanguageModel[] = anthropicModelData.map(
     provider: "anthropic",
   }),
 );
-
-export const aaa = anthropicModels.map((model) => anthropic(model.modelId));
