@@ -1,34 +1,22 @@
 # Toolkit Development Guide
 
-Welcome to the OpenChat toolkit system! This guide will help you understand how toolkits work and how to create your own.
-
 ## What are Toolkits?
 
 Toolkits are extensible collections of AI tools that provide specific capabilities to the chat interface. Each toolkit contains multiple related tools (e.g., a "Web Search" toolkit might include general search, company research, and Wikipedia search tools).
 
 ## Integration
 
-Once you've created your toolkit, integrating it into the OpenChat system is straightforward. The toolkit system uses an automatic registration process that makes your tools available in the UI without any additional configuration.
+Once you've created your toolkit, integrating it into the OpenChat system is simple. Just add your toolkit to the registry objects, and it's immediately available in the UI.
 
-### Automatic Registration
+### Registration Process
 
-When you create a toolkit following the standard structure, it's automatically discovered and registered by the system. This means:
+After building your toolkit, you need to register it in three places:
 
-- Your tools will appear in the UI automatically
-- No manual configuration is needed
-- The system handles all the routing and state management
+1. Add your toolkit id to the enum in `shared.ts`
+2. Import and add it to the `clientToolkits` object in `client.ts`
+3. Import and add it to the `serverToolkits` object in `server.ts`
 
-### How It Works
-
-The registration process happens through the toolkit factory functions (`createClientToolkit` and `createServerToolkit`). When you create a toolkit using these factories:
-
-1. The system validates your toolkit structure
-2. Registers your tools in the global registry
-3. Makes them available to the UI components
-4. Sets up all necessary routing and state management
-
-This automatic registration system ensures that your tools are immediately available while maintaining type safety and proper separation of concerns.
-
+That's it! Once added to these objects, your toolkit will immediately appear in the UI with full functionality.
 
 ## Architecture Overview
 
@@ -37,7 +25,7 @@ The toolkit system uses a **client/server separation** architecture where each t
 ```
 toolkit/
 ├── base.ts          # Shared configuration and schemas
-├── client.tsx       # UI components and client logic  
+├── client.tsx       # UI components and client logic
 ├── server.ts        # Server-side tool execution
 └── tools/
     ├── tools.ts     # Tool name definitions
@@ -52,11 +40,12 @@ toolkit/
 The separation serves several critical purposes:
 
 ### **Security & API Key Management**
+
 - Server-side code runs in a secure environment with access to API keys
 - Client-side code never imports server-side code that depends on API keys
-- Prevents API key leakage to the browser
 
-### 🛡️ **Type Safety**
+### **Type Safety**
+
 - Shared schemas ensure type consistency between client and server
 - Zod schemas provide runtime validation
 - TypeScript ensures compile-time safety
@@ -66,19 +55,25 @@ The separation serves several critical purposes:
 ### Core Files
 
 #### `types.ts` - Type Definitions
+
 Defines the fundamental types for the entire toolkit system:
+
 - `BaseTool` - Shared tool definition with schemas
-- `ClientTool` - Client-side tool with UI components  
+- `ClientTool` - Client-side tool with UI components
 - `ServerTool` - Server-side tool with execution logic
 - `ClientToolkit` & `ServerToolkit` - Complete toolkit definitions
 
 #### `create-toolkit.ts` - Toolkit Factories
+
 Provides factory functions to create toolkits:
+
 - `createClientToolkit()` - Combines base config with client-specific config
 - `createServerToolkit()` - Combines base config with server-specific config
 
 #### `create-tool.ts` - Tool Factories
+
 Provides factory functions to create individual tools:
+
 - `createBaseTool()` - Creates shared tool definition
 - `createClientTool()` - Adds client UI components
 - `createServerTool()` - Adds server execution logic
@@ -88,6 +83,7 @@ Provides factory functions to create individual tools:
 ### Step 1: Plan Your Toolkit
 
 Define:
+
 - **Purpose**: What domain does your toolkit cover?
 - **Tools**: What specific actions will it provide?
 - **Parameters**: What configuration does it need?
@@ -102,6 +98,7 @@ mkdir -p src/toolkits/toolkits/my-toolkit/tools/my-tool
 ### Step 3: Define Tool Names
 
 Create `tools/tools.ts`:
+
 ```typescript
 export enum MyToolkitTools {
   MyTool = "my-tool",
@@ -112,6 +109,7 @@ export enum MyToolkitTools {
 ### Step 4: Create Base Configuration
 
 Create `base.ts`:
+
 ```typescript
 import { z } from "zod";
 import type { ToolkitConfig } from "@/toolkits/types";
@@ -119,8 +117,7 @@ import { baseMyTool } from "./tools/my-tool/base";
 import { MyToolkitTools } from "./tools/tools";
 
 export const myToolkitParameters = z.object({
-  apiKey: z.string().optional(),
-  // Add other configuration parameters
+  // any input needed from the user on the client
 });
 
 export const baseMyToolkitConfig: ToolkitConfig<
@@ -138,6 +135,7 @@ export const baseMyToolkitConfig: ToolkitConfig<
 ### Step 5: Create Tool Base Schema
 
 Create `tools/my-tool/base.ts`:
+
 ```typescript
 import { z } from "zod";
 import { createBaseTool } from "@/toolkits/create-tool";
@@ -158,6 +156,7 @@ export const baseMyTool = createBaseTool({
 ### Step 6: Implement Server-Side Logic
 
 Create `tools/my-tool/server.ts`:
+
 ```typescript
 import type { ServerToolConfig } from "@/toolkits/types";
 import type { baseMyTool } from "./base";
@@ -169,7 +168,7 @@ export const myToolConfigServer: ServerToolConfig<
   callback: async (args) => {
     // Implement your tool logic here
     const result = await callExternalAPI(args.query);
-    
+
     return {
       result: result.data,
     };
@@ -181,6 +180,7 @@ export const myToolConfigServer: ServerToolConfig<
 ### Step 7: Create Client UI Components
 
 Create `tools/my-tool/client.tsx`:
+
 ```typescript
 import type { ClientToolConfig } from "@/toolkits/types";
 import type { baseMyTool } from "./base";
@@ -208,6 +208,7 @@ export const myToolConfigClient: ClientToolConfig<
 ### Step 8: Create Client Toolkit
 
 Create `client.tsx`:
+
 ```typescript
 import { MyIcon } from "lucide-react";
 import { createClientToolkit } from "@/toolkits/create-toolkit";
@@ -222,8 +223,9 @@ export const myClientToolkit = createClientToolkit(
     name: "My Toolkit",
     description: "Brief description of what this toolkit does",
     icon: MyIcon,
-    form: null, // Or a React component for configuration
+    form: null, // if the toolkit requires parameters from the user, add a form here
     type: ToolkitGroups.DataSource, // Choose appropriate group
+    addToolkitWrapper: ({ children }) => <div>{children}</div> // if you need escalated permission s from the user, you can wrap the add button to ensure you have the necessary scopes
   },
   {
     [MyToolkitTools.MyTool]: myToolConfigClient,
@@ -235,6 +237,7 @@ export const myClientToolkit = createClientToolkit(
 ### Step 9: Create Server Toolkit
 
 Create `server.ts`:
+
 ```typescript
 import { createServerToolkit } from "@/toolkits/create-toolkit";
 import { baseMyToolkitConfig } from "./base";
@@ -261,6 +264,7 @@ export const myToolkitServer = createServerToolkit(
 ### Step 10: Register Your Toolkit
 
 1. Add your toolkit to `shared.ts`:
+
 ```typescript
 export enum Toolkits {
   // ... existing toolkits
@@ -279,6 +283,7 @@ export type ServerToolkitParameters = {
 ```
 
 2. Add to `client.ts`:
+
 ```typescript
 import { myClientToolkit } from "./my-toolkit/client";
 
@@ -289,6 +294,7 @@ export const clientToolkits: ClientToolkits = {
 ```
 
 3. Add to `server.ts`:
+
 ```typescript
 import { myToolkitServer } from "./my-toolkit/server";
 
@@ -300,31 +306,28 @@ export const serverToolkits: ServerToolkits = {
 
 ## Best Practices
 
-### 🎯 **Tool Design**
+### **Tool Design**
+
 - Keep tools focused on single responsibilities
 - Use clear, descriptive names and descriptions
 - Design intuitive input/output schemas
 - Provide helpful error messages
 
-### 🔧 **Parameter Management**
+### **Parameter Management**
+
 - Use Zod schemas for all inputs and outputs
 - Validate parameters on both client and server
 - Provide sensible defaults where possible
-- Make optional parameters truly optional
 
-### 🎨 **UI Components**
+### **UI Components**
+
 - Create responsive, accessible components
 - Show loading states for long-running operations
 - Provide clear visual feedback
 - Handle error states gracefully
 
-### 🔒 **Security**
-- Never expose API keys in client code
-- Validate all inputs on the server
-- Use environment variables for sensitive config
-- Implement proper error handling
+### **Documentation**
 
-### 📚 **Documentation**
 - Write clear tool descriptions
 - Provide helpful system prompts
 - Include usage examples
@@ -347,21 +350,6 @@ Organize your toolkit into the appropriate group:
 - **`ToolkitGroups.DataSource`** - External data and search
 - **`ToolkitGroups.KnowledgeBase`** - Document and knowledge management
 
-## Getting Help
+You can also create a new group if your toolkit does not fall into one of these categories
 
-- Study existing toolkit implementations
-- Check the type definitions in `types.ts`
-- Look at how factory functions work in `create-toolkit.ts`
-- Follow the patterns established by successful toolkits
-
-## Contributing
-
-When contributing a new toolkit:
-
-1. Follow the established patterns and conventions
-2. Include comprehensive error handling
-3. Add appropriate TypeScript types
-4. Test both client and server functionality
-5. Update this documentation if needed
-
-Happy toolkit building! 🚀
+Happy toolkit building!
