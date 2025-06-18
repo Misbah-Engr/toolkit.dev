@@ -15,7 +15,7 @@ export default async function WorkbenchLayout({
   const session = await auth();
 
   if (!session) {
-    redirect("/login?redirect=/workbench/${id}");
+    redirect(`/login?redirect=/workbench/${id}`);
   }
 
   const workbench = await api.workbenches.getWorkbench(id);
