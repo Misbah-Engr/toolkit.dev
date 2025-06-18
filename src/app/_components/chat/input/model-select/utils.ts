@@ -7,6 +7,7 @@ import {
   SiAnthropic,
   SiPerplexity,
   SiX,
+  SiMeta,
 } from "@icons-pack/react-simple-icons";
 
 import { LanguageModelCapability, type Provider } from "@/ai/types";
@@ -51,6 +52,7 @@ export const modelProviderNames: Record<Provider, string> = {
   anthropic: "Anthropic",
   perplexity: "Perplexity",
   xai: "xAI",
+  llama: "Llama",
 };
 
 export const modelIcons: Record<
@@ -62,4 +64,5 @@ export const modelIcons: Record<
   anthropic: SiAnthropic,
   perplexity: SiPerplexity,
   xai: SiX,
+  llama: SiMeta,
 };

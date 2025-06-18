@@ -95,6 +95,10 @@ const createLlmSchema = () => {
     llmSchema.PERPLEXITY_API_KEY = z.string();
   }
 
+  if (process.env.GROQ_API_KEY) {
+    llmSchema.GROQ_API_KEY = z.string();
+  }
+
   if (Object.keys(llmSchema).length === 0) {
     throw new Error("No LLM provider configured");
   }
@@ -124,6 +128,10 @@ const llmRuntimeEnv = () => {
 
   if (process.env.PERPLEXITY_API_KEY) {
     object.PERPLEXITY_API_KEY = process.env.PERPLEXITY_API_KEY;
+  }
+
+  if (process.env.GROQ_API_KEY) {
+    object.GROQ_API_KEY = process.env.GROQ_API_KEY;
   }
 
   return object;
