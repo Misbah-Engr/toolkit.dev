@@ -31,7 +31,6 @@ import type {
   UIMessage,
 } from "ai";
 import type { Chat } from "@prisma/client";
-import { type providers } from "@/ai/registry";
 import { openai } from "@ai-sdk/openai";
 import { getServerToolkit } from "@/toolkits/toolkits/server";
 import { languageModels } from "@/ai/models";
@@ -233,7 +232,7 @@ export async function POST(request: Request) {
     const stream = createDataStream({
       execute: (dataStream) => {
         const result = streamText(
-          getModelId(selectedChatModel, useNativeSearch),
+          `${selectedChatModel}${useNativeSearch ? ":search" : ""}`,
           {
             system: fullSystemPrompt,
             messages: convertToCoreMessages(messages),
@@ -243,6 +242,7 @@ export async function POST(request: Request) {
             experimental_generateMessageId: generateUUID,
             onError: (error) => {
               console.error(error);
+              throw new ChatSDKError("bad_request:api");
             },
             onFinish: async ({ response }) => {
               const model = languageModels.find(
@@ -346,7 +346,7 @@ export async function POST(request: Request) {
 }
 
 async function generateTitleFromUserMessage(message: UIMessage) {
-  const { text: title } = await generateText("openai:gpt-4o-mini", {
+  const { text: title } = await generateText("openai/gpt-4o-mini", {
     system: `\n
       - you will generate a short title based on the first message a user begins a conversation with
       - ensure it is not more than 80 characters long
@@ -371,22 +371,6 @@ function getTrailingMessageId({
 
   return trailingMessage.id;
 }
-
-const getModelId = (
-  model: `${keyof typeof providers}:${string}`,
-  useNativeSearch: boolean | undefined,
-): `${keyof typeof providers}:${string}` => {
-  // no need for dynamic mdoel config
-  if (!useNativeSearch) return model;
-
-  const [provider, modelId] = model.split(":");
-
-  if (provider === "google") {
-    return `${provider}:${modelId}-search`;
-  }
-
-  return model;
-};
 
 export async function GET(request: Request) {
   const streamContext = getStreamContext();

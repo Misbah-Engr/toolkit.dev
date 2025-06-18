@@ -6,16 +6,8 @@ import {
 
 const xaiLanguageModelData: Omit<LanguageModel, "provider">[] = [
   {
-    name: "Grok 3 Fast",
-    modelId: "grok-3-fast",
-    description: "Optimized for speed and efficiency",
-    capabilities: [LanguageModelCapability.ToolCalling],
-    bestFor: ["Quick responses", "Real-time chat", "Simple tasks"],
-    contextLength: 128000,
-  },
-  {
     name: "Grok 3",
-    modelId: "grok-3",
+    modelId: "grok-3-beta",
     description: "Latest generation Grok model with enhanced capabilities",
     capabilities: [LanguageModelCapability.ToolCalling],
     bestFor: ["General purpose", "Real-time information", "Analysis"],
@@ -23,21 +15,13 @@ const xaiLanguageModelData: Omit<LanguageModel, "provider">[] = [
   },
   {
     name: "Grok 3 Mini",
-    modelId: "grok-3-mini",
+    modelId: "grok-3-mini-beta",
     description: "Compact version for efficient processing",
     capabilities: [
       LanguageModelCapability.ToolCalling,
       LanguageModelCapability.Reasoning,
     ],
     bestFor: ["Cost-effective", "Simple queries", "Quick tasks"],
-    contextLength: 128000,
-  },
-  {
-    name: "Grok 3 Mini Fast",
-    modelId: "grok-3-mini-fast",
-    description: "Ultra-fast compact model",
-    capabilities: [LanguageModelCapability.ToolCalling],
-    bestFor: ["Ultra-quick responses", "Simple chat", "Basic tasks"],
     contextLength: 128000,
   },
   {
@@ -64,7 +48,7 @@ const xaiLanguageModelData: Omit<LanguageModel, "provider">[] = [
 export const xaiLanguageModels: LanguageModel[] = xaiLanguageModelData.map(
   (model) => ({
     ...model,
-    provider: "xai",
+    provider: "x-ai",
   }),
 );
 

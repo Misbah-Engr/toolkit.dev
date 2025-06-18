@@ -3,7 +3,7 @@ import { LanguageModelCapability, type LanguageModel } from "@/ai/types";
 const googleModelData: Omit<LanguageModel, "provider">[] = [
   {
     name: "Gemini 2.0 Flash",
-    modelId: "gemini-2.0-flash",
+    modelId: "gemini-2.0-flash-001",
     description: "Balanced performance with multimodal capabilities",
     capabilities: [
       LanguageModelCapability.Vision,
@@ -16,7 +16,7 @@ const googleModelData: Omit<LanguageModel, "provider">[] = [
   },
   {
     name: "Gemini 2.5 Pro Preview",
-    modelId: "gemini-2.5-pro-preview-05-06",
+    modelId: "gemini-2.5-pro-preview-06-05",
     description: "Next-generation Gemini with enhanced reasoning",
     capabilities: [
       LanguageModelCapability.Vision,
@@ -30,7 +30,7 @@ const googleModelData: Omit<LanguageModel, "provider">[] = [
   },
   {
     name: "Gemini 2.5 Flash Preview",
-    modelId: "gemini-2.5-flash-preview-04-17",
+    modelId: "gemini-2.5-flash",
     description: "Fast version of Gemini 2.5 for quick responses",
     capabilities: [
       LanguageModelCapability.Vision,
@@ -44,7 +44,7 @@ const googleModelData: Omit<LanguageModel, "provider">[] = [
   },
   {
     name: "Gemini 1.5 Pro",
-    modelId: "gemini-1.5-pro",
+    modelId: "gemini-pro-1.5",
     description: "Powerful model with large context window",
     capabilities: [
       LanguageModelCapability.Vision,
@@ -56,7 +56,7 @@ const googleModelData: Omit<LanguageModel, "provider">[] = [
   },
   {
     name: "Gemini 1.5 Flash",
-    modelId: "gemini-1.5-flash",
+    modelId: "gemini-flash-1.5",
     description: "Fast and efficient for everyday tasks",
     capabilities: [
       LanguageModelCapability.Vision,
@@ -68,7 +68,7 @@ const googleModelData: Omit<LanguageModel, "provider">[] = [
   },
   {
     name: "Gemini 1.5 Flash 8B",
-    modelId: "gemini-1.5-flash-8b",
+    modelId: "gemini-flash-1.5-8b",
     description: "Compact model optimized for speed",
     capabilities: [
       LanguageModelCapability.WebSearch,

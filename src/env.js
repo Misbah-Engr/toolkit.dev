@@ -72,58 +72,29 @@ const authRuntimeEnv = () => {
   return object;
 };
 
-const createLlmSchema = () => {
-  const llmSchema = {};
+const createImageModelSchema = () => {
+  const imageModelSchema = {};
 
   if (process.env.OPENAI_API_KEY) {
-    llmSchema.OPENAI_API_KEY = z.string();
-  }
-
-  if (process.env.ANTHROPIC_API_KEY) {
-    llmSchema.ANTHROPIC_API_KEY = z.string();
+    imageModelSchema.OPENAI_API_KEY = z.string();
   }
 
   if (process.env.XAI_API_KEY) {
-    llmSchema.XAI_API_KEY = z.string();
+    imageModelSchema.XAI_API_KEY = z.string();
   }
 
-  if (process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
-    llmSchema.GOOGLE_GENERATIVE_AI_API_KEY = z.string();
-  }
-
-  if (process.env.PERPLEXITY_API_KEY) {
-    llmSchema.PERPLEXITY_API_KEY = z.string();
-  }
-
-  if (Object.keys(llmSchema).length === 0) {
-    throw new Error("No LLM provider configured");
-  }
-
-  return llmSchema;
+  return imageModelSchema;
 };
 
-const llmRuntimeEnv = () => {
+const imageModelRuntimeEnv = () => {
   const object = {};
 
   if (process.env.OPENAI_API_KEY) {
     object.OPENAI_API_KEY = process.env.OPENAI_API_KEY;
   }
 
-  if (process.env.ANTHROPIC_API_KEY) {
-    object.ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
-  }
-
   if (process.env.XAI_API_KEY) {
     object.XAI_API_KEY = process.env.XAI_API_KEY;
-  }
-
-  if (process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
-    object.GOOGLE_GENERATIVE_AI_API_KEY =
-      process.env.GOOGLE_GENERATIVE_AI_API_KEY;
-  }
-
-  if (process.env.PERPLEXITY_API_KEY) {
-    object.PERPLEXITY_API_KEY = process.env.PERPLEXITY_API_KEY;
   }
 
   return object;
@@ -144,11 +115,12 @@ export const env = createEnv({
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
-    ...createAuthSchema(),
-    ...createLlmSchema(),
+    OPENROUTER_API_KEY: z.string(),
     EXA_API_KEY: z.string().optional(),
     MEM0_API_KEY: z.string().optional(),
     E2B_API_KEY: z.string().optional(),
+    ...createAuthSchema(),
+    ...createImageModelSchema(),
   },
 
   /**
@@ -169,11 +141,12 @@ export const env = createEnv({
     AUTH_SECRET: process.env.AUTH_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
-    ...authRuntimeEnv(),
-    ...llmRuntimeEnv(),
+    OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY,
     EXA_API_KEY: process.env.EXA_API_KEY,
     MEM0_API_KEY: process.env.MEM0_API_KEY,
     E2B_API_KEY: process.env.E2B_API_KEY,
+    ...authRuntimeEnv(),
+    ...imageModelRuntimeEnv(),
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

@@ -3,7 +3,6 @@ import { z } from "zod";
 import { languageModels } from "@/ai/models";
 import { MESSAGE_MAX_LENGTH, FILE_NAME_MAX_LENGTH } from "@/lib/constants";
 
-import type { providers } from "@/ai/registry";
 import { Toolkits } from "@/toolkits/toolkits/shared";
 import { clientToolkits } from "@/toolkits/toolkits/client";
 
@@ -36,9 +35,9 @@ export const postRequestBodySchema = z.object({
       .optional(),
   }),
   selectedChatModel: z.enum(
-    languageModels.map((model) => `${model.provider}:${model.modelId}`) as [
-      `${keyof typeof providers}:${string}`,
-      ...`${keyof typeof providers}:${string}`[],
+    languageModels.map((model) => `${model.provider}/${model.modelId}`) as [
+      `${string}/${string}`,
+      ...`${string}/${string}`[],
     ],
   ),
   selectedVisibilityType: z.enum(["public", "private"]),

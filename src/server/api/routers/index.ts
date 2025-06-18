@@ -1,7 +1,6 @@
 export { chatsRouter } from "./chats";
 export { messagesRouter } from "./messages";
 export { streamsRouter } from "./streams";
-export { modelsRouter } from "./models";
 export { filesRouter } from "./files";
 export { usersRouter } from "./users";
 export { accountsRouter } from "./accounts";

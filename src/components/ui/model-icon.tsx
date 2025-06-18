@@ -1,14 +1,20 @@
+import Image from "next/image";
+
 import { cn } from "@/lib/utils";
-import type { Provider } from "@/ai/types";
-import { modelIcons } from "@/app/_components/chat/input/model-select/utils";
 
 interface Props {
-  provider: Provider;
+  provider: string;
   className?: string;
 }
 
 export const ModelProviderIcon: React.FC<Props> = ({ provider, className }) => {
-  const Icon = modelIcons[provider] ?? null;
-
-  return Icon ? <Icon className={cn("size-4", className)} /> : null;
+  return (
+    <Image
+      src={`/icons/${provider}.png`}
+      alt={provider}
+      width={16}
+      height={16}
+      className={cn("rounded-full", className ?? "")}
+    />
+  );
 };

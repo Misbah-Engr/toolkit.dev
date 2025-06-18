@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import { Chat } from "@/app/_components/chat/chat";
+import { Chat } from "@/app/_components/chat";
 import { api } from "@/trpc/server";
 import { generateUUID } from "@/lib/utils";
 
@@ -23,10 +23,8 @@ export default async function WorkbenchPage(props: {
       <Chat
         id={chatId}
         isReadonly={false}
-        initialMessages={[]}
+        isNew={true}
         initialVisibilityType="private"
-        autoResume={true}
-        hasInitialMessages={false}
         workbench={workbench}
       />
     );

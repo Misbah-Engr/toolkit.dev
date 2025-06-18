@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { ChevronDown, Loader2 } from "lucide-react";
 
 import { motion, AnimatePresence } from "motion/react";
 
 import { Markdown } from "@/components/ui/markdown";
+import { cn } from "@/lib/utils";
 
 interface MessageReasoningProps {
   isLoading: boolean;
@@ -18,6 +19,12 @@ export function MessageReasoning({
   reasoning,
 }: MessageReasoningProps) {
   const [isExpanded, setIsExpanded] = useState(true);
+
+  useEffect(() => {
+    if (!isLoading) {
+      setIsExpanded(false);
+    }
+  }, [isLoading]);
 
   const variants = {
     collapsed: {
@@ -40,7 +47,7 @@ export function MessageReasoning({
         <div className="flex flex-row items-center gap-2">
           <div className="font-medium">Reasoning</div>
           <div className="animate-spin">
-            <Loader2 />
+            <Loader2 className="size-4" />
           </div>
         </div>
       ) : (
@@ -54,7 +61,12 @@ export function MessageReasoning({
               setIsExpanded(!isExpanded);
             }}
           >
-            <ChevronDown />
+            <ChevronDown
+              className={cn(
+                "size-4 transition-transform duration-200",
+                isExpanded ? "rotate-180" : "",
+              )}
+            />
           </button>
         </div>
       )}
