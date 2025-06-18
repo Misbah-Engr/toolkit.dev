@@ -19,6 +19,7 @@ import {
 import Link from "next/link";
 import { SiGoogledrive } from "@icons-pack/react-simple-icons";
 import { ToolkitGroups } from "@/toolkits/types";
+import { Toolkits } from "../shared";
 
 const driveScope = "https://www.googleapis.com/auth/drive.readonly";
 
@@ -85,7 +86,7 @@ export const googleDriveClientToolkit = createClientToolkit(
               void signIn(
                 "google",
                 {
-                  callbackUrl: window.location.href,
+                  callbackUrl: `${window.location.href}?${Toolkits.GoogleDrive}=true`,
                 },
                 {
                   prompt: "consent",
@@ -112,7 +113,7 @@ export const googleDriveClientToolkit = createClientToolkit(
               void signIn(
                 "google",
                 {
-                  callbackUrl: window.location.href,
+                  callbackUrl: `${window.location.href}?${Toolkits.GoogleDrive}=true`,
                 },
                 {
                   prompt: "consent",
