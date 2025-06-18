@@ -21,7 +21,6 @@ import { useRouter } from "next/navigation";
 import type { Message } from "ai";
 import { HStack } from "@/components/ui/stack";
 import { ModelProviderIcon } from "@/components/ui/model-icon";
-import type { Provider } from "@/ai/types";
 
 interface Props {
   message: Message;
@@ -52,7 +51,7 @@ export const PureMessageActions: React.FC<Props> = ({
   const model = message.annotations?.find(
     (annotation) => (annotation as { type: string }).type === "model",
   ) as
-    | { model: { name: string; provider: Provider; modelId: string } }
+    | { model: { name: string; provider: string; modelId: string } | null }
     | undefined;
 
   if (isLoading) return null;
@@ -110,7 +109,7 @@ export const PureMessageActions: React.FC<Props> = ({
           </TooltipTrigger>
           <TooltipContent>Branch chat from here</TooltipContent>
         </Tooltip>
-        {model && (
+        {model?.model && (
           <HStack>
             <ModelProviderIcon provider={model.model.provider} />
             <p className="text-muted-foreground text-xs">{model.model.name}</p>

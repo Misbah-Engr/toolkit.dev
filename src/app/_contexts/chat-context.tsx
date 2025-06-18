@@ -31,9 +31,7 @@ import type { Toolkits } from "@/toolkits/toolkits/shared";
 import type { Workbench } from "@prisma/client";
 import { anthropicModels } from "@/ai/models/anthropic";
 
-const DEFAULT_CHAT_MODEL = anthropicModels.find(
-  (model) => model.modelId === "claude-3-7-sonnet-latest",
-)!;
+const DEFAULT_CHAT_MODEL = anthropicModels[0];
 
 interface ChatContextType {
   // Chat state
@@ -226,7 +224,7 @@ export function ChatProvider({
     experimental_prepareRequestBody: (body) => ({
       id,
       message: body.messages.at(-1),
-      selectedChatModel: `${selectedChatModel?.provider}:${selectedChatModel?.modelId}`,
+      selectedChatModel: `${selectedChatModel?.provider}/${selectedChatModel?.modelId}`,
       imageGenerationModel: imageGenerationModel
         ? `${imageGenerationModel.provider}:${imageGenerationModel.modelId}`
         : undefined,

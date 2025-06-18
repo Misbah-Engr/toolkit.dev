@@ -1,17 +1,8 @@
 "use client";
 
 import { Eye, Search, Sparkles, File, Wrench } from "lucide-react";
-import {
-  SiGoogle,
-  SiOpenai,
-  SiAnthropic,
-  SiPerplexity,
-  SiX,
-  SiMeta,
-  SiAlibabacloud,
-} from "@icons-pack/react-simple-icons";
 
-import { LanguageModelCapability, type Provider } from "@/ai/types";
+import { LanguageModelCapability } from "@/ai/types";
 
 export const capabilityIcons: Record<
   LanguageModelCapability,
@@ -47,25 +38,13 @@ export const formatContextLength = (length?: number) => {
   return `${length} tokens`;
 };
 
-export const modelProviderNames: Record<Provider, string> = {
+export const modelProviderNames: Record<string, string> = {
   openai: "OpenAI",
   google: "Google",
   anthropic: "Anthropic",
   perplexity: "Perplexity",
-  xai: "xAI",
-  llama: "Llama",
+  "x-ai": "xAI",
+  "meta-llama": "Llama",
   qwen: "Qwen",
-};
-
-export const modelIcons: Record<
-  Provider,
-  React.ComponentType<{ className?: string }>
-> = {
-  openai: SiOpenai,
-  google: SiGoogle,
-  anthropic: SiAnthropic,
-  perplexity: SiPerplexity,
-  xai: SiX,
-  llama: SiMeta,
-  qwen: SiAlibabacloud,
+  deepseek: "DeepSeek",
 };

@@ -1,23 +1,23 @@
 import { generateText as generateTextAi, streamText as streamTextAi } from "ai";
 
-import { type providers, registry } from "./registry";
+import { openrouter } from "@openrouter/ai-sdk-provider";
 
 export const generateText = (
-  model: `${keyof typeof providers}:${string}`,
+  model: `${string}/${string}`,
   params: Omit<Parameters<typeof generateTextAi>[0], "model">,
 ) => {
   return generateTextAi({
-    model: registry.languageModel(model),
+    model: openrouter(model),
     ...params,
   });
 };
 
 export const streamText = (
-  model: `${keyof typeof providers}:${string}`,
+  model: `${string}/${string}`,
   params: Omit<Parameters<typeof streamTextAi>[0], "model">,
 ) => {
   return streamTextAi({
-    model: registry.languageModel(model),
+    model: openrouter(model),
     ...params,
   });
 };

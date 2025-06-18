@@ -16,8 +16,8 @@ export const languageModels: LanguageModel[] = [
   ...("OPENAI_API_KEY" in env ? openAiLanguageModels : []),
   ...("XAI_API_KEY" in env ? xaiLanguageModels : []),
   ...("PERPLEXITY_API_KEY" in env ? perplexityModels : []),
-  ...("GROQ_API_KEY" in env ? llamaModels : []),
-  ...("GROQ_API_KEY" in env ? qwenModels : []),
+  ...("OPENROUTER_API_KEY" in env ? llamaModels : []),
+  ...("OPENROUTER_API_KEY" in env ? qwenModels : []),
 ];
 
 export const imageModels = [

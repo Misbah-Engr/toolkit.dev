@@ -1,12 +1,7 @@
-import {
-  SiDiscord,
-  SiGithub,
-  SiGoogle,
-  SiNotion,
-  SiX,
-} from "@icons-pack/react-simple-icons";
+import Image from "next/image";
 
 import { cn } from "@/lib/utils";
+import { SiGithub, SiNotion, SiX } from "@icons-pack/react-simple-icons";
 
 interface Props {
   provider: string;
@@ -16,8 +11,24 @@ interface Props {
 export const AuthProviderIcon: React.FC<Props> = ({ provider, className }) => {
   const Icon =
     {
-      Discord: SiDiscord,
-      Google: SiGoogle,
+      Discord: ({ className }: { className?: string }) => (
+        <Image
+          src="/icons/discord.png"
+          alt="Discord"
+          className={className}
+          width={16}
+          height={16}
+        />
+      ),
+      Google: ({ className }: { className?: string }) => (
+        <Image
+          src="/icons/google.png"
+          alt="Google"
+          className={className}
+          width={16}
+          height={16}
+        />
+      ),
       GitHub: SiGithub,
       Twitter: SiX,
       Notion: SiNotion,

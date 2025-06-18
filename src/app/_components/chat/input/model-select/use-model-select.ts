@@ -2,11 +2,7 @@
 
 import { useState } from "react";
 import { api } from "@/trpc/react";
-import type {
-  LanguageModel,
-  LanguageModelCapability,
-  Provider,
-} from "@/ai/types";
+import type { LanguageModel, LanguageModelCapability } from "@/ai/types";
 
 interface UseModelSelectProps {
   selectedChatModel: LanguageModel | undefined;
@@ -53,7 +49,7 @@ export const useModelSelect = ({
   const [selectedCapabilities, setSelectedCapabilities] = useState<
     LanguageModelCapability[]
   >([]);
-  const [selectedProviders, setSelectedProviders] = useState<Provider[]>([]);
+  const [selectedProviders, setSelectedProviders] = useState<string[]>([]);
 
   const handleModelSelect = (model: LanguageModel) => {
     setSelectedChatModel(model);
@@ -73,7 +69,7 @@ export const useModelSelect = ({
 
     const matchesProviders =
       selectedProviders.length === 0 ||
-      selectedProviders.includes(model.provider as Provider);
+      selectedProviders.includes(model.provider);
 
     return matchesSearch && matchesCapabilities && matchesProviders;
   });
@@ -86,7 +82,7 @@ export const useModelSelect = ({
     );
   };
 
-  const toggleProvider = (provider: Provider) => {
+  const toggleProvider = (provider: string) => {
     setSelectedProviders((prev) =>
       prev.includes(provider)
         ? prev.filter((p) => p !== provider)

@@ -99,6 +99,10 @@ const createLlmSchema = () => {
     llmSchema.GROQ_API_KEY = z.string();
   }
 
+  if (process.env.OPENROUTER_API_KEY) {
+    llmSchema.OPENROUTER_API_KEY = z.string();
+  }
+
   if (Object.keys(llmSchema).length === 0) {
     throw new Error("No LLM provider configured");
   }
@@ -132,6 +136,10 @@ const llmRuntimeEnv = () => {
 
   if (process.env.GROQ_API_KEY) {
     object.GROQ_API_KEY = process.env.GROQ_API_KEY;
+  }
+
+  if (process.env.OPENROUTER_API_KEY) {
+    object.OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
   }
 
   return object;

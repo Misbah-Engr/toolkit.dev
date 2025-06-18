@@ -2,8 +2,8 @@ import { type LanguageModel, LanguageModelCapability } from "@/ai/types";
 
 const qwenModelData: Omit<LanguageModel, "provider">[] = [
   {
-    name: "Qwen QWQ 32B",
-    modelId: "qwen-qwq-32b",
+    name: "Qwen QwQ 32B",
+    modelId: "qwq-32b",
     description:
       "Qwen QWQ 32B is a large language model optimized for various natural language processing tasks",
     capabilities: [LanguageModelCapability.ToolCalling],
@@ -12,7 +12,7 @@ const qwenModelData: Omit<LanguageModel, "provider">[] = [
   },
   {
     name: "Qwen 3 32B",
-    modelId: "qwen/qwen3-32b",
+    modelId: "qwen3-32b",
     description:
       "Qwen 3 32B is the latest generation of Qwen models with enhanced capabilities",
     capabilities: [LanguageModelCapability.ToolCalling],
