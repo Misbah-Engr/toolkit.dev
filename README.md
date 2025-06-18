@@ -106,7 +106,6 @@ Toolkit.dev leverages the full power of the T3 Stack:
 - **[Next.js](https://nextjs.org)** - React framework with App Router
 - **[NextAuth.js](https://next-auth.js.org)** - Authentication solution
 - **[Prisma](https://prisma.io)** - Database ORM and migrations
-- **[Drizzle](https://orm.drizzle.team)** - Type-safe database queries
 - **[Tailwind CSS](https://tailwindcss.com)** - Utility-first CSS framework
 - **[tRPC](https://trpc.io)** - End-to-end type-safe APIs
 
@@ -198,36 +197,10 @@ AUTH_NOTION_ID="your-notion-client-id"
 AUTH_NOTION_SECRET="your-notion-client-secret"
 ```
 
-#### Choose at least one LLM Provider
-
-**Option 1: OpenAI**
+#### Add an OpenRouter key
 
 ```env
-OPENAI_API_KEY="sk-your-openai-key"
-```
-
-**Option 2: Anthropic**
-
-```env
-ANTHROPIC_API_KEY="sk-ant-your-anthropic-key"
-```
-
-**Option 3: XAI**
-
-```env
-XAI_API_KEY="your-xai-key"
-```
-
-**Option 4: Google**
-
-```env
-GOOGLE_GENERATIVE_AI_API_KEY="your-google-ai-key"
-```
-
-**Option 5: Perplexity**
-
-```env
-PERPLEXITY_API_KEY="your-perplexity-key"
+OPENROUTER_API_KEY=""
 ```
 
 #### Optional Toolkit API Keys
@@ -243,6 +216,10 @@ MEM0_API_KEY="your-mem0-key"
 
 # Code Execution
 E2B_API_KEY="your-e2b-key"
+
+# Image Generation
+OPENAI_API_KEY=""
+XAI_API_KEY=""
 ```
 
 > **Note:** The app automatically detects which providers and toolkits are configured and adapts the interface accordingly!

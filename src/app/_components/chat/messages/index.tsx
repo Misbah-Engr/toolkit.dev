@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useEffect, useState } from "react";
 import { motion } from "motion/react";
 import equal from "fast-deep-equal";
 import { PreviewMessage, ThinkingMessage } from "./message";
@@ -32,7 +32,17 @@ const PureMessages: React.FC<Props> = ({
     scrollToBottom,
   });
 
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, [hasMounted]);
+
   const lastMessage = messages[messages.length - 1];
+
+  if (!hasMounted) {
+    return null;
+  }
 
   return (
     <div

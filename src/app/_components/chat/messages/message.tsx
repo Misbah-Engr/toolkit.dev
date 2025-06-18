@@ -185,7 +185,7 @@ export const ThinkingMessage = () => {
       data-testid="message-assistant-loading"
       className="group/message mx-auto min-h-96 w-full max-w-3xl px-4"
       initial={{ y: 5, opacity: 0 }}
-      animate={{ y: 0, opacity: 1, transition: { delay: 1 } }}
+      animate={{ y: 0, opacity: 1, transition: { delay: 0.5 } }}
       data-role={role}
     >
       <div
