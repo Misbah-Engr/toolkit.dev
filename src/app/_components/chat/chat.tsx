@@ -11,6 +11,7 @@ import { useChatContext } from "@/app/_contexts/chat-context";
 import { Logo } from "@/components/ui/logo";
 import { useSearchParams } from "next/navigation";
 import { WelcomeDialog } from "../welcome-dialog";
+import { Anvil } from "lucide-react";
 
 export const ChatContent = ({
   id,
@@ -33,7 +34,7 @@ export const ChatContent = ({
     onViewportLeave,
   } = useScrollToBottom();
 
-  const { messages } = useChatContext();
+  const { messages, workbench } = useChatContext();
   const hasMessages = messages.length > 0;
 
   return (
@@ -91,7 +92,11 @@ export const ChatContent = ({
                   transition={{ delay: 0.2, duration: 0.3 }}
                   className="flex items-center justify-center"
                 >
-                  <Logo className="size-24" />
+                  {workbench ? (
+                    <Anvil className="text-primary size-24" />
+                  ) : (
+                    <Logo className="size-24" />
+                  )}
                 </motion.div>
                 <motion.h1
                   initial={{ opacity: 0, y: 10 }}
@@ -100,7 +105,9 @@ export const ChatContent = ({
                   transition={{ delay: 0.3, duration: 0.3 }}
                   className="text-2xl font-bold md:text-3xl"
                 >
-                  Welcome to Toolkit.dev
+                  {workbench
+                    ? `${workbench.name} Workbench`
+                    : "Welcome to Toolkit.dev"}
                 </motion.h1>
               </motion.div>
             )}
