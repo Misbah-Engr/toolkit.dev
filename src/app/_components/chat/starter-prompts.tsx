@@ -18,9 +18,9 @@ interface StarterPrompt {
 const DYNAMIC_STARTER_PROMPTS: StarterPrompt[] = [
   // Multi-toolkit prompts (4+ toolkits - highest priority)
   {
-    title: "Full-Stack Architecture Analysis",
+    title: "React/Next.js Architecture Analysis",
     prompt:
-      "Search GitHub for repositories using my tech stack, analyze their code structure and patterns, generate an architecture diagram, execute sample code to understand implementation, and store architectural insights in memory",
+      "Search GitHub for React/Next.js repositories with TypeScript, analyze their component architecture and state management patterns, generate an architecture diagram, execute sample components to understand implementation, and store architectural insights in memory",
     toolkitIds: [
       Toolkits.Github,
       Toolkits.E2B,
@@ -28,12 +28,12 @@ const DYNAMIC_STARTER_PROMPTS: StarterPrompt[] = [
       Toolkits.Memory,
     ],
     description:
-      "Complete technical analysis: repository discovery, code execution, architecture visualization, and persistent learning",
+      "Complete React/Next.js analysis: repository discovery, component execution, architecture visualization, and pattern learning",
   },
   {
-    title: "Competitive Technical Intelligence",
+    title: "AI/ML Competitive Intelligence",
     prompt:
-      "Research competitors' technical approaches, analyze their GitHub repositories and commit patterns, generate comparison charts, and document findings with memory for future reference",
+      "Research competitors' AI approaches (LLM fine-tuning, RAG systems, vector databases), analyze their GitHub repositories for ML pipelines and model architectures, generate comparison charts, and store findings for future reference",
     toolkitIds: [
       Toolkits.Exa,
       Toolkits.Github,
@@ -41,12 +41,12 @@ const DYNAMIC_STARTER_PROMPTS: StarterPrompt[] = [
       Toolkits.Memory,
     ],
     description:
-      "Technical competitive analysis with code review, visualization, and strategic insights",
+      "AI/ML competitive analysis with model architecture review, visualization, and strategic insights",
   },
   {
-    title: "Research-Driven Development Workflow",
+    title: "Transformer Architecture Research Pipeline",
     prompt:
-      "Search for academic papers on my technical problem, find related GitHub implementations, test algorithms with Python execution, create comparison visualizations, and store key insights",
+      "Search for research papers on transformer architectures and attention mechanisms, find GitHub implementations of BERT/GPT variants, test model performance with Python execution, create architecture comparison visualizations, and store key insights",
     toolkitIds: [
       Toolkits.Exa,
       Toolkits.Github,
@@ -55,12 +55,12 @@ const DYNAMIC_STARTER_PROMPTS: StarterPrompt[] = [
       Toolkits.Memory,
     ],
     description:
-      "Complete research workflow: academic search, code discovery, algorithm testing, and knowledge retention",
+      "Complete AI research workflow: paper discovery, implementation analysis, model testing, and knowledge retention",
   },
   {
-    title: "Technical Documentation Generator",
+    title: "Full-Stack Documentation Generator",
     prompt:
-      "Analyze my Notion project documentation, search for related GitHub examples, generate architecture diagrams, and create comprehensive technical specifications with memory of project context",
+      "Analyze my Notion API documentation and database schemas, search for similar FastAPI/Django REST implementations on GitHub, generate API architecture diagrams, and create comprehensive technical specifications with memory of project context",
     toolkitIds: [
       Toolkits.Notion,
       Toolkits.Github,
@@ -68,247 +68,247 @@ const DYNAMIC_STARTER_PROMPTS: StarterPrompt[] = [
       Toolkits.Memory,
     ],
     description:
-      "Documentation automation with code examples, visual diagrams, and contextual memory",
+      "API documentation automation with implementation examples, visual diagrams, and contextual memory",
   },
 
   // Multi-toolkit prompts (3 toolkits)
   {
-    title: "Algorithm Research & Implementation",
+    title: "Computer Vision Algorithm Implementation",
     prompt:
-      "Search for research papers on specific algorithms, find GitHub implementations, and test performance with Python benchmarks",
+      "Search for research papers on object detection and image segmentation, find PyTorch/OpenCV implementations on GitHub, and benchmark performance with Python execution",
     toolkitIds: [Toolkits.Exa, Toolkits.Github, Toolkits.E2B],
     description:
-      "Research-to-implementation pipeline with performance analysis",
+      "CV research-to-implementation pipeline with performance benchmarking",
   },
   {
-    title: "Codebase Architecture Visualization",
+    title: "Microservices Architecture Visualization",
     prompt:
-      "Analyze GitHub repositories for architectural patterns, execute code samples to understand data flow, and generate system architecture diagrams",
+      "Analyze GitHub repositories with Docker/Kubernetes microservices architectures, execute container orchestration scripts to understand deployment flow, and generate system architecture diagrams",
     toolkitIds: [Toolkits.Github, Toolkits.E2B, Toolkits.Image],
     description:
-      "Code analysis with execution testing and visual architecture mapping",
+      "Microservices analysis with deployment testing and visual architecture mapping",
   },
   {
-    title: "Technical Knowledge Memory Bank",
+    title: "AI/ML Framework Knowledge Bank",
     prompt:
-      "Research emerging technologies and frameworks, analyze trending GitHub projects, and build a persistent knowledge base for future reference",
+      "Research emerging ML frameworks (LangChain, Hugging Face Transformers, MLflow), analyze trending PyTorch/TensorFlow projects, and build a persistent knowledge base of implementation patterns",
     toolkitIds: [Toolkits.Exa, Toolkits.Github, Toolkits.Memory],
     description:
-      "Technology scouting with repository analysis and knowledge retention",
+      "ML technology scouting with repository analysis and pattern retention",
   },
   {
-    title: "Performance Analysis Dashboard",
+    title: "Web Performance Analysis Dashboard",
     prompt:
-      "Extract performance metrics from my Notion project tracking, run statistical analysis with Python, and generate performance visualization charts",
+      "Extract performance metrics from my Notion project tracking (Core Web Vitals, bundle sizes, API response times), run statistical analysis with Python, and generate performance visualization charts",
     toolkitIds: [Toolkits.Notion, Toolkits.E2B, Toolkits.Image],
     description:
-      "Data-driven performance analysis with computational processing and visualization",
+      "Web performance analysis with computational processing and visualization",
   },
   {
-    title: "Tech Stack Recommendation Engine",
+    title: "JavaScript Framework Comparison Engine",
     prompt:
-      "Research current technology trends, analyze popular GitHub repositories in my domain, and create visual technology comparison charts",
+      "Research current JavaScript framework trends (React vs Vue vs Svelte), analyze popular GitHub repositories for each framework, and create visual technology comparison charts",
     toolkitIds: [Toolkits.Exa, Toolkits.Github, Toolkits.Image],
     description:
-      "Technology research with repository analysis and comparative visualization",
+      "Frontend framework research with repository analysis and comparative visualization",
   },
   {
-    title: "Code Pattern Recognition",
+    title: "ML Design Pattern Recognition",
     prompt:
-      "Analyze GitHub repositories for design patterns and best practices, execute code examples, and remember successful patterns for future projects",
+      "Analyze GitHub repositories for machine learning design patterns (MLOps pipelines, model serving, data preprocessing), execute code examples, and remember successful patterns for future ML projects",
     toolkitIds: [Toolkits.Github, Toolkits.E2B, Toolkits.Memory],
     description:
-      "Pattern analysis with code execution and persistent learning",
+      "ML pattern analysis with code execution and persistent learning",
   },
   {
-    title: "Technical Project Documentation",
+    title: "Web API Project Documentation",
     prompt:
-      "Search GitHub for similar projects and implementations, create technical documentation in Notion, and remember key architectural decisions",
+      "Search GitHub for similar REST API and GraphQL implementations, create technical documentation in Notion for authentication and data modeling, and remember key architectural decisions",
     toolkitIds: [Toolkits.Github, Toolkits.Notion, Toolkits.Memory],
     description:
-      "Project documentation with code research and decision tracking",
+      "API documentation with implementation research and decision tracking",
   },
   {
-    title: "API & Framework Research",
+    title: "AI Framework & Library Research",
     prompt:
-      "Research latest API trends and frameworks, analyze their GitHub repositories, and document findings in my Notion knowledge base",
+      "Research latest AI/ML libraries (Anthropic SDK, OpenAI API, vector databases like Pinecone), analyze their GitHub repositories for implementation examples, and document findings in Notion",
     toolkitIds: [Toolkits.Exa, Toolkits.Github, Toolkits.Notion],
     description:
-      "API research with repository analysis and structured documentation",
+      "AI library research with implementation analysis and structured documentation",
   },
 
   // Two-toolkit prompts - High Value Technical Combinations
   {
-    title: "GitHub Code Deep Dive",
+    title: "React Component Deep Dive",
     prompt:
-      "Search for repositories implementing specific algorithms or patterns, then execute and analyze the code to understand implementation details",
+      "Search for advanced React repositories (state management with Zustand/Redux, custom hooks, performance optimization), then execute and analyze component patterns to understand implementation details",
     toolkitIds: [Toolkits.Github, Toolkits.E2B],
-    description: "Repository discovery with hands-on code analysis and execution",
+    description: "React component discovery with hands-on code analysis and execution",
   },
   {
-    title: "Technical Research Execution",
+    title: "LLM Fine-tuning Research",
     prompt:
-      "Find research papers on machine learning or systems topics, then implement and test the algorithms described using Python",
+      "Find research papers on large language model fine-tuning techniques (LoRA, QLoRA, RLHF), then implement and test the training algorithms using Python with PyTorch",
     toolkitIds: [Toolkits.Exa, Toolkits.E2B],
-    description: "Academic research with practical implementation and testing",
+    description: "LLM research with practical fine-tuning implementation and testing",
   },
   {
-    title: "Architecture Diagram Generator",
+    title: "System Architecture Diagram Generator",
     prompt:
-      "Analyze GitHub repository structure and dependencies, then generate clean architecture diagrams and system flow charts",
+      "Analyze GitHub repositories with modern web architectures (Next.js + Prisma + tRPC, FastAPI + PostgreSQL), then generate clean architecture diagrams and data flow charts",
     toolkitIds: [Toolkits.Github, Toolkits.Image],
-    description: "Code analysis with professional architecture visualization",
+    description: "Web architecture analysis with professional diagram generation",
   },
   {
-    title: "Technical Competitive Analysis",
+    title: "Frontend Performance Intelligence",
     prompt:
-      "Research competitors' technical approaches and tools, then analyze their open-source contributions and GitHub activity patterns",
+      "Research web performance optimization techniques (code splitting, lazy loading, CDN strategies), then analyze high-performance GitHub repositories for implementation patterns",
     toolkitIds: [Toolkits.Exa, Toolkits.Github],
-    description: "Market research combined with technical code analysis",
+    description: "Performance research combined with real-world implementation analysis",
   },
   {
-    title: "Data Science Pipeline Visualization",
+    title: "ML Pipeline Visualization",
     prompt:
-      "Execute data analysis algorithms with Python and generate professional charts, graphs, and data visualization dashboards",
+      "Execute machine learning pipelines (data preprocessing, model training, evaluation metrics) with Python and generate professional ML workflow diagrams and result visualizations",
     toolkitIds: [Toolkits.E2B, Toolkits.Image],
-    description: "Computational analysis with publication-ready visualizations",
+    description: "ML pipeline execution with publication-ready visualizations",
   },
   {
-    title: "Technical Memory Assistant",
+    title: "Web Development Pattern Memory",
     prompt:
-      "Analyze GitHub repositories for best practices and coding patterns, storing key insights and learnings for future development projects",
+      "Analyze GitHub repositories for modern web development patterns (authentication with NextAuth, API design with tRPC, database patterns with Prisma), storing insights for future projects",
     toolkitIds: [Toolkits.Github, Toolkits.Memory],
-    description: "Code pattern learning with persistent knowledge retention",
+    description: "Web development pattern learning with persistent knowledge retention",
   },
   {
-    title: "Tech Trend Visualization",
+    title: "AI Technology Trend Visualization",
     prompt:
-      "Research emerging technologies and programming trends, then create comprehensive infographics and trend analysis charts",
+      "Research emerging AI technologies (multimodal models, agent frameworks, retrieval-augmented generation), then create comprehensive infographics and trend analysis charts",
     toolkitIds: [Toolkits.Exa, Toolkits.Image],
-    description: "Technology research with professional visual trend analysis",
+    description: "AI technology research with professional visual trend analysis",
   },
   {
-    title: "Engineering Knowledge Base",
+    title: "Developer Tool Knowledge Base",
     prompt:
-      "Research technical topics and best practices, then organize findings systematically in my Notion engineering documentation",
+      "Research modern development tools and practices (CI/CD with GitHub Actions, testing with Playwright, deployment with Vercel), then organize findings in Notion engineering documentation",
     toolkitIds: [Toolkits.Exa, Toolkits.Notion],
-    description: "Technical research with structured knowledge organization",
+    description: "DevOps research with structured knowledge organization",
   },
   {
-    title: "Project Analysis Dashboard",
+    title: "Web Project Analysis Dashboard",
     prompt:
-      "Extract project data from my Notion workspace and perform statistical analysis to identify patterns, bottlenecks, and optimization opportunities",
+      "Extract project metrics from Notion workspace (sprint velocity, bug counts, feature completion rates) and perform statistical analysis to identify development bottlenecks and optimization opportunities",
     toolkitIds: [Toolkits.Notion, Toolkits.E2B],
-    description: "Project data analysis with computational insights",
+    description: "Development project analysis with computational insights",
   },
   {
-    title: "Technical Research Memory",
+    title: "AI Research Memory Bank",
     prompt:
-      "Research cutting-edge technologies and development practices, storing detailed insights and findings for future reference and decision-making",
+      "Research cutting-edge AI developments (foundation models, prompt engineering techniques, AI safety research), storing detailed insights and findings for future reference and decision-making",
     toolkitIds: [Toolkits.Exa, Toolkits.Memory],
-    description: "Technology scouting with persistent strategic knowledge",
+    description: "AI technology scouting with persistent strategic knowledge",
   },
   {
-    title: "Notion Technical Documentation",
+    title: "Technical Specification Visualization",
     prompt:
-      "Analyze my Notion project pages and technical specifications, creating visual documentation and storing key architectural insights",
+      "Analyze my Notion technical specifications and API documentation, creating visual system diagrams and storing key architectural insights for future reference",
     toolkitIds: [Toolkits.Notion, Toolkits.Image],
     description: "Technical documentation with visual specification creation",
   },
   {
-    title: "Engineering Context Memory",
+    title: "Engineering Decision Memory",
     prompt:
-      "Analyze my Notion engineering notes and project documentation, remembering key technical decisions and architectural context for future discussions",
+      "Analyze my Notion engineering notes and architectural decision records (ADRs), remembering key technical choices and trade-offs for future architectural discussions",
     toolkitIds: [Toolkits.Notion, Toolkits.Memory],
-    description: "Technical knowledge extraction with persistent context building",
+    description: "Technical decision tracking with persistent context building",
   },
 
   // Single-toolkit prompts - Core Technical Tools
   {
-    title: "Advanced GitHub Analysis",
+    title: "Advanced GitHub Code Analysis",
     prompt:
-      "Perform deep analysis of GitHub repositories, users, and code patterns - search for specific implementations, analyze commit patterns, and discover trending projects in my tech stack",
+      "Perform deep analysis of React/Next.js repositories, Node.js APIs, or Python ML projects - search for specific implementations, analyze commit patterns, and discover trending projects in modern web and AI development",
     toolkitIds: [Toolkits.Github],
-    description: "Comprehensive repository analysis and developer intelligence",
+    description: "Comprehensive repository analysis for web and AI development",
   },
   {
-    title: "Python Algorithm Development",
+    title: "Python Development Environment",
     prompt:
-      "Execute Python code for algorithm development, data analysis, performance benchmarking, API testing, or mathematical computations with full execution environment",
+      "Execute Python code for web scraping with BeautifulSoup, ML model training with scikit-learn/PyTorch, API testing with requests, data analysis with pandas, or algorithm implementation with full execution environment",
     toolkitIds: [Toolkits.E2B],
-    description: "Full Python development environment with code execution and testing",
+    description: "Full Python development environment for web and AI development",
   },
   {
     title: "Technical Research Intelligence",
     prompt:
-      "Research emerging technologies, academic papers, technical blogs, competitor analysis, and industry trends with comprehensive web search capabilities",
+      "Research web development trends (Server Components, edge computing, JAMstack), AI/ML breakthroughs (transformer architectures, prompt engineering), technical blogs, and competitive analysis with comprehensive search",
     toolkitIds: [Toolkits.Exa],
-    description: "Advanced technical research and competitive intelligence gathering",
+    description: "Advanced technical research for web and AI development trends",
   },
   {
     title: "Technical Visualization Studio",
     prompt:
-      "Generate architecture diagrams, system flow charts, data visualizations, technical infographics, and professional presentation graphics",
+      "Generate React component hierarchy diagrams, ML model architecture visualizations, API flow charts, database schema diagrams, system architecture blueprints, and technical presentation graphics",
     toolkitIds: [Toolkits.Image],
-    description: "Professional technical visualization and diagram creation",
+    description: "Professional technical visualization for web and AI architectures",
   },
   {
     title: "Engineering Knowledge System",
     prompt:
-      "Store and retrieve technical insights, architectural decisions, code patterns, research findings, and engineering context across conversations",
+      "Store and retrieve technical insights about React patterns, ML model architectures, API design decisions, performance optimizations, and engineering context across conversations",
     toolkitIds: [Toolkits.Memory],
-    description: "Persistent technical knowledge management and context retention",
+    description: "Persistent technical knowledge management for web and AI development",
   },
   {
     title: "Notion Engineering Workspace",
     prompt:
-      "Analyze Notion databases, technical documentation, project specifications, and engineering notes to extract insights and organize technical knowledge",
+      "Analyze Notion databases with project specifications, API documentation, technical requirements, code review notes, and engineering documentation to extract insights and organize technical knowledge",
     toolkitIds: [Toolkits.Notion],
     description: "Technical workspace analysis and engineering documentation management",
   },
 
   // Generic prompts for technical audience
   {
-    title: "System Architecture Design",
+    title: "React/Next.js Architecture Design",
     prompt:
-      "Design scalable system architecture for my application with microservices patterns, database design, API specifications, and deployment considerations",
+      "Design scalable React/Next.js application architecture with TypeScript, state management (Zustand/Redux), API layer (tRPC/GraphQL), database design (Prisma/Drizzle), and deployment considerations (Vercel/AWS)",
     toolkitIds: [],
-    description: "Complete system design with industry best practices and scalability patterns",
+    description: "Complete React/Next.js system design with modern best practices",
   },
   {
-    title: "Algorithm Optimization Consultation",
+    title: "ML Algorithm Optimization",
     prompt:
-      "Analyze algorithm complexity, suggest optimizations, review data structures, and provide performance improvement recommendations for my code",
+      "Analyze machine learning algorithm complexity, suggest model optimizations, review neural network architectures, and provide performance improvement recommendations for training and inference",
     toolkitIds: [],
-    description: "Algorithm analysis with performance optimization and complexity assessment",
+    description: "ML algorithm analysis with performance optimization and architecture assessment",
   },
   {
-    title: "Technical Code Review",
+    title: "Full-Stack Code Review",
     prompt:
-      "Comprehensive code review focusing on design patterns, performance, security, maintainability, and adherence to software engineering best practices",
+      "Comprehensive code review for React/Node.js applications or Python ML projects focusing on design patterns, performance, security, maintainability, and modern best practices",
     toolkitIds: [],
     description: "Professional code review with architectural and performance insights",
   },
   {
     title: "API Design & Documentation",
     prompt:
-      "Design RESTful APIs, GraphQL schemas, or gRPC services with proper documentation, error handling, authentication, and versioning strategies",
+      "Design RESTful APIs or GraphQL schemas with FastAPI/Express/tRPC, including proper documentation, error handling, authentication (JWT/OAuth), rate limiting, and versioning strategies",
     toolkitIds: [],
-    description: "Complete API design with documentation and best practices",
+    description: "Complete API design with modern authentication and documentation",
   },
   {
-    title: "Database Schema Design",
+    title: "Database & ML Data Pipeline Design",
     prompt:
-      "Design efficient database schemas, optimize queries, plan migrations, and recommend indexing strategies for optimal performance",
+      "Design efficient database schemas (PostgreSQL/MongoDB), optimize queries, plan migrations, design ML data pipelines (ETL/ELT), and recommend indexing strategies for web and AI applications",
     toolkitIds: [],
-    description: "Database architecture with performance optimization and scalability planning",
+    description: "Database and ML data architecture with performance optimization",
   },
   {
-    title: "DevOps & Infrastructure Planning",
+    title: "Modern DevOps & MLOps Planning",
     prompt:
-      "Plan CI/CD pipelines, containerization strategies, cloud infrastructure, monitoring, and deployment automation for production systems",
+      "Plan CI/CD pipelines (GitHub Actions), containerization (Docker/Kubernetes), cloud infrastructure (AWS/Vercel), monitoring (DataDog), ML model deployment, and automation for production systems",
     toolkitIds: [],
-    description: "Complete DevOps strategy with infrastructure and automation planning",
+    description: "Complete DevOps and MLOps strategy with modern infrastructure",
   },
 ];
 
