@@ -203,6 +203,13 @@ const DYNAMIC_STARTER_PROMPTS: StarterPrompt[] = [
     description: "Development project analysis with computational insights",
   },
   {
+    title: "Schedule Engineering Meeting",
+    prompt:
+      "Find my soonest available time to meet with my engineering team, and schedule a meeting with them.",
+    toolkitIds: [Toolkits.Notion, Toolkits.GoogleCalendar],
+    description: "Schedule a meeting with my engineering team",
+  },
+  {
     title: "AI Research Memory Bank",
     prompt:
       "Research cutting-edge AI developments (foundation models, prompt engineering techniques, AI safety research), storing detailed insights and findings for future reference and decision-making",
