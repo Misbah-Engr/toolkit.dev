@@ -18,341 +18,297 @@ interface StarterPrompt {
 const DYNAMIC_STARTER_PROMPTS: StarterPrompt[] = [
   // Multi-toolkit prompts (4+ toolkits - highest priority)
   {
-    title: "Comprehensive Project Analysis Dashboard",
+    title: "Full-Stack Architecture Analysis",
     prompt:
-      "Analyze my Notion project database, find related GitHub repositories, generate a visual project overview chart, and store key insights in memory for future reference",
+      "Search GitHub for repositories using my tech stack, analyze their code structure and patterns, generate an architecture diagram, execute sample code to understand implementation, and store architectural insights in memory",
     toolkitIds: [
-      Toolkits.Notion,
       Toolkits.Github,
+      Toolkits.E2B,
       Toolkits.Image,
       Toolkits.Memory,
     ],
     description:
-      "Complete project analysis combining workspace data, code discovery, visualization, and persistent insights",
+      "Complete technical analysis: repository discovery, code execution, architecture visualization, and persistent learning",
   },
   {
-    title: "Market Research & Competitive Analysis",
+    title: "Competitive Technical Intelligence",
     prompt:
-      "Research my industry competitors using web search, analyze their GitHub presence, create a competitive landscape infographic, document findings in Notion, and remember key insights",
+      "Research competitors' technical approaches, analyze their GitHub repositories and commit patterns, generate comparison charts, and document findings with memory for future reference",
     toolkitIds: [
       Toolkits.Exa,
       Toolkits.Github,
       Toolkits.Image,
-      Toolkits.Notion,
       Toolkits.Memory,
     ],
     description:
-      "Complete competitive intelligence workflow with research, code analysis, visualization, documentation, and memory",
+      "Technical competitive analysis with code review, visualization, and strategic insights",
   },
   {
-    title: "Meeting Intelligence & Documentation",
+    title: "Research-Driven Development Workflow",
     prompt:
-      "Analyze my calendar events, read related documents from Google Drive, create meeting summaries in Notion, and remember key discussion points",
+      "Search for academic papers on my technical problem, find related GitHub implementations, test algorithms with Python execution, create comparison visualizations, and store key insights",
     toolkitIds: [
-      Toolkits.GoogleCalendar,
-      Toolkits.GoogleDrive,
-      Toolkits.Notion,
-      Toolkits.Memory,
-    ],
-    description:
-      "Intelligent meeting analysis with document integration and persistent memory",
-  },
-  {
-    title: "Data-Driven Productivity Insights",
-    prompt:
-      "Query my Notion task database, analyze patterns with Python, create productivity visualizations, and identify calendar optimization opportunities",
-    toolkitIds: [
-      Toolkits.Notion,
+      Toolkits.Exa,
+      Toolkits.Github,
       Toolkits.E2B,
       Toolkits.Image,
-      Toolkits.GoogleCalendar,
+      Toolkits.Memory,
     ],
     description:
-      "Data-driven productivity analysis with computational insights and visual reporting",
+      "Complete research workflow: academic search, code discovery, algorithm testing, and knowledge retention",
+  },
+  {
+    title: "Technical Documentation Generator",
+    prompt:
+      "Analyze my Notion project documentation, search for related GitHub examples, generate architecture diagrams, and create comprehensive technical specifications with memory of project context",
+    toolkitIds: [
+      Toolkits.Notion,
+      Toolkits.Github,
+      Toolkits.Image,
+      Toolkits.Memory,
+    ],
+    description:
+      "Documentation automation with code examples, visual diagrams, and contextual memory",
   },
 
   // Multi-toolkit prompts (3 toolkits)
   {
-    title: "Research Paper Analysis with Memory",
+    title: "Algorithm Research & Implementation",
     prompt:
-      "Search for recent AI research papers, create a visual summary of key findings, and store important insights in memory",
-    toolkitIds: [Toolkits.Exa, Toolkits.Image, Toolkits.Memory],
+      "Search for research papers on specific algorithms, find GitHub implementations, and test performance with Python benchmarks",
+    toolkitIds: [Toolkits.Exa, Toolkits.Github, Toolkits.E2B],
     description:
-      "Academic research with visual summaries and persistent knowledge storage",
+      "Research-to-implementation pipeline with performance analysis",
   },
   {
-    title: "GitHub Repository Deep Dive",
+    title: "Codebase Architecture Visualization",
     prompt:
-      "Search for repositories in my tech stack, analyze their code structure, and create an architecture visualization diagram",
-    toolkitIds: [Toolkits.Github, Toolkits.Image, Toolkits.E2B],
+      "Analyze GitHub repositories for architectural patterns, execute code samples to understand data flow, and generate system architecture diagrams",
+    toolkitIds: [Toolkits.Github, Toolkits.E2B, Toolkits.Image],
     description:
-      "Repository discovery with code analysis and visual architecture mapping",
+      "Code analysis with execution testing and visual architecture mapping",
   },
   {
-    title: "Company Research & Intelligence",
+    title: "Technical Knowledge Memory Bank",
     prompt:
-      "Research a target company comprehensively, analyze their GitHub projects, and remember key strategic insights for future reference",
+      "Research emerging technologies and frameworks, analyze trending GitHub projects, and build a persistent knowledge base for future reference",
     toolkitIds: [Toolkits.Exa, Toolkits.Github, Toolkits.Memory],
     description:
-      "Company intelligence gathering with technical analysis and memory storage",
+      "Technology scouting with repository analysis and knowledge retention",
   },
   {
-    title: "Notion Knowledge Visualization",
+    title: "Performance Analysis Dashboard",
     prompt:
-      "Query my Notion pages for project information, create visual knowledge maps, and store key insights in memory",
-    toolkitIds: [Toolkits.Notion, Toolkits.Image, Toolkits.Memory],
+      "Extract performance metrics from my Notion project tracking, run statistical analysis with Python, and generate performance visualization charts",
+    toolkitIds: [Toolkits.Notion, Toolkits.E2B, Toolkits.Image],
     description:
-      "Knowledge base visualization with intelligent summarization and memory",
+      "Data-driven performance analysis with computational processing and visualization",
   },
   {
-    title: "Document Analysis Dashboard",
+    title: "Tech Stack Recommendation Engine",
     prompt:
-      "Search my Google Drive for project documents, perform data analysis with Python, and create visual insights charts",
-    toolkitIds: [Toolkits.GoogleDrive, Toolkits.E2B, Toolkits.Image],
+      "Research current technology trends, analyze popular GitHub repositories in my domain, and create visual technology comparison charts",
+    toolkitIds: [Toolkits.Exa, Toolkits.Github, Toolkits.Image],
     description:
-      "Document processing with computational analysis and visual reporting",
+      "Technology research with repository analysis and comparative visualization",
   },
   {
-    title: "Industry Trend Visualization",
+    title: "Code Pattern Recognition",
     prompt:
-      "Research current industry trends, generate comprehensive infographics, and organize findings in my Notion workspace",
-    toolkitIds: [Toolkits.Exa, Toolkits.Image, Toolkits.Notion],
+      "Analyze GitHub repositories for design patterns and best practices, execute code examples, and remember successful patterns for future projects",
+    toolkitIds: [Toolkits.Github, Toolkits.E2B, Toolkits.Memory],
     description:
-      "Market research with visual content creation and organized documentation",
+      "Pattern analysis with code execution and persistent learning",
   },
   {
-    title: "Technical Stack Documentation",
+    title: "Technical Project Documentation",
     prompt:
-      "Search GitHub for repositories matching my technology stack, create a visual tech roadmap, and document in Notion",
-    toolkitIds: [Toolkits.Github, Toolkits.Image, Toolkits.Notion],
+      "Search GitHub for similar projects and implementations, create technical documentation in Notion, and remember key architectural decisions",
+    toolkitIds: [Toolkits.Github, Toolkits.Notion, Toolkits.Memory],
     description:
-      "Technology research with visual planning and comprehensive documentation",
+      "Project documentation with code research and decision tracking",
   },
   {
-    title: "Calendar Pattern Analysis",
+    title: "API & Framework Research",
     prompt:
-      "Analyze my calendar events and meeting patterns, research productivity techniques, and create a time optimization visualization",
-    toolkitIds: [Toolkits.GoogleCalendar, Toolkits.Exa, Toolkits.Image],
+      "Research latest API trends and frameworks, analyze their GitHub repositories, and document findings in my Notion knowledge base",
+    toolkitIds: [Toolkits.Exa, Toolkits.Github, Toolkits.Notion],
     description:
-      "Calendar intelligence with research-backed productivity optimization",
-  },
-  {
-    title: "Project Documentation Analysis",
-    prompt:
-      "Search my Google Drive for project files, analyze content with Python for insights, and remember key findings",
-    toolkitIds: [Toolkits.GoogleDrive, Toolkits.E2B, Toolkits.Memory],
-    description:
-      "Document analysis with computational processing and insight retention",
+      "API research with repository analysis and structured documentation",
   },
 
-  // Two-toolkit prompts
+  // Two-toolkit prompts - High Value Technical Combinations
   {
-    title: "Notion Database Visualization",
+    title: "GitHub Code Deep Dive",
     prompt:
-      "Query my Notion database and create beautiful charts and visual reports from the data",
-    toolkitIds: [Toolkits.Notion, Toolkits.Image],
-    description: "Database visualization with custom chart generation",
+      "Search for repositories implementing specific algorithms or patterns, then execute and analyze the code to understand implementation details",
+    toolkitIds: [Toolkits.Github, Toolkits.E2B],
+    description: "Repository discovery with hands-on code analysis and execution",
   },
   {
-    title: "Notion Data Science Analysis",
+    title: "Technical Research Execution",
     prompt:
-      "Extract data from my Notion workspace and perform statistical analysis with Python",
-    toolkitIds: [Toolkits.Notion, Toolkits.E2B],
-    description: "Notion data processing with computational analysis",
-  },
-  {
-    title: "Notion Knowledge Memory",
-    prompt:
-      "Search my Notion pages for important information and store key insights in memory for future conversations",
-    toolkitIds: [Toolkits.Notion, Toolkits.Memory],
-    description: "Knowledge extraction with persistent memory storage",
-  },
-  {
-    title: "Calendar Pattern Insights",
-    prompt:
-      "Analyze my calendar events and meeting patterns, then create a visual time management dashboard",
-    toolkitIds: [Toolkits.GoogleCalendar, Toolkits.Image],
-    description: "Calendar analysis with visual time management insights",
-  },
-  {
-    title: "Research with Code Examples",
-    prompt:
-      "Search for machine learning tutorials and research, then test code examples with Python execution",
+      "Find research papers on machine learning or systems topics, then implement and test the algorithms described using Python",
     toolkitIds: [Toolkits.Exa, Toolkits.E2B],
-    description: "Research with hands-on code experimentation and testing",
+    description: "Academic research with practical implementation and testing",
   },
   {
-    title: "Competitive Intelligence Memory",
-    prompt: "Research competitors in my industry and store their key strategies and insights in memory",
-    toolkitIds: [Toolkits.Exa, Toolkits.Memory],
-    description: "Competitive research with persistent strategic insights",
-  },
-  {
-    title: "GitHub Portfolio Visualization",
+    title: "Architecture Diagram Generator",
     prompt:
-      "Analyze GitHub repositories and user profiles, then generate a visual portfolio showcase",
+      "Analyze GitHub repository structure and dependencies, then generate clean architecture diagrams and system flow charts",
     toolkitIds: [Toolkits.Github, Toolkits.Image],
-    description: "Code portfolio analysis with visual presentation",
+    description: "Code analysis with professional architecture visualization",
   },
   {
-    title: "Document Content Analysis",
+    title: "Technical Competitive Analysis",
     prompt:
-      "Search my Google Drive for specific documents and analyze their content with Python for insights",
-    toolkitIds: [Toolkits.GoogleDrive, Toolkits.E2B],
-    description: "Document analysis with computational text processing",
+      "Research competitors' technical approaches and tools, then analyze their open-source contributions and GitHub activity patterns",
+    toolkitIds: [Toolkits.Exa, Toolkits.Github],
+    description: "Market research combined with technical code analysis",
   },
   {
-    title: "Calendar Memory Learning",
+    title: "Data Science Pipeline Visualization",
     prompt:
-      "Analyze my calendar patterns and meeting preferences, storing insights in memory for future optimization",
-    toolkitIds: [Toolkits.GoogleCalendar, Toolkits.Memory],
-    description: "Calendar intelligence with learning preferences",
+      "Execute data analysis algorithms with Python and generate professional charts, graphs, and data visualization dashboards",
+    toolkitIds: [Toolkits.E2B, Toolkits.Image],
+    description: "Computational analysis with publication-ready visualizations",
   },
   {
-    title: "Research Trend Visualization",
-    prompt: "Research latest trends in my field and create compelling infographics and visual summaries",
-    toolkitIds: [Toolkits.Exa, Toolkits.Image],
-    description: "Industry research with professional visualization",
-  },
-  {
-    title: "GitHub Learning Memory",
+    title: "Technical Memory Assistant",
     prompt:
-      "Analyze interesting GitHub repositories and remember coding patterns and best practices for future projects",
+      "Analyze GitHub repositories for best practices and coding patterns, storing key insights and learnings for future development projects",
     toolkitIds: [Toolkits.Github, Toolkits.Memory],
-    description: "Code analysis with pattern recognition and persistent learning",
+    description: "Code pattern learning with persistent knowledge retention",
   },
   {
-    title: "Drive to Notion Organization",
+    title: "Tech Trend Visualization",
     prompt:
-      "Search my Google Drive for project documents and create organized summaries in my Notion workspace",
-    toolkitIds: [Toolkits.GoogleDrive, Toolkits.Notion],
-    description: "Document organization with structured knowledge management",
+      "Research emerging technologies and programming trends, then create comprehensive infographics and trend analysis charts",
+    toolkitIds: [Toolkits.Exa, Toolkits.Image],
+    description: "Technology research with professional visual trend analysis",
   },
   {
-    title: "Calendar and Notion Integration",
+    title: "Engineering Knowledge Base",
     prompt:
-      "Analyze my calendar events and create corresponding project updates in my Notion database",
-    toolkitIds: [Toolkits.GoogleCalendar, Toolkits.Notion],
-    description: "Calendar insights with project management integration",
-  },
-  {
-    title: "GitHub Research Documentation",
-    prompt:
-      "Search GitHub for projects in my domain and create comprehensive documentation in Notion",
-    toolkitIds: [Toolkits.Github, Toolkits.Notion],
-    description: "Technical research with organized documentation",
-  },
-  {
-    title: "Industry Intelligence Organization",
-    prompt:
-      "Research industry insights and competitors, then organize findings systematically in my Notion workspace",
+      "Research technical topics and best practices, then organize findings systematically in my Notion engineering documentation",
     toolkitIds: [Toolkits.Exa, Toolkits.Notion],
-    description: "Market research with structured knowledge organization",
+    description: "Technical research with structured knowledge organization",
+  },
+  {
+    title: "Project Analysis Dashboard",
+    prompt:
+      "Extract project data from my Notion workspace and perform statistical analysis to identify patterns, bottlenecks, and optimization opportunities",
+    toolkitIds: [Toolkits.Notion, Toolkits.E2B],
+    description: "Project data analysis with computational insights",
+  },
+  {
+    title: "Technical Research Memory",
+    prompt:
+      "Research cutting-edge technologies and development practices, storing detailed insights and findings for future reference and decision-making",
+    toolkitIds: [Toolkits.Exa, Toolkits.Memory],
+    description: "Technology scouting with persistent strategic knowledge",
+  },
+  {
+    title: "Notion Technical Documentation",
+    prompt:
+      "Analyze my Notion project pages and technical specifications, creating visual documentation and storing key architectural insights",
+    toolkitIds: [Toolkits.Notion, Toolkits.Image],
+    description: "Technical documentation with visual specification creation",
+  },
+  {
+    title: "Engineering Context Memory",
+    prompt:
+      "Analyze my Notion engineering notes and project documentation, remembering key technical decisions and architectural context for future discussions",
+    toolkitIds: [Toolkits.Notion, Toolkits.Memory],
+    description: "Technical knowledge extraction with persistent context building",
   },
 
-  // Single-toolkit prompts (ensure at least one per toolkit)
+  // Single-toolkit prompts - Core Technical Tools
   {
-    title: "AI & Tech Research",
+    title: "Advanced GitHub Analysis",
     prompt:
-      "Search for the latest developments in AI, machine learning, and emerging technologies with detailed analysis",
-    toolkitIds: [Toolkits.Exa],
-    description: "Comprehensive web research and industry intelligence",
-  },
-  {
-    title: "Custom Data Visualization",
-    prompt:
-      "Generate a custom infographic, data chart, or professional visualization for my presentation or report",
-    toolkitIds: [Toolkits.Image],
-    description:
-      "Professional visual content creation with AI-powered design",
-  },
-  {
-    title: "GitHub Code Discovery",
-    prompt:
-      "Search and analyze GitHub repositories, users, and code patterns in my technology stack or field of interest",
+      "Perform deep analysis of GitHub repositories, users, and code patterns - search for specific implementations, analyze commit patterns, and discover trending projects in my tech stack",
     toolkitIds: [Toolkits.Github],
-    description: "Repository discovery with detailed code analysis and insights",
+    description: "Comprehensive repository analysis and developer intelligence",
   },
   {
-    title: "Calendar Intelligence",
+    title: "Python Algorithm Development",
     prompt:
-      "Analyze my calendar events, meeting patterns, and time allocation to identify optimization opportunities",
-    toolkitIds: [Toolkits.GoogleCalendar],
-    description: "Smart calendar analysis with productivity insights",
-  },
-  {
-    title: "Document Intelligence",
-    prompt:
-      "Search and analyze documents in my Google Drive with intelligent content extraction and summarization",
-    toolkitIds: [Toolkits.GoogleDrive],
-    description: "Document discovery with AI-powered content analysis",
-  },
-  {
-    title: "Conversation Memory",
-    prompt:
-      "Store important information from our conversation in memory for future reference and context building",
-    toolkitIds: [Toolkits.Memory],
-    description: "Persistent memory storage with intelligent context management",
-  },
-  {
-    title: "Notion Workspace Intelligence",
-    prompt:
-      "Analyze my Notion databases, pages, and blocks to extract insights and identify patterns in my knowledge base",
-    toolkitIds: [Toolkits.Notion],
-    description:
-      "Comprehensive workspace analysis with knowledge extraction",
-  },
-  {
-    title: "Python Code Execution",
-    prompt:
-      "Execute Python code to analyze data, create calculations, test algorithms, or solve computational problems",
+      "Execute Python code for algorithm development, data analysis, performance benchmarking, API testing, or mathematical computations with full execution environment",
     toolkitIds: [Toolkits.E2B],
-    description:
-      "Secure code execution with data analysis and algorithmic solutions",
+    description: "Full Python development environment with code execution and testing",
+  },
+  {
+    title: "Technical Research Intelligence",
+    prompt:
+      "Research emerging technologies, academic papers, technical blogs, competitor analysis, and industry trends with comprehensive web search capabilities",
+    toolkitIds: [Toolkits.Exa],
+    description: "Advanced technical research and competitive intelligence gathering",
+  },
+  {
+    title: "Technical Visualization Studio",
+    prompt:
+      "Generate architecture diagrams, system flow charts, data visualizations, technical infographics, and professional presentation graphics",
+    toolkitIds: [Toolkits.Image],
+    description: "Professional technical visualization and diagram creation",
+  },
+  {
+    title: "Engineering Knowledge System",
+    prompt:
+      "Store and retrieve technical insights, architectural decisions, code patterns, research findings, and engineering context across conversations",
+    toolkitIds: [Toolkits.Memory],
+    description: "Persistent technical knowledge management and context retention",
+  },
+  {
+    title: "Notion Engineering Workspace",
+    prompt:
+      "Analyze Notion databases, technical documentation, project specifications, and engineering notes to extract insights and organize technical knowledge",
+    toolkitIds: [Toolkits.Notion],
+    description: "Technical workspace analysis and engineering documentation management",
   },
 
-  // Fallback generic prompts (no specific toolkits required)
+  // Generic prompts for technical audience
   {
-    title: "Creative Problem Solving",
+    title: "System Architecture Design",
     prompt:
-      "Help me brainstorm innovative solutions for my project challenge with creative approaches and actionable ideas",
+      "Design scalable system architecture for my application with microservices patterns, database design, API specifications, and deployment considerations",
     toolkitIds: [],
-    description: "Creative ideation with structured problem-solving methodology",
+    description: "Complete system design with industry best practices and scalability patterns",
   },
   {
-    title: "Technical Concept Explanation",
+    title: "Algorithm Optimization Consultation",
     prompt:
-      "Explain a complex technical concept in simple terms with practical examples and clear analogies",
+      "Analyze algorithm complexity, suggest optimizations, review data structures, and provide performance improvement recommendations for my code",
     toolkitIds: [],
-    description: "Educational content with technical clarity and practical context",
+    description: "Algorithm analysis with performance optimization and complexity assessment",
   },
   {
-    title: "Strategic Project Planning",
+    title: "Technical Code Review",
     prompt:
-      "Create a detailed strategic plan for my project with milestones, deliverables, and actionable steps",
+      "Comprehensive code review focusing on design patterns, performance, security, maintainability, and adherence to software engineering best practices",
     toolkitIds: [],
-    description: "Strategic planning with detailed execution roadmaps",
+    description: "Professional code review with architectural and performance insights",
   },
   {
-    title: "Code & Content Review",
+    title: "API Design & Documentation",
     prompt:
-      "Review and provide detailed feedback on my code, writing, or presentation with specific improvement suggestions",
+      "Design RESTful APIs, GraphQL schemas, or gRPC services with proper documentation, error handling, authentication, and versioning strategies",
     toolkitIds: [],
-    description: "Professional review with constructive feedback and optimization",
+    description: "Complete API design with documentation and best practices",
   },
   {
-    title: "Architecture Design Consultation",
+    title: "Database Schema Design",
     prompt:
-      "Help me design the architecture for my software project with best practices and scalability considerations",
+      "Design efficient database schemas, optimize queries, plan migrations, and recommend indexing strategies for optimal performance",
     toolkitIds: [],
-    description:
-      "Technical architecture guidance with industry best practices",
+    description: "Database architecture with performance optimization and scalability planning",
   },
   {
-    title: "Business Strategy Analysis",
-    prompt: "Analyze my business idea and provide strategic advice with market positioning and growth opportunities",
+    title: "DevOps & Infrastructure Planning",
+    prompt:
+      "Plan CI/CD pipelines, containerization strategies, cloud infrastructure, monitoring, and deployment automation for production systems",
     toolkitIds: [],
-    description: "Business analysis with strategic market insights",
+    description: "Complete DevOps strategy with infrastructure and automation planning",
   },
 ];
 
