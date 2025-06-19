@@ -18,9 +18,9 @@ interface StarterPrompt {
 const DYNAMIC_STARTER_PROMPTS: StarterPrompt[] = [
   // Multi-toolkit prompts (4+ toolkits - highest priority)
   {
-    title: "Comprehensive Project Dashboard",
+    title: "Comprehensive Project Analysis Dashboard",
     prompt:
-      "Create a comprehensive project dashboard by analyzing my Notion database, GitHub repositories, and generating visual progress charts with memory of key insights",
+      "Analyze my Notion project database, find related GitHub repositories, generate a visual project overview chart, and store key insights in memory for future reference",
     toolkitIds: [
       Toolkits.Notion,
       Toolkits.Github,
@@ -28,12 +28,12 @@ const DYNAMIC_STARTER_PROMPTS: StarterPrompt[] = [
       Toolkits.Memory,
     ],
     description:
-      "Ultimate project management combining workspace data, code analysis, visualization, and persistent insights",
+      "Complete project analysis combining workspace data, code discovery, visualization, and persistent insights",
   },
   {
-    title: "Market Research & Competitive Intelligence",
+    title: "Market Research & Competitive Analysis",
     prompt:
-      "Research market trends, analyze competitor GitHub repos, create infographics, and store findings in Notion with persistent memory",
+      "Research my industry competitors using web search, analyze their GitHub presence, create a competitive landscape infographic, document findings in Notion, and remember key insights",
     toolkitIds: [
       Toolkits.Exa,
       Toolkits.Github,
@@ -42,25 +42,25 @@ const DYNAMIC_STARTER_PROMPTS: StarterPrompt[] = [
       Toolkits.Memory,
     ],
     description:
-      "Complete competitive intelligence workflow with research, analysis, visualization, documentation, and memory",
+      "Complete competitive intelligence workflow with research, code analysis, visualization, documentation, and memory",
   },
   {
-    title: "Intelligent Meeting Coordination",
+    title: "Meeting Intelligence & Documentation",
     prompt:
-      "Schedule team meetings based on calendar availability, prepare agenda from Notion pages and Drive documents, and remember meeting preferences",
+      "Analyze my calendar events, read related documents from Google Drive, create meeting summaries in Notion, and remember key discussion points",
     toolkitIds: [
       Toolkits.GoogleCalendar,
-      Toolkits.Notion,
       Toolkits.GoogleDrive,
+      Toolkits.Notion,
       Toolkits.Memory,
     ],
     description:
-      "Intelligent meeting coordination with multi-source document preparation and learning preferences",
+      "Intelligent meeting analysis with document integration and persistent memory",
   },
   {
-    title: "Data-Driven Productivity Analysis",
+    title: "Data-Driven Productivity Insights",
     prompt:
-      "Analyze my Notion task database with Python, create productivity visualizations, and schedule optimization based on calendar patterns",
+      "Query my Notion task database, analyze patterns with Python, create productivity visualizations, and identify calendar optimization opportunities",
     toolkitIds: [
       Toolkits.Notion,
       Toolkits.E2B,
@@ -68,299 +68,291 @@ const DYNAMIC_STARTER_PROMPTS: StarterPrompt[] = [
       Toolkits.GoogleCalendar,
     ],
     description:
-      "Data-driven productivity optimization with computational analysis and visual insights",
+      "Data-driven productivity analysis with computational insights and visual reporting",
   },
 
   // Multi-toolkit prompts (3 toolkits)
   {
-    title: "Competitor Analysis with Memory",
+    title: "Research Paper Analysis with Memory",
     prompt:
-      "Research my competitors and create a comprehensive analysis with visual charts stored in memory for future reference",
+      "Search for recent AI research papers, create a visual summary of key findings, and store important insights in memory",
     toolkitIds: [Toolkits.Exa, Toolkits.Image, Toolkits.Memory],
     description:
-      "Uses web search, image generation, and memory for comprehensive competitor analysis",
+      "Academic research with visual summaries and persistent knowledge storage",
   },
   {
-    title: "GitHub Architecture Analysis",
+    title: "GitHub Repository Deep Dive",
     prompt:
-      "Analyze this GitHub repository, create a visual architecture diagram, and execute code examples to understand the implementation",
+      "Search for repositories in my tech stack, analyze their code structure, and create an architecture visualization diagram",
     toolkitIds: [Toolkits.Github, Toolkits.Image, Toolkits.E2B],
     description:
-      "Combines GitHub analysis, code execution, and visual diagram generation",
+      "Repository discovery with code analysis and visual architecture mapping",
   },
   {
-    title: "AI Research with Code Analysis",
+    title: "Company Research & Intelligence",
     prompt:
-      "Find research papers on AI, summarize key findings with code analysis, and remember important insights for future conversations",
-    toolkitIds: [Toolkits.Exa, Toolkits.Memory, Toolkits.E2B],
+      "Research a target company comprehensively, analyze their GitHub projects, and remember key strategic insights for future reference",
+    toolkitIds: [Toolkits.Exa, Toolkits.Github, Toolkits.Memory],
     description:
-      "Research papers with data analysis and persistent memory storage",
+      "Company intelligence gathering with technical analysis and memory storage",
   },
   {
-    title: "Visual Knowledge Base Creation",
+    title: "Notion Knowledge Visualization",
     prompt:
-      "Create a knowledge base by analyzing my Notion pages, generating visual summaries, and storing key insights in memory",
+      "Query my Notion pages for project information, create visual knowledge maps, and store key insights in memory",
     toolkitIds: [Toolkits.Notion, Toolkits.Image, Toolkits.Memory],
     description:
-      "Notion content analysis with visual summaries and persistent knowledge storage",
+      "Knowledge base visualization with intelligent summarization and memory",
   },
   {
-    title: "Data Visualization Dashboard",
+    title: "Document Analysis Dashboard",
     prompt:
-      "Build a data visualization dashboard by analyzing my Google Drive spreadsheets with Python and creating interactive charts",
+      "Search my Google Drive for project documents, perform data analysis with Python, and create visual insights charts",
     toolkitIds: [Toolkits.GoogleDrive, Toolkits.E2B, Toolkits.Image],
     description:
-      "Data processing with computational analysis and visual output generation",
+      "Document processing with computational analysis and visual reporting",
   },
   {
-    title: "Industry Trend Infographics",
+    title: "Industry Trend Visualization",
     prompt:
-      "Research industry trends, generate infographics, and organize findings in my Notion workspace",
+      "Research current industry trends, generate comprehensive infographics, and organize findings in my Notion workspace",
     toolkitIds: [Toolkits.Exa, Toolkits.Image, Toolkits.Notion],
     description:
       "Market research with visual content creation and organized documentation",
   },
   {
-    title: "Technical Roadmap Planning",
+    title: "Technical Stack Documentation",
     prompt:
-      "Find GitHub repositories for my project idea, create a technical roadmap visualization, and document in Notion",
+      "Search GitHub for repositories matching my technology stack, create a visual tech roadmap, and document in Notion",
     toolkitIds: [Toolkits.Github, Toolkits.Image, Toolkits.Notion],
     description:
-      "Repository discovery with comprehensive visual planning and documentation",
+      "Technology research with visual planning and comprehensive documentation",
   },
   {
-    title: "Database Analytics with Visualizations",
+    title: "Calendar Pattern Analysis",
     prompt:
-      "Query my Notion database, perform statistical analysis with Python, and create data visualizations",
-    toolkitIds: [Toolkits.Notion, Toolkits.E2B, Toolkits.Image],
-    description:
-      "Database analysis with computational processing and visual reporting",
-  },
-  {
-    title: "Time Management Optimization",
-    prompt:
-      "Analyze my calendar patterns, research productivity techniques, and create a time management visualization",
+      "Analyze my calendar events and meeting patterns, research productivity techniques, and create a time optimization visualization",
     toolkitIds: [Toolkits.GoogleCalendar, Toolkits.Exa, Toolkits.Image],
     description:
-      "Calendar analysis with research-backed productivity optimization",
+      "Calendar intelligence with research-backed productivity optimization",
   },
   {
-    title: "Document Analysis with Memory",
+    title: "Project Documentation Analysis",
     prompt:
-      "Search my Google Drive for project files, execute analysis scripts, and remember key findings",
+      "Search my Google Drive for project files, analyze content with Python for insights, and remember key findings",
     toolkitIds: [Toolkits.GoogleDrive, Toolkits.E2B, Toolkits.Memory],
     description:
-      "Document analysis with computational processing and insight storage",
+      "Document analysis with computational processing and insight retention",
   },
 
   // Two-toolkit prompts
   {
-    title: "Notion Visual Reports",
+    title: "Notion Database Visualization",
     prompt:
-      "Analyze my Notion database and create beautiful data visualizations and reports",
+      "Query my Notion database and create beautiful charts and visual reports from the data",
     toolkitIds: [Toolkits.Notion, Toolkits.Image],
-    description: "Notion database analysis with visual reporting",
+    description: "Database visualization with custom chart generation",
   },
   {
-    title: "Notion Data Analysis",
+    title: "Notion Data Science Analysis",
     prompt:
-      "Query my Notion workspace and perform advanced data analysis with Python",
+      "Extract data from my Notion workspace and perform statistical analysis with Python",
     toolkitIds: [Toolkits.Notion, Toolkits.E2B],
     description: "Notion data processing with computational analysis",
   },
   {
-    title: "Notion Memory Search",
+    title: "Notion Knowledge Memory",
     prompt:
-      "Search my Notion pages and remember important information for future conversations",
+      "Search my Notion pages for important information and store key insights in memory for future conversations",
     toolkitIds: [Toolkits.Notion, Toolkits.Memory],
-    description: "Notion content search with persistent memory storage",
+    description: "Knowledge extraction with persistent memory storage",
   },
   {
-    title: "Calendar Time Analysis",
+    title: "Calendar Pattern Insights",
     prompt:
-      "Analyze my calendar patterns and create a time management visualization",
+      "Analyze my calendar events and meeting patterns, then create a visual time management dashboard",
     toolkitIds: [Toolkits.GoogleCalendar, Toolkits.Image],
-    description: "Calendar analysis with visual insights",
+    description: "Calendar analysis with visual time management insights",
   },
   {
-    title: "Research with Code Testing",
+    title: "Research with Code Examples",
     prompt:
-      "Search for machine learning papers and execute code examples to test concepts",
+      "Search for machine learning tutorials and research, then test code examples with Python execution",
     toolkitIds: [Toolkits.Exa, Toolkits.E2B],
-    description: "Research with hands-on code experimentation",
+    description: "Research with hands-on code experimentation and testing",
   },
   {
     title: "Competitive Intelligence Memory",
-    prompt: "Find competitors in my industry and remember their key strategies",
+    prompt: "Research competitors in my industry and store their key strategies and insights in memory",
     toolkitIds: [Toolkits.Exa, Toolkits.Memory],
-    description: "Competitive intelligence with persistent insights",
+    description: "Competitive research with persistent strategic insights",
   },
   {
-    title: "GitHub Portfolio Showcase",
+    title: "GitHub Portfolio Visualization",
     prompt:
-      "Analyze my GitHub contributions and generate a portfolio showcase image",
+      "Analyze GitHub repositories and user profiles, then generate a visual portfolio showcase",
     toolkitIds: [Toolkits.Github, Toolkits.Image],
-    description: "Code portfolio visualization",
+    description: "Code portfolio analysis with visual presentation",
   },
   {
-    title: "Drive Document Analysis",
+    title: "Document Content Analysis",
     prompt:
-      "Search my Google Drive for project files and run analysis scripts on the data",
+      "Search my Google Drive for specific documents and analyze their content with Python for insights",
     toolkitIds: [Toolkits.GoogleDrive, Toolkits.E2B],
-    description: "Document analysis with computational processing",
+    description: "Document analysis with computational text processing",
   },
   {
-    title: "Smart Calendar Learning",
+    title: "Calendar Memory Learning",
     prompt:
-      "Remember my meeting preferences and schedule optimization based on calendar analysis",
+      "Analyze my calendar patterns and meeting preferences, storing insights in memory for future optimization",
     toolkitIds: [Toolkits.GoogleCalendar, Toolkits.Memory],
-    description: "Smart scheduling with learning preferences",
+    description: "Calendar intelligence with learning preferences",
   },
   {
-    title: "Research Data Visualizations",
-    prompt: "Create stunning visualizations of research data and trends",
+    title: "Research Trend Visualization",
+    prompt: "Research latest trends in my field and create compelling infographics and visual summaries",
     toolkitIds: [Toolkits.Exa, Toolkits.Image],
-    description: "Research visualization and infographic creation",
+    description: "Industry research with professional visualization",
   },
   {
-    title: "GitHub Pattern Recognition",
+    title: "GitHub Learning Memory",
     prompt:
-      "Analyze GitHub repositories and remember coding patterns for future projects",
+      "Analyze interesting GitHub repositories and remember coding patterns and best practices for future projects",
     toolkitIds: [Toolkits.Github, Toolkits.Memory],
-    description: "Code analysis with pattern recognition and memory",
+    description: "Code analysis with pattern recognition and persistent learning",
   },
   {
     title: "Drive to Notion Organization",
     prompt:
-      "Search my Google Drive documents and organize findings in my Notion workspace",
+      "Search my Google Drive for project documents and create organized summaries in my Notion workspace",
     toolkitIds: [Toolkits.GoogleDrive, Toolkits.Notion],
-    description: "Document search with organized knowledge management",
+    description: "Document organization with structured knowledge management",
   },
   {
-    title: "Team Database Scheduling",
+    title: "Calendar and Notion Integration",
     prompt:
-      "Analyze my Notion team database and schedule coordination meetings",
-    toolkitIds: [Toolkits.Notion, Toolkits.GoogleCalendar],
-    description: "Team management with intelligent scheduling",
+      "Analyze my calendar events and create corresponding project updates in my Notion database",
+    toolkitIds: [Toolkits.GoogleCalendar, Toolkits.Notion],
+    description: "Calendar insights with project management integration",
   },
   {
     title: "GitHub Research Documentation",
     prompt:
-      "Research GitHub projects and document findings in my Notion knowledge base",
+      "Search GitHub for projects in my domain and create comprehensive documentation in Notion",
     toolkitIds: [Toolkits.Github, Toolkits.Notion],
-    description: "Code research with organized documentation",
+    description: "Technical research with organized documentation",
   },
   {
-    title: "Industry Insights Organization",
+    title: "Industry Intelligence Organization",
     prompt:
-      "Search for industry insights and organize them in my Notion workspace",
+      "Research industry insights and competitors, then organize findings systematically in my Notion workspace",
     toolkitIds: [Toolkits.Exa, Toolkits.Notion],
-    description: "Research with structured knowledge organization",
+    description: "Market research with structured knowledge organization",
   },
 
-  // Single-toolkit prompts (ensure at least one per server)
+  // Single-toolkit prompts (ensure at least one per toolkit)
   {
-    title: "AI & ML Research",
+    title: "AI & Tech Research",
     prompt:
-      "Search for the latest developments in artificial intelligence and machine learning",
+      "Search for the latest developments in AI, machine learning, and emerging technologies with detailed analysis",
     toolkitIds: [Toolkits.Exa],
-    description: "Comprehensive web research and information gathering",
+    description: "Comprehensive web research and industry intelligence",
   },
   {
-    title: "Custom Visual Content",
+    title: "Custom Data Visualization",
     prompt:
-      "Generate a beautiful infographic, chart, or custom image for my presentation",
+      "Generate a custom infographic, data chart, or professional visualization for my presentation or report",
     toolkitIds: [Toolkits.Image],
     description:
-      "Custom visual content creation with AI-powered image generation",
+      "Professional visual content creation with AI-powered design",
   },
   {
-    title: "GitHub Code Analysis",
+    title: "GitHub Code Discovery",
     prompt:
-      "Find and analyze interesting GitHub repositories, users, and code patterns in my field",
+      "Search and analyze GitHub repositories, users, and code patterns in my technology stack or field of interest",
     toolkitIds: [Toolkits.Github],
-    description: "Repository discovery, code analysis, and developer insights",
+    description: "Repository discovery with detailed code analysis and insights",
   },
   {
-    title: "Smart Calendar Management",
+    title: "Calendar Intelligence",
     prompt:
-      "Help me organize and optimize my calendar schedule with smart scheduling suggestions",
+      "Analyze my calendar events, meeting patterns, and time allocation to identify optimization opportunities",
     toolkitIds: [Toolkits.GoogleCalendar],
-    description: "Intelligent calendar management and scheduling assistance",
+    description: "Smart calendar analysis with productivity insights",
   },
   {
-    title: "Google Drive Analysis",
+    title: "Document Intelligence",
     prompt:
-      "Search and analyze documents in my Google Drive with content extraction",
+      "Search and analyze documents in my Google Drive with intelligent content extraction and summarization",
     toolkitIds: [Toolkits.GoogleDrive],
-    description: "Document discovery, analysis, and content extraction",
+    description: "Document discovery with AI-powered content analysis",
   },
   {
     title: "Conversation Memory",
     prompt:
-      "Remember important information from our conversation for future reference and context",
+      "Store important information from our conversation in memory for future reference and context building",
     toolkitIds: [Toolkits.Memory],
-    description: "Persistent memory storage and intelligent context management",
+    description: "Persistent memory storage with intelligent context management",
   },
   {
-    title: "Notion Workspace Analysis",
+    title: "Notion Workspace Intelligence",
     prompt:
-      "Analyze my Notion workspace, databases, and pages to extract insights and organize information",
+      "Analyze my Notion databases, pages, and blocks to extract insights and identify patterns in my knowledge base",
     toolkitIds: [Toolkits.Notion],
     description:
-      "Comprehensive Notion workspace analysis and knowledge extraction",
+      "Comprehensive workspace analysis with knowledge extraction",
   },
   {
     title: "Python Code Execution",
     prompt:
-      "Execute Python code to analyze data, create visualizations, or solve complex computational problems",
+      "Execute Python code to analyze data, create calculations, test algorithms, or solve computational problems",
     toolkitIds: [Toolkits.E2B],
     description:
-      "Secure code execution, data analysis, and algorithmic problem solving",
+      "Secure code execution with data analysis and algorithmic solutions",
   },
 
   // Fallback generic prompts (no specific toolkits required)
   {
-    title: "Creative Brainstorming",
+    title: "Creative Problem Solving",
     prompt:
-      "Help me brainstorm creative ideas for my project with innovative approaches",
+      "Help me brainstorm innovative solutions for my project challenge with creative approaches and actionable ideas",
     toolkitIds: [],
-    description: "Creative ideation and innovative thinking assistance",
+    description: "Creative ideation with structured problem-solving methodology",
   },
   {
-    title: "Concept Explanation",
+    title: "Technical Concept Explanation",
     prompt:
-      "Explain a complex topic in simple terms with clear examples and analogies",
+      "Explain a complex technical concept in simple terms with practical examples and clear analogies",
     toolkitIds: [],
-    description: "Educational content and concept explanation",
+    description: "Educational content with technical clarity and practical context",
   },
   {
-    title: "Content Review & Feedback",
+    title: "Strategic Project Planning",
     prompt:
-      "Review and improve my writing, code, or presentation with detailed feedback",
+      "Create a detailed strategic plan for my project with milestones, deliverables, and actionable steps",
     toolkitIds: [],
-    description: "Content review, optimization, and constructive feedback",
+    description: "Strategic planning with detailed execution roadmaps",
   },
   {
-    title: "Strategic Planning",
+    title: "Code & Content Review",
     prompt:
-      "Create a strategic plan or roadmap for achieving my goals with actionable steps",
+      "Review and provide detailed feedback on my code, writing, or presentation with specific improvement suggestions",
     toolkitIds: [],
-    description: "Strategic planning, goal setting, and execution roadmaps",
+    description: "Professional review with constructive feedback and optimization",
   },
   {
-    title: "Problem Solving",
+    title: "Architecture Design Consultation",
     prompt:
-      "Help me solve a problem with creative solutions and analytical thinking",
+      "Help me design the architecture for my software project with best practices and scalability considerations",
     toolkitIds: [],
     description:
-      "Problem-solving with innovative approaches and logical analysis",
+      "Technical architecture guidance with industry best practices",
   },
   {
-    title: "Expert Consultation",
-    prompt: "Provide expert advice and guidance on a topic I'm working on",
+    title: "Business Strategy Analysis",
+    prompt: "Analyze my business idea and provide strategic advice with market positioning and growth opportunities",
     toolkitIds: [],
-    description: "Professional consultation and expert guidance",
+    description: "Business analysis with strategic market insights",
   },
 ];
 
