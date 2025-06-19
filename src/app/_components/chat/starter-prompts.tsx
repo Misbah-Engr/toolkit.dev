@@ -18,15 +18,10 @@ interface StarterPrompt {
 const DYNAMIC_STARTER_PROMPTS: StarterPrompt[] = [
   // Multi-toolkit prompts (4+ toolkits - highest priority)
   {
-    title: "React/Next.js Architecture Analysis",
+    title: "Analyze Toolkit.dev",
     prompt:
-      "Search GitHub for React/Next.js repositories with TypeScript, analyze their component architecture and state management patterns, generate an architecture diagram, execute sample components to understand implementation, and store architectural insights in memory",
-    toolkitIds: [
-      Toolkits.Github,
-      Toolkits.E2B,
-      Toolkits.Image,
-      Toolkits.Memory,
-    ],
+      "Search GitHub for jasonhedman/toolkit.dev, analyze the repo, clone the repo and read the readme in a sandbox environment, and give me a getting started guide.",
+    toolkitIds: [Toolkits.Github, Toolkits.E2B, Toolkits.Exa],
     description:
       "Complete React/Next.js analysis: repository discovery, component execution, architecture visualization, and pattern learning",
   },
@@ -143,28 +138,32 @@ const DYNAMIC_STARTER_PROMPTS: StarterPrompt[] = [
     prompt:
       "Search for advanced React repositories (state management with Zustand/Redux, custom hooks, performance optimization), then execute and analyze component patterns to understand implementation details",
     toolkitIds: [Toolkits.Github, Toolkits.E2B],
-    description: "React component discovery with hands-on code analysis and execution",
+    description:
+      "React component discovery with hands-on code analysis and execution",
   },
   {
     title: "LLM Fine-tuning Research",
     prompt:
       "Find research papers on large language model fine-tuning techniques (LoRA, QLoRA, RLHF), then implement and test the training algorithms using Python with PyTorch",
     toolkitIds: [Toolkits.Exa, Toolkits.E2B],
-    description: "LLM research with practical fine-tuning implementation and testing",
+    description:
+      "LLM research with practical fine-tuning implementation and testing",
   },
   {
     title: "System Architecture Diagram Generator",
     prompt:
       "Analyze GitHub repositories with modern web architectures (Next.js + Prisma + tRPC, FastAPI + PostgreSQL), then generate clean architecture diagrams and data flow charts",
     toolkitIds: [Toolkits.Github, Toolkits.Image],
-    description: "Web architecture analysis with professional diagram generation",
+    description:
+      "Web architecture analysis with professional diagram generation",
   },
   {
     title: "Frontend Performance Intelligence",
     prompt:
       "Research web performance optimization techniques (code splitting, lazy loading, CDN strategies), then analyze high-performance GitHub repositories for implementation patterns",
     toolkitIds: [Toolkits.Exa, Toolkits.Github],
-    description: "Performance research combined with real-world implementation analysis",
+    description:
+      "Performance research combined with real-world implementation analysis",
   },
   {
     title: "ML Pipeline Visualization",
@@ -178,14 +177,16 @@ const DYNAMIC_STARTER_PROMPTS: StarterPrompt[] = [
     prompt:
       "Analyze GitHub repositories for modern web development patterns (authentication with NextAuth, API design with tRPC, database patterns with Prisma), storing insights for future projects",
     toolkitIds: [Toolkits.Github, Toolkits.Memory],
-    description: "Web development pattern learning with persistent knowledge retention",
+    description:
+      "Web development pattern learning with persistent knowledge retention",
   },
   {
     title: "AI Technology Trend Visualization",
     prompt:
       "Research emerging AI technologies (multimodal models, agent frameworks, retrieval-augmented generation), then create comprehensive infographics and trend analysis charts",
     toolkitIds: [Toolkits.Exa, Toolkits.Image],
-    description: "AI technology research with professional visual trend analysis",
+    description:
+      "AI technology research with professional visual trend analysis",
   },
   {
     title: "Developer Tool Knowledge Base",
@@ -236,35 +237,40 @@ const DYNAMIC_STARTER_PROMPTS: StarterPrompt[] = [
     prompt:
       "Execute Python code for web scraping with BeautifulSoup, ML model training with scikit-learn/PyTorch, API testing with requests, data analysis with pandas, or algorithm implementation with full execution environment",
     toolkitIds: [Toolkits.E2B],
-    description: "Full Python development environment for web and AI development",
+    description:
+      "Full Python development environment for web and AI development",
   },
   {
     title: "Technical Research Intelligence",
     prompt:
       "Research web development trends (Server Components, edge computing, JAMstack), AI/ML breakthroughs (transformer architectures, prompt engineering), technical blogs, and competitive analysis with comprehensive search",
     toolkitIds: [Toolkits.Exa],
-    description: "Advanced technical research for web and AI development trends",
+    description:
+      "Advanced technical research for web and AI development trends",
   },
   {
     title: "Technical Visualization Studio",
     prompt:
       "Generate React component hierarchy diagrams, ML model architecture visualizations, API flow charts, database schema diagrams, system architecture blueprints, and technical presentation graphics",
     toolkitIds: [Toolkits.Image],
-    description: "Professional technical visualization for web and AI architectures",
+    description:
+      "Professional technical visualization for web and AI architectures",
   },
   {
     title: "Engineering Knowledge System",
     prompt:
       "Store and retrieve technical insights about React patterns, ML model architectures, API design decisions, performance optimizations, and engineering context across conversations",
     toolkitIds: [Toolkits.Memory],
-    description: "Persistent technical knowledge management for web and AI development",
+    description:
+      "Persistent technical knowledge management for web and AI development",
   },
   {
     title: "Notion Engineering Workspace",
     prompt:
       "Analyze Notion databases with project specifications, API documentation, technical requirements, code review notes, and engineering documentation to extract insights and organize technical knowledge",
     toolkitIds: [Toolkits.Notion],
-    description: "Technical workspace analysis and engineering documentation management",
+    description:
+      "Technical workspace analysis and engineering documentation management",
   },
 
   // Generic prompts for technical audience
@@ -273,42 +279,48 @@ const DYNAMIC_STARTER_PROMPTS: StarterPrompt[] = [
     prompt:
       "Design scalable React/Next.js application architecture with TypeScript, state management (Zustand/Redux), API layer (tRPC/GraphQL), database design (Prisma/Drizzle), and deployment considerations (Vercel/AWS)",
     toolkitIds: [],
-    description: "Complete React/Next.js system design with modern best practices",
+    description:
+      "Complete React/Next.js system design with modern best practices",
   },
   {
     title: "ML Algorithm Optimization",
     prompt:
       "Analyze machine learning algorithm complexity, suggest model optimizations, review neural network architectures, and provide performance improvement recommendations for training and inference",
     toolkitIds: [],
-    description: "ML algorithm analysis with performance optimization and architecture assessment",
+    description:
+      "ML algorithm analysis with performance optimization and architecture assessment",
   },
   {
     title: "Full-Stack Code Review",
     prompt:
       "Comprehensive code review for React/Node.js applications or Python ML projects focusing on design patterns, performance, security, maintainability, and modern best practices",
     toolkitIds: [],
-    description: "Professional code review with architectural and performance insights",
+    description:
+      "Professional code review with architectural and performance insights",
   },
   {
     title: "API Design & Documentation",
     prompt:
       "Design RESTful APIs or GraphQL schemas with FastAPI/Express/tRPC, including proper documentation, error handling, authentication (JWT/OAuth), rate limiting, and versioning strategies",
     toolkitIds: [],
-    description: "Complete API design with modern authentication and documentation",
+    description:
+      "Complete API design with modern authentication and documentation",
   },
   {
     title: "Database & ML Data Pipeline Design",
     prompt:
       "Design efficient database schemas (PostgreSQL/MongoDB), optimize queries, plan migrations, design ML data pipelines (ETL/ELT), and recommend indexing strategies for web and AI applications",
     toolkitIds: [],
-    description: "Database and ML data architecture with performance optimization",
+    description:
+      "Database and ML data architecture with performance optimization",
   },
   {
     title: "Modern DevOps & MLOps Planning",
     prompt:
       "Plan CI/CD pipelines (GitHub Actions), containerization (Docker/Kubernetes), cloud infrastructure (AWS/Vercel), monitoring (DataDog), ML model deployment, and automation for production systems",
     toolkitIds: [],
-    description: "Complete DevOps and MLOps strategy with modern infrastructure",
+    description:
+      "Complete DevOps and MLOps strategy with modern infrastructure",
   },
 ];
 
