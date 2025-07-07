@@ -1,4 +1,5 @@
-import { Logo } from "@/components/ui/logo";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Menu } from "lucide-react";
 
 import { AccountButton } from "./account-button";
 import { ColorModeToggle } from "./color-mode-toggle";
@@ -15,10 +16,9 @@ export const Navbar = async () => {
   return (
     <HStack className="bg-background sticky top-0 z-10 justify-between p-2 md:hidden">
       <HStack>
-        <Logo className="size-6" />
-        <h1 className="overflow-hidden text-lg font-bold whitespace-nowrap">
-          Toolkit.dev
-        </h1>
+        <SidebarTrigger className="p-2 hover:bg-accent/50 rounded-lg mr-2">
+          <Menu size={20}/>
+        </SidebarTrigger>   
       </HStack>
       <HStack>
         <AccountButton />
