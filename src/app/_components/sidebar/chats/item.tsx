@@ -24,6 +24,7 @@ import {
   Share,
   Trash,
   GitBranch,
+  Star,
 } from "lucide-react";
 import { useUpdateChatVisibility } from "@/app/_hooks/use-chat-visibility";
 
@@ -33,11 +34,13 @@ const PureChatItem = ({
   chat,
   isActive,
   onDelete,
+  onStar,
   setOpenMobile,
 }: {
   chat: Chat;
   isActive: boolean;
   onDelete: (chatId: string) => void;
+  onStar: (chatId: string, currentStarred: boolean) => void;
   setOpenMobile: (open: boolean) => void;
 }) => {
   const updateChatVisibility = useUpdateChatVisibility();
@@ -63,7 +66,7 @@ const PureChatItem = ({
       <DropdownMenu modal={true}>
         <DropdownMenuTrigger asChild>
           <SidebarMenuAction
-            className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground mr-0.5"
+            className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground mr-0.5 cursor-pointer"
             showOnHover={!isActive}
           >
             <MoreHorizontal />
@@ -72,6 +75,14 @@ const PureChatItem = ({
         </DropdownMenuTrigger>
 
         <DropdownMenuContent side="bottom" align="end">
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={() => onStar(chat.id, chat.starred)}
+          >
+            <Star className="size-4" />
+            <span>{chat.starred ? "Unstar" : "Star"}</span>
+          </DropdownMenuItem>
+
           <DropdownMenuSub>
             <DropdownMenuSubTrigger className="flex cursor-pointer items-center gap-2">
               <Share className="size-4" />

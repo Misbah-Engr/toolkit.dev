@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 
 import {
   AlertDialog,
@@ -12,6 +13,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -19,29 +21,24 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
+import { VStack } from "@/components/ui/stack";
 import { ChatItem } from "./item";
-
+import { Button } from "@/components/ui/button";
 import { api } from "@/trpc/react";
 import { useDeleteChat } from "@/app/_hooks/use-delete-chat";
-import { Button } from "@/components/ui/button";
-import { usePathname } from "next/navigation";
+import { useStarChat } from "@/app/_hooks/use-star-chat";
 
 export const NavChats = () => {
   return (
-    <SidebarGroup>
-      <SidebarGroupLabel>Chats</SidebarGroupLabel>
-      <SidebarMenu>
-        <NavChatsBody />
-      </SidebarMenu>
-    </SidebarGroup>
+    <VStack>
+      <NavChatsBody />
+    </VStack>
   );
 };
 
 const NavChatsBody = () => {
   const pathname = usePathname();
-
   const [, type, resourceId] = pathname.split("/");
-
   const workbenchId =
     type === "workbench" && resourceId !== "new" ? resourceId : undefined;
 
@@ -68,6 +65,7 @@ const NavChatsBody = () => {
   );
 
   const deleteChat = useDeleteChat();
+  const starChat = useStarChat();
 
   const handleDelete = () => {
     if (deleteId) {
@@ -76,44 +74,87 @@ const NavChatsBody = () => {
     }
   };
 
-  if (isLoading) {
-    return null;
-  }
+  const handleStar = (chatId: string, currentStarred: boolean) => {
+    starChat.mutate({
+      id: chatId,
+      starred: !currentStarred,
+    });
+  };
 
-  if (!chats || chats.pages.flatMap((page) => page.items).length === 0) {
+  if (isLoading || !chats) return null;
+
+  const allChats = chats.pages.flatMap((page) => page.items) ?? [];
+
+  if (allChats.length === 0) {
     return (
-      <div className="text-muted-foreground overflow-hidden px-2 text-sm whitespace-nowrap group-data-[collapsible=icon]:hidden">
-        No chats yet.
-      </div>
+      <SidebarGroup>
+        <SidebarGroupLabel>Chats</SidebarGroupLabel>
+        <SidebarMenu>
+          <div className="text-muted-foreground px-3 py-2 text-xs">
+            No chats yet.
+          </div>
+        </SidebarMenu>
+      </SidebarGroup>
     );
   }
 
+  const starredChats = allChats.filter((chat) => chat.starred);
+  const regularChats = allChats.filter((chat) => !chat.starred);
+
   return (
     <>
-      {chats?.pages.flatMap((page) =>
-        page.items.map((chat) => (
-          <ChatItem
-            key={chat.id}
-            chat={chat}
-            isActive={pathname.includes(chat.id)}
-            onDelete={() => {
-              setDeleteId(chat.id);
-              setShowDeleteDialog(true);
-            }}
-            setOpenMobile={setOpenMobile}
-          />
-        )),
+      {starredChats.length > 0 && (
+        <SidebarGroup>
+          <SidebarGroupLabel>Starred</SidebarGroupLabel>
+          <SidebarMenu>
+            {starredChats.map((chat) => (
+              <ChatItem
+                key={chat.id}
+                chat={chat}
+                isActive={pathname.endsWith(chat.id)}
+                onDelete={(id) => {
+                  setDeleteId(id);
+                  setShowDeleteDialog(true);
+                }}
+                onStar={() => handleStar(chat.id, chat.starred)}
+                setOpenMobile={setOpenMobile}
+              />
+            ))}
+          </SidebarMenu>
+        </SidebarGroup>
       )}
-      {hasNextPage && (
-        <Button
-          onClick={() => void fetchNextPage()}
-          variant="ghost"
-          size="xs"
-          className="text-accent-foreground/40 w-full justify-start"
-        >
-          {isFetchingNextPage ? "Loading..." : "Load more"}
-        </Button>
+
+      {regularChats.length > 0 && (
+        <SidebarGroup>
+          <SidebarGroupLabel>Chats</SidebarGroupLabel>
+          <SidebarMenu>
+            {regularChats.map((chat) => (
+              <ChatItem
+                key={chat.id}
+                chat={chat}
+                isActive={pathname.endsWith(chat.id)}
+                onDelete={(id) => {
+                  setDeleteId(id);
+                  setShowDeleteDialog(true);
+                }}
+                onStar={() => handleStar(chat.id, chat.starred)}
+                setOpenMobile={setOpenMobile}
+              />
+            ))}
+            {hasNextPage && (
+              <Button
+                onClick={() => void fetchNextPage()}
+                variant="ghost"
+                size="xs"
+                className="text-accent-foreground/40 w-full justify-start"
+              >
+                {isFetchingNextPage ? "Loading..." : "Load more"}
+              </Button>
+            )}
+          </SidebarMenu>
+        </SidebarGroup>
       )}
+
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
