@@ -10,6 +10,7 @@ import {
   Check,
   Lock,
   Star,
+  Menu,
 } from "lucide-react";
 
 import { useDataContext } from "@/app/_contexts/data-context";
@@ -29,6 +30,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { HStack } from "@/components/ui/stack";
 
 import { useUpdateChatVisibility } from "@/app/_hooks/use-chat-visibility";
 import { useDeleteChat } from "@/app/_hooks/use-delete-chat";
@@ -68,7 +71,7 @@ export default function Topbar() {
   if (pathname === "/") return null;
 
   return (
-    <div className="bg-background/80 shadow-background border-border/50 sticky top-0 z-20 flex w-full justify-between border-b px-4 py-3 shadow-lg backdrop-blur-md">
+    <div className="bg-background/80 shadow-background border-border/50 sticky top-0 z-20 flex w-full justify-between border-b px-2 py-3 shadow-lg backdrop-blur-md max-sm:text-sm lg:px-4">
       {!chat ? (
         <div className="text-muted-foreground text-sm italic">
           No chat selected
@@ -76,13 +79,19 @@ export default function Topbar() {
       ) : (
         <>
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className="hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground flex min-w-0 cursor-pointer items-center gap-2 rounded-md p-1 focus:outline-none focus-visible:ring-0">
-                <span>{chat.title}</span>
-                <ChevronDown size={20} />
-              </button>
-            </DropdownMenuTrigger>
-
+            <HStack>
+              <HStack className="hidden max-sm:block">
+                <SidebarTrigger className="hover:bg-accent/50 mr-2 rounded-lg p-2">
+                  <Menu size={20} />
+                </SidebarTrigger>
+              </HStack>
+              <DropdownMenuTrigger asChild>
+                <button className="hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground flex min-w-0 cursor-pointer items-center gap-2 rounded-md p-1 focus:outline-none focus-visible:ring-0 max-sm:max-w-[200px] max-sm:gap-1">
+                  <span className="truncate">{chat.title}</span>
+                  <ChevronDown size={20} />
+                </button>
+              </DropdownMenuTrigger>
+            </HStack>
             <DropdownMenuContent side="bottom" align="end">
               <DropdownMenuItem
                 className="text-foreground cursor-pointer"
@@ -107,13 +116,13 @@ export default function Topbar() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground flex min-w-0 cursor-pointer items-center gap-2 rounded-md px-2 py-1 focus:outline-none focus-visible:ring-0">
-                <Share className="size-4" /> <span>Share</span>
+                <Share className="size-4 max-sm:size-3" /> <span>Share</span>
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent side="bottom" align="end">
               <DropdownMenuItem
                 className="cursor-pointer flex-row justify-between"
-                onClick={() => {
+                onSelect={() => {
                   updateChatVisibility.mutate({
                     id: chat.id,
                     visibility: "private",
