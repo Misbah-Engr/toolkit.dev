@@ -71,9 +71,9 @@ export default function Topbar() {
   if (pathname === "/") return null;
 
   return (
-    <div className="bg-background/80 shadow-background border-border/50 sticky top-0 z-20 flex w-full justify-between border-b px-2 py-3 shadow-lg backdrop-blur-md max-sm:text-sm lg:px-4">
+    <div className="bg-background/80 shadow-background border-border/50 sticky top-0 z-20 flex h-12 w-full justify-between border-b px-2 py-3 shadow-lg backdrop-blur-md max-sm:text-sm lg:px-4">
       {!chat ? (
-        <div className="text-muted-foreground text-sm italic">
+        <div className="text-muted-foreground italic max-sm:text-sm lg:px-4">
           No chat selected
         </div>
       ) : (

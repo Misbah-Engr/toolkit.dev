@@ -47,7 +47,7 @@ const PureMessages: React.FC<Props> = ({
   return (
     <div
       ref={containerRef}
-      className="relative mb-20 flex h-full min-w-0 flex-1 flex-col gap-6 overflow-y-scroll py-8 pb-20"
+      className="mt-12 flex h-screen min-w-0 flex-col gap-6 overflow-y-scroll pt-4 pb-40"
     >
       {messages
         .filter(
