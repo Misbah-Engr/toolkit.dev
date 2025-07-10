@@ -10,6 +10,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "./_components/sidebar";
 import { Navbar } from "./_components/navbar";
 import { ThemeProvider } from "./_contexts/theme";
+import { DataProvider } from "./_contexts/data-context";
 
 import type { Metadata } from "next";
 
@@ -46,13 +47,15 @@ export default async function RootLayout({
       <body>
         <TRPCReactProvider>
           <ThemeProvider initialTheme={initialTheme}>
-            <SidebarProvider>
-              <AppSidebar />
-              <SidebarInset className="flex h-dvh flex-col">
-                <Navbar />
-                {children}
-              </SidebarInset>
-            </SidebarProvider>
+            <DataProvider>
+              <SidebarProvider>
+                <AppSidebar />
+                <SidebarInset className="flex h-dvh flex-col">
+                  <Navbar />
+                  {children}
+                </SidebarInset>
+              </SidebarProvider>
+            </DataProvider>
           </ThemeProvider>
         </TRPCReactProvider>
         <Toaster />

@@ -79,7 +79,7 @@ const PureChatItem = ({
             className="cursor-pointer"
             onClick={() => onStar(chat.id, chat.starred)}
           >
-            <Star className="size-4" />
+            <Star className="text-foreground size-4" />
             <span>{chat.starred ? "Unstar" : "Star"}</span>
           </DropdownMenuItem>
 

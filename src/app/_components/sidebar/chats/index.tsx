@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 
 import {
   AlertDialog,
@@ -20,10 +20,10 @@ import {
   SidebarMenu,
   useSidebar,
 } from "@/components/ui/sidebar";
-
 import { VStack } from "@/components/ui/stack";
 import { ChatItem } from "./item";
 import { Button } from "@/components/ui/button";
+import { useDataContext } from "@/app/_contexts/data-context";
 import { api } from "@/trpc/react";
 import { useDeleteChat } from "@/app/_hooks/use-delete-chat";
 import { useStarChat } from "@/app/_hooks/use-star-chat";
@@ -37,7 +37,10 @@ export const NavChats = () => {
 };
 
 const NavChatsBody = () => {
+  const router = useRouter();
   const pathname = usePathname();
+  const { setActiveChat } = useDataContext();
+
   const [, type, resourceId] = pathname.split("/");
   const workbenchId =
     type === "workbench" && resourceId !== "new" ? resourceId : undefined;
@@ -69,8 +72,13 @@ const NavChatsBody = () => {
 
   const handleDelete = () => {
     if (deleteId) {
-      deleteChat.mutate(deleteId);
-      setShowDeleteDialog(false);
+      deleteChat.mutate(deleteId, {
+        onSuccess: () => {
+          setActiveChat(null);
+          setShowDeleteDialog(false);
+          router.push("/");
+        },
+      });
     }
   };
 
@@ -81,9 +89,19 @@ const NavChatsBody = () => {
     });
   };
 
+  const allChats = chats?.pages.flatMap((page) => page.items) ?? [];
+
+  useEffect(() => {
+    const activeChat = allChats.find((chat) => pathname.endsWith(chat.id));
+    if (activeChat) {
+      setActiveChat(activeChat);
+    }
+  }, [pathname, allChats, setActiveChat]);
+
   if (isLoading || !chats) return null;
 
-  const allChats = chats.pages.flatMap((page) => page.items) ?? [];
+  const starredChats = allChats.filter((chat) => chat.starred);
+  const regularChats = allChats.filter((chat) => !chat.starred);
 
   if (allChats.length === 0) {
     return (
@@ -97,9 +115,6 @@ const NavChatsBody = () => {
       </SidebarGroup>
     );
   }
-
-  const starredChats = allChats.filter((chat) => chat.starred);
-  const regularChats = allChats.filter((chat) => !chat.starred);
 
   return (
     <>

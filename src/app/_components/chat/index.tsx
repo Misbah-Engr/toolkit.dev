@@ -10,6 +10,7 @@ import { clientToolkits } from "@/toolkits/toolkits/client";
 import type { ClientToolkit } from "@/toolkits/types";
 import type { z } from "zod";
 import type { PersistedToolkit } from "@/lib/cookies/types";
+import Topbar from "./topbar";
 
 interface Props {
   id: string;
@@ -113,6 +114,7 @@ export const Chat = async ({
         workbench={workbench}
         initialPreferences={initialPreferences}
       >
+        <Topbar />
         <ChatContent
           id={id}
           isReadonly={isReadonly}
