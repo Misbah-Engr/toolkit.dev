@@ -105,7 +105,7 @@ export const ModelSelect: React.FC = () => {
                 <div className="text-muted-foreground mb-1.5 text-xs font-medium">
                   Providers
                 </div>
-                <div className="flex flex-wrap gap-1">
+                <div className="no-scrollbar flex gap-1 overflow-x-auto">
                   {availableProviders.map((provider) => (
                     <Badge
                       key={provider}
@@ -114,7 +114,7 @@ export const ModelSelect: React.FC = () => {
                           ? "default"
                           : "outline"
                       }
-                      className="cursor-pointer gap-1 px-1.5 py-0.5"
+                      className="shrink-0 cursor-pointer gap-1 px-1.5 py-0.5"
                       onClick={() => toggleProvider(provider)}
                     >
                       <ModelProviderIcon
@@ -130,7 +130,7 @@ export const ModelSelect: React.FC = () => {
                 <div className="text-muted-foreground mb-1.5 text-xs font-medium">
                   Capabilities
                 </div>
-                <div className="flex flex-wrap gap-1">
+                <div className="no-scrollbar flex gap-1 overflow-x-auto">
                   {Object.values(LanguageModelCapability).map((capability) => {
                     const Icon = capabilityIcons[capability];
                     return (
@@ -141,7 +141,7 @@ export const ModelSelect: React.FC = () => {
                             ? "default"
                             : "outline"
                         }
-                        className="cursor-pointer gap-1 px-1.5 py-0.5"
+                        className="shrink-0 cursor-pointer gap-1 px-1.5 py-0.5"
                         onClick={() => toggleCapability(capability)}
                       >
                         {Icon && <Icon className="size-3" />}

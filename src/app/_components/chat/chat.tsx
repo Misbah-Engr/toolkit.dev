@@ -53,13 +53,11 @@ export const ChatContent = ({
 
         {/* Input Container - absolutely positioned, contains greeting, input, and starter prompts */}
         <motion.div
-          initial={
-            hasInitialMessages ? { y: 0 } : { y: "calc(-50vh + 50% - 1rem)" }
-          }
+          initial={hasInitialMessages ? { y: 0 } : { y: "calc(-50vh + 50%)" }}
           animate={
             hasMessages || hasInitialMessages
               ? { y: 0 }
-              : { y: "calc(-50vh + 50% - 1rem)" }
+              : { y: "calc(-50vh + 50%)" }
           }
           transition={{
             type: "tween",
