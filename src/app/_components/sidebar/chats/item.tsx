@@ -1,21 +1,5 @@
-import { memo } from "react";
+import React, { memo } from "react";
 
-import {
-  SidebarMenuAction,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar";
-import Link from "next/link";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuPortal,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   Check,
   Globe,
@@ -26,24 +10,46 @@ import {
   GitBranch,
   Star,
 } from "lucide-react";
+
+import Link from "next/link";
+
+import {
+  SidebarMenuAction,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/components/ui/sidebar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuPortal,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 import { useUpdateChatVisibility } from "@/app/_hooks/use-chat-visibility";
+import { useStarChat } from "@/app/_hooks/use-star-chat";
 
 import type { Chat } from "@prisma/client";
 
-const PureChatItem = ({
-  chat,
-  isActive,
-  onDelete,
-  onStar,
-  setOpenMobile,
-}: {
+interface Props {
   chat: Chat;
   isActive: boolean;
   onDelete: (chatId: string) => void;
-  onStar: (chatId: string, currentStarred: boolean) => void;
   setOpenMobile: (open: boolean) => void;
-}) => {
+}
+
+const PureChatItem: React.FC<Props> = ({
+  chat,
+  isActive,
+  onDelete,
+  setOpenMobile,
+}: Props) => {
   const updateChatVisibility = useUpdateChatVisibility();
+
+  const starChat = useStarChat();
 
   return (
     <SidebarMenuItem>
@@ -77,7 +83,12 @@ const PureChatItem = ({
         <DropdownMenuContent side="bottom" align="end">
           <DropdownMenuItem
             className="cursor-pointer"
-            onClick={() => onStar(chat.id, chat.starred)}
+            onClick={() =>
+              starChat.mutate({
+                id: chat.id,
+                starred: !chat.starred,
+              })
+            }
           >
             <Star className="text-foreground size-4" />
             <span>{chat.starred ? "Unstar" : "Star"}</span>
