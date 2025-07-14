@@ -9,7 +9,11 @@ const xaiLanguageModelData: Omit<LanguageModel, "provider">[] = [
     name: "Grok 4",
     modelId: "grok-4-latest",
     description: "Latest generation Grok model with enhanced capabilities",
-    capabilities: [LanguageModelCapability.ToolCalling],
+    capabilities: [
+      LanguageModelCapability.ToolCalling,
+      LanguageModelCapability.Vision,
+      LanguageModelCapability.Reasoning,
+    ],
     bestFor: ["General purpose", "Real-time information", "Analysis"],
     contextLength: 256000,
   },
