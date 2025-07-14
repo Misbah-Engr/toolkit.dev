@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { Logo } from "@/components/ui/logo";
 
 import { AccountButton } from "./account-button";
@@ -14,12 +16,14 @@ export const Navbar = async () => {
 
   return (
     <HStack className="bg-background sticky top-0 z-10 justify-between p-2 md:hidden">
-      <HStack>
-        <Logo className="size-6" />
-        <h1 className="overflow-hidden text-lg font-bold whitespace-nowrap">
-          Toolkit.dev
-        </h1>
-      </HStack>
+      <Link href="/">
+        <HStack>
+          <Logo className="size-6" />
+          <h1 className="overflow-hidden text-lg font-bold whitespace-nowrap">
+            Toolkit.dev
+          </h1>
+        </HStack>
+      </Link>
       <HStack>
         <AccountButton />
         <ColorModeToggle />
