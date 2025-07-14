@@ -37,7 +37,7 @@ export const mem0SearchMemoriesToolConfigClient: ClientToolConfig<
         <AccordionItem value="memories">
           <AccordionTrigger className="cursor-pointer p-0 hover:no-underline">
             <h3 className="text-primary flex items-center gap-2 text-sm font-medium">
-              Found {memories.length} Memory{memories.length === 1 ? "y" : "ies"}
+              Found {memories.length} Memor{memories.length === 1 ? "y" : "ies"}
             </h3>
           </AccordionTrigger>
           <AccordionContent className="p-0">
