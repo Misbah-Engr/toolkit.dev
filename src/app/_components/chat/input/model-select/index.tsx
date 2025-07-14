@@ -54,7 +54,7 @@ export const ModelSelect: React.FC = () => {
         <DropdownMenuTrigger asChild>
           <Button
             variant="outline"
-            className="w-fit justify-start bg-transparent md:w-auto"
+            className="size-9 justify-center bg-transparent md:w-auto md:justify-start"
             onClick={(event) => {
               const target = event.target as HTMLElement;
               const isNativeSearchToggle = target.closest(
