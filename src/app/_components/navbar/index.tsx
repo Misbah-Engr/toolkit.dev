@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { AccountButton } from "./account-button";
 import { ColorModeToggle } from "./color-mode-toggle";
 import { HStack } from "@/components/ui/stack";
@@ -16,9 +18,11 @@ export const Navbar = async () => {
         <SidebarTrigger className="hover:bg-accent/50 rounded-lg p-2">
           <Menu className="size-4" />
         </SidebarTrigger>
-        <h1 className="overflow-hidden text-lg font-bold whitespace-nowrap">
-          Toolkit.dev
-        </h1>
+        <Link href="/">
+          <h1 className="overflow-hidden text-lg font-bold whitespace-nowrap">
+            Toolkit.dev
+          </h1>
+        </Link>
       </HStack>
       <HStack>
         <AccountButton />
