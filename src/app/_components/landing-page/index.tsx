@@ -5,6 +5,7 @@ import { WorkbenchSection } from "./workbenches";
 import { DependenciesSection } from "./dependencies";
 import { Navbar } from "./navbar";
 import { Banner } from "./banner";
+import { FeaturesSection } from "./features";
 
 export const LandingPage: React.FC = () => {
   return (
@@ -12,6 +13,7 @@ export const LandingPage: React.FC = () => {
       <Navbar />
       <div className="mx-auto max-w-full divide-y pt-16 md:max-w-5xl md:border-x">
         <Banner />
+        <FeaturesSection />
         <HeroSection />
         <DependenciesSection />
         <ToolkitCreationSection />

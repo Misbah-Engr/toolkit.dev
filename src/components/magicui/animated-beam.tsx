@@ -1,9 +1,12 @@
 "use client";
 
+import { useEffect, useId, useState } from "react";
+
 import { motion } from "motion/react";
-import { type RefObject, useEffect, useId, useState } from "react";
 
 import { cn } from "@/lib/utils";
+
+import type { RefObject } from "react";
 
 export interface AnimatedBeamProps {
   className?: string;
@@ -23,6 +26,7 @@ export interface AnimatedBeamProps {
   startYOffset?: number;
   endXOffset?: number;
   endYOffset?: number;
+  pathType?: "curved" | "angular"; // New prop for path style
 }
 
 export const AnimatedBeam: React.FC<AnimatedBeamProps> = ({
@@ -37,31 +41,23 @@ export const AnimatedBeam: React.FC<AnimatedBeamProps> = ({
   pathColor = "gray",
   pathWidth = 2,
   pathOpacity = 0.2,
-  gradientStartColor = "#ffaa40",
-  gradientStopColor = "#9c40ff",
+  gradientStartColor = "var(--color-secondary-500)",
+  gradientStopColor = "var(--color-secondary-600)",
   startXOffset = 0,
   startYOffset = 0,
   endXOffset = 0,
   endYOffset = 0,
+  pathType = "curved", // Default to curved
 }) => {
   const id = useId();
   const [pathD, setPathD] = useState("");
   const [svgDimensions, setSvgDimensions] = useState({ width: 0, height: 0 });
-
-  // Calculate the gradient coordinates based on the reverse prop
-  const gradientCoordinates = reverse
-    ? {
-        x1: ["90%", "-10%"],
-        x2: ["100%", "0%"],
-        y1: ["0%", "0%"],
-        y2: ["0%", "0%"],
-      }
-    : {
-        x1: ["10%", "110%"],
-        x2: ["0%", "100%"],
-        y1: ["0%", "0%"],
-        y2: ["0%", "0%"],
-      };
+  const [gradientCoordinates, setGradientCoordinates] = useState({
+    x1: ["10%", "110%"],
+    x2: ["0%", "100%"],
+    y1: ["0%", "0%"],
+    y2: ["0%", "0%"],
+  });
 
   useEffect(() => {
     const updatePath = () => {
@@ -83,10 +79,60 @@ export const AnimatedBeam: React.FC<AnimatedBeamProps> = ({
         const endY =
           rectB.top - containerRect.top + rectB.height / 2 + endYOffset;
 
-        const controlY = startY - curvature;
-        const d = `M ${startX},${startY} Q ${
-          (startX + endX) / 2
-        },${controlY} ${endX},${endY}`;
+        // Calculate if the beam is more vertical or horizontal
+        const dx = Math.abs(endX - startX);
+        const dy = Math.abs(endY - startY);
+        const isVertical = dy > dx;
+
+        // Update gradient coordinates based on direction
+        setGradientCoordinates(
+          isVertical
+            ? {
+                x1: ["0%", "0%"],
+                x2: ["0%", "0%"],
+                y1: ["10%", "110%"],
+                y2: ["0%", "100%"],
+              }
+            : reverse
+              ? {
+                  x1: ["90%", "-10%"],
+                  x2: ["100%", "0%"],
+                  y1: ["0%", "0%"],
+                  y2: ["0%", "0%"],
+                }
+              : {
+                  x1: ["10%", "110%"],
+                  x2: ["0%", "100%"],
+                  y1: ["0%", "0%"],
+                  y2: ["0%", "0%"],
+                },
+        );
+
+        let d = "";
+        if (pathType === "angular") {
+          // Create angular path with rounded corners
+          const controlPointY = (startY + endY) / 2;
+          const cornerRadius = 8;
+
+          if (Math.abs(startX - endX) < 5) {
+            // Nearly straight vertical line - use curved path to avoid stem overlap
+            d = `M ${startX},${startY} L ${endX},${endY}`;
+          } else {
+            // L-shaped path with rounded corner
+            const verticalEnd = controlPointY - cornerRadius;
+            const horizontalStart =
+              startX + (endX > startX ? cornerRadius : -cornerRadius);
+            const horizontalEnd =
+              endX - (endX > startX ? cornerRadius : -cornerRadius);
+            const verticalStart = controlPointY + cornerRadius;
+
+            d = `M ${startX},${startY} L ${startX},${verticalEnd} Q ${startX},${controlPointY} ${horizontalStart},${controlPointY} L ${horizontalEnd},${controlPointY} Q ${endX},${controlPointY} ${endX},${verticalStart} L ${endX},${endY}`;
+          }
+        } else {
+          // Original curved path
+          const controlY = startY - curvature;
+          d = `M ${startX},${startY} Q ${(startX + endX) / 2},${controlY} ${endX},${endY}`;
+        }
         setPathD(d);
       }
     };
@@ -94,7 +140,9 @@ export const AnimatedBeam: React.FC<AnimatedBeamProps> = ({
     // Initialize ResizeObserver
     const resizeObserver = new ResizeObserver((entries) => {
       // For all entries, recalculate the path
-      entries.forEach(() => updatePath());
+      entries.forEach(() => {
+        updatePath();
+      });
     });
 
     // Observe the container element
@@ -118,6 +166,8 @@ export const AnimatedBeam: React.FC<AnimatedBeamProps> = ({
     startYOffset,
     endXOffset,
     endYOffset,
+    reverse,
+    pathType,
   ]);
 
   return (
@@ -166,7 +216,7 @@ export const AnimatedBeam: React.FC<AnimatedBeamProps> = ({
           transition={{
             delay,
             duration,
-            ease: [0.16, 1, 0.3, 1], // https://easings.net/#easeOutExpo
+            ease: [0.16, 1, 0.3, 1],
             repeat: Infinity,
             repeatDelay: 0,
           }}
