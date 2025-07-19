@@ -4,15 +4,19 @@ import { ToolkitCreationSection } from "./toolkit-creation";
 import { WorkbenchSection } from "./workbenches";
 import { DependenciesSection } from "./dependencies";
 import { Navbar } from "./navbar";
+import { Banner } from "./banner";
 
 export const LandingPage: React.FC = () => {
   return (
     <div className="h-fit min-h-screen">
       <Navbar />
-      <HeroSection />
-      <DependenciesSection />
-      <ToolkitCreationSection />
-      <WorkbenchSection />
+      <div className="mx-auto max-w-full divide-y pt-16 md:max-w-5xl md:border-x">
+        <Banner />
+        <HeroSection />
+        <DependenciesSection />
+        <ToolkitCreationSection />
+        <WorkbenchSection />
+      </div>
     </div>
   );
 };
