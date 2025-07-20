@@ -43,7 +43,10 @@ export const ToolkitIcons = ({
             )}
             key={toolkit}
           >
-            <ToolkitIcon toolkit={toolkit} iconClassName={iconClassName} />
+            <ToolkitIcon
+              toolkit={toolkit}
+              iconClassName={cn(iconClassName, "text-primary")}
+            />
           </div>
         );
       })}
@@ -58,7 +61,5 @@ interface ToolkitIconProps {
 
 export const ToolkitIcon = ({ toolkit, iconClassName }: ToolkitIconProps) => {
   const Icon = getClientToolkit(toolkit).icon;
-  return (
-    <Icon className={cn("text-primary size-3 md:size-4", iconClassName)} />
-  );
+  return <Icon className={cn("size-3 md:size-4", iconClassName)} />;
 };
