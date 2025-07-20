@@ -66,13 +66,13 @@ export const AnyModel: React.FC = () => {
         containerRef={containerRef}
         fromRef={sourceRef}
         toRef={target2Ref}
+        reverse
         {...animatedBeamProps}
       />
       <AnimatedBeam
         containerRef={containerRef}
         fromRef={sourceRef}
         toRef={target3Ref}
-        reverse
         {...animatedBeamProps}
       />
       <AnimatedBeam

@@ -31,7 +31,6 @@ export const ToolkitIcons = ({
       )}
     >
       {toolkits.map((toolkit) => {
-        const Icon = getClientToolkit(toolkit).icon;
         return (
           <div
             className={cn(
@@ -44,12 +43,22 @@ export const ToolkitIcons = ({
             )}
             key={toolkit}
           >
-            <Icon
-              className={cn("text-primary size-3 md:size-4", iconClassName)}
-            />
+            <ToolkitIcon toolkit={toolkit} iconClassName={iconClassName} />
           </div>
         );
       })}
     </div>
+  );
+};
+
+interface ToolkitIconProps {
+  toolkit: Toolkits;
+  iconClassName?: string;
+}
+
+export const ToolkitIcon = ({ toolkit, iconClassName }: ToolkitIconProps) => {
+  const Icon = getClientToolkit(toolkit).icon;
+  return (
+    <Icon className={cn("text-primary size-3 md:size-4", iconClassName)} />
   );
 };
