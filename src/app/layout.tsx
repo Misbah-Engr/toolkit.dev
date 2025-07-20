@@ -1,7 +1,7 @@
 import { Space_Grotesk } from "next/font/google";
 import { JetBrains_Mono } from "next/font/google";
-import { cookies } from "next/headers";
 import { Analytics } from "@vercel/analytics/next";
+import { ThemeProvider } from "next-themes";
 
 import { TRPCReactProvider } from "@/trpc/react";
 
@@ -14,7 +14,6 @@ import { Navbar } from "./_components/navbar";
 import type { Metadata } from "next";
 
 import "@/styles/globals.css";
-import { ThemeProvider } from "next-themes";
 
 export const metadata: Metadata = {
   title: "Toolkit.dev",
@@ -35,14 +34,10 @@ const jetBrainsMono = JetBrains_Mono({
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const cookieStore = await cookies();
-  const themeCookie = cookieStore.get("theme");
-  const initialTheme = (themeCookie?.value as "light" | "dark") || "light";
-
   return (
     <html
       lang="en"
-      className={`${spaceGrotesk.variable} ${jetBrainsMono.variable} ${initialTheme === "dark" ? "dark" : ""}`}
+      className={`${spaceGrotesk.variable} ${jetBrainsMono.variable}`}
       suppressHydrationWarning
     >
       <body>
