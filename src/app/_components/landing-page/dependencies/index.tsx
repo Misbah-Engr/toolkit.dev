@@ -14,26 +14,16 @@ import { Section } from "../section";
 import { dependencies } from "./data";
 
 import type { Dependency } from "./types";
+import { Heading } from "../heading";
 
 export const DependenciesSection: React.FC = () => {
   return (
     <Section className="px-0 md:px-0" id="dependencies">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        viewport={{ once: true }}
-        className="mb-8 flex flex-col items-start gap-2 px-4 text-left"
-      >
-        <h2 className="text-2xl font-bold md:text-3xl">
-          Built on the
-          <span className="text-primary block">Shoulders of Giants</span>
-        </h2>
-        <p className="text-muted-foreground max-w-2xl text-lg">
-          Toolkit is powered by the incredible work of the open source
-          community.
-        </p>
-      </motion.div>
+      <Heading
+        title={["Built on the", "Shoulders of Giants"]}
+        description="Toolkit is powered by the incredible work of the open source community."
+        className="mb-8 px-4 md:px-16"
+      />
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}

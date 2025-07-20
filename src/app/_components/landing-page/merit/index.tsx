@@ -114,7 +114,7 @@ const PrCard = React.forwardRef<HTMLDivElement, PrCardProps>(
         <VStack className="items-start gap-1">
           <HStack className="w-full justify-between text-sm font-bold md:text-lg">
             <HStack className="gap-1 md:gap-2">
-              <GitPullRequest className="text-primary size-4" />
+              <GitPullRequest className="text-primary size-4 md:size-5" />
               <p className="font-bold">PR #{number}</p>
             </HStack>
             <p className="text-primary font-bold">${dollars}</p>
