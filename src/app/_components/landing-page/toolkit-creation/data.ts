@@ -1,79 +1,141 @@
-import { Code2, Server, Settings } from "lucide-react";
+export const agentWorkflowExamples = [
+  {
+    id: "simple",
+    title: "Simple Agent Workflow",
+    description: "Create a basic AI agent workflow with multiple agents.",
+    code: `import { Swarm, Agent } from 'ai-agent-sdk';
 
-export const toolkitCreationSteps = [
-  {
-    icon: Settings,
-    title: "Define Base Config",
-    description: "Define tools and configuration parameters",
-    codeTitle: "base.ts",
-    code: `export const baseToolkit = {
-  tools: {
-    myAction: {
-      description: "Write notes to your workspace",
-      inputSchema: z.object({
-        note: z.string(),
-      }),
-      outputSchema: z.object({
-        result: z.string(),
-      }),
-    },
+const client = new Swarm();
+
+const transferToAgentB = (): Agent => {
+  return agentB;
+};
+
+const agentA = new Agent({
+  name: "Agent A",
+  instructions: "You are a helpful agent.",
+  functions: [transferToAgentB],
+});
+
+const agentB = new Agent({
+  name: "Agent B",
+  instructions: "Only speak in Haikus.",
+});
+
+const run = async () => {
+  const response = await client.run({
+    agent: agentA,
+    messages: [{ role: "user", content: "I want to talk to agent B" }],
+  });
+  console.log('Response:', response);
+};
+
+run();`,
   },
-  // user configuration
-  parameters: z.object({
-    workspaceId: z.string(),
-    scopes: z.array(z.string()),
-  }),
+  {
+    id: "collaboration",
+    title: "Multi-Agent Collaboration",
+    description: "Set up multiple AI agents to work together on a complex task.",
+    code: `import { Agent, MultiAgentSystem } from 'ai-agent-sdk';
+
+const researchAgent = new Agent('Researcher');
+const analysisAgent = new Agent('Analyst');
+const reportAgent = new Agent('Reporter');
+
+const system = new MultiAgentSystem('MarketResearch');
+
+system.addAgent(researchAgent, {
+  task: 'collectData',
+  output: 'rawData'
+});
+
+system.addAgent(analysisAgent, {
+  task: 'analyzeData',
+  input: 'rawData',
+  output: 'analysisResults'
+});
+
+system.addAgent(reportAgent, {
+  task: 'generateReport',
+  input: 'analysisResults',
+  output: 'finalReport'
+});
+
+const runResearch = async () => {
+  const finalReport = await system.run();
+  console.log('Research completed:', finalReport);
 };`,
-    delay: 0,
   },
   {
-    icon: Code2,
-    title: "Create Client UI",
-    description: "Define a the look and feel",
-    codeTitle: "client.tsx",
-    code: `export const clientToolkit = createClientToolkit(
-  baseToolkit,
-  {
-    name: "Note Taker",
-    description: "Write notes to your workspace",
-    icon: Note,
+    id: "tool-integration",
+    title: "Tool Integration",
+    description: "Integrate external tools and APIs into an AI agent workflow.",
+    code: `import { Agent, Tool } from 'ai-agent-sdk';
+import { SearchAPI, DatabaseAPI, EmailAPI } from './external-apis';
+
+const searchTool = new Tool({
+  name: 'search',
+  description: 'Search the web for information',
+  function: async (query) => {
+    return await SearchAPI.search(query);
+  }
+});
+
+const databaseTool = new Tool({
+  name: 'database',
+  description: 'Store and retrieve data',
+  function: async (data) => {
+    return await DatabaseAPI.store(data);
+  }
+});
+
+const agent = new Agent({
+  name: 'Research Assistant',
+  instructions: 'You help users research topics',
+  tools: [searchTool, databaseTool],
+});
+
+const result = await agent.run({
+  message: 'Research AI agent frameworks',
+  context: { userId: '123' }
+});`,
   },
   {
-    myAction: {
-      CallComponent: ({ args }) => (
-        <p>Writing note to {args.workspaceId}</p>
-      ),
-      CallButtonComponent: ({ result }) => (
-        <Button>Save Note</Button>
-      ),
-    },
+    id: "customizable",
+    title: "Customizable Agent Behavior",
+    description: "Design a specialized AI agent with custom decision-making logic.",
+    code: `import { Agent, DecisionEngine } from 'ai-agent-sdk';
+
+class CustomDecisionEngine extends DecisionEngine {
+  async decide(context, options) {
+    // Custom logic for decision making
+    if (context.urgency === 'high') {
+      return options.priorityPath;
+    }
+    
+    if (context.userPreference === 'detailed') {
+      return options.detailedPath;
+    }
+    
+    return options.defaultPath;
+  }
+}
+
+const customAgent = new Agent({
+  name: 'Smart Assistant',
+  instructions: 'Adapt behavior based on context',
+  decisionEngine: new CustomDecisionEngine(),
+  personality: {
+    tone: 'professional',
+    helpfulness: 'high',
+    verbosity: 'adaptive'
   },
-);`,
-    delay: 0.1,
-  },
-  {
-    icon: Server,
-    title: "Add Server Logic",
-    description: "Implement the tool execution",
-    codeTitle: "server.ts",
-    code: `export const serverToolkit = createServerToolkit(
-  baseToolkit,
-  "System prompt for toolkit",
-  async (params) => ({
-    myAction: {
-      callback: async (args) => {
-        // Your custom logic here
-        const userToken = await getUserToken();
-        const result = await callExternalAPI(
-          args.query, 
-          params.apiKey
-        );
-        return { result };
-      },
-      aiMessage: "Note saved"
-    },
-  }),
-);`,
-    delay: 0.2,
+  learningMode: true,
+});
+
+const response = await customAgent.process({
+  input: 'Help me plan my day',
+  context: { urgency: 'medium', userPreference: 'concise' }
+});`,
   },
 ];
