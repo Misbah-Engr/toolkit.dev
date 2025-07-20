@@ -69,7 +69,9 @@ const DependencyCard: React.FC<{ dependency: Dependency }> = ({
   <Card className="border-border/50 hover:border-primary/20 group flex-shrink-0 p-2 transition-all duration-300 hover:shadow-lg">
     <HStack className="gap-2">
       {dependency.icon}
-      <h3 className="truncate text-lg font-semibold">{dependency.name}</h3>
+      <h3 className="truncate text-sm font-semibold md:text-lg">
+        {dependency.name}
+      </h3>
     </HStack>
   </Card>
 );
