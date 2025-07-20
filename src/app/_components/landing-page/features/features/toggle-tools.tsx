@@ -48,8 +48,8 @@ export const ToggleTools = () => {
           <div
             key={key}
             className={cn(
-              "bg-card flex aspect-square items-center justify-center rounded-full border p-2 transition-all duration-300",
-              isSelected && "text-primary border-primary",
+              "bg-card flex aspect-square items-center justify-center rounded-full border p-2.5 opacity-20 transition-all duration-300",
+              isSelected && "opacity-100",
             )}
           >
             <ToolkitIcon
