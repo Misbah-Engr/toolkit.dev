@@ -11,7 +11,7 @@ export const FeatureCard = ({ children }: { children: React.ReactNode }) => {
       className={cn(
         "h-full gap-4 p-4",
         "border-b last:border-b-0",
-        "md:nth-child(-n+2):border-b-0 md:nth-child(even):border-r",
+        "md:odd:border-r md:nth-last-2:border-b-0",
         "xl:border-r xl:border-b-0 xl:last:border-r-0",
       )}
     >
