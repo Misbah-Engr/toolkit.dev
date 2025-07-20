@@ -28,11 +28,11 @@ export const MeritSection: React.FC = () => {
         </Card>
         <Card
           ref={meritRef}
-          className="z-10 size-14 shrink-0 items-center gap-2 p-2 md:size-fit md:gap-2 md:p-4"
+          className="z-10 size-14 shrink-0 flex-col items-center gap-2 p-2 md:size-fit md:flex-row md:gap-4 md:p-4"
         >
-          <MeritLogo className="size-10 md:size-20" />
+          <MeritLogo className="size-10 md:size-12" />
           <h1 className="block text-sm font-bold md:hidden">Merit</h1>
-          <VStack className="hidden items-center gap-0 md:flex">
+          <VStack className="hidden items-start gap-0 md:flex">
             <h1 className="text-2xl font-bold">Merit Systems</h1>
             <p className="text-sm font-light opacity-60">
               Assigns an impact score to each PR
@@ -109,15 +109,15 @@ interface PrCardProps {
 const PrCard = React.forwardRef<HTMLDivElement, PrCardProps>(
   ({ title, number, additions, deletions, mergedAt, dollars }, ref) => {
     return (
-      <Card className="md:flew-row relative z-10 flex flex-col items-center justify-between gap-2 p-2 md:gap-4 md:p-4">
+      <Card className="md:flew-row relative z-10 flex flex-col items-center justify-between gap-2 p-2 md:gap-4">
         <div ref={ref} className="absolute top-0 bottom-0 left-0 z-0 w-8" />
         <VStack className="items-start gap-1">
           <HStack className="w-full justify-between text-sm font-bold md:text-lg">
-            <HStack className="gap-1">
-              <GitPullRequest className="size-4 text-purple-600" />
+            <HStack className="gap-1 md:gap-2">
+              <GitPullRequest className="text-primary size-4" />
               <p className="font-bold">PR #{number}</p>
             </HStack>
-            <p className="font-bold text-green-600">${dollars}</p>
+            <p className="text-primary font-bold">${dollars}</p>
           </HStack>
           <h3 className="text-xs font-medium opacity-80 md:text-base">
             {title}
