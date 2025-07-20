@@ -19,7 +19,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { useTheme } from "@/app/_contexts/theme";
+import { useTheme } from "next-themes";
 import { signOut } from "next-auth/react";
 
 export function NavUser({
@@ -32,7 +32,7 @@ export function NavUser({
   };
 }) {
   const { isMobile } = useSidebar();
-  const { theme, toggleTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
 
   return (
     <SidebarMenu>
@@ -87,7 +87,7 @@ export function NavUser({
             <DropdownMenuItem
               onClick={(e) => {
                 e.preventDefault();
-                toggleTheme();
+                setTheme(theme === "light" ? "dark" : "light");
               }}
             >
               {theme === "light" ? (

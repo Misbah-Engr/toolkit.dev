@@ -10,11 +10,11 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 import { AppSidebar } from "./_components/sidebar";
 import { Navbar } from "./_components/navbar";
-import { ThemeProvider } from "./_contexts/theme";
 
 import type { Metadata } from "next";
 
 import "@/styles/globals.css";
+import { ThemeProvider } from "next-themes";
 
 export const metadata: Metadata = {
   title: "Toolkit.dev",
@@ -43,12 +43,18 @@ export default async function RootLayout({
     <html
       lang="en"
       className={`${spaceGrotesk.variable} ${jetBrainsMono.variable} ${initialTheme === "dark" ? "dark" : ""}`}
+      suppressHydrationWarning
     >
       <body>
         <Analytics />
 
         <TRPCReactProvider>
-          <ThemeProvider initialTheme={initialTheme}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
             <SidebarProvider>
               <AppSidebar />
               <SidebarInset className="flex h-dvh flex-col">
