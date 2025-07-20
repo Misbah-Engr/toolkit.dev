@@ -20,11 +20,11 @@ export const ToolkitCreationSection: React.FC = () => {
   const [activeTab, setActiveTab] = useState<number>(0);
 
   return (
-    <Section className="px-2 md:px-8" id="toolkit-creation">
+    <Section id="toolkit-creation">
       <Heading
         title={["Designed to Facilitate", "Seamless Toolkit Creation"]}
         description="Create powerful AI agent systems with our intuitive SDK. From simple workflows to complex multi-agent collaborations."
-        className="mb-8 md:mb-16 md:px-8"
+        className="mb-8 md:mb-16"
       />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -37,12 +37,12 @@ export const ToolkitCreationSection: React.FC = () => {
           onValueChange={(value) => setActiveTab(Number(value))}
           className="flex w-full flex-col gap-2 md:grid md:grid-cols-12 md:gap-4"
         >
-          <TabsList className="no-scrollbar col-span-1 flex h-fit w-full flex-row justify-start gap-2 overflow-x-auto bg-transparent md:col-span-5 md:flex-col md:overflow-x-hidden">
+          <TabsList className="no-scrollbar flex h-fit w-full flex-row justify-start gap-2 overflow-x-auto bg-transparent md:col-span-5 md:flex-col md:overflow-x-hidden">
             {toolkitCreationSteps.map((step, index) => (
               <div key={index} className="h-full w-72 shrink-0 md:w-full">
                 <TabsTrigger
                   value={index.toString()}
-                  className="hover:bg-card/50 border-border data-[state=active]:border-primary data-[state=active]:bg-card dark:data-[state=active]:border-primary dark:data-[state=active]:bg-card group h-auto w-full shrink-0 overflow-hidden rounded-lg p-2 text-left transition-colors md:p-4"
+                  className="bg-card hover:border-primary/50 border-border data-[state=active]:border-primary data-[state=active]:bg-card dark:data-[state=active]:border-primary dark:data-[state=active]:bg-card group h-auto w-full shrink-0 overflow-hidden rounded-lg p-2 text-left transition-colors md:p-4"
                   asChild
                 >
                   <HStack className="w-full max-w-full justify-start gap-2 md:gap-4">
