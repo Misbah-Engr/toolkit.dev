@@ -2,27 +2,24 @@
 
 import React from "react";
 
-import Link from "next/link";
-
 import { motion } from "motion/react";
 
-import { Code } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { HStack, VStack } from "@/components/ui/stack";
 import { CodeBlock } from "@/components/ui/code-block";
 
-import { toolkitCreationSteps } from "./data";
-import { HStack, VStack } from "@/components/ui/stack";
-import { cn } from "@/lib/utils";
 import { Section } from "../section";
 import { Heading } from "../heading";
+
+import { cn } from "@/lib/utils";
+
+import { toolkitCreationSteps } from "./data";
 
 export const ToolkitCreationSection: React.FC = () => {
   return (
     <Section className="px-2 md:px-8" id="toolkit-creation">
       <Heading
-        title={["Build AI Agent Workflows", "With Simple Code"]}
+        title={["Designed to Facilitate", "Seamless Toolkit Creation"]}
         description="Create powerful AI agent systems with our intuitive SDK. From simple workflows to complex multi-agent collaborations."
         className="mb-16 md:px-8"
       />
