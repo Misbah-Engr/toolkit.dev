@@ -6,11 +6,10 @@ import { SiGithub } from "@icons-pack/react-simple-icons";
 
 import { Button } from "@/components/ui/button";
 import { HStack, VStack } from "@/components/ui/stack";
+import { AnimatedLogo } from "@/components/ui/logo";
 
 import { Section } from "../section";
 import { AuthModal } from "../auth-modal";
-
-import { AnimatedLogo } from "./animated-logo";
 
 export const HeroSection: React.FC = () => {
   return (
