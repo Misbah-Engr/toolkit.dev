@@ -15,102 +15,82 @@ import { CodeBlock } from "@/components/ui/code-block";
 import { toolkitCreationSteps } from "./data";
 import { HStack, VStack } from "@/components/ui/stack";
 import { cn } from "@/lib/utils";
+import { Section } from "../section";
+import { Heading } from "../heading";
 
 export const ToolkitCreationSection: React.FC = () => {
   return (
-    <section
-      className="from-background to-muted/20 bg-gradient-to-b py-24"
-      id="toolkit-creation"
-    >
-      <div className="container mx-auto px-2 md:px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="mb-16 text-center"
+    <Section className="px-2 md:px-8" id="toolkit-creation">
+      <Heading
+        title={["Build AI Agent Workflows", "With Simple Code"]}
+        description="Create powerful AI agent systems with our intuitive SDK. From simple workflows to complex multi-agent collaborations."
+        className="mb-16 md:px-8"
+      />
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        viewport={{ once: true }}
+      >
+        <Tabs
+          defaultValue="0"
+          className="grid w-full grid-cols-1 md:grid-cols-12"
         >
-          <h2 className="mb-4 text-3xl font-bold md:text-4xl">
-            Build AI Agent Workflows
-            <span className="text-primary block">With Simple Code</span>
-          </h2>
-          <p className="text-muted-foreground mx-auto mb-4 max-w-2xl text-lg">
-            Create powerful AI agent systems with our intuitive SDK. From simple
-            workflows to complex multi-agent collaborations.
-          </p>
-          <Link href="https://github.com/jasonhedman/toolkit.dev/tree/main/src/toolkits">
-            <Button className="user-message">
-              <Code className="size-4" />
-              Start Building
-            </Button>
-          </Link>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          viewport={{ once: true }}
-        >
-          <Tabs
-            defaultValue="0"
-            className="grid w-full grid-cols-1 md:grid-cols-12"
-          >
-            <TabsList className="col-span-5 flex h-fit w-full flex-col bg-transparent">
-              {toolkitCreationSteps.map((step, index) => (
-                <TabsTrigger
-                  key={index}
-                  value={index.toString()}
-                  className="hover:bg-accent/50 data-[state=active]:bg-accent data-[state=active]:border-primary h-auto w-full rounded-lg border p-4 text-left"
-                  asChild
-                >
-                  <HStack className="w-full justify-start gap-4">
-                    <div
-                      className={cn(
-                        "flex items-center justify-center font-bold",
-                        "size-8 md:size-10",
-                      )}
-                    >
-                      {index + 1}
-                    </div>
-                    <VStack className="items-start gap-1">
-                      <h3 className="text-base font-semibold md:text-lg">
-                        {step.title}
-                      </h3>
-                      <p className="text-muted-foreground text-sm leading-relaxed">
-                        {step.description}
-                      </p>
-                    </VStack>
-                  </HStack>
-                </TabsTrigger>
-              ))}
-            </TabsList>
-            <div className="col-span-7">
-              {toolkitCreationSteps.map((step, index) => (
-                <TabsContent
-                  key={index}
-                  value={index.toString()}
-                  className="mt-0"
-                >
-                  <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3 }}
+          <TabsList className="col-span-5 flex h-fit w-full flex-col gap-2 bg-transparent">
+            {toolkitCreationSteps.map((step, index) => (
+              <TabsTrigger
+                key={index}
+                value={index.toString()}
+                className="hover:bg-accent/50 border-border data-[state=active]:border-primary dark:data-[state=active]:border-primary group h-auto w-full overflow-hidden rounded-lg p-4 text-left transition-colors"
+                asChild
+              >
+                <HStack className="w-full max-w-full justify-start gap-4 overflow-hidden">
+                  <div
+                    className={cn(
+                      "flex shrink-0 items-center justify-center font-bold",
+                      "size-8 md:size-10",
+                      "group-data-[state=active]:bg-primary group-data-[state=active]:text-primary-foreground group-hover:bg-primary/10 rounded-full transition-colors",
+                    )}
                   >
-                    <CodeBlock
-                      language="typescript"
-                      value={step.code}
-                      showLineNumbers={false}
-                      allowCopy={true}
-                      headerClassName="bg-primary/20 dark:bg-primary/20 py-2"
-                    />
-                  </motion.div>
-                </TabsContent>
-              ))}
-            </div>
-          </Tabs>
-        </motion.div>
-      </div>
-    </section>
+                    {index + 1}
+                  </div>
+                  <VStack className="flex-1 items-start gap-0 overflow-hidden">
+                    <h3 className="w-full max-w-full text-base font-semibold text-wrap break-words md:text-lg">
+                      {step.title}
+                    </h3>
+                    <p className="text-muted-foreground max-w-full text-sm leading-relaxed text-wrap break-words">
+                      {step.description}
+                    </p>
+                  </VStack>
+                </HStack>
+              </TabsTrigger>
+            ))}
+          </TabsList>
+          <div className="col-span-7">
+            {toolkitCreationSteps.map((step, index) => (
+              <TabsContent
+                key={index}
+                value={index.toString()}
+                className="mt-0"
+              >
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <CodeBlock
+                    language="typescript"
+                    value={step.code}
+                    showLineNumbers={false}
+                    allowCopy={true}
+                    headerClassName="bg-primary/20 dark:bg-primary/20 py-2"
+                  />
+                </motion.div>
+              </TabsContent>
+            ))}
+          </div>
+        </Tabs>
+      </motion.div>
+    </Section>
   );
 };
