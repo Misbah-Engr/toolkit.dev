@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   description: "The Playground for LLM Tool Developers",
   appleWebApp: {
     title: "Toolkit.dev",
-    statusBarStyle: "black-translucent",
+    statusBarStyle: "black",
   },
   manifest: "/manifest.json",
 };
