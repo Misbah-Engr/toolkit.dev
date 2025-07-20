@@ -9,17 +9,6 @@ import { HStack } from "@/components/ui/stack";
 
 import { AnimatedBeam, Circle } from "@/components/magicui/animated-beam";
 
-const animatedBeamProps = {
-  pathColor: "var(--color-primary-500)",
-  pathWidth: 2,
-  pathOpacity: 0.2,
-  gradientStartColor: "var(--color-primary-500)",
-  gradientStopColor: "var(--color-primary-600)",
-  startXOffset: 0,
-  startYOffset: 0,
-  duration: 4,
-};
-
 export const GetPaid: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const prLogo = useRef<HTMLDivElement>(null);
@@ -41,13 +30,13 @@ export const GetPaid: React.FC = () => {
         containerRef={containerRef}
         fromRef={prLogo}
         toRef={meritRef}
-        {...animatedBeamProps}
+        duration={4}
       />
       <AnimatedBeam
         containerRef={containerRef}
         fromRef={meritRef}
         toRef={moneyRef}
-        {...animatedBeamProps}
+        duration={4}
       />
     </HStack>
   );

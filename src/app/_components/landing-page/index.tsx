@@ -1,10 +1,12 @@
 import React from "react";
+
+import { HeroSection } from "./hero";
+import { FeaturesSection } from "./features";
+import { MeritSection } from "./merit";
 import { ToolkitCreationSection } from "./toolkit-creation";
 import { WorkbenchSection } from "./workbenches";
 import { DependenciesSection } from "./dependencies";
 import { Navbar } from "./navbar";
-import { HeroSection } from "./hero";
-import { FeaturesSection } from "./features";
 
 export const LandingPage: React.FC = () => {
   return (
@@ -13,6 +15,7 @@ export const LandingPage: React.FC = () => {
       <div className="mx-auto max-w-full divide-y pt-16 md:max-w-5xl md:border-x">
         <HeroSection />
         <FeaturesSection />
+        <MeritSection />
         <DependenciesSection />
         <ToolkitCreationSection />
         <WorkbenchSection />

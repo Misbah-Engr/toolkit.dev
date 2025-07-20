@@ -14,17 +14,6 @@ const iconProps = {
   className: "size-4",
 };
 
-const animatedBeamProps = {
-  pathColor: "var(--color-primary-500)",
-  pathWidth: 2,
-  pathOpacity: 0.2,
-  gradientStartColor: "var(--color-primary-500)",
-  gradientStopColor: "var(--color-primary-600)",
-  startXOffset: 0,
-  startYOffset: 0,
-  duration: 6,
-};
-
 export const AnyModel: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const sourceRef = useRef<HTMLDivElement>(null);
@@ -58,26 +47,26 @@ export const AnyModel: React.FC = () => {
         fromRef={sourceRef}
         toRef={target1Ref}
         reverse
-        {...animatedBeamProps}
+        duration={6}
       />
       <AnimatedBeam
         containerRef={containerRef}
         fromRef={sourceRef}
         toRef={target2Ref}
         reverse
-        {...animatedBeamProps}
+        duration={6}
       />
       <AnimatedBeam
         containerRef={containerRef}
         fromRef={sourceRef}
         toRef={target3Ref}
-        {...animatedBeamProps}
+        duration={6}
       />
       <AnimatedBeam
         containerRef={containerRef}
         fromRef={sourceRef}
         toRef={target4Ref}
-        {...animatedBeamProps}
+        duration={6}
       />
     </VStack>
   );
