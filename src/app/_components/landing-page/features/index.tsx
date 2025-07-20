@@ -17,7 +17,7 @@ import { ToggleTools } from "./features/toggle-tools";
 export const FeaturesSection: React.FC = () => {
   return (
     <Section id="features" className="p-0 md:p-0">
-      <div className={cn("grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4")}>
+      <div className={cn("grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4")}>
         {/* Get Paid */}
         <FeatureCard>
           <FeatureCardComponent>

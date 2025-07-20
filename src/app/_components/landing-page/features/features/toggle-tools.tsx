@@ -7,6 +7,7 @@ import { ToolkitIcon } from "@/components/toolkit/toolkit-icons";
 
 import { Toolkits } from "@/toolkits/toolkits/shared";
 import { MessageSquare } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const toolkitSets = [
   [Toolkits.Exa, Toolkits.Github, Toolkits.Notion, Toolkits.GoogleCalendar],
@@ -23,50 +24,29 @@ const toolkitSets = [
 const DURATION = 5000;
 
 const initialProps = {
-  x: "0%",
-  y: "0%",
+  top: "50%",
+  left: "50%",
   scale: 0.5,
   rotate: -180,
   opacity: 0,
 };
 
-const commonProps = (index: number) => ({
-  scale: 1,
-  rotate: 0,
-  opacity: 1,
-  transition: {
-    type: "spring",
-    stiffness: 200,
-    damping: 20,
-    delay: index * 0.1,
-  },
-});
-
-const offset = 100 * Math.sqrt(2);
-
 // Animation variants for the three positions
 const iconVariants = {
   initial: initialProps,
-  topLeft: {
-    x: `-${offset}%`,
-    y: `-${offset}%`,
-    ...commonProps(0),
-  },
-  topRight: {
-    x: `${offset}%`,
-    y: `-${offset}%`,
-    ...commonProps(1),
-  },
-  bottomLeft: {
-    x: `-${offset}%`,
-    y: `${offset}%`,
-    ...commonProps(2),
-  },
-  bottomRight: {
-    x: `${offset}%`,
-    y: `${offset}%`,
-    ...commonProps(3),
-  },
+  spread: (index: number) => ({
+    scale: 1,
+    rotate: 0,
+    opacity: 1,
+    top: index < 2 ? `0%` : `100%`,
+    left: index % 2 === 0 ? `0%` : `100%`,
+    transition: {
+      type: "spring",
+      stiffness: 200,
+      damping: 20,
+      delay: index * 0.1,
+    },
+  }),
   exit: {
     ...initialProps,
     transition: {
@@ -90,7 +70,9 @@ export const ToggleTools = () => {
   const currentToolkits = toolkitSets[currentSetIndex]!;
 
   return (
-    <div className="relative flex aspect-square w-full items-center justify-center">
+    <div className="relative flex size-full items-center justify-center">
+      {/* SVG Lines */}
+
       <div className="bg-card absolute top-1/2 left-1/2 z-20 -translate-x-1/2 -translate-y-1/2 rounded-full border p-6 shadow-sm">
         <MessageSquare className="size-12" />
       </div>
@@ -103,30 +85,29 @@ export const ToggleTools = () => {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <Toolkit toolkit={currentToolkits[0]} animate="topLeft" />
-          <Toolkit toolkit={currentToolkits[1]} animate="bottomLeft" />
-          <Toolkit toolkit={currentToolkits[2]} animate="topRight" />
-          <Toolkit toolkit={currentToolkits[3]} animate="bottomRight" />
+          <Toolkit toolkit={currentToolkits[0]} index={0} />
+          <Toolkit toolkit={currentToolkits[1]} index={1} />
+          <Toolkit toolkit={currentToolkits[2]} index={2} />
+          <Toolkit toolkit={currentToolkits[3]} index={3} />
         </motion.div>
       </AnimatePresence>
     </div>
   );
 };
 
-const Toolkit = ({
-  toolkit,
-  animate,
-}: {
-  toolkit: Toolkits;
-  animate: "topLeft" | "topRight" | "bottomLeft" | "bottomRight";
-}) => {
+const Toolkit = ({ toolkit, index }: { toolkit: Toolkits; index: number }) => {
   return (
     <motion.div
-      className="bg-card border-primary absolute rounded-full border p-3 shadow-sm"
+      className={cn(
+        "bg-card border-primary absolute rounded-full border p-3 shadow-sm",
+        index % 2 === 1 && "-translate-x-1/1",
+        index > 1 && "-translate-y-1/1",
+      )}
       variants={iconVariants}
       initial="initial"
-      animate={animate}
+      animate={"spread"}
       exit="exit"
+      custom={index}
     >
       <ToolkitIcon toolkit={toolkit} iconClassName="size-6 md:size-8" />
     </motion.div>
