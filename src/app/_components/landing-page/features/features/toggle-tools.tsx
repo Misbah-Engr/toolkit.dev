@@ -32,7 +32,7 @@ export const ToggleTools = () => {
       setTimeout(() => {
         setCurrentSetIndex((prev) => (prev + 1) % toolkitSets.length);
         setIsAnimatingOut(false);
-      }, 600);
+      }, 900);
     }, DURATION); // Increased time to allow for animations
 
     return () => clearInterval(interval);
@@ -49,7 +49,7 @@ export const ToggleTools = () => {
             key={key}
             className={cn(
               "bg-card flex aspect-square items-center justify-center rounded-full border p-2 transition-all duration-300",
-              isSelected && "border-primary bg-primary/10 text-primary",
+              isSelected && "text-primary border-primary",
             )}
           >
             <ToolkitIcon
