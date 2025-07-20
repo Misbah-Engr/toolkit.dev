@@ -11,14 +11,27 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "./_components/sidebar";
 import { Navbar } from "./_components/navbar";
 
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
   title: "Toolkit.dev",
-  description: "A highly-configurable open-source chat client",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
+  description: "The Playground for LLM Tool Developers",
+  appleWebApp: {
+    title: "Toolkit.dev",
+    statusBarStyle: "black-translucent",
+  },
+  manifest: "/manifest.json",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  height: "device-height",
+  initialScale: 1,
+  minimumScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 const spaceGrotesk = Space_Grotesk({
@@ -40,6 +53,9 @@ export default async function RootLayout({
       className={`${spaceGrotesk.variable} ${jetBrainsMono.variable}`}
       suppressHydrationWarning
     >
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      </head>
       <body>
         <Analytics />
 
