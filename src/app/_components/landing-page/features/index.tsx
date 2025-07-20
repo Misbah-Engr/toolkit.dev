@@ -25,9 +25,9 @@ export const FeaturesSection: React.FC = () => {
             <GetPaid />
           </FeatureCardComponent>
           <FeatureCardFooter>
-            <FeatureCardTitle>Get Paid</FeatureCardTitle>
+            <FeatureCardTitle>Merged PRs Earn</FeatureCardTitle>
             <FeatureCardDescription>
-              Get paid for your work
+              Toolkit uses Merit to pay contributors for their work
             </FeatureCardDescription>
           </FeatureCardFooter>
         </FeatureCard>
@@ -39,7 +39,7 @@ export const FeaturesSection: React.FC = () => {
           <FeatureCardFooter>
             <FeatureCardTitle>Toggle Tools</FeatureCardTitle>
             <FeatureCardDescription>
-              Toggle tools for your work
+              Mix and match toolkits to create your own custom agent
             </FeatureCardDescription>
           </FeatureCardFooter>
         </FeatureCard>
@@ -51,7 +51,7 @@ export const FeaturesSection: React.FC = () => {
           <FeatureCardFooter>
             <FeatureCardTitle>Generative UI</FeatureCardTitle>
             <FeatureCardDescription>
-              Generative UI for your work
+              Every tool has a content-rich display for observability
             </FeatureCardDescription>
           </FeatureCardFooter>
         </FeatureCard>
@@ -63,7 +63,7 @@ export const FeaturesSection: React.FC = () => {
           <FeatureCardFooter>
             <FeatureCardTitle>Any Model</FeatureCardTitle>
             <FeatureCardDescription>
-              Use any model you want
+              Test your Toolkit configuration with the latest LLMs
             </FeatureCardDescription>
           </FeatureCardFooter>
         </FeatureCard>

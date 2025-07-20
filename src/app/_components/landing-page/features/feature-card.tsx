@@ -9,7 +9,7 @@ export const FeatureCard = ({ children }: { children: React.ReactNode }) => {
   return (
     <VStack
       className={cn(
-        "h-full gap-4 p-4",
+        "h-full gap-4 p-4 pt-8 md:pt-4",
         "border-b last:border-b-0",
         "md:odd:border-r md:nth-last-2:border-b-0",
         "xl:border-r xl:border-b-0 xl:last:border-r-0",

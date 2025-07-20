@@ -40,7 +40,7 @@ export const ToggleTools = () => {
   const currentToolkits = toolkitSets[currentSetIndex];
 
   return (
-    <div className="grid w-full grid-cols-4 gap-4">
+    <div className="grid w-full grid-cols-8 gap-2 md:grid-cols-4 md:gap-4">
       {Object.entries(Toolkits).map(([key, value]) => {
         const isSelected = currentToolkits?.includes(value) && !isAnimatingOut;
         return (

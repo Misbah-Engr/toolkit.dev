@@ -15,7 +15,7 @@ import { AnimatedLogo } from "./animated-logo";
 export const Banner: React.FC = () => {
   return (
     <Section id="banner">
-      <div className="flex flex-col-reverse items-start gap-8 md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col-reverse items-start gap-4 md:flex-row md:items-center md:justify-between md:gap-8">
         <VStack className="items-start gap-8">
           <VStack className="items-start gap-4">
             <VStack className="items-start gap-1">
