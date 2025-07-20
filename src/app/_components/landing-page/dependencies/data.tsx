@@ -43,7 +43,7 @@ export const dependenciesData = [
   // API & State Management
   {
     name: "tRPC",
-    url: "trpc.png",
+    url: "tRPC.png",
   },
   {
     name: "TanStack",

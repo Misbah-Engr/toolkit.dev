@@ -1,5 +1,4 @@
 import React from "react";
-import { HeroSection } from "./hero";
 import { ToolkitCreationSection } from "./toolkit-creation";
 import { WorkbenchSection } from "./workbenches";
 import { DependenciesSection } from "./dependencies";
@@ -14,7 +13,6 @@ export const LandingPage: React.FC = () => {
       <div className="mx-auto max-w-full divide-y pt-16 md:max-w-5xl md:border-x">
         <Banner />
         <FeaturesSection />
-        <HeroSection />
         <DependenciesSection />
         <ToolkitCreationSection />
         <WorkbenchSection />
