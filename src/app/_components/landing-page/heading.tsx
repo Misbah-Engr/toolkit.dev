@@ -20,7 +20,9 @@ export const Heading: React.FC<Props> = ({ title, description, className }) => {
         {title[0]}
         <span className="text-primary block">{title[1]}</span>
       </h2>
-      <p className="text-muted-foreground max-w-2xl text-lg">{description}</p>
+      <p className="text-muted-foreground max-w-2xl text-sm md:text-lg">
+        {description}
+      </p>
     </motion.div>
   );
 };

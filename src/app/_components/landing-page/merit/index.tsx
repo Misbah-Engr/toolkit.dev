@@ -8,6 +8,7 @@ import { AnimatedBeam, Circle } from "@/components/magicui/animated-beam";
 import { DollarSign, GitPullRequest } from "lucide-react";
 import { MeritLogo } from "@/components/ui/merit-logo";
 import { Card } from "@/components/ui/card";
+import { Heading } from "../heading";
 
 export const MeritSection: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -19,6 +20,11 @@ export const MeritSection: React.FC = () => {
 
   return (
     <Section id="merit">
+      <Heading
+        title={["Merge a PR", "Get Paid on Merit Systems"]}
+        description="Toolkit will become the first autonomous repository by distributing all revenue directly to its contributors."
+        className="mb-4"
+      />
       <div
         ref={containerRef}
         className="relative flex items-center justify-between gap-4 md:flex-row"
@@ -31,7 +37,6 @@ export const MeritSection: React.FC = () => {
           className="z-10 size-14 shrink-0 flex-col items-center gap-2 p-2 md:size-fit md:flex-row md:gap-4 md:p-4"
         >
           <MeritLogo className="size-10 md:size-12" />
-          <h1 className="block text-sm font-bold md:hidden">Merit</h1>
           <VStack className="hidden items-start gap-0 md:flex">
             <h1 className="text-2xl font-bold">Merit Systems</h1>
             <p className="text-sm font-light opacity-60">
