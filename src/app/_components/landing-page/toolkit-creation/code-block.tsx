@@ -39,6 +39,14 @@ export const CodeBlock: React.FC<Props> = ({ value }) => {
         .shiki {
           padding: 1rem;
           overflow-x: auto;
+          background-color: var(--card) !important;
+        }
+
+        @media (max-width: 768px) {
+          .shiki {
+            padding: 0.5rem;
+            font-size: 12px;
+          }
         }
       `}</style>
       <div dangerouslySetInnerHTML={{ __html: highlighted }} />

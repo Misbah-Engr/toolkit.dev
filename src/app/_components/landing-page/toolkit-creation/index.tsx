@@ -32,36 +32,37 @@ export const ToolkitCreationSection: React.FC = () => {
       >
         <Tabs
           defaultValue="0"
-          className="grid w-full grid-cols-1 md:grid-cols-12"
+          className="flex w-full flex-col gap-2 md:grid md:grid-cols-12 md:gap-4"
         >
-          <TabsList className="col-span-5 flex h-fit w-full flex-col gap-2 bg-transparent">
+          <TabsList className="col-span-1 flex h-fit w-full flex-row justify-start gap-2 overflow-x-auto bg-transparent md:col-span-5 md:flex-col md:overflow-x-hidden">
             {toolkitCreationSteps.map((step, index) => (
-              <TabsTrigger
-                key={index}
-                value={index.toString()}
-                className="hover:bg-accent/50 border-border data-[state=active]:border-primary dark:data-[state=active]:border-primary group h-auto w-full overflow-hidden rounded-lg p-4 text-left transition-colors"
-                asChild
-              >
-                <HStack className="w-full max-w-full justify-start gap-4 overflow-hidden">
-                  <div
-                    className={cn(
-                      "flex shrink-0 items-center justify-center font-bold",
-                      "size-8 md:size-10",
-                      "group-data-[state=active]:bg-primary group-data-[state=active]:text-primary-foreground group-hover:bg-primary/10 rounded-full transition-colors",
-                    )}
-                  >
-                    {index + 1}
-                  </div>
-                  <VStack className="flex-1 items-start gap-0 overflow-hidden">
-                    <h3 className="w-full max-w-full text-base font-semibold text-wrap break-words md:text-lg">
-                      {step.title}
-                    </h3>
-                    <p className="text-muted-foreground max-w-full text-sm leading-relaxed text-wrap break-words">
-                      {step.description}
-                    </p>
-                  </VStack>
-                </HStack>
-              </TabsTrigger>
+              <div key={index} className="w-72 shrink-0 md:w-full">
+                <TabsTrigger
+                  value={index.toString()}
+                  className="hover:bg-card/50 border-border data-[state=active]:border-primary data-[state=active]:bg-card dark:data-[state=active]:border-primary dark:data-[state=active]:bg-card group h-auto w-full shrink-0 overflow-hidden rounded-lg p-2 text-left transition-colors md:p-4"
+                  asChild
+                >
+                  <HStack className="w-full max-w-full justify-start gap-2 md:gap-4">
+                    <div
+                      className={cn(
+                        "flex shrink-0 items-center justify-center font-bold",
+                        "size-8 md:size-10",
+                        "group-data-[state=active]:bg-primary group-data-[state=active]:text-primary-foreground group-hover:bg-primary/10 rounded-full transition-colors",
+                      )}
+                    >
+                      {index + 1}
+                    </div>
+                    <VStack className="items-start gap-0 md:flex-1">
+                      <h3 className="w-full max-w-full text-base font-semibold text-wrap md:text-lg">
+                        {step.title}
+                      </h3>
+                      <p className="text-muted-foreground max-w-full text-xs leading-relaxed text-wrap md:text-sm">
+                        {step.description}
+                      </p>
+                    </VStack>
+                  </HStack>
+                </TabsTrigger>
+              </div>
             ))}
           </TabsList>
           <div className="col-span-7">
