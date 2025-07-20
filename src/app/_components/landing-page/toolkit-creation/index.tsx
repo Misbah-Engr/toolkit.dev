@@ -6,10 +6,11 @@ import { motion } from "motion/react";
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { HStack, VStack } from "@/components/ui/stack";
-import { CodeBlock } from "@/components/ui/code-block";
 
 import { Section } from "../section";
 import { Heading } from "../heading";
+
+import { CodeBlock } from "./code-block";
 
 import { cn } from "@/lib/utils";
 
@@ -74,14 +75,9 @@ export const ToolkitCreationSection: React.FC = () => {
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3 }}
+                  className="border-border overflow-hidden rounded-lg border"
                 >
-                  <CodeBlock
-                    language="typescript"
-                    value={step.code}
-                    showLineNumbers={false}
-                    allowCopy={true}
-                    headerClassName="bg-primary/20 dark:bg-primary/20 py-2"
-                  />
+                  <CodeBlock value={step.code} />
                 </motion.div>
               </TabsContent>
             ))}
