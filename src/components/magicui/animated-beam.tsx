@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useId, useState } from "react";
+import { forwardRef, useEffect, useId, useState } from "react";
 
 import { motion } from "motion/react";
 
 import { cn } from "@/lib/utils";
 
 import type { RefObject } from "react";
+import { Card } from "../ui/card";
 
 export interface AnimatedBeamProps {
   className?: string;
@@ -234,3 +235,22 @@ export const AnimatedBeam: React.FC<AnimatedBeamProps> = ({
     </svg>
   );
 };
+
+export const Circle = forwardRef<
+  HTMLDivElement,
+  { className?: string; children?: React.ReactNode }
+>(({ className, children }, ref) => {
+  return (
+    <Card
+      ref={ref}
+      className={cn(
+        "bg-card z-10 flex items-center justify-center rounded-full border-2 p-2 shadow-sm",
+        className,
+      )}
+    >
+      {children}
+    </Card>
+  );
+});
+
+Circle.displayName = "Circle";

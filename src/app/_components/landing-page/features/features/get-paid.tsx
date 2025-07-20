@@ -1,15 +1,13 @@
 "use client";
 
-import React, { forwardRef, useRef } from "react";
+import React, { useRef } from "react";
 
 import { CircleDollarSign, GitPullRequest } from "lucide-react";
 
 import { MeritLogo } from "@/components/ui/merit-logo";
 import { HStack } from "@/components/ui/stack";
 
-import { AnimatedBeam } from "@/components/magicui/animated-beam";
-
-import { cn } from "@/lib/utils";
+import { AnimatedBeam, Circle } from "@/components/magicui/animated-beam";
 
 const animatedBeamProps = {
   pathColor: "var(--color-primary-500)",
@@ -54,22 +52,3 @@ export const GetPaid: React.FC = () => {
     </HStack>
   );
 };
-
-const Circle = forwardRef<
-  HTMLDivElement,
-  { className?: string; children?: React.ReactNode }
->(({ className, children }, ref) => {
-  return (
-    <div
-      ref={ref}
-      className={cn(
-        "border-border z-10 flex items-center justify-center rounded-full border-2 bg-white p-2 shadow-[0_0_20px_-12px_rgba(0,0,0,0.8)]",
-        className,
-      )}
-    >
-      {children}
-    </div>
-  );
-});
-
-Circle.displayName = "Circle";
