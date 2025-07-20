@@ -85,10 +85,9 @@ export const ToggleTools = () => {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <Toolkit toolkit={currentToolkits[0]} index={0} />
-          <Toolkit toolkit={currentToolkits[1]} index={1} />
-          <Toolkit toolkit={currentToolkits[2]} index={2} />
-          <Toolkit toolkit={currentToolkits[3]} index={3} />
+          {currentToolkits.map((toolkit, index) => (
+            <Toolkit toolkit={toolkit} index={index} key={index} />
+          ))}
         </motion.div>
       </AnimatePresence>
     </div>
