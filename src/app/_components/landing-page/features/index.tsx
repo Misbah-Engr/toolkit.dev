@@ -13,6 +13,7 @@ import { AnyModel } from "./features/any-model";
 import { cn } from "@/lib/utils";
 import { GetPaid } from "./features/get-paid";
 import { ToggleTools } from "./features/toggle-tools";
+import { GenerativeUI } from "./features/generative-ui";
 
 export const FeaturesSection: React.FC = () => {
   return (
@@ -44,7 +45,9 @@ export const FeaturesSection: React.FC = () => {
         </FeatureCard>
         {/* Generative UI */}
         <FeatureCard>
-          <FeatureCardComponent>{null}</FeatureCardComponent>
+          <FeatureCardComponent>
+            <GenerativeUI />
+          </FeatureCardComponent>
           <FeatureCardFooter>
             <FeatureCardTitle>Generative UI</FeatureCardTitle>
             <FeatureCardDescription>

@@ -13,7 +13,7 @@ import { mem0ClientToolkit } from "./mem0/client";
 import { notionClientToolkit } from "./notion/client";
 import { e2bClientToolkit } from "./e2b/client";
 
-type ClientToolkits = {
+export type ClientToolkits = {
   [K in Toolkits]: ClientToolkit<
     ServerToolkitNames[K],
     ServerToolkitParameters[K]

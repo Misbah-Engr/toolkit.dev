@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
 
 import { ToolkitIcon } from "@/components/toolkit/toolkit-icons";
 
