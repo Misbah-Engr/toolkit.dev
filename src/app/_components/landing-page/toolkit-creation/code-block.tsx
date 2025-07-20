@@ -40,6 +40,11 @@ export const CodeBlock: React.FC<Props> = ({ value }) => {
           padding: 1rem;
           overflow-x: auto;
           background-color: var(--card) !important;
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+          &::-webkit-scrollbar {
+            display: none;
+          }
         }
 
         @media (max-width: 768px) {

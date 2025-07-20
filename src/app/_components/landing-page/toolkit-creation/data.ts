@@ -4,7 +4,8 @@ export const toolkitCreationSteps = [
   {
     icon: Settings,
     title: "Define Base Config",
-    description: "Define tools and configuration parameters",
+    description:
+      "Define the toolkit parameters + each tool's inputs and outputs",
     codeTitle: "base.ts",
     code: `export const baseToolkit = {
   tools: {
@@ -29,7 +30,7 @@ export const toolkitCreationSteps = [
   {
     icon: Code2,
     title: "Create Client UI",
-    description: "Define a the look and feel",
+    description: "Create a loading and complete UI for each tool",
     codeTitle: "client.tsx",
     code: `export const clientToolkit = createClientToolkit(
   baseToolkit,
@@ -54,7 +55,7 @@ export const toolkitCreationSteps = [
   {
     icon: Server,
     title: "Add Server Logic",
-    description: "Implement the tool execution",
+    description: "Implement server initialization + tool execution logic",
     codeTitle: "server.ts",
     code: `export const serverToolkit = createServerToolkit(
   baseToolkit,
