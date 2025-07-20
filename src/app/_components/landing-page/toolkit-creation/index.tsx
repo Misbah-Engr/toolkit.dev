@@ -1,10 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { HStack, VStack } from "@/components/ui/stack";
 
 import { Section } from "../section";
@@ -17,6 +17,8 @@ import { cn } from "@/lib/utils";
 import { toolkitCreationSteps } from "./data";
 
 export const ToolkitCreationSection: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<number>(0);
+
   return (
     <Section className="px-2 md:px-8" id="toolkit-creation">
       <Heading
@@ -31,7 +33,8 @@ export const ToolkitCreationSection: React.FC = () => {
         viewport={{ once: true }}
       >
         <Tabs
-          defaultValue="0"
+          value={activeTab.toString()}
+          onValueChange={(value) => setActiveTab(Number(value))}
           className="flex w-full flex-col gap-2 md:grid md:grid-cols-12 md:gap-4"
         >
           <TabsList className="col-span-1 flex h-fit w-full flex-row justify-start gap-2 overflow-x-auto bg-transparent md:col-span-5 md:flex-col md:overflow-x-hidden">
@@ -66,22 +69,20 @@ export const ToolkitCreationSection: React.FC = () => {
             ))}
           </TabsList>
           <div className="col-span-7">
-            {toolkitCreationSteps.map((step, index) => (
-              <TabsContent
-                key={index}
-                value={index.toString()}
-                className="mt-0"
-              >
+            <AnimatePresence mode="wait">
+              {toolkitCreationSteps[activeTab]?.code && (
                 <motion.div
+                  key={activeTab}
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.3 }}
                   className="border-border overflow-hidden rounded-lg border"
                 >
-                  <CodeBlock value={step.code} />
+                  <CodeBlock value={toolkitCreationSteps[activeTab].code} />
                 </motion.div>
-              </TabsContent>
-            ))}
+              )}
+            </AnimatePresence>
           </div>
         </Tabs>
       </motion.div>
