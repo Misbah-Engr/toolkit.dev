@@ -1,13 +1,20 @@
+import { HStack } from "@/components/ui/stack";
 import { cn } from "@/lib/utils";
 import { motion } from "motion/react";
 
 interface Props {
   title: [string, string];
   description: string;
+  buttons?: React.ReactNode[];
   className?: string;
 }
 
-export const Heading: React.FC<Props> = ({ title, description, className }) => {
+export const Heading: React.FC<Props> = ({
+  title,
+  description,
+  buttons,
+  className,
+}) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -23,6 +30,9 @@ export const Heading: React.FC<Props> = ({ title, description, className }) => {
       <p className="text-muted-foreground max-w-2xl text-sm md:text-lg">
         {description}
       </p>
+      {buttons && (
+        <HStack className="mt-2">{buttons.map((button) => button)}</HStack>
+      )}
     </motion.div>
   );
 };

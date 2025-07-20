@@ -9,6 +9,9 @@ import { DollarSign, GitPullRequest } from "lucide-react";
 import { MeritLogo } from "@/components/ui/merit-logo";
 import { Card } from "@/components/ui/card";
 import { Heading } from "../heading";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { SiDiscord } from "@icons-pack/react-simple-icons";
 
 export const MeritSection: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -23,7 +26,21 @@ export const MeritSection: React.FC = () => {
       <Heading
         title={["Merge a PR", "Get Paid on Merit Systems"]}
         description="Toolkit will become the first autonomous repository by distributing all revenue directly to its contributors."
-        className="mb-4"
+        className="mb-8"
+        buttons={[
+          <Link
+            href="https://terminal.merit.systems/jasonhedman/toolkit.dev"
+            key="terminal"
+          >
+            <Button className="user-message">Start Earning</Button>
+          </Link>,
+          <Link href="https://discord.com" key="discord">
+            <Button variant="outline">
+              <SiDiscord />
+              Join Discord
+            </Button>
+          </Link>,
+        ]}
       />
       <div
         ref={containerRef}
