@@ -23,13 +23,13 @@ export const DependenciesSection: React.FC = () => {
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         viewport={{ once: true }}
-        className="mb-8 text-center"
+        className="mb-8 flex flex-col items-start gap-2 px-4 text-left"
       >
-        <h2 className="mb-4 text-3xl font-bold md:text-4xl">
+        <h2 className="text-2xl font-bold md:text-3xl">
           Built on the
           <span className="text-primary block">Shoulders of Giants</span>
         </h2>
-        <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
+        <p className="text-muted-foreground max-w-2xl text-lg">
           Toolkit is powered by the incredible work of the open source
           community.
         </p>
