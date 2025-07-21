@@ -6,7 +6,7 @@ import {
   DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { AuthButtons } from "../auth/auth-buttons";
+import { AuthButtons } from "../../auth/auth-buttons";
 import { providers } from "@/server/auth/providers";
 import { Logo } from "@/components/ui/logo";
 import { VStack } from "@/components/ui/stack";

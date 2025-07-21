@@ -2,7 +2,7 @@ import { Logo } from "@/components/ui/logo";
 import { HStack } from "@/components/ui/stack";
 import { ColorModeToggle } from "../../navbar/color-mode-toggle";
 import { Button } from "@/components/ui/button";
-import { AuthModal } from "../auth-modal";
+import { AuthModal } from "../lib/auth-modal";
 
 export const Navbar = () => {
   return (

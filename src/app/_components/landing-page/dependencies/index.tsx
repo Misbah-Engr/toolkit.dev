@@ -9,12 +9,12 @@ import { HStack } from "@/components/ui/stack";
 
 import { Marquee } from "@/components/magicui/marquee";
 
-import { Section } from "../section";
+import { Section } from "../lib/section";
 
 import { dependencies } from "./data";
 
 import type { Dependency } from "./types";
-import { Heading } from "../heading";
+import { Heading } from "../lib/heading";
 
 export const DependenciesSection: React.FC = () => {
   return (

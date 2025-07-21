@@ -7,8 +7,8 @@ import { AnimatePresence, motion } from "motion/react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { HStack, VStack } from "@/components/ui/stack";
 
-import { Section } from "../section";
-import { Heading } from "../heading";
+import { Section } from "../lib/section";
+import { Heading } from "../lib/heading";
 
 import { CodeBlock } from "./code-block";
 

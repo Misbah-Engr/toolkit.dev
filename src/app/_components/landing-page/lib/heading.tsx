@@ -1,4 +1,7 @@
-import { HStack } from "@/components/ui/stack";
+"use client";
+
+import { FlickeringGrid } from "@/components/magicui/flickering-grid";
+import { HStack, VStack } from "@/components/ui/stack";
 import { cn } from "@/lib/utils";
 import { motion } from "motion/react";
 
@@ -34,5 +37,21 @@ export const Heading: React.FC<Props> = ({
         <HStack className="mt-2">{buttons.map((button) => button)}</HStack>
       )}
     </motion.div>
+  );
+};
+
+interface MiniHeadingProps {
+  title: string;
+}
+
+export const MiniHeading: React.FC<MiniHeadingProps> = ({ title }) => {
+  return (
+    <VStack className="relative px-2 py-4 md:py-8">
+      <FlickeringGrid
+        className="absolute inset-0 z-0 size-full opacity-20"
+        flickerChance={0.1}
+      />
+      <h2 className="text-primary text-xl font-bold md:text-2xl">{title}</h2>
+    </VStack>
   );
 };
