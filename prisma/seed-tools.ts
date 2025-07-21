@@ -1,20 +1,8 @@
 import { clientToolkits } from "@/toolkits/toolkits/client";
 import { PrismaClient } from "@prisma/client";
+import type { Message } from "ai";
 
 const prisma = new PrismaClient();
-
-interface ToolInvocation {
-  toolName: string;
-  toolCallId: string;
-  args?: unknown;
-  result?: unknown;
-  state: string;
-}
-
-interface MessagePart {
-  type: string;
-  toolInvocation?: ToolInvocation;
-}
 
 // Define all available tools from each toolkit
 const ALL_TOOLS = Object.entries(clientToolkits).reduce(
@@ -87,8 +75,12 @@ async function main() {
 
   // Process each message
   for (const message of messages) {
-    const parts = message.parts as unknown as MessagePart[];
+    const parts = message.parts as unknown as Message["parts"];
     let messageHasTools = false;
+
+    if (!parts) {
+      continue;
+    }
 
     // Look for tool-invocation parts
     for (const part of parts) {

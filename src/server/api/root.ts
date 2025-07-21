@@ -1,4 +1,6 @@
 import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
+import { auth } from "@/server/auth";
+import { db } from "@/server/db";
 
 import {
   chatsRouter,
@@ -46,3 +48,20 @@ export type AppRouter = typeof appRouter;
  *       ^? Post[]
  */
 export const createCaller = createCallerFactory(appRouter);
+
+// Create server-side caller
+export const createServerCaller = createCallerFactory(appRouter);
+
+/**
+ * Helper function to create a server caller with serverCall flag set to true
+ * This ensures the caller can access server-only procedures
+ */
+export const createServerOnlyCaller = async () => {
+  const session = await auth();
+  return createServerCaller({
+    headers: new Headers(),
+    serverCall: true,
+    db,
+    session,
+  });
+};

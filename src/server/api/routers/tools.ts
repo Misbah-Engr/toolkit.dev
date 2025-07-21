@@ -4,6 +4,7 @@ import {
   createTRPCRouter,
   protectedProcedure,
   publicProcedure,
+  serverOnlyProcedure,
 } from "@/server/api/trpc";
 
 export const toolsRouter = createTRPCRouter({
@@ -123,7 +124,21 @@ export const toolsRouter = createTRPCRouter({
       });
     }),
 
-  // Increment tool usage
+  // Increment tool usage (server-only)
+  incrementToolUsageServer: serverOnlyProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.tool.update({
+        where: { id: input },
+        data: {
+          usageCount: {
+            increment: 1,
+          },
+        },
+      });
+    }),
+
+  // Increment tool usage (public - for backward compatibility)
   incrementToolUsage: protectedProcedure
     .input(z.string())
     .mutation(async ({ ctx, input }) => {
