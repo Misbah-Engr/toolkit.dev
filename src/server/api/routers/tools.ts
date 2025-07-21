@@ -2,9 +2,14 @@ import { z } from "zod";
 import {
   adminProcedure,
   createTRPCRouter,
-  protectedProcedure,
   publicProcedure,
+  serverOnlyProcedure,
 } from "@/server/api/trpc";
+
+const toolIdSchema = z.object({
+  id: z.string(),
+  toolkitId: z.string(),
+});
 
 export const toolsRouter = createTRPCRouter({
   // Get all tools
@@ -14,7 +19,6 @@ export const toolsRouter = createTRPCRouter({
         toolkit: {
           select: {
             id: true,
-            name: true,
           },
         },
       },
@@ -26,15 +30,14 @@ export const toolsRouter = createTRPCRouter({
 
   // Get tool by ID
   getToolById: publicProcedure
-    .input(z.string())
+    .input(toolIdSchema)
     .query(async ({ ctx, input }) => {
       return ctx.db.tool.findUnique({
-        where: { id: input },
+        where: { id_toolkitId: input },
         include: {
           toolkit: {
             select: {
               id: true,
-              name: true,
             },
           },
         },
@@ -53,82 +56,38 @@ export const toolsRouter = createTRPCRouter({
       });
     }),
 
-  // Get tool by name and toolkit
-  getToolByNameAndToolkit: publicProcedure
-    .input(
-      z.object({
-        name: z.string(),
-        toolkitName: z.string(),
-      }),
-    )
-    .query(async ({ ctx, input }) => {
-      return ctx.db.tool.findFirst({
-        where: {
-          name: input.name,
-          toolkit: {
-            name: input.toolkitName,
-          },
-        },
-        include: {
-          toolkit: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
-        },
-      });
-    }),
-
   // Create tool
   createTool: adminProcedure
     .input(
       z.object({
-        name: z.string(),
+        id: z.string(),
         toolkitId: z.string(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
       return ctx.db.tool.create({
         data: {
-          name: input.name,
+          id: input.id,
           toolkitId: input.toolkitId,
-        },
-      });
-    }),
-
-  // Update tool
-  updateTool: adminProcedure
-    .input(
-      z.object({
-        id: z.string(),
-        name: z.string(),
-      }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      return ctx.db.tool.update({
-        where: { id: input.id },
-        data: {
-          name: input.name,
         },
       });
     }),
 
   // Delete tool
   deleteTool: adminProcedure
-    .input(z.string())
+    .input(toolIdSchema)
     .mutation(async ({ ctx, input }) => {
       return ctx.db.tool.delete({
-        where: { id: input },
+        where: { id_toolkitId: { id: input.id, toolkitId: input.toolkitId } },
       });
     }),
 
-  // Increment tool usage
-  incrementToolUsage: protectedProcedure
-    .input(z.string())
+  // Increment tool usage (server-only)
+  incrementToolUsageServer: serverOnlyProcedure
+    .input(z.object({ toolkit: z.string(), tool: z.string() }))
     .mutation(async ({ ctx, input }) => {
       return ctx.db.tool.update({
-        where: { id: input },
+        where: { id_toolkitId: { id: input.tool, toolkitId: input.toolkit } },
         data: {
           usageCount: {
             increment: 1,
@@ -152,7 +111,6 @@ export const toolsRouter = createTRPCRouter({
           toolkit: {
             select: {
               id: true,
-              name: true,
             },
           },
         },
@@ -165,15 +123,14 @@ export const toolsRouter = createTRPCRouter({
 
   // Get tool usage statistics
   getToolStats: publicProcedure
-    .input(z.string())
+    .input(toolIdSchema)
     .query(async ({ ctx, input }) => {
       const tool = await ctx.db.tool.findUnique({
-        where: { id: input },
+        where: { id_toolkitId: input },
         include: {
           toolkit: {
             select: {
               id: true,
-              name: true,
             },
           },
         },
@@ -185,9 +142,8 @@ export const toolsRouter = createTRPCRouter({
 
       return {
         id: tool.id,
-        name: tool.name,
+        toolkitId: tool.toolkitId,
         usageCount: tool.usageCount,
-        toolkit: tool.toolkit,
       };
     }),
 
@@ -205,7 +161,6 @@ export const toolsRouter = createTRPCRouter({
           toolkit: {
             select: {
               id: true,
-              name: true,
             },
           },
         },
@@ -233,12 +188,11 @@ export const toolsRouter = createTRPCRouter({
         toolkit: {
           select: {
             id: true,
-            name: true,
           },
         },
       },
       orderBy: {
-        name: "asc",
+        id: "asc",
       },
     });
   }),
@@ -262,7 +216,7 @@ export const toolsRouter = createTRPCRouter({
     const toolkitIds = toolkitsWithUsage.map((t) => t.toolkitId);
     const toolkitDetails = await ctx.db.toolkit.findMany({
       where: { id: { in: toolkitIds } },
-      select: { id: true, name: true },
+      select: { id: true },
     });
 
     // Merge usage info with toolkit details
@@ -270,7 +224,6 @@ export const toolsRouter = createTRPCRouter({
       const toolkit = toolkitDetails.find((td) => td.id === tu.toolkitId);
       return {
         id: toolkit?.id,
-        name: toolkit?.name,
         totalUsage: tu._sum.usageCount ?? 0,
       };
     });

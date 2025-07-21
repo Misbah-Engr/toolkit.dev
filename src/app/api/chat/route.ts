@@ -15,6 +15,7 @@ import { differenceInSeconds } from "date-fns";
 
 import { auth } from "@/server/auth";
 import { api } from "@/trpc/server";
+import { createServerOnlyCaller } from "@/server/api/root";
 
 import { postRequestBodySchema, type PostRequestBody } from "./schema";
 
@@ -165,6 +166,18 @@ export async function POST(request: Request) {
               execute: async (args) => {
                 try {
                   const result = await serverTool.callback(args);
+
+                  // Increment tool usage on successful execution
+                  try {
+                    const serverCaller = await createServerOnlyCaller();
+                    await serverCaller.tools.incrementToolUsageServer({
+                      toolkit: id,
+                      tool: toolName,
+                    });
+                  } catch (error) {
+                    console.error("Failed to increment tool usage:", error);
+                  }
+
                   if (serverTool.message) {
                     return {
                       result,

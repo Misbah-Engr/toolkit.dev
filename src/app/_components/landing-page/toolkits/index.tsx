@@ -21,7 +21,7 @@ export const Toolkits = async () => {
         {topToolkits.slice(0, 6).map((toolkit) => (
           <ToolkitCard
             key={toolkit.id}
-            toolkit={toolkit.name as ToolkitNames}
+            toolkit={toolkit.id as ToolkitNames}
             count={toolkit.totalUsage}
           />
         ))}

@@ -166,18 +166,18 @@ model Workbench {
 
 model Toolkit {
     id        String   @id @default(uuid())
-    name      String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    toolkits  Tool[]
+    tools  Tool[]
 }
 
 model Tool {
-    id        String   @id @default(uuid())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    toolkit   Toolkit  @relation(fields: [toolkitId], references: [id], onDelete: Cascade)
-    toolkitId String
-    usageCount Int @default(0)
+    id          String
+    toolkitId   String
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    usageCount  Int @default(0)
+    toolkit     Toolkit  @relation(fields: [toolkitId], references: [id], onDelete: Cascade)
+
+    @@id([id, toolkitId])
 }

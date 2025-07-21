@@ -2,7 +2,6 @@ import { z } from "zod";
 import {
   adminProcedure,
   createTRPCRouter,
-  protectedProcedure,
   publicProcedure,
 } from "@/server/api/trpc";
 
@@ -11,16 +10,15 @@ export const toolkitsRouter = createTRPCRouter({
   getAllToolkits: publicProcedure.query(async ({ ctx }) => {
     return ctx.db.toolkit.findMany({
       include: {
-        toolkits: {
+        tools: {
           select: {
             id: true,
-            name: true,
             usageCount: true,
           },
         },
       },
       orderBy: {
-        name: "asc",
+        id: "asc",
       },
     });
   }),
@@ -32,7 +30,7 @@ export const toolkitsRouter = createTRPCRouter({
       return ctx.db.toolkit.findUnique({
         where: { id: input },
         include: {
-          toolkits: {
+          tools: {
             orderBy: {
               usageCount: "desc",
             },
@@ -46,9 +44,9 @@ export const toolkitsRouter = createTRPCRouter({
     .input(z.string())
     .query(async ({ ctx, input }) => {
       return ctx.db.toolkit.findFirst({
-        where: { name: input },
+        where: { id: input },
         include: {
-          toolkits: {
+          tools: {
             orderBy: {
               usageCount: "desc",
             },
@@ -61,30 +59,13 @@ export const toolkitsRouter = createTRPCRouter({
   createToolkit: adminProcedure
     .input(
       z.object({
-        name: z.string(),
+        id: z.string(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
       return ctx.db.toolkit.create({
         data: {
-          name: input.name,
-        },
-      });
-    }),
-
-  // Update toolkit
-  updateToolkit: adminProcedure
-    .input(
-      z.object({
-        id: z.string(),
-        name: z.string(),
-      }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      return ctx.db.toolkit.update({
-        where: { id: input.id },
-        data: {
-          name: input.name,
+          id: input.id,
         },
       });
     }),
@@ -110,7 +91,7 @@ export const toolkitsRouter = createTRPCRouter({
 
       const toolkits = await ctx.db.toolkit.findMany({
         include: {
-          toolkits: {
+          tools: {
             select: {
               usageCount: true,
             },
@@ -121,12 +102,11 @@ export const toolkitsRouter = createTRPCRouter({
       // Calculate total usage for each toolkit
       const toolkitUsage = toolkits.map((toolkit) => ({
         id: toolkit.id,
-        name: toolkit.name,
-        totalUsage: toolkit.toolkits.reduce(
+        totalUsage: toolkit.tools.reduce(
           (sum, tool) => sum + tool.usageCount,
           0,
         ),
-        toolCount: toolkit.toolkits.length,
+        toolCount: toolkit.tools.length,
       }));
 
       // Sort by total usage and return top N
@@ -148,7 +128,7 @@ export const toolkitsRouter = createTRPCRouter({
       const toolkit = await ctx.db.toolkit.findUnique({
         where: { id: toolkitId },
         include: {
-          toolkits: {
+          tools: {
             orderBy: {
               usageCount: "desc",
             },
@@ -160,17 +140,16 @@ export const toolkitsRouter = createTRPCRouter({
         throw new Error("Toolkit not found");
       }
 
-      const totalUsage = toolkit.toolkits.reduce(
+      const totalUsage = toolkit.tools.reduce(
         (sum, tool) => sum + tool.usageCount,
         0,
       );
-      const topTools = toolkit.toolkits.slice(0, 5);
+      const topTools = toolkit.tools.slice(0, 5);
 
       return {
         id: toolkit.id,
-        name: toolkit.name,
         totalUsage,
-        toolCount: toolkit.toolkits.length,
+        toolCount: toolkit.tools.length,
         topTools,
       };
     }),
@@ -179,7 +158,7 @@ export const toolkitsRouter = createTRPCRouter({
   getOverallStats: publicProcedure.query(async ({ ctx }) => {
     const toolkits = await ctx.db.toolkit.findMany({
       include: {
-        toolkits: {
+        tools: {
           select: {
             usageCount: true,
           },
@@ -190,24 +169,20 @@ export const toolkitsRouter = createTRPCRouter({
     const totalUsage = toolkits.reduce(
       (sum, toolkit) =>
         sum +
-        toolkit.toolkits.reduce(
-          (toolSum, tool) => toolSum + tool.usageCount,
-          0,
-        ),
+        toolkit.tools.reduce((toolSum, tool) => toolSum + tool.usageCount, 0),
       0,
     );
 
     const toolkitCount = toolkits.length;
     const toolCount = toolkits.reduce(
-      (sum, toolkit) => sum + toolkit.toolkits.length,
+      (sum, toolkit) => sum + toolkit.tools.length,
       0,
     );
 
     const topToolkits = toolkits
       .map((toolkit) => ({
         id: toolkit.id,
-        name: toolkit.name,
-        totalUsage: toolkit.toolkits.reduce(
+        totalUsage: toolkit.tools.reduce(
           (sum, tool) => sum + tool.usageCount,
           0,
         ),

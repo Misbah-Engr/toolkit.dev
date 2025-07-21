@@ -1,30 +1,21 @@
 import { clientToolkits } from "@/toolkits/toolkits/client";
 import { PrismaClient } from "@prisma/client";
+import type { Message } from "ai";
 
 const prisma = new PrismaClient();
-
-interface ToolInvocation {
-  toolName: string;
-  toolCallId: string;
-  args?: unknown;
-  result?: unknown;
-  state: string;
-}
-
-interface MessagePart {
-  type: string;
-  toolInvocation?: ToolInvocation;
-}
 
 // Define all available tools from each toolkit
 const ALL_TOOLS = Object.entries(clientToolkits).reduce(
   (acc, [toolkitName, toolkit]) => {
     return {
       ...acc,
-      [toolkitName]: Object.keys(toolkit.tools),
+      [toolkitName]: {
+        name: toolkit.name,
+        tools: Object.keys(toolkit.tools),
+      },
     };
   },
-  {} as Record<string, string[]>,
+  {} as Record<string, { name: string; tools: string[] }>,
 );
 
 async function main() {
@@ -37,11 +28,11 @@ async function main() {
   // Create toolkits and tools
   const toolkitMap = new Map<string, string>(); // toolkit name -> toolkit id
 
-  for (const [toolkitName, tools] of Object.entries(ALL_TOOLS)) {
+  for (const [toolkitName, { tools }] of Object.entries(ALL_TOOLS)) {
     // Create toolkit
     const toolkit = await prisma.toolkit.create({
       data: {
-        name: toolkitName,
+        id: toolkitName,
       },
     });
 
@@ -49,9 +40,8 @@ async function main() {
 
     // Create tools for this toolkit
     const toolData = tools.map((toolName) => ({
-      name: toolName,
+      id: toolName,
       toolkitId: toolkit.id,
-      usageCount: 0,
     }));
 
     await prisma.tool.createMany({
@@ -87,8 +77,12 @@ async function main() {
 
   // Process each message
   for (const message of messages) {
-    const parts = message.parts as unknown as MessagePart[];
+    const parts = message.parts as unknown as Message["parts"];
     let messageHasTools = false;
+
+    if (!parts) {
+      continue;
+    }
 
     // Look for tool-invocation parts
     for (const part of parts) {
@@ -130,7 +124,7 @@ async function main() {
         if (toolkitId) {
           return prisma.tool.updateMany({
             where: {
-              name: toolName,
+              id: toolName,
               toolkitId: toolkitId,
             },
             data: {
@@ -151,7 +145,7 @@ async function main() {
     include: {
       toolkit: {
         select: {
-          name: true,
+          id: true,
         },
       },
     },
@@ -164,7 +158,7 @@ async function main() {
   console.log("\n🏆 Top 10 most used tools:");
   finalResults.slice(0, 10).forEach((tool, index) => {
     console.log(
-      `${index + 1}. ${tool.toolkit.name}/${tool.name}: ${tool.usageCount} uses`,
+      `${index + 1}. ${tool.toolkit.id}/${tool.id}: ${tool.usageCount} uses`,
     );
   });
 
@@ -172,8 +166,8 @@ async function main() {
   const toolkitUsage = new Map<string, number>();
   finalResults.forEach(({ toolkit, usageCount }) => {
     toolkitUsage.set(
-      toolkit.name,
-      (toolkitUsage.get(toolkit.name) ?? 0) + usageCount,
+      toolkit.id,
+      (toolkitUsage.get(toolkit.id) ?? 0) + usageCount,
     );
   });
 
