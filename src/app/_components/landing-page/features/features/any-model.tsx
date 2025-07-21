@@ -48,6 +48,7 @@ export const AnyModel: React.FC = () => {
         toRef={target1Ref}
         reverse
         duration={6}
+        isVertical
       />
       <AnimatedBeam
         containerRef={containerRef}
@@ -55,18 +56,21 @@ export const AnyModel: React.FC = () => {
         toRef={target2Ref}
         reverse
         duration={6}
+        isVertical
       />
       <AnimatedBeam
         containerRef={containerRef}
         fromRef={sourceRef}
         toRef={target3Ref}
         duration={6}
+        isVertical
       />
       <AnimatedBeam
         containerRef={containerRef}
         fromRef={sourceRef}
         toRef={target4Ref}
         duration={6}
+        isVertical
       />
     </VStack>
   );

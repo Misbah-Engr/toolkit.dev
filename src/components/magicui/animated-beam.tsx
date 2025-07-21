@@ -28,6 +28,7 @@ export interface AnimatedBeamProps {
   endXOffset?: number;
   endYOffset?: number;
   pathType?: "curved" | "angular"; // New prop for path style
+  isVertical?: boolean;
 }
 
 export const AnimatedBeam: React.FC<AnimatedBeamProps> = ({
@@ -49,6 +50,7 @@ export const AnimatedBeam: React.FC<AnimatedBeamProps> = ({
   endXOffset = 0,
   endYOffset = 0,
   pathType = "curved", // Default to curved
+  isVertical = false,
 }) => {
   const id = useId();
   const [pathD, setPathD] = useState("");
@@ -79,11 +81,6 @@ export const AnimatedBeam: React.FC<AnimatedBeamProps> = ({
           rectB.left - containerRect.left + rectB.width / 2 + endXOffset;
         const endY =
           rectB.top - containerRect.top + rectB.height / 2 + endYOffset;
-
-        // Calculate if the beam is more vertical or horizontal
-        const dx = Math.abs(endX - startX);
-        const dy = Math.abs(endY - startY);
-        const isVertical = dy > dx;
 
         // Update gradient coordinates based on direction
         setGradientCoordinates(
