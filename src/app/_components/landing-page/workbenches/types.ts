@@ -1,10 +1,9 @@
 import type { Toolkits } from "@/toolkits/toolkits/shared";
+import type { LucideIcon } from "lucide-react";
 
 export interface WorkbenchExample {
   title: string;
-  description: string;
   systemPrompt: string;
   toolkits: Toolkits[];
-  icon: React.ReactNode;
-  color: string;
+  icon: LucideIcon;
 }
