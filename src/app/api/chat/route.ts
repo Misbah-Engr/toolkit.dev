@@ -170,9 +170,10 @@ export async function POST(request: Request) {
                   // Increment tool usage on successful execution
                   try {
                     const serverCaller = await createServerOnlyCaller();
-                    await serverCaller.tools.incrementToolUsageServer(
-                      `${id}_${toolName}`,
-                    );
+                    await serverCaller.tools.incrementToolUsageServer({
+                      toolkit: id,
+                      tool: toolName,
+                    });
                   } catch (error) {
                     console.error("Failed to increment tool usage:", error);
                   }

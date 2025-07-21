@@ -166,6 +166,7 @@ export const AnimatedBeam: React.FC<AnimatedBeamProps> = ({
     endYOffset,
     reverse,
     pathType,
+    isVertical,
   ]);
 
   return (
