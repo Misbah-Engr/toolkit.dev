@@ -157,3 +157,21 @@ model Workbench {
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
     chats        Chat[]
 }
+
+model Toolkit {
+    id        String   @id @default(uuid())
+    name      String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    toolkits  Tool[]
+}
+
+model Tool {
+    id        String   @id @default(uuid())
+    name      String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    toolkit   Toolkit  @relation(fields: [toolkitId], references: [id], onDelete: Cascade)
+    toolkitId String
+    usageCount Int @default(0)
+}

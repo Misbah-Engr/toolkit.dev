@@ -51,10 +51,7 @@ export const ToggleTools = () => {
               isSelected && "opacity-100",
             )}
           >
-            <ToolkitIcon
-              toolkit={value}
-              iconClassName="size-full md:size-full"
-            />
+            <ToolkitIcon toolkit={value} className="size-full md:size-full" />
           </div>
         );
       })}

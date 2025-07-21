@@ -7,6 +7,7 @@ import { ToolkitCreationSection } from "./toolkit-creation";
 import { WorkbenchSection } from "./workbenches";
 import { DependenciesSection } from "./dependencies";
 import { Navbar } from "./navbar";
+import { Toolkits } from "./toolkits";
 
 export const LandingPage: React.FC = () => {
   return (
@@ -16,6 +17,7 @@ export const LandingPage: React.FC = () => {
         <HeroSection />
         <FeaturesSection />
         <MeritSection />
+        <Toolkits />
         <DependenciesSection />
         <ToolkitCreationSection />
         <WorkbenchSection />

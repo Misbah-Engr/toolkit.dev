@@ -1,3 +1,5 @@
+"use client";
+
 import { HStack } from "@/components/ui/stack";
 import { cn } from "@/lib/utils";
 import { motion } from "motion/react";
