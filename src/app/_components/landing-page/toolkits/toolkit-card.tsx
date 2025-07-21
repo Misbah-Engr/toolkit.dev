@@ -6,6 +6,8 @@ import { clientToolkits } from "@/toolkits/toolkits/client";
 
 import type { Toolkits } from "@/toolkits/toolkits/shared";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Activity, Wrench } from "lucide-react";
 
 interface ToolkitCardProps {
   toolkit: Toolkits;
@@ -18,7 +20,7 @@ export const ToolkitCard: React.FC<ToolkitCardProps> = ({ toolkit, count }) => {
   return (
     <VStack
       className={cn(
-        "w-full items-start justify-between px-4 py-2",
+        "w-full items-start justify-between p-2 md:p-4",
         "border-t",
         "md:odd:border-r",
         "lg:border-r lg:nth-[3n]:border-r-0 lg:nth-last-[3]:border-b-0",
@@ -33,8 +35,15 @@ export const ToolkitCard: React.FC<ToolkitCardProps> = ({ toolkit, count }) => {
           {clientToolkit.description}
         </p>
       </VStack>
-      <HStack>
-        <p className="text-muted-foreground text-sm">{count} usages</p>
+      <HStack className="text-muted-foreground w-full justify-between text-sm">
+        <HStack className="gap-1">
+          <Wrench className="size-3" />
+          <p>{Object.keys(clientToolkit.tools).length} tools</p>
+        </HStack>
+        <HStack className="gap-1">
+          <Activity className="size-3" />
+          <p>{count} invocations</p>
+        </HStack>
       </HStack>
     </VStack>
   );
