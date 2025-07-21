@@ -3,7 +3,7 @@
 import React, { useRef } from "react";
 
 import { HStack, VStack } from "@/components/ui/stack";
-import { Section } from "../section";
+import { Section } from "../lib/section";
 import { AnimatedBeam } from "@/components/magicui/animated-beam";
 import {
   DollarSign,
@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { MeritLogo } from "@/components/ui/merit-logo";
 import { Card } from "@/components/ui/card";
-import { Heading } from "../heading";
+import { Heading } from "../lib/heading";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { SiDiscord } from "@icons-pack/react-simple-icons";

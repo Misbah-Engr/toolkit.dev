@@ -8,8 +8,8 @@ import { Button } from "@/components/ui/button";
 import { HStack, VStack } from "@/components/ui/stack";
 import { AnimatedLogo } from "@/components/ui/logo";
 
-import { Section } from "../section";
-import { AuthModal } from "../auth-modal";
+import { Section } from "../lib/section";
+import { AuthModal } from "../lib/auth-modal";
 
 export const HeroSection: React.FC = () => {
   return (

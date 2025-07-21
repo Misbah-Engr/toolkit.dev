@@ -1,13 +1,13 @@
 import { api } from "@/trpc/server";
 
-import { Section } from "../section";
+import { Section } from "../lib/section";
 
 import { ToolkitCard } from "./toolkit-card";
 
 import type { Toolkits as ToolkitNames } from "@/toolkits/toolkits/shared";
-import { Heading } from "../heading";
+import { Heading } from "../lib/heading";
 
-export const Toolkits = async () => {
+export const TopToolkitsSection = async () => {
   const topToolkits = await api.tools.getTopToolkits();
 
   return (

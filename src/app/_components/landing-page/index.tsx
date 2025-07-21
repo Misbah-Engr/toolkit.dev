@@ -3,11 +3,11 @@ import React from "react";
 import { HeroSection } from "./hero";
 import { FeaturesSection } from "./features";
 import { MeritSection } from "./merit";
+import { TopToolkitsSection } from "./top-toolkits";
 import { ToolkitCreationSection } from "./toolkit-creation";
 import { WorkbenchSection } from "./workbenches";
 import { DependenciesSection } from "./dependencies";
 import { Navbar } from "./navbar";
-import { Toolkits } from "./toolkits";
 
 export const LandingPage: React.FC = () => {
   return (
@@ -17,9 +17,9 @@ export const LandingPage: React.FC = () => {
         <HeroSection />
         <FeaturesSection />
         <MeritSection />
-        <Toolkits />
-        <DependenciesSection />
+        <TopToolkitsSection />
         <ToolkitCreationSection />
+        <DependenciesSection />
         <WorkbenchSection />
       </div>
     </div>
