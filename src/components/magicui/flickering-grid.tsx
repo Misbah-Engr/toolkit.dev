@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "/lib/utils";
+import { cn } from "@/lib/utils";
 import React, {
   useCallback,
   useEffect,
@@ -126,8 +126,8 @@ export const FlickeringGrid: React.FC<FlickeringGridProps> = ({
     let gridParams: ReturnType<typeof setupCanvas>;
 
     const updateCanvasSize = () => {
-      const newWidth = width || container.clientWidth;
-      const newHeight = height || container.clientHeight;
+      const newWidth = width ?? container.clientWidth;
+      const newHeight = height ?? container.clientHeight;
       setCanvasSize({ width: newWidth, height: newHeight });
       gridParams = setupCanvas(canvas, newWidth, newHeight);
     };
@@ -162,7 +162,7 @@ export const FlickeringGrid: React.FC<FlickeringGridProps> = ({
 
     const intersectionObserver = new IntersectionObserver(
       ([entry]) => {
-        setIsInView(entry.isIntersecting);
+        setIsInView(entry?.isIntersecting ?? false);
       },
       { threshold: 0 },
     );
