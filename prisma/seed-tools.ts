@@ -41,7 +41,6 @@ async function main() {
     // Create tools for this toolkit
     const toolData = tools.map((toolName) => ({
       id: toolName,
-      name: toolName,
       toolkitId: toolkit.id,
     }));
 
