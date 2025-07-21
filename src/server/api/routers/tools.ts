@@ -1,5 +1,6 @@
 import { z } from "zod";
 import {
+  adminProcedure,
   createTRPCRouter,
   protectedProcedure,
   publicProcedure,
@@ -80,7 +81,7 @@ export const toolsRouter = createTRPCRouter({
     }),
 
   // Create tool
-  createTool: protectedProcedure
+  createTool: adminProcedure
     .input(
       z.object({
         name: z.string(),
@@ -97,7 +98,7 @@ export const toolsRouter = createTRPCRouter({
     }),
 
   // Update tool
-  updateTool: protectedProcedure
+  updateTool: adminProcedure
     .input(
       z.object({
         id: z.string(),
@@ -114,7 +115,7 @@ export const toolsRouter = createTRPCRouter({
     }),
 
   // Delete tool
-  deleteTool: protectedProcedure
+  deleteTool: adminProcedure
     .input(z.string())
     .mutation(async ({ ctx, input }) => {
       return ctx.db.tool.delete({
@@ -137,7 +138,7 @@ export const toolsRouter = createTRPCRouter({
     }),
 
   // Get top tools
-  getTopTools: protectedProcedure
+  getTopTools: publicProcedure
     .input(
       z.object({
         limit: z.number().min(1).max(100).default(10),
@@ -163,7 +164,7 @@ export const toolsRouter = createTRPCRouter({
     }),
 
   // Get tool usage statistics
-  getToolStats: protectedProcedure
+  getToolStats: publicProcedure
     .input(z.string())
     .query(async ({ ctx, input }) => {
       const tool = await ctx.db.tool.findUnique({
@@ -191,7 +192,7 @@ export const toolsRouter = createTRPCRouter({
     }),
 
   // Get overall tool statistics
-  getOverallStats: protectedProcedure.query(async ({ ctx }) => {
+  getOverallStats: publicProcedure.query(async ({ ctx }) => {
     const [totalUsage, toolCount, topTools] = await Promise.all([
       ctx.db.tool.aggregate({
         _sum: {
@@ -223,7 +224,7 @@ export const toolsRouter = createTRPCRouter({
   }),
 
   // Get tools with zero usage
-  getZeroUsageTools: protectedProcedure.query(async ({ ctx }) => {
+  getZeroUsageTools: publicProcedure.query(async ({ ctx }) => {
     return ctx.db.tool.findMany({
       where: {
         usageCount: 0,
