@@ -1,8 +1,5 @@
 import { redirect, notFound } from "next/navigation";
 import { auth } from "@/server/auth";
-import { createCaller } from "@/server/api/root";
-import { createTRPCContext } from "@/server/api/trpc";
-import { headers } from "next/headers";
 import { AdminPanel } from "./_components/admin-panel";
 
 export default async function AdminPage() {
@@ -13,13 +10,9 @@ export default async function AdminPage() {
     redirect("/login?redirect=/admin");
   }
 
-  // Create TRPC context and caller for server-side calls
-  const ctx = await createTRPCContext({ headers: await headers() });
-  const caller = createCaller(ctx);
-
   // Check if user has admin access
   try {
-    const isAdmin = await caller.features.isAdmin();
+    const isAdmin = session.user.role === "ADMIN";
 
     if (!isAdmin) {
       notFound();

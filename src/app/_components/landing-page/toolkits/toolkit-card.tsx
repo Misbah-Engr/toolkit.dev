@@ -1,3 +1,7 @@
+import React from "react";
+
+import { Activity, Wrench } from "lucide-react";
+
 import { HStack, VStack } from "@/components/ui/stack";
 
 import { ToolkitIcon } from "@/components/toolkit/toolkit-icons";
@@ -5,9 +9,8 @@ import { ToolkitIcon } from "@/components/toolkit/toolkit-icons";
 import { clientToolkits } from "@/toolkits/toolkits/client";
 
 import type { Toolkits } from "@/toolkits/toolkits/shared";
+
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Activity, Wrench } from "lucide-react";
 
 interface ToolkitCardProps {
   toolkit: Toolkits;
