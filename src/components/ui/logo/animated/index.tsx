@@ -2,9 +2,14 @@
 
 import React, { useCallback, useEffect, useRef } from "react";
 
-import { cn } from "@/lib/utils";
-import type { LottieRefCurrentProps } from "lottie-react";
 import Lottie from "lottie-react";
+
+import { cn } from "@/lib/utils";
+
+import lightAnimationData from "./light.json";
+import darkAnimationData from "./dark.json";
+
+import type { LottieRefCurrentProps } from "lottie-react";
 
 const DURATION = 1180;
 const DELAY = 2500;
@@ -21,33 +26,30 @@ export const AnimatedLogo: React.FC<Props> = ({ className, delay = DELAY }) => {
         className={cn(className, "dark:hidden")}
         delay={delay}
         theme="light"
+        animationData={lightAnimationData}
       />
       <AnimatedLogoWithTheme
         className={cn(className, "hidden dark:block")}
         delay={delay}
         theme="dark"
+        animationData={darkAnimationData}
       />
     </>
   );
 };
 
 interface AnimatedLogoPropsWithTheme extends Props {
+  animationData: object;
   theme: "light" | "dark";
 }
 
 const AnimatedLogoWithTheme: React.FC<AnimatedLogoPropsWithTheme> = ({
+  animationData,
   className,
   delay = DELAY,
   theme,
 }) => {
-  const [animationData, setAnimationData] = React.useState<object | null>(null);
   const lottieRef = useRef<LottieRefCurrentProps>(null);
-
-  useEffect(() => {
-    void fetch(`/logo/animated/${theme}.json`)
-      .then((res) => res.json())
-      .then((data) => setAnimationData(data as object));
-  }, [theme]);
 
   const playAnimation = useCallback(() => {
     lottieRef.current?.play();
@@ -57,8 +59,6 @@ const AnimatedLogoWithTheme: React.FC<AnimatedLogoPropsWithTheme> = ({
   }, []);
 
   useEffect(() => {
-    if (!animationData) return;
-
     let interval: NodeJS.Timeout;
 
     setTimeout(() => {
@@ -70,7 +70,7 @@ const AnimatedLogoWithTheme: React.FC<AnimatedLogoPropsWithTheme> = ({
     }, delay);
 
     return () => clearInterval(interval);
-  }, [animationData, playAnimation, delay]);
+  }, [playAnimation, delay]);
 
   return (
     <Lottie
@@ -79,6 +79,7 @@ const AnimatedLogoWithTheme: React.FC<AnimatedLogoPropsWithTheme> = ({
       autoPlay={false}
       loop={false}
       className={className}
+      src={`/logo/animated/${theme}.json`}
     />
   );
 };
