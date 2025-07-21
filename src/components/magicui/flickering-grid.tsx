@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { useTheme } from "next-themes";
 import React, {
   useCallback,
   useEffect,
@@ -13,7 +14,10 @@ interface FlickeringGridProps extends React.HTMLAttributes<HTMLDivElement> {
   squareSize?: number;
   gridGap?: number;
   flickerChance?: number;
-  color?: string;
+  itemColor?: {
+    light: string;
+    dark: string;
+  };
   width?: number;
   height?: number;
   className?: string;
@@ -24,13 +28,18 @@ export const FlickeringGrid: React.FC<FlickeringGridProps> = ({
   squareSize = 4,
   gridGap = 6,
   flickerChance = 0.3,
-  color = "rgb(0, 0, 0)",
+  itemColor = {
+    light: "rgb(0, 0, 0)",
+    dark: "rgb(255, 255, 255)",
+  },
   width,
   height,
   className,
   maxOpacity = 0.3,
   ...props
 }) => {
+  const { theme } = useTheme();
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isInView, setIsInView] = useState(false);
@@ -50,8 +59,8 @@ export const FlickeringGrid: React.FC<FlickeringGridProps> = ({
       const [r, g, b] = Array.from(ctx.getImageData(0, 0, 1, 1).data);
       return `rgba(${r}, ${g}, ${b},`;
     };
-    return toRGBA(color);
-  }, [color]);
+    return toRGBA(itemColor[theme === "dark" ? "dark" : "light"]);
+  }, [itemColor, theme]);
 
   const setupCanvas = useCallback(
     (canvas: HTMLCanvasElement, width: number, height: number) => {
