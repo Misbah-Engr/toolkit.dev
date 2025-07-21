@@ -1,5 +1,6 @@
 import { z } from "zod";
 import {
+  adminProcedure,
   createTRPCRouter,
   protectedProcedure,
   publicProcedure,
@@ -57,7 +58,7 @@ export const toolkitsRouter = createTRPCRouter({
     }),
 
   // Create toolkit
-  createToolkit: protectedProcedure
+  createToolkit: adminProcedure
     .input(
       z.object({
         name: z.string(),
@@ -72,7 +73,7 @@ export const toolkitsRouter = createTRPCRouter({
     }),
 
   // Update toolkit
-  updateToolkit: protectedProcedure
+  updateToolkit: adminProcedure
     .input(
       z.object({
         id: z.string(),
@@ -89,7 +90,7 @@ export const toolkitsRouter = createTRPCRouter({
     }),
 
   // Delete toolkit
-  deleteToolkit: protectedProcedure
+  deleteToolkit: adminProcedure
     .input(z.string())
     .mutation(async ({ ctx, input }) => {
       return ctx.db.toolkit.delete({
@@ -98,7 +99,7 @@ export const toolkitsRouter = createTRPCRouter({
     }),
 
   // Get top toolkits by total usage
-  getTopToolkits: protectedProcedure
+  getTopToolkits: publicProcedure
     .input(
       z.object({
         limit: z.number().min(1).max(100).default(10),
@@ -135,7 +136,7 @@ export const toolkitsRouter = createTRPCRouter({
     }),
 
   // Get toolkit usage statistics
-  getToolkitStats: protectedProcedure
+  getToolkitStats: publicProcedure
     .input(
       z.object({
         toolkitId: z.string(),
@@ -175,7 +176,7 @@ export const toolkitsRouter = createTRPCRouter({
     }),
 
   // Get overall toolkit statistics
-  getOverallStats: protectedProcedure.query(async ({ ctx }) => {
+  getOverallStats: publicProcedure.query(async ({ ctx }) => {
     const toolkits = await ctx.db.toolkit.findMany({
       include: {
         toolkits: {
