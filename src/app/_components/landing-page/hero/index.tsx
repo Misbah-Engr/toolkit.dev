@@ -2,8 +2,6 @@ import React from "react";
 
 import Link from "next/link";
 
-import { SiGithub } from "@icons-pack/react-simple-icons";
-
 import { Button } from "@/components/ui/button";
 import { HStack, VStack } from "@/components/ui/stack";
 import { AnimatedLogo } from "@/components/ui/logo";
