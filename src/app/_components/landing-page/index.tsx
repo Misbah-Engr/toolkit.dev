@@ -23,9 +23,9 @@ export const LandingPage: React.FC = () => {
         <MeritSection />
         <TopToolkitsSection />
         <ToolkitCreationSection />
-        <DependenciesSection />
         <WorkbenchSection />
         <WorkbenchExamplesSection />
+        <DependenciesSection />
       </div>
     </div>
   );

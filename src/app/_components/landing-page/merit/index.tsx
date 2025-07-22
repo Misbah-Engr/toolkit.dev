@@ -44,10 +44,15 @@ export const MeritSection: React.FC = () => {
           <Link
             href="https://terminal.merit.systems/jasonhedman/toolkit.dev"
             key="terminal"
+            target="_blank"
           >
             <Button className="user-message">Start Earning</Button>
           </Link>,
-          <Link href="https://discord.com" key="discord">
+          <Link
+            href="https://discord.gg/cnNBsSfY"
+            key="discord"
+            target="_blank"
+          >
             <Button variant="outline">
               <SiDiscord />
               Join Discord
