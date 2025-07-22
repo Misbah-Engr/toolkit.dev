@@ -19,9 +19,9 @@ export const ContributorsSection = async () => {
   return (
     <Section
       id={SECTIONS.Contributors}
-      className="relative flex flex-col items-center gap-6 md:py-8"
+      className="relative flex flex-col items-center gap-6 py-0 md:py-0"
     >
-      <HStack className="h-14">
+      <HStack className="mt-6 h-14">
         <h2 className="max-w-sm text-center text-xl font-bold">
           We are grateful to the contributors who make Toolkit better every day
         </h2>
@@ -36,7 +36,7 @@ export const ContributorsSection = async () => {
         totalUsers={contributors.length}
         size={48}
       />
-      <HStack className="h-14">
+      <HStack className="mb-6 h-14">
         <Link href="https://github.com/jasonhedman/toolkit.dev" target="_blank">
           <Button variant="outline">
             <SiGithub className="size-4" />
@@ -44,7 +44,7 @@ export const ContributorsSection = async () => {
           </Button>
         </Link>
       </HStack>
-      <Ripple className="absolute inset-0 opacity-80 dark:opacity-40" />
+      <Ripple className="absolute inset-0" />
     </Section>
   );
 };
