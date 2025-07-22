@@ -23,36 +23,32 @@ export const HeroSection: React.FC = () => {
                 Toolkit.dev
               </h1>
               <h2 className="text-xl font-semibold md:text-2xl">
-                The Playground for LLM Tool Developers
+                Get Paid to Build LLM Tools
               </h2>
             </VStack>
             <p className="max-w-sm text-sm md:text-base">
-              Mix and match hundreds of tools in a highly-configurable chat
-              interface
+              Join an elite group of global developers building an AI platform
+              for the usage-based economy.
             </p>
           </VStack>
           <HStack>
-            <AuthModal>
+            <Link href="https://discord.gg/HkXwTaTV" target="_blank">
               <Button
                 size="lg"
                 className="user-message text-base font-semibold"
               >
-                Get Started
+                Join Us
               </Button>
-            </AuthModal>
-            <Link
-              href="https://github.com/jasonhedman/toolkit.dev"
-              target="_blank"
-            >
+            </Link>
+            <AuthModal>
               <Button
                 variant="outline"
                 size="lg"
                 className="text-base font-semibold"
               >
-                <SiGithub />
-                Contribute
+                Try the Playground
               </Button>
-            </Link>
+            </AuthModal>
           </HStack>
         </VStack>
         <AnimatedLogo className="size-32 md:size-48" />
