@@ -9,20 +9,24 @@ import { WorkbenchSection } from "./workbenches";
 import { WorkbenchExamplesSection } from "./workbench-examples";
 import { DependenciesSection } from "./dependencies";
 import { Navbar } from "./navbar";
+import { Banner } from "./banner";
 
 export const LandingPage: React.FC = () => {
   return (
     <div className="h-fit min-h-screen">
       <Navbar />
-      <div className="mx-auto max-w-full divide-y pt-16 md:max-w-5xl md:border-x">
-        <HeroSection />
-        <FeaturesSection />
-        <MeritSection />
-        <TopToolkitsSection />
-        <ToolkitCreationSection />
-        <DependenciesSection />
-        <WorkbenchSection />
-        <WorkbenchExamplesSection />
+      <div className="pt-16">
+        <Banner />
+        <div className="mx-auto max-w-full divide-y md:max-w-5xl md:border-x">
+          <HeroSection />
+          <FeaturesSection />
+          <MeritSection />
+          <TopToolkitsSection />
+          <ToolkitCreationSection />
+          <DependenciesSection />
+          <WorkbenchSection />
+          <WorkbenchExamplesSection />
+        </div>
       </div>
     </div>
   );
