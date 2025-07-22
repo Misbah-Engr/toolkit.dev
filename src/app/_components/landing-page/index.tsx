@@ -11,6 +11,7 @@ import { ToolkitCreationSection } from "./toolkit-creation";
 import { WorkbenchSection } from "./workbenches";
 import { WorkbenchExamplesSection } from "./workbench-examples";
 import { DependenciesSection } from "./dependencies";
+import { ContributorsSection } from "./contributors";
 
 export const LandingPage: React.FC = () => {
   return (
@@ -21,6 +22,7 @@ export const LandingPage: React.FC = () => {
         <HeroSection />
         <FeaturesSection />
         <MeritSection />
+        <ContributorsSection />
         <TopToolkitsSection />
         <ToolkitCreationSection />
         <WorkbenchSection />

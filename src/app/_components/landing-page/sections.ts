@@ -7,4 +7,5 @@ export const SECTIONS = {
   Dependencies: "Dependencies",
   Workbench: "Workbench",
   WorkbenchExamples: "WorkbenchExamples",
+  Contributors: "Contributors",
 } as const;
