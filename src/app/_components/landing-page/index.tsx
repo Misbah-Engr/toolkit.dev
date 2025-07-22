@@ -6,6 +6,7 @@ import { MeritSection } from "./merit";
 import { TopToolkitsSection } from "./top-toolkits";
 import { ToolkitCreationSection } from "./toolkit-creation";
 import { WorkbenchSection } from "./workbenches";
+import { WorkbenchExamplesSection } from "./workbench-examples";
 import { DependenciesSection } from "./dependencies";
 import { Navbar } from "./navbar";
 
@@ -21,6 +22,7 @@ export const LandingPage: React.FC = () => {
         <ToolkitCreationSection />
         <DependenciesSection />
         <WorkbenchSection />
+        <WorkbenchExamplesSection />
       </div>
     </div>
   );

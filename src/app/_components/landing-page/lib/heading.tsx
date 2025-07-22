@@ -42,11 +42,15 @@ export const Heading: React.FC<Props> = ({
 
 interface MiniHeadingProps {
   title: string;
+  className?: string;
 }
 
-export const MiniHeading: React.FC<MiniHeadingProps> = ({ title }) => {
+export const MiniHeading: React.FC<MiniHeadingProps> = ({
+  title,
+  className,
+}) => {
   return (
-    <VStack className="relative px-2 py-4 md:py-8">
+    <VStack className={cn("relative px-2 py-4 md:py-8", className)}>
       <FlickeringGrid
         className="absolute inset-0 z-0 size-full opacity-20"
         flickerChance={0.1}
