@@ -12,15 +12,17 @@ import { Heading } from "../lib/heading";
 
 import { CodeBlock } from "./code-block";
 
-import { cn } from "@/lib/utils";
+import { SECTIONS } from "../sections";
 
 import { toolkitCreationSteps } from "./data";
+
+import { cn } from "@/lib/utils";
 
 export const ToolkitCreationSection: React.FC = () => {
   const [activeTab, setActiveTab] = useState<number>(0);
 
   return (
-    <Section id="toolkit-creation">
+    <Section id={SECTIONS.ToolkitCreation}>
       <Heading
         title={["Designed to Facilitate", "Seamless Toolkit Creation"]}
         description="Create powerful AI agent systems with our intuitive SDK. From simple workflows to complex multi-agent collaborations."

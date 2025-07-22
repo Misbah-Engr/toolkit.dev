@@ -1,8 +1,9 @@
 import { cn } from "@/lib/utils";
 import React from "react";
+import type { SECTIONS } from "../sections";
 
 interface Props {
-  id: string;
+  id: (typeof SECTIONS)[keyof typeof SECTIONS];
   children: React.ReactNode;
   className?: string;
 }

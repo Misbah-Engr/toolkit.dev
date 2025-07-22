@@ -6,7 +6,7 @@ import { AuthModal } from "../lib/auth-modal";
 
 export const Navbar = () => {
   return (
-    <HStack className="bg-background/50 fixed top-0 z-50 h-16 w-full border-b py-2 backdrop-blur-sm">
+    <HStack className="bg-background/50 sticky top-0 z-50 h-16 w-full border-b py-2 backdrop-blur-sm">
       <HStack className="container mx-auto justify-between px-2">
         <HStack>
           <Logo className="size-6" />

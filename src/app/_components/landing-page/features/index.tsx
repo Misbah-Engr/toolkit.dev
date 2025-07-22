@@ -10,14 +10,17 @@ import {
 } from "./feature-card";
 
 import { AnyModel } from "./features/any-model";
-import { cn } from "@/lib/utils";
 import { GetPaid } from "./features/get-paid";
 import { ToggleTools } from "./features/toggle-tools";
 import { GenerativeUI } from "./features/generative-ui";
 
+import { cn } from "@/lib/utils";
+
+import { SECTIONS } from "../sections";
+
 export const FeaturesSection: React.FC = () => {
   return (
-    <Section id="features" className="p-0 md:p-0">
+    <Section id={SECTIONS.Features} className="p-0 md:p-0">
       <div className={cn("grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4")}>
         {/* Get Paid */}
         <FeatureCard>

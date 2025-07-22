@@ -2,21 +2,26 @@
 
 import React, { useRef } from "react";
 
-import { HStack, VStack } from "@/components/ui/stack";
-import { Section } from "../lib/section";
-import { AnimatedBeam } from "@/components/magicui/animated-beam";
+import Link from "next/link";
+
 import {
   DollarSign,
   Handshake,
   MessageSquareShare,
   type LucideIcon,
 } from "lucide-react";
-import { MeritLogo } from "@/components/ui/merit-logo";
-import { Card } from "@/components/ui/card";
-import { Heading } from "../lib/heading";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { SiDiscord } from "@icons-pack/react-simple-icons";
+
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { HStack, VStack } from "@/components/ui/stack";
+import { AnimatedBeam } from "@/components/magicui/animated-beam";
+import { MeritLogo } from "@/components/ui/merit-logo";
+
+import { Section } from "../lib/section";
+import { Heading } from "../lib/heading";
+
+import { SECTIONS } from "../sections";
 
 export const MeritSection: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -30,7 +35,7 @@ export const MeritSection: React.FC = () => {
   const pr3Ref = useRef<HTMLDivElement>(null);
 
   return (
-    <Section id="merit">
+    <Section id={SECTIONS.Merit}>
       <Heading
         title={["Merge a PR", "Get Paid on Merit Systems"]}
         description="Toolkit will become the first autonomous repository by distributing all revenue directly to its contributors."
