@@ -44,7 +44,7 @@ export const ContributorsSection = async () => {
           </Button>
         </Link>
       </HStack>
-      <Ripple className="absolute inset-0 opacity-50" />
+      <Ripple className="absolute inset-0 opacity-80 dark:opacity-40" />
     </Section>
   );
 };
