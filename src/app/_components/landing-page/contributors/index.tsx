@@ -5,6 +5,8 @@ import { UserAvatarCirclesByLogin } from "./user-avatar-circles";
 import Link from "next/link";
 import { SiGithub } from "@icons-pack/react-simple-icons";
 import { Button } from "@/components/ui/button";
+import { Ripple } from "@/components/magicui/ripple";
+import { HStack } from "@/components/ui/stack";
 
 export const ContributorsSection = async () => {
   const { data: contributors } = await new Octokit({
@@ -17,11 +19,13 @@ export const ContributorsSection = async () => {
   return (
     <Section
       id={SECTIONS.Contributors}
-      className="flex flex-col items-center gap-8"
+      className="relative flex flex-col items-center gap-6 md:py-8"
     >
-      <h2 className="max-w-sm text-center text-xl font-bold">
-        We are grateful to the contributors who make Toolkit better every day
-      </h2>
+      <HStack className="h-14">
+        <h2 className="max-w-sm text-center text-xl font-bold">
+          We are grateful to the contributors who make Toolkit better every day
+        </h2>
+      </HStack>
       <UserAvatarCirclesByLogin
         logins={contributors
           .filter(
@@ -32,12 +36,15 @@ export const ContributorsSection = async () => {
         totalUsers={contributors.length}
         size={48}
       />
-      <Link href="https://github.com/jasonhedman/toolkit.dev" target="_blank">
-        <Button variant="outline">
-          <SiGithub className="size-4" />
-          Become a Contributor
-        </Button>
-      </Link>
+      <HStack className="h-14">
+        <Link href="https://github.com/jasonhedman/toolkit.dev" target="_blank">
+          <Button variant="outline">
+            <SiGithub className="size-4" />
+            Become a Contributor
+          </Button>
+        </Link>
+      </HStack>
+      <Ripple className="absolute inset-0 opacity-50" />
     </Section>
   );
 };
