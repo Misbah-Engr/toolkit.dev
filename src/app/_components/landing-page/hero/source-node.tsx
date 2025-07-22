@@ -1,11 +1,13 @@
 import React, { memo } from "react";
 
-import { Handle, Position } from "@xyflow/react";
+import { Position } from "@xyflow/react";
 
 import { Card } from "@/components/ui/card";
+import { HStack } from "@/components/ui/stack";
+
+import { Handle } from "./handle";
 
 import type { Node, NodeProps } from "@xyflow/react";
-import { HStack } from "@/components/ui/stack";
 
 type SourceNodeData = {
   Icon: React.FC<{ className?: string }>;
@@ -21,12 +23,12 @@ export const SourceNode: React.FC<NodeProps<Node<SourceNodeData>>> = memo(
 
     return (
       <>
-        <Card className="size-full gap-2 p-2">
+        <Card className="size-full justify-center gap-1 p-2">
           <HStack>
             <Icon className="size-4" />
-            <span>{label}</span>
+            <span className="font-semibold">{label}</span>
           </HStack>
-          <span>
+          <span className="text-primary text-sm font-bold">
             {amount.toLocaleString(undefined, {
               style: "currency",
               currency: "USD",
@@ -36,13 +38,11 @@ export const SourceNode: React.FC<NodeProps<Node<SourceNodeData>>> = memo(
         <Handle
           type="source"
           position={Position.Right}
-          id={Position.Right}
           className="hidden md:block"
         />
         <Handle
           type="source"
           position={Position.Bottom}
-          id={Position.Bottom}
           className="block md:hidden"
         />
       </>

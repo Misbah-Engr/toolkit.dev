@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+
 import {
   ReactFlow,
   Background,
@@ -11,22 +12,37 @@ import {
   Position,
 } from "@xyflow/react";
 
-import { ToolkitNode } from "./toolkit-node";
+import {
+  CircleDollarSign,
+  GitPullRequest,
+  Paintbrush,
+  Server,
+  Trophy,
+  Wrench,
+} from "lucide-react";
 
-import "@xyflow/react/dist/style.css";
-import { SourceNode } from "./source-node";
-import { MeritLogo } from "@/components/ui/merit-logo";
-import { CircleDollarSign, Trophy } from "lucide-react";
-import { Section } from "../lib/section";
-import { SECTIONS } from "../sections";
 import { useTheme } from "next-themes";
+
 import { useMediaQuery } from "usehooks-ts";
 
+import { MeritLogo } from "@/components/ui/merit-logo";
+
+import { Section } from "../lib/section";
+import { SECTIONS } from "../sections";
+
+import { ToolkitNode } from "./toolkit-node";
+import { SourceNode } from "./source-node";
+
+import { TargetNode } from "./target-node";
+
 import type { Node, Edge } from "@xyflow/react";
+
+import "@xyflow/react/dist/style.css";
 
 const nodeTypes = {
   toolkit: ToolkitNode,
   source: SourceNode,
+  target: TargetNode,
 };
 
 export const GraphHeroSection = () => {
@@ -49,6 +65,11 @@ const toolkitNodeDimensions = {
   height: 200,
 };
 
+const targetNodeDimensions = {
+  width: 200,
+  height: 72,
+};
+
 const primarySpacing = 100;
 const secondarySpacing = 25;
 
@@ -59,10 +80,7 @@ const getNodes = (isMobile: boolean): Node[] => [
     data: { label: "Merit Sponsorship", Icon: MeritLogo, amount: 6000 },
     position: isMobile
       ? {
-          x:
-            -toolkitNodeDimensions.width / 2 -
-            secondarySpacing -
-            sourceNodeDimensions.width / 2,
+          x: -secondarySpacing - sourceNodeDimensions.width,
           y: -toolkitNodeDimensions.height / 2 - primarySpacing,
         }
       : {
@@ -103,10 +121,7 @@ const getNodes = (isMobile: boolean): Node[] => [
     },
     position: isMobile
       ? {
-          x:
-            toolkitNodeDimensions.width / 2 +
-            secondarySpacing +
-            sourceNodeDimensions.width / 2,
+          x: secondarySpacing + sourceNodeDimensions.width,
           y: -toolkitNodeDimensions.height / 2 - primarySpacing,
         }
       : {
@@ -125,6 +140,95 @@ const getNodes = (isMobile: boolean): Node[] => [
     position: { x: 0, y: 0 },
     ...toolkitNodeDimensions,
   },
+  {
+    id: "contributor-1",
+    type: "target",
+    data: {
+      Icon: Wrench,
+      label: "Toolkit Developer",
+      description: "Merged 3 new Toolkits",
+    },
+    position: isMobile
+      ? {
+          x: (-targetNodeDimensions.width * 3) / 2 - (secondarySpacing * 3) / 2,
+          y: toolkitNodeDimensions.height / 2 + primarySpacing,
+        }
+      : {
+          x:
+            toolkitNodeDimensions.width / 2 +
+            primarySpacing +
+            sourceNodeDimensions.width / 2,
+          y:
+            (-targetNodeDimensions.height * 3) / 2 - (secondarySpacing * 3) / 2,
+        },
+    ...targetNodeDimensions,
+  },
+  {
+    id: "contributor-2",
+    type: "target",
+    data: {
+      Icon: Server,
+      label: "Backend Maintainer",
+      description: "Optimized API performance",
+    },
+    position: isMobile
+      ? {
+          x: -targetNodeDimensions.width / 2 - secondarySpacing / 2,
+          y: toolkitNodeDimensions.height / 2 + primarySpacing,
+        }
+      : {
+          x:
+            toolkitNodeDimensions.width / 2 +
+            primarySpacing +
+            sourceNodeDimensions.width / 2,
+          y: -sourceNodeDimensions.height / 2 - secondarySpacing / 2,
+        },
+    ...targetNodeDimensions,
+  },
+  {
+    id: "contributor-3",
+    type: "target",
+    data: {
+      Icon: Paintbrush,
+      label: "Product Designer",
+      description: "Upgraded the UI/UX",
+    },
+    position: isMobile
+      ? {
+          x: targetNodeDimensions.width / 2 + secondarySpacing / 2,
+          y: toolkitNodeDimensions.height / 2 + primarySpacing,
+        }
+      : {
+          x:
+            toolkitNodeDimensions.width / 2 +
+            primarySpacing +
+            sourceNodeDimensions.width / 2,
+          y: sourceNodeDimensions.height / 2 + secondarySpacing / 2,
+        },
+    ...targetNodeDimensions,
+  },
+  {
+    id: "contributor-4",
+    type: "target",
+    data: {
+      Icon: GitPullRequest,
+      label: "PR Reviewer",
+      description: "Reviewed 62 PRs",
+    },
+    position: isMobile
+      ? {
+          x: (targetNodeDimensions.width * 3) / 2 + (secondarySpacing * 3) / 2,
+          y: toolkitNodeDimensions.height / 2 + primarySpacing,
+        }
+      : {
+          x:
+            toolkitNodeDimensions.width / 2 +
+            primarySpacing +
+            sourceNodeDimensions.width / 2,
+          y: (sourceNodeDimensions.height * 3) / 2 + (secondarySpacing * 3) / 2,
+        },
+    ...targetNodeDimensions,
+  },
 ];
 
 const getEdges = (isMobile: boolean): Edge[] => [
@@ -134,6 +238,7 @@ const getEdges = (isMobile: boolean): Edge[] => [
     target: "toolkit",
     animated: true,
     sourceHandle: isMobile ? Position.Bottom : Position.Right,
+    targetHandle: isMobile ? Position.Top : Position.Left,
   },
   {
     id: "e2-3",
@@ -141,6 +246,7 @@ const getEdges = (isMobile: boolean): Edge[] => [
     target: "toolkit",
     animated: true,
     sourceHandle: isMobile ? Position.Bottom : Position.Right,
+    targetHandle: isMobile ? Position.Top : Position.Left,
   },
   {
     id: "e3-4",
@@ -148,6 +254,39 @@ const getEdges = (isMobile: boolean): Edge[] => [
     target: "toolkit",
     animated: true,
     sourceHandle: isMobile ? Position.Bottom : Position.Right,
+    targetHandle: isMobile ? Position.Top : Position.Left,
+  },
+  {
+    id: "e4-5",
+    source: "toolkit",
+    target: "contributor-1",
+    animated: true,
+    sourceHandle: isMobile ? Position.Bottom : Position.Right,
+    targetHandle: isMobile ? Position.Top : Position.Left,
+  },
+  {
+    id: "e5-6",
+    source: "toolkit",
+    target: "contributor-2",
+    animated: true,
+    sourceHandle: isMobile ? Position.Bottom : Position.Right,
+    targetHandle: isMobile ? Position.Top : Position.Left,
+  },
+  {
+    id: "e6-7",
+    source: "toolkit",
+    target: "contributor-3",
+    animated: true,
+    sourceHandle: isMobile ? Position.Bottom : Position.Right,
+    targetHandle: isMobile ? Position.Top : Position.Left,
+  },
+  {
+    id: "e7-8",
+    source: "toolkit",
+    target: "contributor-4",
+    animated: true,
+    sourceHandle: isMobile ? Position.Bottom : Position.Right,
+    targetHandle: isMobile ? Position.Top : Position.Left,
   },
 ];
 
@@ -175,7 +314,9 @@ const Graph = () => {
   }, [isMobile, setNodes, setEdges]);
 
   useEffect(() => {
-    void fitView();
+    void fitView({
+      padding: 10,
+    });
     setIsVisible(true);
   }, [nodes, fitView]);
 
@@ -192,6 +333,12 @@ const Graph = () => {
         opacity: isVisible ? 1 : 0,
       }}
       nodeOrigin={[0.5, 0.5]}
+      panOnDrag={false}
+      nodesDraggable={false}
+      elementsSelectable={false}
+      zoomOnPinch={false}
+      zoomOnScroll={false}
+      zoomOnDoubleClick={false}
     >
       <Background bgColor="transparent" />
     </ReactFlow>
