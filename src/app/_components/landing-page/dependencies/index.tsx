@@ -10,15 +10,17 @@ import { HStack } from "@/components/ui/stack";
 import { Marquee } from "@/components/magicui/marquee";
 
 import { Section } from "../lib/section";
+import { Heading } from "../lib/heading";
 
 import { dependencies } from "./data";
 
+import { SECTIONS } from "../sections";
+
 import type { Dependency } from "./types";
-import { Heading } from "../lib/heading";
 
 export const DependenciesSection: React.FC = () => {
   return (
-    <Section className="px-0 md:px-0" id="dependencies">
+    <Section className="px-0 md:px-0" id={SECTIONS.Dependencies}>
       <Heading
         title={["Built on the", "Shoulders of Giants"]}
         description="Toolkit is powered by the incredible work of the open source community."
