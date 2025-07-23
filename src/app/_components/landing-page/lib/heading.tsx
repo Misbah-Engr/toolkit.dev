@@ -10,6 +10,7 @@ interface Props {
   description: string;
   buttons?: React.ReactNode[];
   className?: string;
+  align?: "left" | "center";
 }
 
 export const Heading: React.FC<Props> = ({
@@ -17,6 +18,7 @@ export const Heading: React.FC<Props> = ({
   description,
   buttons,
   className,
+  align = "center",
 }) => {
   return (
     <motion.div
@@ -24,13 +26,20 @@ export const Heading: React.FC<Props> = ({
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
       viewport={{ once: true }}
-      className={cn("flex flex-col items-start gap-2 text-left", className)}
+      className={cn(
+        "flex flex-col gap-2",
+        {
+          "items-center text-center": align === "center",
+          "items-start text-left": align === "left",
+        },
+        className,
+      )}
     >
       <h2 className="text-2xl font-bold md:text-3xl">
         {title[0]}
         <span className="text-primary block">{title[1]}</span>
       </h2>
-      <p className="text-muted-foreground max-w-2xl text-sm md:text-lg">
+      <p className="text-muted-foreground max-w-2xl text-sm md:text-base">
         {description}
       </p>
       {buttons && (

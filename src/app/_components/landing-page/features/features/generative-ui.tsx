@@ -93,8 +93,9 @@ export const GenerativeUI: React.FC = () => {
           y: -10,
         }}
         transition={{ duration: 0.4, ease: "easeInOut" }}
+        className="flex h-[122px] w-full flex-col justify-center"
       >
-        <Card className="gap-0 overflow-hidden p-0">
+        <Card className="w-full gap-0 overflow-hidden p-0">
           <HStack className="border-b p-2">
             <toolkit.icon className="size-3" />
             <span className="font-semibold">{toolkit.heading}</span>
