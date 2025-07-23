@@ -178,6 +178,7 @@ export const AnimatedBeam: React.FC<AnimatedBeamProps> = ({
     reverse,
     pathType,
     isVertical,
+    beamWidth,
   ]);
 
   return (
@@ -192,12 +193,18 @@ export const AnimatedBeam: React.FC<AnimatedBeamProps> = ({
       )}
       viewBox={`0 0 ${svgDimensions.width} ${svgDimensions.height}`}
     >
-      <path
+      <motion.path
         d={pathD}
         stroke={pathColor}
         strokeWidth={pathWidth}
         strokeOpacity={pathOpacity}
         strokeLinecap="round"
+        transition={{
+          repeat: Infinity,
+          repeatType: "loop",
+          duration: 2,
+          ease: "linear",
+        }}
       />
       <path
         d={pathD}

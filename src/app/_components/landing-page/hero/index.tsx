@@ -1,6 +1,6 @@
 import React from "react";
 
-import { SiDiscord } from "@icons-pack/react-simple-icons";
+import { SiGithub } from "@icons-pack/react-simple-icons";
 
 import Link from "next/link";
 
@@ -57,7 +57,7 @@ export const HeroSection: React.FC = () => {
               </AuthModal>
             </div>
             <Link
-              href="https://discord.gg/HkXwTaTV"
+              href="https://github.com/jasonhedman/toolkit.dev"
               target="_blank"
               className="flex-1 shrink-0"
             >
@@ -66,8 +66,8 @@ export const HeroSection: React.FC = () => {
                 size="lg"
                 className="w-full text-sm font-semibold md:text-base"
               >
-                <SiDiscord className="size-4" />
-                Join the Community
+                <SiGithub className="size-4" />
+                Contribute to Toolkit
               </Button>
             </Link>
           </HStack>

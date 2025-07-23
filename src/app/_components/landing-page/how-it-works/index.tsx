@@ -13,7 +13,7 @@ import { AnimatedBeam } from "@/components/magicui/animated-beam";
 import { Logo } from "@/components/ui/logo";
 
 import { Section } from "../lib/section";
-import { Heading, MiniHeading } from "../lib/heading";
+import { Heading } from "../lib/heading";
 
 import { SECTIONS } from "../sections";
 import { Handle } from "../lib/handle";
@@ -30,104 +30,102 @@ export const MeritSection: React.FC = () => {
   const pr4Ref = useRef<HTMLDivElement>(null);
 
   return (
-    <div>
-      <MiniHeading title="How it Works" className="border-b" />
-      <Section id={SECTIONS.Merit}>
-        <Heading
-          title={["Merge a PR", "Get Paid on Merit Systems"]}
-          description="Every PR merged into Toolkit is paid based on its impact. The more impactful the PR, the more money you earn."
-          buttons={[
-            <Link
-              href="https://terminal.merit.systems/jasonhedman/toolkit.dev"
-              key="terminal"
-              target="_blank"
-            >
-              <Button className="user-message">Explore Merit Systems</Button>
-            </Link>,
-            <Link
-              href="https://discord.gg/cnNBsSfY"
-              key="discord"
-              target="_blank"
-            >
-              <Button variant="outline">
-                <SiGithub />
-                Good First Issues
-              </Button>
-            </Link>,
-          ]}
-          align="center"
-        />
-        <div
-          ref={containerRef}
-          className="relative flex items-center gap-4 sm:gap-6 md:gap-8 lg:gap-10 xl:gap-12"
-        >
-          <VStack className="flex-1 items-start gap-2">
-            <PrCard
-              title="Add chat UI with rate limiting"
-              number={3}
-              additions={3611}
-              deletions={28}
-              mergedAt={new Date("2025-06-08")}
-              dollars={428.79}
-              ref={pr1Ref}
-              side="right"
-            />
-            <PrCard
-              title="Implement workbench system"
-              number={53}
-              additions={1677}
-              deletions={404}
-              mergedAt={new Date("2025-06-16")}
-              dollars={343.18}
-              ref={pr2Ref}
-              side="right"
-            />
-          </VStack>
+    <Section id={SECTIONS.Merit}>
+      <Heading
+        title={["Merge a PR", "Get Paid on Merit Systems"]}
+        description="Every PR merged into Toolkit is paid based on its impact. The more impactful the PR, the more money you earn."
+        badgeText="How Payouts Work"
+        buttons={[
+          <Link
+            href="https://terminal.merit.systems/jasonhedman/toolkit.dev"
+            key="terminal"
+            target="_blank"
+          >
+            <Button className="user-message">Explore Merit Systems</Button>
+          </Link>,
+          <Link
+            href="https://github.com/jasonhedman/toolkit.dev/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22good%20first%20issue%22"
+            key="github"
+            target="_blank"
+          >
+            <Button variant="outline">
+              <SiGithub />
+              Good First Issues
+            </Button>
+          </Link>,
+        ]}
+        align="center"
+      />
+      <div
+        ref={containerRef}
+        className="relative flex items-center gap-4 sm:gap-6 md:gap-8 lg:gap-10 xl:gap-12"
+      >
+        <VStack className="flex-1 items-start gap-2">
+          <PrCard
+            title="Add chat UI with rate limiting"
+            number={3}
+            additions={3611}
+            deletions={28}
+            mergedAt={new Date("2025-06-08")}
+            dollars={428.79}
+            ref={pr1Ref}
+            side="right"
+          />
+          <PrCard
+            title="Implement workbench system"
+            number={53}
+            additions={1677}
+            deletions={404}
+            mergedAt={new Date("2025-06-16")}
+            dollars={343.18}
+            ref={pr2Ref}
+            side="right"
+          />
+        </VStack>
 
-          <MeritCard leftRef={meritLeftRef} rightRef={meritRightRef} />
+        <MeritCard leftRef={meritLeftRef} rightRef={meritRightRef} />
 
-          <div className="flex flex-1 flex-col gap-2">
-            <PrCard
-              title="Serve Toolkits as MCP Servers"
-              number={23}
-              additions={1248}
-              deletions={236}
-              mergedAt={new Date("2025-06-13")}
-              dollars={228.08}
-              ref={pr3Ref}
-              side="left"
-            />
-            <YourPrCard ref={pr4Ref} />
-          </div>
-          <AnimatedBeam
-            containerRef={containerRef}
-            fromRef={meritLeftRef}
-            toRef={pr1Ref}
-            duration={6}
-            reverse={true}
+        <div className="flex flex-1 flex-col gap-2">
+          <PrCard
+            title="Serve Toolkits as MCP Servers"
+            number={23}
+            additions={1248}
+            deletions={236}
+            mergedAt={new Date("2025-06-13")}
+            dollars={228.08}
+            ref={pr3Ref}
+            side="left"
           />
-          <AnimatedBeam
-            containerRef={containerRef}
-            fromRef={meritLeftRef}
-            toRef={pr2Ref}
-            duration={6}
-            reverse={true}
-          />
-          <AnimatedBeam
-            containerRef={containerRef}
-            fromRef={meritRightRef}
-            toRef={pr3Ref}
-            duration={6}
-          />
-          <AnimatedBeam
-            containerRef={containerRef}
-            fromRef={meritRightRef}
-            toRef={pr4Ref}
-            duration={6}
-          />
+          <YourPrCard ref={pr4Ref} />
         </div>
-      </Section>
-    </div>
+        <AnimatedBeam
+          containerRef={containerRef}
+          fromRef={meritLeftRef}
+          toRef={pr1Ref}
+          duration={6}
+          reverse={true}
+        />
+        <AnimatedBeam
+          containerRef={containerRef}
+          fromRef={meritLeftRef}
+          toRef={pr2Ref}
+          duration={6}
+          reverse={true}
+        />
+        <AnimatedBeam
+          containerRef={containerRef}
+          fromRef={meritRightRef}
+          toRef={pr3Ref}
+          duration={6}
+        />
+        <AnimatedBeam
+          containerRef={containerRef}
+          fromRef={meritRightRef}
+          toRef={pr4Ref}
+          duration={6}
+        />
+      </div>
+    </Section>
   );
 };
 

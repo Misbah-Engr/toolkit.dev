@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 
 import { Navbar } from "./navbar";
 import { Banner } from "./banner";
@@ -13,17 +13,21 @@ import { WorkbenchExamplesSection } from "./workbench-examples";
 import { DependenciesSection } from "./dependencies";
 import { ContributorsSection } from "./contributors";
 import { VisionSection } from "./vision";
+import { RoadmapSection } from "./roadmap";
 
 export const LandingPage: React.FC = () => {
   return (
-    <div className="relative w-full max-w-full overflow-x-hidden">
+    <div className="relative w-full max-w-full">
       <Navbar />
       <Banner />
-      <div className="mx-auto max-w-full divide-y md:max-w-5xl md:border-x">
+      <div className="mx-auto max-w-full divide-y overflow-x-hidden md:max-w-5xl md:border-x">
         <HeroSection />
         <MeritSection />
+        <Suspense>
+          <ContributorsSection />
+        </Suspense>
         <VisionSection />
-        <ContributorsSection />
+        <RoadmapSection />
         <FeaturesSection />
         <ToolkitCreationSection />
         <TopToolkitsSection />
