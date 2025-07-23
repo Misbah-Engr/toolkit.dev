@@ -16,6 +16,18 @@ export const ContributorsSection = async () => {
 
   const contributors = await new Octokit({
     auth: env.GITHUB_TOKEN,
+    request: {
+      fetch: (url: string, options: RequestInit) => {
+        console.log("fetching", url, options);
+        return fetch(url, {
+          ...options,
+          cache: "force-cache",
+          next: {
+            revalidate: 60 * 60,
+          },
+        });
+      },
+    },
   }).rest.repos
     .listContributors({
       owner: "jasonhedman",
