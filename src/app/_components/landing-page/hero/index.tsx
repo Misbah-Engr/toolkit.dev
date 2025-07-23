@@ -4,19 +4,26 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { HStack, VStack } from "@/components/ui/stack";
-import { AnimatedLogo } from "@/components/ui/logo";
 
 import { Section } from "../lib/section";
 import { AuthModal } from "../lib/auth-modal";
 import { SECTIONS } from "../sections";
 
+import { HeroGraph } from "./graph";
+import { Badge } from "@/components/ui/badge";
+import { MeritLogo } from "@/components/ui/merit-logo";
+
 export const HeroSection: React.FC = () => {
   return (
     <Section id={SECTIONS.Hero}>
-      <div className="flex flex-col-reverse items-start gap-4 md:flex-row md:items-center md:justify-between md:gap-8">
-        <VStack className="items-start gap-8">
-          <VStack className="items-start gap-4">
-            <VStack className="items-start gap-1">
+      <div className="flex flex-col items-center gap-8">
+        <VStack className="gap-8">
+          <VStack className="gap-4 text-center">
+            <Badge variant="glass" className="gap-1">
+              <MeritLogo className="size-4" />
+              <span>A Merit Systems Experiment</span>
+            </Badge>
+            <VStack className="gap-1">
               <h1 className="text-primary overflow-hidden text-5xl font-bold whitespace-nowrap md:text-6xl">
                 Toolkit.dev
               </h1>
@@ -24,32 +31,40 @@ export const HeroSection: React.FC = () => {
                 Get Paid to Build LLM Tools
               </h2>
             </VStack>
-            <p className="max-w-sm text-sm md:text-base">
+            <p className="max-w-md text-sm md:text-base">
               Join an elite group of global developers building an AI platform
               for the usage-based economy.
             </p>
           </VStack>
-          <HStack>
-            <Link href="https://discord.gg/HkXwTaTV" target="_blank">
+          <HStack className="w-full">
+            <Link
+              href="https://discord.gg/HkXwTaTV"
+              target="_blank"
+              className="flex-1 shrink-0"
+            >
               <Button
                 size="lg"
-                className="user-message text-base font-semibold"
+                className="user-message w-full text-base font-semibold"
               >
                 Join Us
               </Button>
             </Link>
-            <AuthModal>
-              <Button
-                variant="outline"
-                size="lg"
-                className="text-base font-semibold"
-              >
-                Try the Playground
-              </Button>
-            </AuthModal>
+            <div className="flex-1 shrink-0">
+              <AuthModal>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="w-full text-base font-semibold"
+                >
+                  Playground
+                </Button>
+              </AuthModal>
+            </div>
           </HStack>
         </VStack>
-        <AnimatedLogo className="size-32 md:size-48" />
+        <div className="h-[200px] w-full max-w-2xl sm:h-[232px] md:h-[40vh]">
+          <HeroGraph />
+        </div>
       </div>
     </Section>
   );

@@ -12,16 +12,14 @@ import { WorkbenchSection } from "./workbenches";
 import { WorkbenchExamplesSection } from "./workbench-examples";
 import { DependenciesSection } from "./dependencies";
 import { ContributorsSection } from "./contributors";
-import { GraphHeroSection } from "./hero/sandbox";
 
 export const LandingPage: React.FC = () => {
   return (
     <div className="relative">
       <Navbar />
       <Banner />
-      <div className="mx-auto max-w-full divide-y md:max-w-5xl md:border-x">
+      <div className="mx-auto max-w-full divide-y md:max-w-6xl md:border-x">
         <HeroSection />
-        <GraphHeroSection />
         <FeaturesSection />
         <MeritSection />
         <ContributorsSection />

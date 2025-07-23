@@ -23,11 +23,6 @@ export const TargetNode: React.FC<NodeProps<Node<SourceNodeData>>> = memo(
       <>
         <Handle
           type="target"
-          position={Position.Top}
-          className="block md:hidden"
-        />
-        <Handle
-          type="target"
           position={Position.Left}
           className="hidden md:block"
         />

@@ -19,7 +19,7 @@ type SourceNodeData = {
 
 export const SourceNode: React.FC<NodeProps<Node<SourceNodeData>>> = memo(
   ({ data }) => {
-    const { Icon, label, amount } = data;
+    const { Icon, label, amount, comingSoon } = data;
 
     return (
       <>
@@ -28,23 +28,20 @@ export const SourceNode: React.FC<NodeProps<Node<SourceNodeData>>> = memo(
             <Icon className="size-4" />
             <span className="font-semibold">{label}</span>
           </HStack>
-          <span className="text-primary text-sm font-bold">
-            {amount.toLocaleString(undefined, {
-              style: "currency",
-              currency: "USD",
-            })}
-          </span>
+          {comingSoon ? (
+            <span className="text-primary/60 text-sm font-bold">
+              Coming Soon
+            </span>
+          ) : (
+            <span className="text-primary text-sm font-bold">
+              {amount.toLocaleString(undefined, {
+                style: "currency",
+                currency: "USD",
+              })}
+            </span>
+          )}
         </Card>
-        <Handle
-          type="source"
-          position={Position.Right}
-          className="hidden md:block"
-        />
-        <Handle
-          type="source"
-          position={Position.Bottom}
-          className="block md:hidden"
-        />
+        <Handle type="source" position={Position.Right} />
       </>
     );
   },
