@@ -12,6 +12,7 @@ import { WorkbenchSection } from "./workbenches";
 import { WorkbenchExamplesSection } from "./workbench-examples";
 import { DependenciesSection } from "./dependencies";
 import { ContributorsSection } from "./contributors";
+import { VisionSection } from "./vision";
 
 export const LandingPage: React.FC = () => {
   return (
@@ -21,6 +22,7 @@ export const LandingPage: React.FC = () => {
       <div className="mx-auto max-w-full divide-y md:max-w-5xl md:border-x">
         <HeroSection />
         <MeritSection />
+        <VisionSection />
         <ContributorsSection />
         <FeaturesSection />
         <ToolkitCreationSection />

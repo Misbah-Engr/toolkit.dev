@@ -1,11 +1,12 @@
 export const SECTIONS = {
   Hero: "Hero",
-  Features: "Features",
+  Vision: "Vision",
   Merit: "Merit",
+  Contributors: "Contributors",
+  Features: "Features",
   TopToolkits: "TopToolkits",
   ToolkitCreation: "ToolkitCreation",
-  Dependencies: "Dependencies",
   Workbench: "Workbench",
   WorkbenchExamples: "WorkbenchExamples",
-  Contributors: "Contributors",
+  Dependencies: "Dependencies",
 } as const;
