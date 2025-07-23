@@ -4,8 +4,7 @@ export const toolkitCreationSteps = [
   {
     icon: Settings,
     title: "Define Base Config",
-    description:
-      "Define the toolkit parameters + each tool's inputs and outputs",
+    description: "Define the parameters + each tool's inputs and outputs",
     codeTitle: "base.ts",
     code: `export const baseToolkit = {
   tools: {

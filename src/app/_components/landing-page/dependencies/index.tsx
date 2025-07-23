@@ -24,14 +24,12 @@ export const DependenciesSection: React.FC = () => {
       <Heading
         title={["Built on the", "Shoulders of Giants"]}
         description="Toolkit is powered by the incredible work of the open source community."
-        className="mb-8 px-4 md:px-16"
       />
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ delay: 0.2, duration: 0.6 }}
         viewport={{ once: true }}
-        className="relative overflow-x-hidden"
       >
         {/* First row - normal direction */}
         <Marquee className="gap-2 py-1" pauseOnHover>
@@ -46,7 +44,7 @@ export const DependenciesSection: React.FC = () => {
         </Marquee>
 
         {/* Second row - reverse direction */}
-        <Marquee className="gap-2 py-0" pauseOnHover reverse>
+        <Marquee className="gap-2 py-0 pb-2" pauseOnHover reverse>
           {dependencies
             .slice(Math.ceil(dependencies.length / 2))
             .map((dependency, index) => (

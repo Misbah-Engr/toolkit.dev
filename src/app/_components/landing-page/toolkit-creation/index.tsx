@@ -26,7 +26,6 @@ export const ToolkitCreationSection: React.FC = () => {
       <Heading
         title={["Designed to Facilitate", "Seamless Toolkit Creation"]}
         description="Create powerful AI agent systems with our intuitive SDK. From simple workflows to complex multi-agent collaborations."
-        className="mb-8 md:mb-16"
       />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -37,35 +36,38 @@ export const ToolkitCreationSection: React.FC = () => {
         <Tabs
           value={activeTab.toString()}
           onValueChange={(value) => setActiveTab(Number(value))}
-          className="flex w-full flex-col gap-2 md:grid md:grid-cols-12 md:gap-4"
+          className="flex w-full max-w-full flex-col gap-2 overflow-hidden"
         >
-          <TabsList className="no-scrollbar flex h-fit w-full flex-row justify-start gap-2 overflow-x-auto bg-transparent md:col-span-5 md:flex-col md:overflow-x-hidden">
+          <TabsList className="no-scrollbar flex h-fit w-full flex-row justify-start gap-2 overflow-x-auto bg-transparent">
             {toolkitCreationSteps.map((step, index) => (
-              <div key={index} className="h-full w-72 shrink-0 md:w-full">
+              <div
+                key={index}
+                className="h-full min-w-64 flex-1 shrink-0 md:min-w-72"
+              >
                 <TabsTrigger
                   value={index.toString()}
                   className="bg-card hover:border-primary/50 border-border data-[state=active]:border-primary data-[state=active]:bg-card dark:data-[state=active]:border-primary dark:data-[state=active]:bg-card group h-auto w-full shrink-0 overflow-hidden rounded-lg p-2 text-left transition-colors md:p-4"
                   asChild
                 >
-                  <HStack className="w-full max-w-full justify-start gap-2 md:gap-4">
-                    <div
-                      className={cn(
-                        "flex shrink-0 items-center justify-center font-bold",
-                        "size-8 md:size-10",
-                        "group-data-[state=active]:bg-primary group-data-[state=active]:text-primary-foreground group-hover:bg-primary/10 rounded-full transition-colors",
-                      )}
-                    >
-                      {index + 1}
-                    </div>
-                    <VStack className="items-start gap-0 md:flex-1">
+                  <VStack className="items-start gap-0 md:flex-1">
+                    <HStack className="w-full max-w-full">
+                      <div
+                        className={cn(
+                          "bg-muted/60 flex shrink-0 items-center justify-center font-bold",
+                          "size-4 md:size-6",
+                          "group-data-[state=active]:bg-primary group-data-[state=active]:text-primary-foreground group-hover:bg-primary/10 rounded-full transition-colors",
+                        )}
+                      >
+                        {index + 1}
+                      </div>
                       <h3 className="w-full max-w-full text-base font-semibold text-wrap md:text-lg">
                         {step.title}
                       </h3>
-                      <p className="text-muted-foreground max-w-full text-xs leading-relaxed text-wrap md:text-sm">
-                        {step.description}
-                      </p>
-                    </VStack>
-                  </HStack>
+                    </HStack>
+                    <p className="text-muted-foreground max-w-full text-xs leading-relaxed text-wrap md:text-sm">
+                      {step.description}
+                    </p>
+                  </VStack>
                 </TabsTrigger>
               </div>
             ))}
