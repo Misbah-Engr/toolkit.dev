@@ -22,9 +22,9 @@ export const LandingPage: React.FC = () => {
         <HeroSection />
         <MeritSection />
         <ContributorsSection />
-        <TopToolkitsSection />
-        <ToolkitCreationSection />
         <FeaturesSection />
+        <ToolkitCreationSection />
+        <TopToolkitsSection />
         <WorkbenchSection />
         <WorkbenchExamplesSection />
         <DependenciesSection />

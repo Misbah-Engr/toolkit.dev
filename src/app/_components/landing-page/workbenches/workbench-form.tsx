@@ -12,7 +12,7 @@ import { SelectToolkits } from "./select-toolkits";
 
 export const WorkbenchForm: React.FC = () => {
   return (
-    <Card className="w-full max-w-2xl flex-col justify-center gap-4 p-4">
+    <Card className="mx-auto w-full max-w-2xl flex-col justify-center gap-4 p-4">
       <HStack>
         <Anvil />
         <h1 className="text-xl font-bold">New Workbench</h1>

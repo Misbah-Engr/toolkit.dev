@@ -4,25 +4,18 @@ import React, { useRef } from "react";
 
 import Link from "next/link";
 
-import {
-  DollarSign,
-  Handshake,
-  MessageSquareShare,
-  type LucideIcon,
-} from "lucide-react";
-import { SiDiscord, SiGithub } from "@icons-pack/react-simple-icons";
+import { SiGithub } from "@icons-pack/react-simple-icons";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { HStack, VStack } from "@/components/ui/stack";
 import { AnimatedBeam } from "@/components/magicui/animated-beam";
-import { MeritLogo } from "@/components/ui/merit-logo";
+import { Logo } from "@/components/ui/logo";
 
 import { Section } from "../lib/section";
-import { Heading } from "../lib/heading";
+import { Heading, MiniHeading } from "../lib/heading";
 
 import { SECTIONS } from "../sections";
-import { cn } from "@/lib/utils";
 import { Handle } from "../lib/handle";
 
 export const MeritSection: React.FC = () => {
@@ -36,6 +29,7 @@ export const MeritSection: React.FC = () => {
 
   return (
     <div>
+      <MiniHeading title="How it Works" className="border-b" />
       <Section id={SECTIONS.Merit}>
         <Heading
           title={["Merge a PR", "Get Paid on Merit Systems"]}
@@ -60,6 +54,7 @@ export const MeritSection: React.FC = () => {
               </Button>
             </Link>,
           ]}
+          align="center"
         />
         <div
           ref={containerRef}
@@ -144,8 +139,13 @@ const MeritCard: React.FC<MeritCardProps> = ({ leftRef, rightRef }) => {
   return (
     <Card className="relative z-10 shrink-0 flex-col items-center gap-2 p-2 md:flex-row md:gap-4 md:p-4">
       <Handle side="left" ref={leftRef} />
-      <MeritLogo className="size-8 md:size-10" />
-      <h1 className="hidden text-2xl font-bold md:block">Merit Systems</h1>
+      <Logo className="size-8 md:size-10" />
+      <VStack className="hidden items-start gap-0 md:flex">
+        <p className="text-xs font-light opacity-60 md:text-sm">
+          Merit Systems
+        </p>
+        <h1 className="hidden text-2xl font-bold md:block">Toolkit Account</h1>
+      </VStack>
       <Handle side="right" ref={rightRef} />
     </Card>
   );
