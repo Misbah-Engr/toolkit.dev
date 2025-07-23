@@ -3,7 +3,7 @@ import React, { memo } from "react";
 import { Card } from "@/components/ui/card";
 import { HStack } from "@/components/ui/stack";
 
-import { Handle } from "./handle";
+import { Handle } from "../../lib/handle";
 
 interface Props {
   Icon: React.FC<{ className?: string }>;
@@ -16,7 +16,7 @@ interface Props {
 export const SourceNode: React.FC<Props> = memo(
   ({ Icon, label, amount, comingSoon, handleRef }) => {
     return (
-      <Card className="relative w-full justify-center gap-1 p-2">
+      <Card className="relative w-full justify-center gap-0 p-2 md:gap-1">
         <HStack className="gap-1 md:gap-2">
           <Icon className="size-2.5 md:size-4" />
           <span className="text-xs font-semibold md:text-base">{label}</span>

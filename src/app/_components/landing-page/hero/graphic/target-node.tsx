@@ -3,7 +3,7 @@ import React, { memo } from "react";
 import { Card } from "@/components/ui/card";
 import { HStack } from "@/components/ui/stack";
 
-import { Handle } from "./handle";
+import { Handle } from "../../lib/handle";
 
 interface Props {
   Icon: React.FC<{ className?: string }>;
@@ -16,7 +16,7 @@ interface Props {
 export const TargetNode = memo(
   ({ Icon, label, amount, numPrs, handleRef }: Props) => {
     return (
-      <Card className="relative size-full gap-1 p-2">
+      <Card className="relative size-full gap-0 p-2 md:gap-1">
         <Handle side="left" ref={handleRef} />
         <HStack className="gap-1 md:gap-2">
           <Icon className="size-2.5 md:size-4" />

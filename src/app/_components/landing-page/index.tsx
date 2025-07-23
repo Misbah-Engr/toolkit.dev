@@ -5,7 +5,7 @@ import { Banner } from "./banner";
 
 import { HeroSection } from "./hero";
 import { FeaturesSection } from "./features";
-import { MeritSection } from "./merit";
+import { MeritSection } from "./how-it-works";
 import { TopToolkitsSection } from "./top-toolkits";
 import { ToolkitCreationSection } from "./toolkit-creation";
 import { WorkbenchSection } from "./workbenches";
@@ -18,13 +18,13 @@ export const LandingPage: React.FC = () => {
     <div className="relative">
       <Navbar />
       <Banner />
-      <div className="mx-auto max-w-full divide-y md:max-w-6xl md:border-x">
+      <div className="mx-auto max-w-full divide-y md:max-w-5xl md:border-x">
         <HeroSection />
-        <FeaturesSection />
         <MeritSection />
         <ContributorsSection />
         <TopToolkitsSection />
         <ToolkitCreationSection />
+        <FeaturesSection />
         <WorkbenchSection />
         <WorkbenchExamplesSection />
         <DependenciesSection />
