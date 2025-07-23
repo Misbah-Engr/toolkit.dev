@@ -1,17 +1,18 @@
 import React from "react";
 
+import { SiDiscord } from "@icons-pack/react-simple-icons";
+
 import Link from "next/link";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { HStack, VStack } from "@/components/ui/stack";
+import { MeritLogo } from "@/components/ui/merit-logo";
 
 import { Section } from "../lib/section";
 import { AuthModal } from "../lib/auth-modal";
 import { SECTIONS } from "../sections";
 
-import { HeroGraph } from "./graph";
-import { Badge } from "@/components/ui/badge";
-import { MeritLogo } from "@/components/ui/merit-logo";
 import { Graphic } from "./graphic";
 
 export const HeroSection: React.FC = () => {
@@ -45,29 +46,30 @@ export const HeroSection: React.FC = () => {
             </p>
           </VStack>
           <HStack className="w-full">
+            <div className="flex-1 shrink-0">
+              <AuthModal>
+                <Button
+                  size="lg"
+                  className="user-message w-full text-base font-semibold"
+                >
+                  Use the Playground
+                </Button>
+              </AuthModal>
+            </div>
             <Link
               href="https://discord.gg/HkXwTaTV"
               target="_blank"
               className="flex-1 shrink-0"
             >
               <Button
+                variant="outline"
                 size="lg"
-                className="user-message w-full text-base font-semibold"
+                className="w-full text-base font-semibold"
               >
-                Join Us
+                <SiDiscord className="size-4" />
+                Join the Community
               </Button>
             </Link>
-            <div className="flex-1 shrink-0">
-              <AuthModal>
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="w-full text-base font-semibold"
-                >
-                  Playground
-                </Button>
-              </AuthModal>
-            </div>
           </HStack>
         </VStack>
         <div className="w-full max-w-2xl">

@@ -18,7 +18,7 @@ export const Navbar = () => {
         </HStack>
         <HStack>
           <AuthModal>
-            <Button className="user-message">Get Started</Button>
+            <Button className="user-message">Playground</Button>
           </AuthModal>
           <Link href="https://github.com/jasonhedman/toolkit.dev">
             <Button variant="outline" size="icon">
