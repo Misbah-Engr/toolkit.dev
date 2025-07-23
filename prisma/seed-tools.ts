@@ -21,6 +21,13 @@ const ALL_TOOLS = Object.entries(clientToolkits).reduce(
 async function main() {
   console.log("🔧 Creating toolkits and tools...");
 
+  const tools = await prisma.tool.findMany({});
+
+  if (tools.length > 0) {
+    console.log("🔍 Found existing tools, skipping creation...");
+    return;
+  }
+
   // Clear existing data
   await prisma.tool.deleteMany({});
   await prisma.toolkit.deleteMany({});

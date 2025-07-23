@@ -1,8 +1,9 @@
+import { BadgeDollarSign, Calendar, Rocket } from "lucide-react";
+
 import { HStack } from "@/components/ui/stack";
+
 import { Section } from "../lib/section";
 import { SECTIONS } from "../sections";
-import { SiGithub } from "@icons-pack/react-simple-icons";
-import { BadgeDollarSign, Calendar, Rocket } from "lucide-react";
 
 export const RoadmapSection = () => {
   return (

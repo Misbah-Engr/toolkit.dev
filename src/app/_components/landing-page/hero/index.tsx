@@ -1,6 +1,6 @@
 import React from "react";
 
-import { SiDiscord, SiGithub } from "@icons-pack/react-simple-icons";
+import { SiGithub } from "@icons-pack/react-simple-icons";
 
 import Link from "next/link";
 

@@ -1,12 +1,19 @@
 import { Octokit } from "octokit";
+
+import { SiDiscord, SiGithub } from "@icons-pack/react-simple-icons";
+
+import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
+import { HStack } from "@/components/ui/stack";
+
+import { Ripple } from "@/components/magicui/ripple";
+
 import { Section } from "../lib/section";
 import { SECTIONS } from "../sections";
+
 import { UserAvatarCirclesByLogin } from "./user-avatar-circles";
-import Link from "next/link";
-import { SiDiscord, SiGithub } from "@icons-pack/react-simple-icons";
-import { Button } from "@/components/ui/button";
-import { Ripple } from "@/components/magicui/ripple";
-import { HStack } from "@/components/ui/stack";
+
 import { env } from "@/env";
 
 export const ContributorsSection = async () => {
@@ -14,7 +21,7 @@ export const ContributorsSection = async () => {
     return null;
   }
 
-  const contributors = await new Octokit({
+  const octo = new Octokit({
     auth: env.GITHUB_TOKEN,
     request: {
       fetch: (url: string, options: RequestInit) => {
@@ -28,7 +35,12 @@ export const ContributorsSection = async () => {
         });
       },
     },
-  }).rest.repos
+    warn: () => {
+      void 0;
+    },
+  });
+
+  const contributors = await octo.rest.repos
     .listContributors({
       owner: "jasonhedman",
       repo: "toolkit.dev",

@@ -13,7 +13,7 @@ import { AnimatedBeam } from "@/components/magicui/animated-beam";
 import { Logo } from "@/components/ui/logo";
 
 import { Section } from "../lib/section";
-import { Heading, MiniHeading } from "../lib/heading";
+import { Heading } from "../lib/heading";
 
 import { SECTIONS } from "../sections";
 import { Handle } from "../lib/handle";
