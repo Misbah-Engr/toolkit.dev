@@ -97,7 +97,9 @@ export const GenerativeUI: React.FC = () => {
       >
         <Card className="w-full gap-0 overflow-hidden p-0">
           <HStack className="border-b p-2">
-            <toolkit.icon className="size-3" />
+            <div className="border-primary bg-muted flex items-center justify-center rounded-full border p-1">
+              <toolkit.icon className="text-primary size-4" />
+            </div>
             <span className="font-semibold">{toolkit.heading}</span>
           </HStack>
           <motion.div
