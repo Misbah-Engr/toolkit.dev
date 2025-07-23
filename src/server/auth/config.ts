@@ -5,6 +5,7 @@ import { providers } from "./providers";
 import { db } from "@/server/db";
 
 import type { DefaultSession, NextAuthConfig } from "next-auth";
+import type { UserRole } from "@prisma/client";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -16,8 +17,7 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
-      // ...other properties
-      // role: UserRole;
+      role: UserRole;
     } & DefaultSession["user"];
   }
 

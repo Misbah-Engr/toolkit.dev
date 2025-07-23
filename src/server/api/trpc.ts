@@ -26,12 +26,16 @@ import { db } from "@/server/db";
  *
  * @see https://trpc.io/docs/server/context
  */
-export const createTRPCContext = async (opts: { headers: Headers }) => {
+export const createTRPCContext = async (opts: {
+  headers: Headers;
+  serverCall?: boolean;
+}) => {
   const session = await auth();
 
   return {
     db,
     session,
+    serverCall: opts.serverCall ?? false,
     ...opts,
   };
 };
@@ -131,3 +135,27 @@ export const protectedProcedure = t.procedure
       },
     });
   });
+
+export const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
+  if (ctx.session.user.role !== "ADMIN") {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+  return next({ ctx });
+});
+
+/**
+ * Server-only procedure
+ *
+ * This procedure can only be called from server-side code, not from client-side.
+ * It checks the serverCall flag in the context which can only be set by server-side code.
+ */
+export const serverOnlyProcedure = t.procedure.use(({ ctx, next }) => {
+  if (!ctx.serverCall) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "This procedure can only be called from server-side code",
+    });
+  }
+
+  return next({ ctx });
+});
