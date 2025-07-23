@@ -8,9 +8,9 @@ import { SECTIONS } from "../sections";
 export const RoadmapSection = () => {
   return (
     <Section id={SECTIONS.Roadmap} className="p-0 md:p-0">
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <div className="grid grid-cols-1 md:grid-cols-3">
         <RoadmapItem
-          title="Now"
+          title={["Bootstrap", "Now"]}
           description="Create a bulletproof chat interface and bootstrap our first 50 toolkits"
           items={[
             "Transition to Vercel AI SDK V5",
@@ -20,7 +20,7 @@ export const RoadmapSection = () => {
           Icon={Calendar}
         />
         <RoadmapItem
-          title="1 Months"
+          title={["Monetize", "1 Month"]}
           description="Add monetization features to create a self-funding mechanism"
           items={[
             "Add subscriptions and usage-based billing",
@@ -30,7 +30,7 @@ export const RoadmapSection = () => {
           Icon={BadgeDollarSign}
         />
         <RoadmapItem
-          title="2 Months"
+          title={["Grow", "2 Months"]}
           description="Build attribution and analytics to reward the most valuable contributors"
           items={[
             "Granular insights on contributor toolkit impact",
@@ -45,7 +45,7 @@ export const RoadmapSection = () => {
 };
 
 interface RoadmapItemProps {
-  title: string;
+  title: [string, string];
   description: string;
   items: string[];
   Icon: React.FC<{ className?: string }>;
@@ -61,7 +61,10 @@ const RoadmapItem: React.FC<RoadmapItemProps> = ({
     <div className="flex flex-col gap-2 border-b p-2 last:border-b-0 md:border-r md:border-b-0 md:p-4 md:last:border-r-0">
       <HStack>
         <Icon className="size-4" />
-        <h2 className="text-lg font-bold">{title}</h2>
+        <h2 className="text-lg font-bold">
+          {title[0]}{" "}
+          <span className="text-muted-foreground/80 text-sm">({title[1]})</span>
+        </h2>
       </HStack>
       <p className="text-sm">{description}</p>
       <ul className="list-disc pl-4 text-xs">

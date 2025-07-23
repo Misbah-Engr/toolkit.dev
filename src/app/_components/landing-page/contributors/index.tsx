@@ -25,7 +25,6 @@ export const ContributorsSection = async () => {
     auth: env.GITHUB_TOKEN,
     request: {
       fetch: (url: string, options: RequestInit) => {
-        console.log("fetching", url, options);
         return fetch(url, {
           ...options,
           cache: "force-cache",
