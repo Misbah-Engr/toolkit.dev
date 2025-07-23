@@ -40,7 +40,7 @@ export const HeroSection: React.FC = () => {
               </strong>
               . <br /> Join us in building a{" "}
               <strong className="text-foreground font-bold">
-                self-sustaining AI app
+                self-funding AI app
               </strong>{" "}
               for the usage-based economy.
             </p>

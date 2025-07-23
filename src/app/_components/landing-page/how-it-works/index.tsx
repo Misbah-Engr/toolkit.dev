@@ -18,6 +18,8 @@ import { Heading, MiniHeading } from "../lib/heading";
 import { SECTIONS } from "../sections";
 import { Handle } from "../lib/handle";
 
+import { cn } from "@/lib/utils";
+
 export const MeritSection: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const meritLeftRef = useRef<HTMLDivElement>(null);
@@ -150,9 +152,20 @@ const MeritCard: React.FC<MeritCardProps> = ({ leftRef, rightRef }) => {
   );
 };
 
-const PrCardWrapper = ({ children }: { children: React.ReactNode }) => {
+const PrCardWrapper = ({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => {
   return (
-    <Card className="relative z-10 flex w-full flex-col items-start justify-between gap-1 p-2">
+    <Card
+      className={cn(
+        "relative z-10 flex w-full flex-col items-start justify-between gap-1 p-2",
+        className,
+      )}
+    >
       {children}
     </Card>
   );
@@ -195,13 +208,13 @@ PrCard.displayName = "PrCard";
 
 const YourPrCard = React.forwardRef<HTMLDivElement>((_, ref) => {
   return (
-    <PrCardWrapper>
+    <PrCardWrapper className="border-primary shadow-primary shadow-[0_0_10px]">
       <Handle side="left" ref={ref} />
       <HStack className="w-full justify-between text-xs font-bold md:text-lg">
         <p className="font-bold">Your PR</p>
         <p className="text-primary font-bold">$???</p>
       </HStack>
-      <h3 className="text-[8px] font-medium opacity-80 md:text-base">
+      <h3 className="text-[8px] font-medium opacity-80 md:text-sm">
         Anything that improves Toolkit
       </h3>
       <HStack className="hidden w-full justify-between text-xs font-light opacity-60 md:flex">

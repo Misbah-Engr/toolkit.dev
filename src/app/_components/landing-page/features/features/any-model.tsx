@@ -46,7 +46,6 @@ export const AnyModel: React.FC = () => {
         containerRef={containerRef}
         fromRef={sourceRef}
         toRef={target1Ref}
-        reverse
         duration={6}
         isVertical
       />
@@ -54,7 +53,6 @@ export const AnyModel: React.FC = () => {
         containerRef={containerRef}
         fromRef={sourceRef}
         toRef={target2Ref}
-        reverse
         duration={6}
         isVertical
       />

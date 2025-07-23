@@ -29,6 +29,8 @@ export interface AnimatedBeamProps {
   endYOffset?: number;
   pathType?: "curved" | "angular"; // New prop for path style
   isVertical?: boolean;
+  repeatDelay?: number;
+  beamWidth?: number;
 }
 
 export const AnimatedBeam: React.FC<AnimatedBeamProps> = ({
@@ -51,6 +53,8 @@ export const AnimatedBeam: React.FC<AnimatedBeamProps> = ({
   endYOffset = 0,
   pathType = "curved", // Default to curved
   isVertical = false,
+  repeatDelay = 0,
+  beamWidth = 10,
 }) => {
   const id = useId();
   const [pathD, setPathD] = useState("");
@@ -85,22 +89,29 @@ export const AnimatedBeam: React.FC<AnimatedBeamProps> = ({
         // Update gradient coordinates based on direction
         setGradientCoordinates(
           isVertical
-            ? {
-                x1: ["0%", "0%"],
-                x2: ["0%", "0%"],
-                y1: ["10%", "110%"],
-                y2: ["0%", "100%"],
-              }
+            ? reverse
+              ? {
+                  x1: ["0%", "0%"],
+                  x2: ["0%", "0%"],
+                  y1: [`100%`, `-${beamWidth}%`],
+                  y2: [`${100 + beamWidth}%`, `0%`],
+                }
+              : {
+                  x1: ["0%", "0%"],
+                  x2: ["0%", "0%"],
+                  y1: [`0%`, `${100 + beamWidth}%`],
+                  y2: [`-${beamWidth}%`, `100%`],
+                }
             : reverse
               ? {
-                  x1: ["90%", "-10%"],
-                  x2: ["100%", "0%"],
+                  x1: [`100%`, `-${beamWidth}%`],
+                  x2: [`${100 + beamWidth}%`, `0%`],
                   y1: ["0%", "0%"],
                   y2: ["0%", "0%"],
                 }
               : {
-                  x1: ["10%", "110%"],
-                  x2: ["0%", "100%"],
+                  x1: [`0%`, `${100 + beamWidth}%`],
+                  x2: [`-${beamWidth}%`, `100%`],
                   y1: ["0%", "0%"],
                   y2: ["0%", "0%"],
                 },
@@ -217,7 +228,7 @@ export const AnimatedBeam: React.FC<AnimatedBeamProps> = ({
             duration,
             ease: [0.16, 1, 0.3, 1],
             repeat: Infinity,
-            repeatDelay: 0,
+            repeatDelay,
           }}
         >
           <stop stopColor={gradientStartColor} stopOpacity="0"></stop>

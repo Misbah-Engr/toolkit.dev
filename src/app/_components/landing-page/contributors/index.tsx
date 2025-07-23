@@ -7,14 +7,26 @@ import { SiGithub } from "@icons-pack/react-simple-icons";
 import { Button } from "@/components/ui/button";
 import { Ripple } from "@/components/magicui/ripple";
 import { HStack } from "@/components/ui/stack";
+import { env } from "@/env";
 
 export const ContributorsSection = async () => {
-  const { data: contributors } = await new Octokit({
-    auth: process.env.GITHUB_TOKEN,
-  }).rest.repos.listContributors({
-    owner: "jasonhedman",
-    repo: "toolkit.dev",
-  });
+  if (!env.GITHUB_TOKEN) {
+    return null;
+  }
+
+  const contributors = await new Octokit({
+    auth: env.GITHUB_TOKEN,
+  }).rest.repos
+    .listContributors({
+      owner: "jasonhedman",
+      repo: "toolkit.dev",
+    })
+    .then((res) => res.data)
+    .catch(() => null);
+
+  if (!contributors) {
+    return null;
+  }
 
   return (
     <Section
@@ -23,7 +35,7 @@ export const ContributorsSection = async () => {
     >
       <HStack className="mt-6 h-14">
         <h2 className="max-w-sm text-center text-xl font-bold">
-          We are grateful to the contributors who make Toolkit better every day
+          Join a global community of elite developers today
         </h2>
       </HStack>
       <UserAvatarCirclesByLogin
@@ -33,6 +45,7 @@ export const ContributorsSection = async () => {
               contributor.login && contributor.login !== "cursoragent",
           )
           .map((contributor) => contributor.login!)}
+        numAvatarsToShow={10}
         totalUsers={contributors.length}
         size={48}
       />
