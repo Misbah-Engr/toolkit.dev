@@ -27,7 +27,7 @@ export const Heading: React.FC<Props> = ({
       transition={{ duration: 0.6 }}
       viewport={{ once: true }}
       className={cn(
-        "flex flex-col gap-2",
+        "mb-4 flex flex-col gap-2 md:mb-8",
         {
           "items-center text-center": align === "center",
           "items-start text-left": align === "left",

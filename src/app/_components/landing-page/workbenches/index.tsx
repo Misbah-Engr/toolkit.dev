@@ -13,7 +13,6 @@ export const WorkbenchSection: React.FC = () => {
       <Heading
         title={["Configure Custom", "Workbenches"]}
         description="Combine multiple toolkits with specialized system prompts to create a tailored AI assistant."
-        className="mb-4"
       />
       <WorkbenchForm />
     </Section>

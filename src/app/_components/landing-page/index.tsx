@@ -15,7 +15,7 @@ import { ContributorsSection } from "./contributors";
 
 export const LandingPage: React.FC = () => {
   return (
-    <div className="relative">
+    <div className="relative w-full max-w-full overflow-x-hidden">
       <Navbar />
       <Banner />
       <div className="mx-auto max-w-full divide-y md:max-w-5xl md:border-x">

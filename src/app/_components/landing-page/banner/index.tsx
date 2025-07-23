@@ -11,7 +11,7 @@ export const Banner: React.FC = () => {
       <HStack className="mx-auto w-fit">
         <MeritLogo className="size-4" />
         <span className="text-primary font-bold">
-          $6,000 available for contributors on Merit Systems
+          $6,000 available for contributors
         </span>
         <ScrollToSection section={SECTIONS.Merit}>
           <span className="decoration-primary/60 decoration-1.5 hover:decoration-primary underline underline-offset-3 transition-all hover:cursor-pointer">

@@ -34,7 +34,6 @@ export const MeritSection: React.FC = () => {
         <Heading
           title={["Merge a PR", "Get Paid on Merit Systems"]}
           description="Every PR merged into Toolkit is paid based on its impact. The more impactful the PR, the more money you earn."
-          className="mb-8"
           buttons={[
             <Link
               href="https://terminal.merit.systems/jasonhedman/toolkit.dev"
