@@ -31,7 +31,7 @@ export const Graphic = () => {
   return (
     <HStack
       ref={containerRef}
-      className="relative w-full gap-4 sm:gap-6 md:gap-10 lg:gap-12 xl:gap-16"
+      className="relative w-full gap-5 sm:gap-8 md:gap-10 lg:gap-12 xl:gap-16"
     >
       <VStack className="flex-1 gap-1 md:gap-2">
         <SourceNode

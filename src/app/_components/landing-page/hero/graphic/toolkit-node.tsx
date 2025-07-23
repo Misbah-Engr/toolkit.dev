@@ -3,7 +3,7 @@ import React, { memo } from "react";
 import { Card } from "@/components/ui/card";
 import { AnimatedLogo } from "@/components/ui/logo";
 
-import { Handle } from "./handle";
+import { Handle } from "../../lib/handle";
 
 interface Props {
   targetRef: React.RefObject<HTMLDivElement | null>;

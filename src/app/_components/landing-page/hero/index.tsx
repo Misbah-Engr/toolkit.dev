@@ -50,7 +50,7 @@ export const HeroSection: React.FC = () => {
               <AuthModal>
                 <Button
                   size="lg"
-                  className="user-message w-full text-base font-semibold"
+                  className="user-message w-full text-sm font-semibold md:text-base"
                 >
                   Use the Playground
                 </Button>
@@ -64,7 +64,7 @@ export const HeroSection: React.FC = () => {
               <Button
                 variant="outline"
                 size="lg"
-                className="w-full text-base font-semibold"
+                className="w-full text-sm font-semibold md:text-base"
               >
                 <SiDiscord className="size-4" />
                 Join the Community
