@@ -38,7 +38,7 @@ export const AnimatedBeam: React.FC<AnimatedBeamProps> = ({
   toRef,
   curvature = 0,
   reverse = false, // Include the reverse prop
-  duration = 4,
+  duration = 10,
   delay = 0,
   pathColor = "var(--color-primary-500)",
   pathWidth = 2,

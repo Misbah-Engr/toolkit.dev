@@ -47,7 +47,6 @@ const AnimatedLogoWithTheme: React.FC<AnimatedLogoPropsWithTheme> = ({
   animationData,
   className,
   delay = DELAY,
-  theme,
 }) => {
   const lottieRef = useRef<LottieRefCurrentProps>(null);
 
@@ -79,7 +78,6 @@ const AnimatedLogoWithTheme: React.FC<AnimatedLogoPropsWithTheme> = ({
       autoPlay={false}
       loop={false}
       className={className}
-      src={`/logo/animated/${theme}.json`}
     />
   );
 };

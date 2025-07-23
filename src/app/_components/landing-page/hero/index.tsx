@@ -12,6 +12,7 @@ import { SECTIONS } from "../sections";
 import { HeroGraph } from "./graph";
 import { Badge } from "@/components/ui/badge";
 import { MeritLogo } from "@/components/ui/merit-logo";
+import { Graphic } from "./graphic";
 
 export const HeroSection: React.FC = () => {
   return (
@@ -31,8 +32,15 @@ export const HeroSection: React.FC = () => {
                 Get Paid to Build LLM Tools
               </h2>
             </VStack>
-            <p className="max-w-md text-sm md:text-base">
-              Join an elite group of global developers building an AI platform
+            <p className="text-foreground/80 max-w-md text-sm font-light md:text-base">
+              An open-source project that{" "}
+              <strong className="text-foreground font-bold">
+                pays every merged PR
+              </strong>
+              . <br /> Join us in building a{" "}
+              <strong className="text-foreground font-bold">
+                self-sustaining AI app
+              </strong>{" "}
               for the usage-based economy.
             </p>
           </VStack>
@@ -62,8 +70,8 @@ export const HeroSection: React.FC = () => {
             </div>
           </HStack>
         </VStack>
-        <div className="h-[200px] w-full max-w-2xl sm:h-[232px] md:h-[40vh]">
-          <HeroGraph />
+        <div className="w-full max-w-2xl">
+          <Graphic />
         </div>
       </div>
     </Section>
