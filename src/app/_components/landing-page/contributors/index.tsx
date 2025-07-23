@@ -3,7 +3,7 @@ import { Section } from "../lib/section";
 import { SECTIONS } from "../sections";
 import { UserAvatarCirclesByLogin } from "./user-avatar-circles";
 import Link from "next/link";
-import { SiGithub } from "@icons-pack/react-simple-icons";
+import { SiDiscord, SiGithub } from "@icons-pack/react-simple-icons";
 import { Button } from "@/components/ui/button";
 import { Ripple } from "@/components/magicui/ripple";
 import { HStack } from "@/components/ui/stack";
@@ -54,6 +54,12 @@ export const ContributorsSection = async () => {
           <Button variant="outline">
             <SiGithub className="size-4" />
             Become a Contributor
+          </Button>
+        </Link>
+        <Link href="https://discord.gg/cnNBsSfY" key="discord" target="_blank">
+          <Button variant="outline">
+            <SiDiscord />
+            Join the Community
           </Button>
         </Link>
       </HStack>

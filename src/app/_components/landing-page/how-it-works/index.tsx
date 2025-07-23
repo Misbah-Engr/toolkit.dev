@@ -44,8 +44,8 @@ export const MeritSection: React.FC = () => {
             <Button className="user-message">Explore Merit Systems</Button>
           </Link>,
           <Link
-            href="https://discord.gg/cnNBsSfY"
-            key="discord"
+            href="https://github.com/jasonhedman/toolkit.dev/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22good%20first%20issue%22"
+            key="github"
             target="_blank"
           >
             <Button variant="outline">
