@@ -16,10 +16,10 @@ import { VisionSection } from "./vision";
 
 export const LandingPage: React.FC = () => {
   return (
-    <div className="relative w-full max-w-full overflow-x-hidden">
+    <div className="relative w-full max-w-full">
       <Navbar />
       <Banner />
-      <div className="mx-auto max-w-full divide-y md:max-w-5xl md:border-x">
+      <div className="mx-auto max-w-full divide-y overflow-x-hidden md:max-w-5xl md:border-x">
         <HeroSection />
         <MeritSection />
         <VisionSection />

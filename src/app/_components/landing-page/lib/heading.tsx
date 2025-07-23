@@ -1,6 +1,7 @@
 "use client";
 
 import { FlickeringGrid } from "@/components/magicui/flickering-grid";
+import { Badge } from "@/components/ui/badge";
 import { HStack, VStack } from "@/components/ui/stack";
 import { cn } from "@/lib/utils";
 import { motion } from "motion/react";
@@ -8,6 +9,7 @@ import { motion } from "motion/react";
 interface Props {
   title: [string, string];
   description: string;
+  badgeText?: string;
   buttons?: React.ReactNode[];
   className?: string;
   align?: "left" | "center";
@@ -17,6 +19,7 @@ export const Heading: React.FC<Props> = ({
   title,
   description,
   buttons,
+  badgeText,
   className,
   align = "center",
 }) => {
@@ -35,6 +38,7 @@ export const Heading: React.FC<Props> = ({
         className,
       )}
     >
+      {badgeText && <Badge variant="glass">{badgeText}</Badge>}
       <h2 className="text-2xl font-bold md:text-3xl">
         {title[0]}
         <span className="text-primary block">{title[1]}</span>

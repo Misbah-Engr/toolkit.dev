@@ -9,6 +9,7 @@ export const VisionSection: React.FC = () => {
       <Heading
         title={["Kickstart a", "Self-Funding Repository"]}
         description="We're building monetization features to spark a flywheel of growth for Toolkit"
+        badgeText="The Vision"
       />
       <VisionGraphic />
     </Section>
