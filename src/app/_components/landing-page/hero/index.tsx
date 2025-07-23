@@ -1,24 +1,31 @@
 import React from "react";
 
+import { SiDiscord } from "@icons-pack/react-simple-icons";
+
 import Link from "next/link";
 
-import { SiGithub } from "@icons-pack/react-simple-icons";
-
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { HStack, VStack } from "@/components/ui/stack";
-import { AnimatedLogo } from "@/components/ui/logo";
+import { MeritLogo } from "@/components/ui/merit-logo";
 
 import { Section } from "../lib/section";
 import { AuthModal } from "../lib/auth-modal";
 import { SECTIONS } from "../sections";
 
+import { Graphic } from "./graphic";
+
 export const HeroSection: React.FC = () => {
   return (
     <Section id={SECTIONS.Hero}>
-      <div className="flex flex-col-reverse items-start gap-4 md:flex-row md:items-center md:justify-between md:gap-8">
-        <VStack className="items-start gap-8">
-          <VStack className="items-start gap-4">
-            <VStack className="items-start gap-1">
+      <div className="flex flex-col items-center gap-8">
+        <VStack className="gap-8">
+          <VStack className="gap-4 text-center">
+            <Badge variant="glass" className="gap-1">
+              <MeritLogo className="size-4" />
+              <span>A Merit Systems Experiment</span>
+            </Badge>
+            <VStack className="gap-1">
               <h1 className="text-primary overflow-hidden text-5xl font-bold whitespace-nowrap md:text-6xl">
                 Toolkit.dev
               </h1>
@@ -26,32 +33,48 @@ export const HeroSection: React.FC = () => {
                 Get Paid to Build LLM Tools
               </h2>
             </VStack>
-            <p className="max-w-sm text-sm md:text-base">
-              Join an elite group of global developers building an AI platform
+            <p className="text-foreground/80 max-w-md text-sm font-light md:text-base">
+              An open-source project that{" "}
+              <strong className="text-foreground font-bold">
+                pays every merged PR
+              </strong>
+              . <br /> Join us in building a{" "}
+              <strong className="text-foreground font-bold">
+                self-sustaining AI app
+              </strong>{" "}
               for the usage-based economy.
             </p>
           </VStack>
-          <HStack>
-            <Link href="https://discord.gg/HkXwTaTV" target="_blank">
-              <Button
-                size="lg"
-                className="user-message text-base font-semibold"
-              >
-                Join Us
-              </Button>
-            </Link>
-            <AuthModal>
+          <HStack className="w-full">
+            <div className="flex-1 shrink-0">
+              <AuthModal>
+                <Button
+                  size="lg"
+                  className="user-message w-full text-base font-semibold"
+                >
+                  Use the Playground
+                </Button>
+              </AuthModal>
+            </div>
+            <Link
+              href="https://discord.gg/HkXwTaTV"
+              target="_blank"
+              className="flex-1 shrink-0"
+            >
               <Button
                 variant="outline"
                 size="lg"
-                className="text-base font-semibold"
+                className="w-full text-base font-semibold"
               >
-                Try the Playground
+                <SiDiscord className="size-4" />
+                Join the Community
               </Button>
-            </AuthModal>
+            </Link>
           </HStack>
         </VStack>
-        <AnimatedLogo className="size-32 md:size-48" />
+        <div className="w-full max-w-2xl">
+          <Graphic />
+        </div>
       </div>
     </Section>
   );

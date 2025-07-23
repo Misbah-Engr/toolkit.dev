@@ -10,7 +10,7 @@ interface Props {
 
 export const Section: React.FC<Props> = ({ id, className, children }) => {
   return (
-    <section id={id} className={cn("px-4 py-16 md:px-16 md:py-16", className)}>
+    <section id={id} className={cn("px-2 py-16 md:px-16 md:py-16", className)}>
       {children}
     </section>
   );

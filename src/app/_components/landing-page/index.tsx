@@ -18,7 +18,7 @@ export const LandingPage: React.FC = () => {
     <div className="relative">
       <Navbar />
       <Banner />
-      <div className="mx-auto max-w-full divide-y md:max-w-5xl md:border-x">
+      <div className="mx-auto max-w-full divide-y md:max-w-6xl md:border-x">
         <HeroSection />
         <FeaturesSection />
         <MeritSection />
