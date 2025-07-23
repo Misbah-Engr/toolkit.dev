@@ -9,4 +9,5 @@ export const SECTIONS = {
   Workbench: "Workbench",
   WorkbenchExamples: "WorkbenchExamples",
   Dependencies: "Dependencies",
+  Roadmap: "Roadmap",
 } as const;

@@ -46,7 +46,7 @@ export const ToolkitCreationSection: React.FC = () => {
               >
                 <TabsTrigger
                   value={index.toString()}
-                  className="bg-card hover:border-primary/50 border-border data-[state=active]:border-primary data-[state=active]:bg-card dark:data-[state=active]:border-primary dark:data-[state=active]:bg-card group h-auto w-full shrink-0 overflow-hidden rounded-lg p-2 text-left transition-colors md:p-4"
+                  className="hover:border-primary/50 border-border data-[state=active]:border-primary data-[state=active]:bg-card dark:data-[state=active]:border-primary dark:data-[state=active]:bg-card group h-auto w-full shrink-0 overflow-hidden rounded-lg p-2 text-left transition-colors md:p-4"
                   asChild
                 >
                   <VStack className="items-start gap-0 md:flex-1">
