@@ -115,6 +115,7 @@ export const env = createEnv({
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
+    PRISMA_LOG_QUERIES: z.string().optional(),
     OPENROUTER_API_KEY: z.string(),
     EXA_API_KEY: z.string().optional(),
     MEM0_API_KEY: z.string().optional(),
@@ -141,6 +142,7 @@ export const env = createEnv({
     AUTH_SECRET: process.env.AUTH_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
+    PRISMA_LOG_QUERIES: process.env.PRISMA_LOG_QUERIES,
     OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY,
     EXA_API_KEY: process.env.EXA_API_KEY,
     MEM0_API_KEY: process.env.MEM0_API_KEY,
