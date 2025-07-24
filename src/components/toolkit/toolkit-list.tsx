@@ -49,7 +49,6 @@ export const ToolkitList: React.FC<ToolkitListProps> = ({
   const router = useRouter();
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [configureDialogOpen, setConfigureDialogOpen] = useState(false);
   const [selectedToolkitForConfig, setSelectedToolkitForConfig] = useState<{
     id: Toolkits;
     toolkit: ClientToolkit;
@@ -181,7 +180,10 @@ export const ToolkitList: React.FC<ToolkitListProps> = ({
           </CommandGroup>
         </CommandList>
       </Command>
-      <Dialog open={configureDialogOpen} onOpenChange={setConfigureDialogOpen}>
+      <Dialog
+        open={selectedToolkitForConfig !== null}
+        onOpenChange={() => setSelectedToolkitForConfig(null)}
+      >
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>
