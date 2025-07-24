@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, useCallback } from "react";
 
 import { useChat } from "@ai-sdk/react";
 
@@ -256,18 +256,20 @@ export function ChatProvider({
     },
   });
 
+  const onStreamError = useCallback(() => {
+    // Mark stream as stopped to hide thinking message
+    setStreamStopped(true);
+    // Also call stop to change the status away from 'submitted'
+    stop();
+  }, [stop]);
+
   useAutoResume({
     autoResume,
     initialMessages,
     experimental_resume,
     data,
     setMessages,
-    onStreamError: () => {
-      // Mark stream as stopped to hide thinking message
-      setStreamStopped(true);
-      // Also call stop to change the status away from 'submitted'
-      stop();
-    },
+    onStreamError,
   });
 
   const handleSubmit: UseChatHelpers["handleSubmit"] = (

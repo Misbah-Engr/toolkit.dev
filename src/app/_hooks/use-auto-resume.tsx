@@ -53,5 +53,5 @@ export function useAutoResume({
       toast.error(dataPart.message);
       onStreamError?.();
     }
-  }, [data, initialMessages, setMessages]);
+  }, [data, initialMessages, setMessages, onStreamError]);
 }
