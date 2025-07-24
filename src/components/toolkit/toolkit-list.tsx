@@ -1,5 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 
+import { Loader2 } from "lucide-react";
+
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import {
@@ -27,7 +29,6 @@ import { cn } from "@/lib/utils";
 import type { ClientToolkit } from "@/toolkits/types";
 import type { Toolkits } from "@/toolkits/toolkits/shared";
 import type { SelectedToolkit } from "./types";
-import { Loader2 } from "lucide-react";
 
 interface ToolkitListProps {
   selectedToolkits: SelectedToolkit[];
