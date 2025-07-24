@@ -180,8 +180,8 @@ export function EditWorkbenchForm({ workbench }: EditWorkbenchFormProps) {
                     )}
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="max-h-[80vh] max-w-lg gap-2 overflow-hidden">
-                  <DialogHeader className="gap-1">
+                <DialogContent className="flex h-[90vh] max-w-lg flex-col gap-2 overflow-hidden p-1 md:h-[60vh] md:p-3">
+                  <DialogHeader className="flex-0 gap-1 px-2 pt-2">
                     <DialogTitle>Select Toolkits</DialogTitle>
                     <DialogDescription>
                       Choose the toolkits that will be available in this
