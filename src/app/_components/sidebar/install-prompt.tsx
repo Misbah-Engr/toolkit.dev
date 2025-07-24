@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useInstallPrompt } from "@/contexts/install-prompt-context";
-import { Download, X } from "lucide-react";
+import { Download, Plus, Share, X } from "lucide-react";
 
 export function InstallPrompt() {
   const {
@@ -42,7 +42,7 @@ export function InstallPrompt() {
       {installPrompt ? (
         <div className="space-y-3">
           <p className="text-muted-foreground text-sm">
-            Install Toolkit.dev for quick access and a better experience.
+            Install Toolkit.dev for quick access
           </p>
           <Button onClick={handleInstall} className="w-full">
             <Download className="mr-2 h-4 w-4" />
@@ -51,8 +51,15 @@ export function InstallPrompt() {
         </div>
       ) : isIOS ? (
         <p className="text-muted-foreground text-sm">
-          To install this app on your iOS device, tap the share button ⎋ and
-          then &ldquo;Add to Home Screen&rdquo; ➕.
+          To install this app on your iOS device, tap the share button{" "}
+          <span className="inline-block align-middle leading-none">
+            <Share className="inline h-4 w-4" />
+          </span>{" "}
+          and then <span className="font-semibold">Add to Home Screen</span>{" "}
+          <span className="inline-block align-middle leading-none">
+            <Plus className="inline h-4 w-4" />
+          </span>
+          .
         </p>
       ) : null}
     </div>
