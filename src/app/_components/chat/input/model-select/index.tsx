@@ -252,7 +252,7 @@ export const ModelSelect: React.FC = () => {
       {isMobile ? (
         <Drawer open={isOpen} onOpenChange={setIsOpen}>
           <DrawerTrigger asChild>{triggerButton}</DrawerTrigger>
-          <DrawerContent className="max-h-[80vh]">
+          <DrawerContent>
             <DrawerHeader className="sr-only">
               <DrawerTitle>Model Selector</DrawerTitle>
             </DrawerHeader>

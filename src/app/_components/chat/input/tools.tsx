@@ -205,7 +205,7 @@ export const ToolsSelect = () => {
       {isMobile ? (
         <Drawer open={isOpen} onOpenChange={setIsOpen}>
           <DrawerTrigger asChild>{triggerButton}</DrawerTrigger>
-          <DrawerContent className="max-h-[80vh]">
+          <DrawerContent>
             <DrawerHeader className="sr-only">
               <DrawerTitle>Toolkit Selector</DrawerTitle>
             </DrawerHeader>
