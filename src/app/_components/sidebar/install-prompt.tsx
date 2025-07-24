@@ -42,7 +42,7 @@ export function InstallPrompt() {
       {installPrompt ? (
         <div className="space-y-3">
           <p className="text-muted-foreground text-sm">
-            Install Toolkit.dev for quick access
+            Install Toolkit.dev to your home screen for quick access.
           </p>
           <Button onClick={handleInstall} className="w-full">
             <Download className="mr-2 h-4 w-4" />
