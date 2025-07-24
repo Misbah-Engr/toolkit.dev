@@ -7,6 +7,7 @@ import { TRPCReactProvider } from "@/trpc/react";
 
 import { Toaster } from "@/components/ui/sonner";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { InstallPromptProvider } from "@/contexts/install-prompt-context";
 
 import { AppSidebar } from "./_components/sidebar";
 import { Navbar } from "./_components/navbar";
@@ -55,6 +56,20 @@ export default async function RootLayout({
     >
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+          rel="apple-touch-icon"
+          sizes="192x192"
+          href="/manifest/web-app-manifest-192x192.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="512x512"
+          href="/manifest/web-app-manifest-512x512.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          href="/manifest/web-app-manifest-192x192.png"
+        />
       </head>
       <body>
         <Analytics />
@@ -66,13 +81,15 @@ export default async function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <SidebarProvider>
-              <AppSidebar />
-              <SidebarInset className="flex h-dvh flex-col">
-                <Navbar />
-                {children}
-              </SidebarInset>
-            </SidebarProvider>
+            <InstallPromptProvider>
+              <SidebarProvider>
+                <AppSidebar />
+                <SidebarInset className="flex h-dvh flex-col">
+                  <Navbar />
+                  {children}
+                </SidebarInset>
+              </SidebarProvider>
+            </InstallPromptProvider>
           </ThemeProvider>
         </TRPCReactProvider>
         <Toaster />
