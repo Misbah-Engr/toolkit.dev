@@ -1,7 +1,6 @@
 import React from "react";
 
 import { HStack } from "@/components/ui/stack";
-import { MeritLogo } from "@/components/ui/merit-logo";
 import { ScrollToSection } from "../lib/scroll-to-section";
 import { SECTIONS } from "../sections";
 
@@ -9,7 +8,6 @@ export const Banner: React.FC = () => {
   return (
     <div className="bg-primary/10 border-primary/60 w-full border-y py-2 text-center text-xs md:text-sm">
       <HStack className="mx-auto w-fit">
-        <MeritLogo className="size-4" />
         <span className="text-primary font-bold">
           $6,000 available for contributors
         </span>
