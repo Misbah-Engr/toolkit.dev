@@ -27,6 +27,7 @@ import { cn } from "@/lib/utils";
 import type { ClientToolkit } from "@/toolkits/types";
 import type { Toolkits } from "@/toolkits/toolkits/shared";
 import type { SelectedToolkit } from "./types";
+import { Loader2 } from "lucide-react";
 
 interface ToolkitListProps {
   selectedToolkits: SelectedToolkit[];
@@ -126,16 +127,25 @@ export const ToolkitList: React.FC<ToolkitListProps> = ({
                 (t) => t.id === (id as Toolkits),
               );
 
-              const item = (
+              const Item = ({
+                isLoading,
+                onSelect,
+              }: {
+                isLoading: boolean;
+                onSelect?: () => void;
+              }) => (
                 <CommandItem
                   key={id}
-                  onSelect={() =>
-                    handleToolkitAction(
-                      id as Toolkits,
-                      toolkit as ClientToolkit,
-                    )
+                  onSelect={
+                    onSelect ??
+                    (() =>
+                      handleToolkitAction(
+                        id as Toolkits,
+                        toolkit as ClientToolkit,
+                      ))
                   }
                   className="flex items-center gap-2 rounded-none px-3"
+                  disabled={isLoading}
                 >
                   <div
                     className={cn(
@@ -143,9 +153,13 @@ export const ToolkitList: React.FC<ToolkitListProps> = ({
                       isSelected && "border-primary text-primary",
                     )}
                   >
-                    <toolkit.icon
-                      className={cn("size-4", isSelected && "text-primary")}
-                    />
+                    {isLoading ? (
+                      <Loader2 className="size-4 animate-spin" />
+                    ) : (
+                      <toolkit.icon
+                        className={cn("size-4", isSelected && "text-primary")}
+                      />
+                    )}
                   </div>
 
                   <VStack className="flex flex-1 flex-col items-start gap-0">
@@ -157,15 +171,11 @@ export const ToolkitList: React.FC<ToolkitListProps> = ({
                 </CommandItem>
               );
 
-              if (toolkit.addToolkitWrapper) {
-                return (
-                  <toolkit.addToolkitWrapper key={id}>
-                    {item}
-                  </toolkit.addToolkitWrapper>
-                );
+              if (toolkit.Wrapper) {
+                return <toolkit.Wrapper key={id} Item={Item} />;
               }
 
-              return item;
+              return <Item key={id} isLoading={false} />;
             })}
           </CommandGroup>
         </CommandList>

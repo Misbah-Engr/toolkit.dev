@@ -23,8 +23,8 @@ export type ClientToolkitConifg<Parameters extends ZodRawShape = ZodRawShape> =
       parameters: z.infer<ZodObject<Parameters>>;
       setParameters: (parameters: z.infer<ZodObject<Parameters>>) => void;
     }> | null;
-    addToolkitWrapper?: React.ComponentType<{
-      children: React.ReactNode;
+    Wrapper: React.FC<{
+      Item: React.FC<{ isLoading: boolean; onSelect?: () => void }>;
     }>;
     type: ToolkitGroups;
   };

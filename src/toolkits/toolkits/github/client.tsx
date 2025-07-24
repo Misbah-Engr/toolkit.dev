@@ -1,19 +1,31 @@
-import { GithubTools } from "./tools";
+"use client";
+
+import { useState } from "react";
+
+import { SiGithub } from "@icons-pack/react-simple-icons";
+
+import { signIn } from "next-auth/react";
+
 import { createClientToolkit } from "@/toolkits/create-toolkit";
+
+import { Toolkits } from "../shared";
+
 import { baseGithubToolkitConfig } from "./base";
+import { GithubTools } from "./tools";
 import {
   githubSearchReposToolConfigClient,
   githubRepoInfoToolConfigClient,
   githubSearchCodeToolConfigClient,
   githubSearchUsersToolConfigClient,
 } from "./tools/client";
-import { SiGithub } from "@icons-pack/react-simple-icons";
-import { api } from "@/trpc/react";
-import { Button } from "@/components/ui/button";
-import { signIn } from "next-auth/react";
-import { Loader2 } from "lucide-react";
+
 import { ToolkitGroups } from "@/toolkits/types";
-import { Toolkits } from "../shared";
+import {
+  AuthButton,
+  AuthRequiredDialog,
+} from "@/toolkits/lib/auth-required-dialog";
+
+import { api } from "@/trpc/react";
 
 export const githubClientToolkit = createClientToolkit(
   baseGithubToolkitConfig,
@@ -22,41 +34,47 @@ export const githubClientToolkit = createClientToolkit(
     description: "Find and analyze repositories, users, and organizations",
     icon: SiGithub,
     form: null,
-    addToolkitWrapper: ({ children }) => {
+    Wrapper: ({ Item }) => {
       const { data: hasAccount, isLoading } =
         api.accounts.hasProviderAccount.useQuery("github");
 
+      const [isAuthRequiredDialogOpen, setIsAuthRequiredDialogOpen] =
+        useState(false);
+
       if (isLoading) {
-        return (
-          <Button
-            variant="outline"
-            size="sm"
-            disabled
-            className="bg-transparent"
-          >
-            <Loader2 className="size-4 animate-spin" />
-          </Button>
-        );
+        return <Item isLoading={true} />;
       }
 
       if (!hasAccount) {
         return (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              void signIn("github", {
-                callbackUrl: `${window.location.href}?${Toolkits.Github}=true`,
-              });
-            }}
-            className="bg-transparent"
-          >
-            Connect
-          </Button>
+          <>
+            <Item
+              isLoading={false}
+              onSelect={() => setIsAuthRequiredDialogOpen(true)}
+            />
+            <AuthRequiredDialog
+              isOpen={isAuthRequiredDialogOpen}
+              onOpenChange={setIsAuthRequiredDialogOpen}
+              Icon={SiGithub}
+              title="Connect your GitHub account"
+              description="This will request read access to public repositories and users."
+              content={
+                <AuthButton
+                  onClick={() => {
+                    void signIn("github", {
+                      callbackUrl: `${window.location.href}?${Toolkits.Github}=true`,
+                    });
+                  }}
+                >
+                  Connect
+                </AuthButton>
+              }
+            />
+          </>
         );
       }
 
-      return children;
+      return <Item isLoading={false} />;
     },
     type: ToolkitGroups.DataSource,
   },
