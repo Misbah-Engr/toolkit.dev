@@ -14,6 +14,10 @@ export type ToolkitConfig<
   parameters: z.ZodObject<Parameters>;
 };
 
+export type ClientToolkitWrapper = React.FC<{
+  Item: React.FC<{ isLoading: boolean; onSelect?: () => void }>;
+}>;
+
 export type ClientToolkitConifg<Parameters extends ZodRawShape = ZodRawShape> =
   {
     name: string;
