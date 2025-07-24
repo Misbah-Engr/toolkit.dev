@@ -200,10 +200,19 @@ export const ModelSelect: React.FC = () => {
     new Set((models ?? []).map((model) => model.provider)),
   );
 
+  // Check if native search toggle will be shown
+  const hasNativeSearch = selectedChatModel?.capabilities?.includes(
+    LanguageModelCapability.WebSearch,
+  );
+
   const triggerButton = (
     <Button
       variant="outline"
-      className="size-9 justify-center bg-transparent md:w-auto md:justify-start"
+      className={cn(
+        "justify-center bg-transparent md:w-auto md:justify-start",
+        // Use wider button on mobile when both icons are present
+        hasNativeSearch && selectedChatModel ? "h-9 w-16" : "size-9",
+      )}
       onClick={(event) => {
         const target = event.target as HTMLElement;
         const isNativeSearchToggle = target.closest(
