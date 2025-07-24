@@ -44,7 +44,7 @@ export const Graphic = () => {
         <SourceNode
           Icon={Trophy}
           label="Hackathon Prize"
-          amount={1000}
+          amount={2000}
           comingSoon={false}
           handleRef={source2}
         />

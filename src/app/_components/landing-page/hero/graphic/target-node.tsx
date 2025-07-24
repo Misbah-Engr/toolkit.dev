@@ -29,7 +29,9 @@ export const TargetNode = memo(
               currency: "USD",
             })}
           </span>
-          <span className="text-foreground/80 font-light">{numPrs} PRs</span>
+          <span className="text-foreground/80 font-light md:text-xs">
+            {numPrs} PRs
+          </span>
         </HStack>
       </Card>
     );

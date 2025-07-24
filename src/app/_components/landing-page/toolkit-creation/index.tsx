@@ -72,7 +72,7 @@ export const ToolkitCreationSection: React.FC = () => {
               </div>
             ))}
           </TabsList>
-          <div className="col-span-7">
+          <div className="relative col-span-7">
             <AnimatePresence mode="wait">
               {toolkitCreationSteps[activeTab]?.code && (
                 <motion.div
@@ -81,12 +81,16 @@ export const ToolkitCreationSection: React.FC = () => {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.3 }}
-                  className="border-border overflow-hidden rounded-lg border"
+                  className="absolute inset-0 overflow-hidden rounded-lg border"
                 >
                   <CodeBlock value={toolkitCreationSteps[activeTab].code} />
                 </motion.div>
               )}
             </AnimatePresence>
+            {/* Invisible placeholder to maintain height */}
+            <div className="invisible">
+              <CodeBlock value={toolkitCreationSteps[0]?.code ?? ""} />
+            </div>
           </div>
         </Tabs>
       </motion.div>
