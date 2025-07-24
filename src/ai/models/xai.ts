@@ -7,7 +7,7 @@ import {
 const xaiLanguageModelData: Omit<LanguageModel, "provider">[] = [
   {
     name: "Grok 4",
-    modelId: "grok-4-latest",
+    modelId: "grok-4",
     description: "Latest generation Grok model with enhanced capabilities",
     capabilities: [
       LanguageModelCapability.ToolCalling,
@@ -19,7 +19,7 @@ const xaiLanguageModelData: Omit<LanguageModel, "provider">[] = [
   },
   {
     name: "Grok 3",
-    modelId: "grok-3-beta",
+    modelId: "grok-3",
     description: "Previous generation Grok model with enhanced capabilities",
     capabilities: [LanguageModelCapability.ToolCalling],
     bestFor: ["General purpose", "Real-time information", "Analysis"],
@@ -74,5 +74,5 @@ const xaiImageModelData: Omit<ImageModel, "provider">[] = [
 
 export const xaiImageModels: ImageModel[] = xaiImageModelData.map((model) => ({
   ...model,
-  provider: "xai",
+  provider: "x-ai",
 }));
