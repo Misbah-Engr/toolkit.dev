@@ -117,7 +117,7 @@ const NonMemoizedMarkdown = ({ children, headingClassName, asSpan }: Props) => {
           if (!match) {
             return (
               <code
-                className={cn("w-full max-w-full overflow-x-auto", className)}
+                className={cn("w-full max-w-full overflow-x-auto whitespace-pre-wrap", className)}
               >
                 {children}
               </code>
