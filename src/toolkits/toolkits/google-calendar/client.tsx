@@ -11,7 +11,6 @@ import {
   googleCalendarSearchEventsToolConfigClient,
 } from "./tools/client";
 import { api } from "@/trpc/react";
-import { Button } from "@/components/ui/button";
 import { signIn } from "next-auth/react";
 import { SiGooglecalendar } from "@icons-pack/react-simple-icons";
 import { ToolkitGroups } from "@/toolkits/types";
@@ -96,9 +95,7 @@ export const googleCalendarClientToolkit = createClientToolkit(
               title="Connect your Google Calendar"
               description="This will request read and write access to your Google Calendar."
               content={
-                <Button
-                  variant="outline"
-                  size="sm"
+                <AuthButton
                   onClick={() => {
                     void signIn(
                       "google",
@@ -116,7 +113,7 @@ export const googleCalendarClientToolkit = createClientToolkit(
                   }}
                 >
                   Connect your Google Calendar
-                </Button>
+                </AuthButton>
               }
             />
           </>

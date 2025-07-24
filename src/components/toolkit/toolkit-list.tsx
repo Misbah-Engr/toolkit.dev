@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { HStack, VStack } from "@/components/ui/stack";
+import { VStack } from "@/components/ui/stack";
 import {
   Command,
   CommandEmpty,
