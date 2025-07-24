@@ -25,7 +25,7 @@ const PureMessages: React.FC<Props> = ({
   onViewportLeave,
   scrollToBottom,
 }) => {
-  const { messages, status } = useChatContext();
+  const { messages, status, streamStopped } = useChatContext();
 
   const { hasSentMessage } = useMessages({
     chatId,
@@ -75,7 +75,7 @@ const PureMessages: React.FC<Props> = ({
           />
         ))}
 
-      {((status === "submitted" &&
+      {!streamStopped && ((status === "submitted" &&
         messages.length > 0 &&
         lastMessage?.role === "user") ||
         (lastMessage?.role === "assistant" &&
