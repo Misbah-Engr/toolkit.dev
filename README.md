@@ -226,7 +226,13 @@ XAI_API_KEY=""
 
 ### 4. Database Setup
 
-Run database migrations:
+Start a local PostgreSQL database using the provided script:
+
+```bash
+./start-database.sh
+```
+
+Then run database migrations:
 
 ```bash
 pnpm db:push
