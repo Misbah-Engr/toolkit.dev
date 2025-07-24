@@ -24,7 +24,7 @@ import { cn } from "@/lib/utils";
 import { LanguageModelCapability } from "@/ai/types";
 
 export const ToolsSelect = () => {
-  const { toolkits, addToolkit, removeToolkit, selectedChatModel } =
+  const { toolkits, addToolkit, removeToolkit, selectedChatModel, workbench } =
     useChatContext();
   const searchParams = useSearchParams();
 
@@ -75,31 +75,31 @@ export const ToolsSelect = () => {
       toolkits={toolkits}
       addToolkit={addToolkit}
       removeToolkit={removeToolkit}
-      triggerButton={
-        <Button
-          variant={"outline"}
-          className={cn(
-            "w-fit justify-center bg-transparent md:w-auto md:px-2",
-            toolkits.length === 0 && "size-9 md:w-auto",
-          )}
-          disabled={
-            !selectedChatModel?.capabilities?.includes(
-              LanguageModelCapability.ToolCalling,
-            )
-          }
-        >
-          {toolkits.length > 0 ? (
-            <ToolkitIcons toolkits={toolkits.map((toolkit) => toolkit.id)} />
-          ) : (
-            <Wrench />
-          )}
-          <span className="hidden md:block">
-            {toolkits.length > 0
-              ? `${toolkits.length} Toolkit${toolkits.length > 1 ? "s" : ""}`
-              : "Add Toolkits"}
-          </span>
-        </Button>
-      }
-    />
+      workbench={workbench}
+    >
+      <Button
+        variant={"outline"}
+        className={cn(
+          "w-fit justify-center bg-transparent md:w-auto md:px-2",
+          toolkits.length === 0 && "size-9 md:w-auto",
+        )}
+        disabled={
+          !selectedChatModel?.capabilities?.includes(
+            LanguageModelCapability.ToolCalling,
+          )
+        }
+      >
+        {toolkits.length > 0 ? (
+          <ToolkitIcons toolkits={toolkits.map((toolkit) => toolkit.id)} />
+        ) : (
+          <Wrench />
+        )}
+        <span className="hidden md:block">
+          {toolkits.length > 0
+            ? `${toolkits.length} Toolkit${toolkits.length > 1 ? "s" : ""}`
+            : "Add Toolkits"}
+        </span>
+      </Button>
+    </ToolkitSelect>
   );
 };

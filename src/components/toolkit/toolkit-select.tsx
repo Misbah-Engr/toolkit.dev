@@ -34,7 +34,7 @@ import type { Toolkits } from "@/toolkits/toolkits/shared";
 interface Props {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  triggerButton: React.ReactNode;
+  children: React.ReactNode;
   toolkits: SelectedToolkit[];
   addToolkit: (toolkit: SelectedToolkit) => void;
   removeToolkit: (id: Toolkits) => void;
@@ -48,7 +48,7 @@ export const ToolkitSelect: React.FC<Props> = ({
   toolkits,
   addToolkit,
   removeToolkit,
-  triggerButton,
+  children,
 }) => {
   const isMobile = useIsMobile();
 
@@ -72,7 +72,7 @@ export const ToolkitSelect: React.FC<Props> = ({
   if (isMobile) {
     return (
       <Drawer open={isOpen} onOpenChange={onOpenChange}>
-        <DrawerTrigger asChild>{triggerButton}</DrawerTrigger>
+        <DrawerTrigger asChild>{children}</DrawerTrigger>
         <DrawerContent className="p-0">
           <DrawerHeader className="items-start px-3 pb-3">
             <DrawerTitle className="text-lg">Toolkit Selector</DrawerTitle>
@@ -88,7 +88,7 @@ export const ToolkitSelect: React.FC<Props> = ({
 
   return (
     <Popover open={isOpen} onOpenChange={onOpenChange}>
-      <PopoverTrigger asChild>{triggerButton}</PopoverTrigger>
+      <PopoverTrigger asChild>{children}</PopoverTrigger>
       <PopoverContent
         className="w-xs overflow-hidden p-0 md:w-lg"
         align="start"
@@ -134,7 +134,7 @@ const WorkbenchSaveButton: React.FC<WorkbenchSaveButtonProps> = ({
   };
 
   return (
-    <div className="border-t p-2">
+    <div className="flex flex-col items-center gap-1 border-t p-2 text-center">
       <Button
         variant={"outline"}
         className="w-full bg-transparent"
@@ -142,8 +142,12 @@ const WorkbenchSaveButton: React.FC<WorkbenchSaveButtonProps> = ({
         disabled={isPending}
       >
         {isPending ? <Loader2 className="animate-spin" /> : <Save />}
-        Save
+        Update Workbench
       </Button>
+      <p className="text-muted-foreground text-xs">
+        You can proceed without saving if you do not want to change the default
+        workbench configuration.
+      </p>
     </div>
   );
 };
