@@ -191,8 +191,8 @@ export const ToolsSelect = () => {
         <Drawer open={isOpen} onOpenChange={setIsOpen}>
           <DrawerTrigger asChild>{triggerButton}</DrawerTrigger>
           <DrawerContent className="p-0">
-            <DrawerHeader className="items-start px-3 pb-2">
-              <DrawerTitle>Toolkit Selector</DrawerTitle>
+            <DrawerHeader className="items-start px-3 pb-3">
+              <DrawerTitle className="text-lg">Toolkit Selector</DrawerTitle>
               <DrawerDescription>
                 Add tools to give the model more capabilities
               </DrawerDescription>
@@ -203,7 +203,6 @@ export const ToolsSelect = () => {
       ) : (
         <Popover open={isOpen} onOpenChange={setIsOpen}>
           <PopoverTrigger asChild>{triggerButton}</PopoverTrigger>
-
           <PopoverContent
             className="w-xs overflow-hidden p-0 md:w-lg"
             align="start"
