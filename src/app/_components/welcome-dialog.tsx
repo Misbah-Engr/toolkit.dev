@@ -59,8 +59,8 @@ export function WelcomeDialog() {
 
   return (
     <AlertDialog defaultOpen>
-      <AlertDialogContent className="flex max-h-[90vh] w-full flex-col overflow-hidden p-3 sm:max-w-2xl md:p-6">
-        <div className="flex flex-col justify-between gap-2 md:flex-row">
+      <AlertDialogContent className="flex h-[90vh] w-full flex-col gap-2 overflow-hidden p-1 sm:max-w-2xl md:h-[60vh] md:p-3">
+        <div className="flex flex-col justify-between gap-2 px-2 md:flex-row">
           <AlertDialogHeader className="gap-0 text-left">
             <AlertDialogTitle className="text-primary text-lg font-bold md:text-2xl">
               Start by Selecting Your Toolkits

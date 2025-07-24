@@ -31,6 +31,7 @@ import { clientToolkits } from "@/toolkits/toolkits/client";
 import { LanguageModelCapability } from "@/ai/types";
 
 import { cn } from "@/lib/utils";
+import { VStack } from "@/components/ui/stack";
 
 export const ToolsSelect = () => {
   const { toolkits, addToolkit, removeToolkit, workbench, selectedChatModel } =
@@ -127,22 +128,24 @@ export const ToolsSelect = () => {
       </PopoverTrigger>
 
       <PopoverContent
-        className="w-xs overflow-hidden p-0 md:w-lg"
+        className="h-96 w-xs overflow-hidden p-0 md:w-lg"
         align="start"
         sideOffset={8}
       >
-        <div className="bg-background sticky top-0 z-10 border-b p-2">
-          <h2 className="mb-1 text-sm font-bold">Toolkit Selector</h2>
-          <div className="text-muted-foreground text-sm">
-            Add or remove tools to enhance your chat experience
+        <div className="flex h-full max-h-full flex-col overflow-hidden">
+          <VStack className="items-start gap-0 p-2 pb-0">
+            <h2 className="mb-1 font-bold">Toolkit Selector</h2>
+            <p className="text-muted-foreground text-sm">
+              Add or remove tools to augment your chat experience
+            </p>
+          </VStack>
+          <div className="h-0 flex-1 overflow-hidden">
+            <ToolkitList
+              selectedToolkits={toolkits}
+              onAddToolkit={addToolkit}
+              onRemoveToolkit={removeToolkit}
+            />
           </div>
-        </div>
-        <div className="max-h-56 w-full max-w-full overflow-x-hidden overflow-y-auto py-2 pr-1 pl-2 md:max-h-80">
-          <ToolkitList
-            selectedToolkits={toolkits}
-            onAddToolkit={addToolkit}
-            onRemoveToolkit={removeToolkit}
-          />
           {workbench !== undefined && (
             <div className="border-t p-2">
               <Button

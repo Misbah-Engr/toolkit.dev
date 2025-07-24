@@ -74,31 +74,35 @@ export const ToolkitList: React.FC<ToolkitListProps> = ({
   }, [searchParams, onAddToolkit, selectedToolkits, router, pathname]);
 
   return (
-    <TooltipProvider>
-      <div className="relative mb-2">
-        <Search className="text-muted-foreground absolute top-2.5 left-2 size-4" />
-        <Input
-          placeholder="Search toolkits..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-8"
-        />
-      </div>
-      <VStack className="w-full items-start">
-        {filteredToolkits.map(([id, toolkit]) => {
-          return (
-            <ToolkitItem
-              key={id}
-              id={id as Toolkits}
-              toolkit={toolkit as ClientToolkit}
-              selectedToolkits={selectedToolkits}
-              onAddToolkit={onAddToolkit}
-              onRemoveToolkit={onRemoveToolkit}
+    <div className="h-full overflow-hidden">
+      <TooltipProvider>
+        <div className="flex h-full max-h-full flex-col gap-2 overflow-hidden p-2">
+          <div className="relative">
+            <Search className="text-muted-foreground absolute top-2.5 left-2 size-4" />
+            <Input
+              placeholder="Search toolkits..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-8"
             />
-          );
-        })}
-      </VStack>
-    </TooltipProvider>
+          </div>
+          <VStack className="h-0 w-full flex-1 items-start overflow-y-auto">
+            {filteredToolkits.map(([id, toolkit]) => {
+              return (
+                <ToolkitItem
+                  key={id}
+                  id={id as Toolkits}
+                  toolkit={toolkit as ClientToolkit}
+                  selectedToolkits={selectedToolkits}
+                  onAddToolkit={onAddToolkit}
+                  onRemoveToolkit={onRemoveToolkit}
+                />
+              );
+            })}
+          </VStack>
+        </div>
+      </TooltipProvider>
+    </div>
   );
 };
 
