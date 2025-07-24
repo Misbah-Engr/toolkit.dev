@@ -255,21 +255,26 @@ export async function POST(request: Request) {
             experimental_generateMessageId: generateUUID,
             onError: (error) => {
               console.error("Stream error occurred:", error);
-              
+
               // Check if it's a 402 error and log it specifically
-              if (error && typeof error === 'object') {
+              if (error && typeof error === "object") {
                 const errorStr = JSON.stringify(error);
-                if (errorStr.includes('402') || errorStr.includes('requires more credits')) {
-                  console.error("OpenRouter credits exhausted - 402 error detected");
+                if (
+                  errorStr.includes("402") ||
+                  errorStr.includes("requires more credits")
+                ) {
+                  console.error(
+                    "OpenRouter credits exhausted - 402 error detected",
+                  );
                 }
               }
-              
+
               // Send error to frontend - this will trigger onStreamError which calls stop()
               dataStream.writeData({
-                type: 'error',
-                message: 'An error occurred while processing your request',
+                type: "error",
+                message: "An error occurred while processing your request",
               });
-              
+
               // Don't throw - just let the stream end naturally after sending error data
             },
             onFinish: async ({ response }) => {

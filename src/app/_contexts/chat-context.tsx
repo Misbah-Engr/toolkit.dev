@@ -270,7 +270,10 @@ export function ChatProvider({
     },
   });
 
-  const handleSubmit: UseChatHelpers["handleSubmit"] = (event, chatRequestOptions) => {
+  const handleSubmit: UseChatHelpers["handleSubmit"] = (
+    event,
+    chatRequestOptions,
+  ) => {
     // Reset stream stopped flag when submitting new message
     setStreamStopped(false);
     originalHandleSubmit(event, chatRequestOptions);

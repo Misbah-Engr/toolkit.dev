@@ -75,15 +75,16 @@ const PureMessages: React.FC<Props> = ({
           />
         ))}
 
-      {!streamStopped && ((status === "submitted" &&
-        messages.length > 0 &&
-        lastMessage?.role === "user") ||
-        (lastMessage?.role === "assistant" &&
-          (lastMessage?.parts?.length === 0 ||
-            (lastMessage?.parts?.length === 1 &&
-              lastMessage?.parts?.[0]?.type === "step-start")))) && (
-        <ThinkingMessage />
-      )}
+      {!streamStopped &&
+        ((status === "submitted" &&
+          messages.length > 0 &&
+          lastMessage?.role === "user") ||
+          (lastMessage?.role === "assistant" &&
+            (lastMessage?.parts?.length === 0 ||
+              (lastMessage?.parts?.length === 1 &&
+                lastMessage?.parts?.[0]?.type === "step-start")))) && (
+          <ThinkingMessage />
+        )}
 
       <motion.div
         ref={endRef}
