@@ -1,23 +1,36 @@
+import { useEffect, useState } from "react";
+
+import { Loader2, Save, Wrench } from "lucide-react";
+
+import { useRouter, useSearchParams } from "next/navigation";
+
+import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   TooltipContent,
   TooltipTrigger,
   Tooltip,
   TooltipProvider,
 } from "@/components/ui/tooltip";
-import { Loader2, Save, Wrench } from "lucide-react";
-import { useChatContext } from "@/app/_contexts/chat-context";
-import { useEffect, useState } from "react";
+
 import { ToolkitList } from "@/components/toolkit/toolkit-list";
-import { useRouter, useSearchParams } from "next/navigation";
-import { api } from "@/trpc/react";
-import { toast } from "sonner";
 import { ToolkitIcons } from "@/components/toolkit/toolkit-icons";
+
+import { useChatContext } from "@/app/_contexts/chat-context";
+
+import { api } from "@/trpc/react";
+
 import { clientToolkits } from "@/toolkits/toolkits/client";
+
 import { LanguageModelCapability } from "@/ai/types";
+
 import { cn } from "@/lib/utils";
-import { DropdownMenu, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
-import { DropdownMenuContent } from "@/components/ui/dropdown-menu";
 
 export const ToolsSelect = () => {
   const { toolkits, addToolkit, removeToolkit, workbench, selectedChatModel } =
@@ -86,67 +99,65 @@ export const ToolsSelect = () => {
   }
 
   return (
-    <TooltipProvider>
-      <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant={"outline"}
-            className={cn(
-              "w-fit justify-center bg-transparent md:w-auto md:px-2",
-              toolkits.length === 0 && "size-9 md:w-auto",
-            )}
-            disabled={
-              !selectedChatModel?.capabilities?.includes(
-                LanguageModelCapability.ToolCalling,
-              )
-            }
-          >
-            {toolkits.length > 0 ? (
-              <ToolkitIcons toolkits={toolkits.map((toolkit) => toolkit.id)} />
-            ) : (
-              <Wrench />
-            )}
-            <span className="hidden md:block">
-              {toolkits.length > 0
-                ? `${toolkits.length} Toolkit${toolkits.length > 1 ? "s" : ""}`
-                : "Add Toolkits"}
-            </span>
-          </Button>
-        </DropdownMenuTrigger>
-
-       <DropdownMenuContent
-          className="w-xs overflow-hidden p-0 md:w-lg"
-          align="start"
-          sideOffset={8}
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant={"outline"}
+          className={cn(
+            "w-fit justify-center bg-transparent md:w-auto md:px-2",
+            toolkits.length === 0 && "size-9 md:w-auto",
+          )}
+          disabled={
+            !selectedChatModel?.capabilities?.includes(
+              LanguageModelCapability.ToolCalling,
+            )
+          }
         >
-          <div className="bg-background sticky top-0 z-10 border-b p-2">
-            <h2 className="mb-1 text-sm font-bold">Toolkit Selector</h2>
-            <div className="text-muted-foreground text-sm">
-              Add or remove tools to enhance your chat experience
+          {toolkits.length > 0 ? (
+            <ToolkitIcons toolkits={toolkits.map((toolkit) => toolkit.id)} />
+          ) : (
+            <Wrench />
+          )}
+          <span className="hidden md:block">
+            {toolkits.length > 0
+              ? `${toolkits.length} Toolkit${toolkits.length > 1 ? "s" : ""}`
+              : "Add Toolkits"}
+          </span>
+        </Button>
+      </PopoverTrigger>
+
+      <PopoverContent
+        className="w-xs overflow-hidden p-0 md:w-lg"
+        align="start"
+        sideOffset={8}
+      >
+        <div className="bg-background sticky top-0 z-10 border-b p-2">
+          <h2 className="mb-1 text-sm font-bold">Toolkit Selector</h2>
+          <div className="text-muted-foreground text-sm">
+            Add or remove tools to enhance your chat experience
+          </div>
+        </div>
+        <div className="max-h-56 w-full max-w-full overflow-x-hidden overflow-y-auto py-2 pr-1 pl-2 md:max-h-80">
+          <ToolkitList
+            selectedToolkits={toolkits}
+            onAddToolkit={addToolkit}
+            onRemoveToolkit={removeToolkit}
+          />
+          {workbench !== undefined && (
+            <div className="border-t p-2">
+              <Button
+                variant={"outline"}
+                className="w-full bg-transparent"
+                onClick={handleSave}
+                disabled={isPending}
+              >
+                {isPending ? <Loader2 className="animate-spin" /> : <Save />}
+                Save
+              </Button>
             </div>
-          </div>
-          <div className="max-h-56 w-full pl-2 pr-1 py-2 max-w-full overflow-x-hidden overflow-y-auto md:max-h-80">
-            <ToolkitList
-              selectedToolkits={toolkits}
-              onAddToolkit={addToolkit}
-              onRemoveToolkit={removeToolkit}
-            />
-            {workbench !== undefined && (
-              <div className="p-2 border-t">
-                <Button
-                  variant={"outline"}
-                  className="bg-transparent w-full"
-                  onClick={handleSave}
-                  disabled={isPending}
-                >
-                  {isPending ? <Loader2 className="animate-spin" /> : <Save />}
-                  Save
-                </Button>
-              </div>
-            )}
-          </div>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </TooltipProvider>
+          )}
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 };
