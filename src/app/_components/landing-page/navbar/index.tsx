@@ -20,12 +20,15 @@ export const Navbar = () => {
           <AuthModal>
             <Button className="user-message">Playground</Button>
           </AuthModal>
-          <Link href="https://github.com/jasonhedman/toolkit.dev">
+          <Link
+            href="https://github.com/jasonhedman/toolkit.dev"
+            target="_blank"
+          >
             <Button variant="outline" size="icon">
               <SiGithub className="size-4" />
             </Button>
           </Link>
-          <Link href="https://discord.gg/cnNBsSfY">
+          <Link href="https://discord.gg/cnNBsSfY" target="_blank">
             <Button variant="outline" size="icon">
               <SiDiscord className="size-4" />
             </Button>

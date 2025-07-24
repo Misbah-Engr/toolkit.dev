@@ -14,6 +14,7 @@ import { DependenciesSection } from "./dependencies";
 import { ContributorsSection } from "./contributors";
 import { VisionSection } from "./vision";
 import { RoadmapSection } from "./roadmap";
+import { Footer } from "./footer";
 
 export const LandingPage: React.FC = () => {
   return (
@@ -35,6 +36,7 @@ export const LandingPage: React.FC = () => {
         <WorkbenchExamplesSection />
         <DependenciesSection />
       </div>
+      <Footer />
     </div>
   );
 };
