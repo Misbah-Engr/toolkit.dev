@@ -87,18 +87,26 @@ export const ToolkitList: React.FC<ToolkitListProps> = ({
             />
           </div>
           <VStack className="h-0 w-full flex-1 items-start overflow-y-auto">
-            {filteredToolkits.map(([id, toolkit]) => {
-              return (
-                <ToolkitItem
-                  key={id}
-                  id={id as Toolkits}
-                  toolkit={toolkit as ClientToolkit}
-                  selectedToolkits={selectedToolkits}
-                  onAddToolkit={onAddToolkit}
-                  onRemoveToolkit={onRemoveToolkit}
-                />
-              );
-            })}
+            {filteredToolkits.length === 0 ? (
+              <div className="flex-1 items-center justify-center">
+                <p className="text-muted-foreground text-sm">
+                  No toolkits match your search
+                </p>
+              </div>
+            ) : (
+              filteredToolkits.map(([id, toolkit]) => {
+                return (
+                  <ToolkitItem
+                    key={id}
+                    id={id as Toolkits}
+                    toolkit={toolkit as ClientToolkit}
+                    selectedToolkits={selectedToolkits}
+                    onAddToolkit={onAddToolkit}
+                    onRemoveToolkit={onRemoveToolkit}
+                  />
+                );
+              })
+            )}
           </VStack>
         </div>
       </TooltipProvider>
