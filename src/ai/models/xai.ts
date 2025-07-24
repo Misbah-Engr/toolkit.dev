@@ -74,5 +74,5 @@ const xaiImageModelData: Omit<ImageModel, "provider">[] = [
 
 export const xaiImageModels: ImageModel[] = xaiImageModelData.map((model) => ({
   ...model,
-  provider: "x-ai",
+  provider: "xai",
 }));

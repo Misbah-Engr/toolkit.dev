@@ -2,7 +2,7 @@ import { z } from "zod";
 import { createBaseTool } from "@/toolkits/create-tool";
 
 const inputSchema = z.object({
-  prompt: z.string().min(1).max(100).describe("The image generation prompt"),
+  prompt: z.string().min(1).max(250).describe("The image generation prompt"),
 });
 
 const outputSchema = z.object({
