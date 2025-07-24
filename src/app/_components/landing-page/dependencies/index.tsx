@@ -20,7 +20,7 @@ import type { Dependency } from "./types";
 
 export const DependenciesSection: React.FC = () => {
   return (
-    <Section className="px-0 md:px-0" id={SECTIONS.Dependencies}>
+    <Section className="relative px-0 md:px-0" id={SECTIONS.Dependencies}>
       <Heading
         title={["Built on the", "Shoulders of Giants"]}
         description="Toolkit is powered by the incredible work of the open source community."
