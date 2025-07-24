@@ -40,18 +40,22 @@ export const AuthRequiredDialog: React.FC<Props> = ({
             <Code className="size-4" />
             <Icon className="size-12" />
           </HStack>
-          <VStack className="gap-0">
+          <VStack className="gap-1">
             <DialogTitle>{title}</DialogTitle>
-            <DialogDescription>{description}</DialogDescription>
+            <DialogDescription className="text-center">
+              {description}
+            </DialogDescription>
           </VStack>
         </DialogHeader>
         {content}
-        <DialogFooter className="justify-center md:justify-center">
-          <p className="text-muted-foreground max-w-xs text-center text-xs">
-            Your configuration will be saved securely by Toolkit and can be
-            deleted at any time.
-          </p>
-        </DialogFooter>
+        {content && (
+          <DialogFooter className="justify-center md:justify-center">
+            <p className="text-muted-foreground max-w-xs text-center text-xs">
+              Your configuration will be saved securely by Toolkit and can be
+              deleted at any time.
+            </p>
+          </DialogFooter>
+        )}
       </DialogContent>
     </Dialog>
   );

@@ -38,7 +38,7 @@ export const googleDriveClientToolkit = createClientToolkit(
 
       const { data: hasAccess, isLoading: isLoadingAccess } =
         api.features.hasFeature.useQuery({
-          feature: "google-calendar",
+          feature: "google-drive",
         });
 
       const [isPrivateBetaDialogOpen, setIsPrivateBetaDialogOpen] =
@@ -58,8 +58,8 @@ export const googleDriveClientToolkit = createClientToolkit(
               onSelect={() => setIsPrivateBetaDialogOpen(true)}
             />
             <AuthRequiredDialog
-              isOpen={isAuthRequiredDialogOpen}
-              onOpenChange={setIsAuthRequiredDialogOpen}
+              isOpen={isPrivateBetaDialogOpen}
+              onOpenChange={setIsPrivateBetaDialogOpen}
               Icon={SiGoogledrive}
               title="Beta Access Required"
               description="We need to add you as a test user on Google Cloud for us to request sensitive OAuth scopes. Please contact @jsonhedman on X to request access."
@@ -69,60 +69,8 @@ export const googleDriveClientToolkit = createClientToolkit(
         );
       }
 
-      if (!account) {
-        return (
-          <>
-            <Item
-              isLoading={false}
-              onSelect={() => {
-                void signIn(
-                  "google",
-                  {
-                    callbackUrl: `${window.location.href}?${Toolkits.GoogleCalendar}=true`,
-                  },
-                  {
-                    prompt: "consent",
-                    access_type: "offline",
-                    response_type: "code",
-                    include_granted_scopes: true,
-                    scope: `openid email profile ${driveScope}`,
-                  },
-                );
-              }}
-            />
-            <AuthRequiredDialog
-              isOpen={isPrivateBetaDialogOpen}
-              onOpenChange={setIsPrivateBetaDialogOpen}
-              Icon={SiGoogledrive}
-              title="Connect your Google Calendar"
-              description="This will request read and write access to your Google Calendar."
-              content={
-                <AuthButton
-                  onClick={() => {
-                    void signIn(
-                      "google",
-                      {
-                        callbackUrl: `${window.location.href}?${Toolkits.GoogleCalendar}=true`,
-                      },
-                      {
-                        prompt: "consent",
-                        access_type: "offline",
-                        response_type: "code",
-                        include_granted_scopes: true,
-                        scope: `openid email profile ${driveScope}`,
-                      },
-                    );
-                  }}
-                >
-                  Connect your Google Calendar
-                </AuthButton>
-              }
-            />
-          </>
-        );
-      }
-
       if (!account?.scope?.includes(driveScope)) {
+        const isMissingAccount = !account;
         return (
           <>
             <Item
@@ -134,7 +82,11 @@ export const googleDriveClientToolkit = createClientToolkit(
               onOpenChange={setIsAuthRequiredDialogOpen}
               Icon={SiGoogledrive}
               title="Connect your Google Drive"
-              description="This will request read access to your Google Drive."
+              description={
+                isMissingAccount
+                  ? "This will request read-only access to your Google Drive."
+                  : "This will request read access to your Google Drive."
+              }
               content={
                 <AuthButton
                   onClick={() => {
@@ -148,12 +100,16 @@ export const googleDriveClientToolkit = createClientToolkit(
                         access_type: "offline",
                         response_type: "code",
                         include_granted_scopes: true,
-                        scope: `${account?.scope} ${driveScope}`,
+                        scope: isMissingAccount
+                          ? `openid email profile ${driveScope}`
+                          : `${account?.scope} ${driveScope}`,
                       },
                     );
                   }}
                 >
-                  Grant Access
+                  {isMissingAccount
+                    ? "Connect your Google Drive"
+                    : "Grant Access"}
                 </AuthButton>
               }
             />

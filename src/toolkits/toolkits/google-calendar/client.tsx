@@ -56,8 +56,8 @@ export const googleCalendarClientToolkit = createClientToolkit(
               onSelect={() => setIsPrivateBetaDialogOpen(true)}
             />
             <AuthRequiredDialog
-              isOpen={isAuthRequiredDialogOpen}
-              onOpenChange={setIsAuthRequiredDialogOpen}
+              isOpen={isPrivateBetaDialogOpen}
+              onOpenChange={setIsPrivateBetaDialogOpen}
               Icon={SiGooglecalendar}
               title="Beta Access Required"
               description="We need to add you as a test user on Google Cloud for us to request sensitive OAuth scopes. Please contact @jsonhedman on X to request access."
@@ -67,60 +67,8 @@ export const googleCalendarClientToolkit = createClientToolkit(
         );
       }
 
-      if (!account) {
-        return (
-          <>
-            <Item
-              isLoading={false}
-              onSelect={() => {
-                void signIn(
-                  "google",
-                  {
-                    callbackUrl: `${window.location.href}?${Toolkits.GoogleCalendar}=true`,
-                  },
-                  {
-                    prompt: "consent",
-                    access_type: "offline",
-                    response_type: "code",
-                    include_granted_scopes: true,
-                    scope: `openid email profile ${calendarScope}`,
-                  },
-                );
-              }}
-            />
-            <AuthRequiredDialog
-              isOpen={isPrivateBetaDialogOpen}
-              onOpenChange={setIsPrivateBetaDialogOpen}
-              Icon={SiGooglecalendar}
-              title="Connect your Google Calendar"
-              description="This will request read and write access to your Google Calendar."
-              content={
-                <AuthButton
-                  onClick={() => {
-                    void signIn(
-                      "google",
-                      {
-                        callbackUrl: `${window.location.href}?${Toolkits.GoogleCalendar}=true`,
-                      },
-                      {
-                        prompt: "consent",
-                        access_type: "offline",
-                        response_type: "code",
-                        include_granted_scopes: true,
-                        scope: `openid email profile ${calendarScope}`,
-                      },
-                    );
-                  }}
-                >
-                  Connect your Google Calendar
-                </AuthButton>
-              }
-            />
-          </>
-        );
-      }
-
       if (!account?.scope?.includes(calendarScope)) {
+        const isMissingAccount = !account;
         return (
           <>
             <Item
@@ -146,12 +94,16 @@ export const googleCalendarClientToolkit = createClientToolkit(
                         access_type: "offline",
                         response_type: "code",
                         include_granted_scopes: true,
-                        scope: `${account?.scope} ${calendarScope}`,
+                        scope: isMissingAccount
+                          ? `openid email profile ${calendarScope}`
+                          : `${account?.scope} ${calendarScope}`,
                       },
                     );
                   }}
                 >
-                  Grant Access
+                  {isMissingAccount
+                    ? "Connect your Google Calendar"
+                    : "Grant Access"}
                 </AuthButton>
               }
             />
