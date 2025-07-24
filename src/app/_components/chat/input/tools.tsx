@@ -16,8 +16,11 @@ import { ToolkitIcons } from "@/components/toolkit/toolkit-icons";
 import { clientToolkits } from "@/toolkits/toolkits/client";
 import { LanguageModelCapability } from "@/ai/types";
 import { cn } from "@/lib/utils";
-import { DropdownMenu, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
-import { DropdownMenuContent } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Drawer,
   DrawerContent,
@@ -49,26 +52,40 @@ const ToolkitSelectContent: React.FC<{
   isMobile = false,
 }) => (
   <>
-    <div className={cn("bg-background border-b", isMobile ? "p-4" : "sticky top-0 z-10 p-2")}>
-      <h2 className={cn("mb-1 font-bold", isMobile ? "text-lg" : "text-sm")}>Toolkit Selector</h2>
-      <div className={cn("text-muted-foreground", isMobile ? "text-base" : "text-sm")}>
+    <div
+      className={cn(
+        "bg-background border-b",
+        isMobile ? "p-4" : "sticky top-0 z-10 p-2",
+      )}
+    >
+      <h2 className={cn("mb-1 font-bold", isMobile ? "text-lg" : "text-sm")}>
+        Toolkit Selector
+      </h2>
+      <div
+        className={cn(
+          "text-muted-foreground",
+          isMobile ? "text-base" : "text-sm",
+        )}
+      >
         Add or remove tools to enhance your chat experience
       </div>
     </div>
-    <div className={cn(
-      "w-full max-w-full overflow-x-hidden overflow-y-auto px-2 py-2",
-      isMobile ? "max-h-[50vh] pb-4" : "max-h-56 md:max-h-80 pl-2 pr-1"
-    )}>
+    <div
+      className={cn(
+        "w-full max-w-full overflow-x-hidden overflow-y-auto px-2 py-2",
+        isMobile ? "max-h-[50vh] pb-4" : "max-h-56 pr-1 pl-2 md:max-h-80",
+      )}
+    >
       <ToolkitList
         selectedToolkits={toolkits}
         onAddToolkit={addToolkit}
         onRemoveToolkit={removeToolkit}
       />
       {workbench !== undefined && (
-        <div className="p-2 border-t">
+        <div className="border-t p-2">
           <Button
             variant={"outline"}
-            className="bg-transparent w-full"
+            className="w-full bg-transparent"
             onClick={handleSave}
             disabled={isPending}
           >
@@ -187,9 +204,7 @@ export const ToolsSelect = () => {
     <TooltipProvider>
       {isMobile ? (
         <Drawer open={isOpen} onOpenChange={setIsOpen}>
-          <DrawerTrigger asChild>
-            {triggerButton}
-          </DrawerTrigger>
+          <DrawerTrigger asChild>{triggerButton}</DrawerTrigger>
           <DrawerContent className="max-h-[80vh]">
             <DrawerHeader className="sr-only">
               <DrawerTitle>Toolkit Selector</DrawerTitle>
@@ -199,9 +214,7 @@ export const ToolsSelect = () => {
         </Drawer>
       ) : (
         <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-          <DropdownMenuTrigger asChild>
-            {triggerButton}
-          </DropdownMenuTrigger>
+          <DropdownMenuTrigger asChild>{triggerButton}</DropdownMenuTrigger>
           <DropdownMenuContent
             className="w-xs overflow-hidden p-0 md:w-lg"
             align="start"

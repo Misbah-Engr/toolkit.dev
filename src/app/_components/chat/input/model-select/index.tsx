@@ -62,8 +62,15 @@ const ModelSelectContent: React.FC<{
   isMobile = false,
 }) => (
   <>
-    <div className={cn("bg-background border-b p-4", !isMobile && "sticky top-0 z-10 p-2")}>
-      <h2 className={cn("mb-2 font-bold", isMobile ? "text-lg" : "text-sm")}>Model Selector</h2>
+    <div
+      className={cn(
+        "bg-background border-b p-4",
+        !isMobile && "sticky top-0 z-10 p-2",
+      )}
+    >
+      <h2 className={cn("mb-2 font-bold", isMobile ? "text-lg" : "text-sm")}>
+        Model Selector
+      </h2>
       <div className="relative mb-2">
         <Search className="text-muted-foreground absolute top-2.5 left-2 size-4" />
         <Input
@@ -83,17 +90,12 @@ const ModelSelectContent: React.FC<{
               <Badge
                 key={provider}
                 variant={
-                  selectedProviders.includes(provider)
-                    ? "default"
-                    : "outline"
+                  selectedProviders.includes(provider) ? "default" : "outline"
                 }
                 className="shrink-0 cursor-pointer gap-1 px-1.5 py-0.5"
                 onClick={() => toggleProvider(provider)}
               >
-                <ModelProviderIcon
-                  provider={provider}
-                  className="size-3"
-                />
+                <ModelProviderIcon provider={provider} className="size-3" />
                 {modelProviderNames[provider]}
               </Badge>
             ))}
@@ -126,17 +128,19 @@ const ModelSelectContent: React.FC<{
         </div>
       </div>
     </div>
-    <div className={cn(
-      "w-full max-w-full overflow-x-hidden overflow-y-auto px-1",
-      isMobile ? "max-h-[50vh] pb-4" : "max-h-32 md:max-h-48"
-    )}>
+    <div
+      className={cn(
+        "w-full max-w-full overflow-x-hidden overflow-y-auto px-1",
+        isMobile ? "max-h-[50vh] pb-4" : "max-h-32 md:max-h-48",
+      )}
+    >
       {models?.map((model) => (
         <div
           key={model.modelId}
           className={cn(
             "hover:bg-accent/50 flex w-full max-w-full cursor-pointer items-center gap-2 rounded-md px-3 py-2 transition-colors",
             selectedChatModel?.modelId === model.modelId && "bg-accent",
-            isMobile && "min-h-[44px]"
+            isMobile && "min-h-[44px]",
           )}
           onClick={() => handleModelSelect(model)}
         >
@@ -146,9 +150,7 @@ const ModelSelectContent: React.FC<{
               provider={model.provider}
               className="size-4 flex-shrink-0"
             />
-            <span className="truncate text-sm font-medium">
-              {model.name}
-            </span>
+            <span className="truncate text-sm font-medium">{model.name}</span>
             {model.isNew && (
               <Badge variant="secondary" className="h-5 text-xs">
                 New
@@ -249,9 +251,7 @@ export const ModelSelect: React.FC = () => {
     <>
       {isMobile ? (
         <Drawer open={isOpen} onOpenChange={setIsOpen}>
-          <DrawerTrigger asChild>
-            {triggerButton}
-          </DrawerTrigger>
+          <DrawerTrigger asChild>{triggerButton}</DrawerTrigger>
           <DrawerContent className="max-h-[80vh]">
             <DrawerHeader className="sr-only">
               <DrawerTitle>Model Selector</DrawerTitle>
@@ -260,10 +260,11 @@ export const ModelSelect: React.FC = () => {
           </DrawerContent>
         </Drawer>
       ) : (
-        <DropdownMenu open={isOpen} onOpenChange={isOpen ? setIsOpen : undefined}>
-          <DropdownMenuTrigger asChild>
-            {triggerButton}
-          </DropdownMenuTrigger>
+        <DropdownMenu
+          open={isOpen}
+          onOpenChange={isOpen ? setIsOpen : undefined}
+        >
+          <DropdownMenuTrigger asChild>{triggerButton}</DropdownMenuTrigger>
           <DropdownMenuContent
             className="w-xs overflow-hidden p-0 md:w-lg"
             align="start"
