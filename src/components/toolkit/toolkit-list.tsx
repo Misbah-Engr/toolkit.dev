@@ -16,7 +16,9 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { HStack, VStack } from "@/components/ui/stack";
+import { HStack } from "@/components/ui/stack";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Input } from "@/components/ui/input";
 
 import { ClientToolkitConfigure } from "@/components/toolkit/toolkit-configure";
 
@@ -25,13 +27,14 @@ import { clientToolkits } from "@/toolkits/toolkits/client";
 import type { ClientToolkit } from "@/toolkits/types";
 import type { Toolkits } from "@/toolkits/toolkits/shared";
 import type { SelectedToolkit } from "./types";
-import { Input } from "../ui/input";
 
 interface ToolkitListProps {
   selectedToolkits: SelectedToolkit[];
   onAddToolkit: (toolkit: SelectedToolkit) => void;
   onRemoveToolkit: (id: Toolkits) => void;
 }
+
+const toolkitItemHeight = 53;
 
 export const ToolkitList: React.FC<ToolkitListProps> = ({
   selectedToolkits,
@@ -74,9 +77,9 @@ export const ToolkitList: React.FC<ToolkitListProps> = ({
   }, [searchParams, onAddToolkit, selectedToolkits, router, pathname]);
 
   return (
-    <div className="h-full overflow-hidden">
+    <div className="overflow-hidden">
       <TooltipProvider>
-        <div className="flex h-full max-h-full flex-col gap-2 overflow-hidden p-2">
+        <div className="flex h-full max-h-full flex-col gap-2 overflow-hidden p-2 pb-0">
           <div className="relative">
             <Search className="text-muted-foreground absolute top-2.5 left-2 size-4" />
             <Input
@@ -86,7 +89,12 @@ export const ToolkitList: React.FC<ToolkitListProps> = ({
               className="pl-8"
             />
           </div>
-          <VStack className="h-0 w-full flex-1 items-start overflow-y-auto">
+          <ScrollArea
+            style={{
+              height: `${toolkitItemHeight * 3}px`,
+              paddingRight: "10px",
+            }}
+          >
             {filteredToolkits.length === 0 ? (
               <div className="flex-1 items-center justify-center">
                 <p className="text-muted-foreground text-sm">
@@ -107,7 +115,7 @@ export const ToolkitList: React.FC<ToolkitListProps> = ({
                 );
               })
             )}
-          </VStack>
+          </ScrollArea>
         </div>
       </TooltipProvider>
     </div>
@@ -150,7 +158,7 @@ const ToolkitItem = ({
           className="bg-transparent"
           type="button"
         >
-          Add
+          Enable
           <Plus className="size-4" />
         </Button>
       </PopoverTrigger>
@@ -171,7 +179,7 @@ const ToolkitItem = ({
       className="bg-transparent"
       type="button"
     >
-      Add
+      Enable
       <Plus className="size-4" />
     </Button>
   );

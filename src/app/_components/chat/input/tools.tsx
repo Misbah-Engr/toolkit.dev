@@ -233,7 +233,7 @@ export const ToolsSelect = () => {
           <PopoverTrigger asChild>{triggerButton}</PopoverTrigger>
 
           <PopoverContent
-            className="h-96 w-xs overflow-hidden p-0 md:w-lg"
+            className="w-xs overflow-hidden p-0 md:w-lg"
             align="start"
             sideOffset={8}
           >
