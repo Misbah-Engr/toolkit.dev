@@ -1,10 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
 
-import { Plus, Info, Search } from "lucide-react";
+import { Info } from "lucide-react";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -18,7 +17,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { HStack } from "@/components/ui/stack";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Command,
   CommandEmpty,
@@ -32,10 +30,11 @@ import { ClientToolkitConfigure } from "@/components/toolkit/toolkit-configure";
 
 import { clientToolkits } from "@/toolkits/toolkits/client";
 
+import { cn } from "@/lib/utils";
+
 import type { ClientToolkit } from "@/toolkits/types";
 import type { Toolkits } from "@/toolkits/toolkits/shared";
 import type { SelectedToolkit } from "./types";
-import { cn } from "@/lib/utils";
 
 interface ToolkitListProps {
   selectedToolkits: SelectedToolkit[];
@@ -44,6 +43,7 @@ interface ToolkitListProps {
 }
 
 const toolkitItemHeight = 48;
+const numToolkitsToShow = 5;
 
 export const ToolkitList: React.FC<ToolkitListProps> = ({
   selectedToolkits,
@@ -126,7 +126,11 @@ export const ToolkitList: React.FC<ToolkitListProps> = ({
               value={searchQuery}
               onValueChange={setSearchQuery}
             />
-            <CommandList style={{ height: `${toolkitItemHeight * 3.5}px` }}>
+            <CommandList
+              style={{
+                height: `${toolkitItemHeight * (numToolkitsToShow + 0.5)}px`,
+              }}
+            >
               <CommandEmpty>No toolkits match your search</CommandEmpty>
               <CommandGroup className="p-0">
                 {filteredToolkits.map(([id, toolkit]) => {

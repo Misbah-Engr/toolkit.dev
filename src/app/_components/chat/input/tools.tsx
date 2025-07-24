@@ -191,7 +191,7 @@ export const ToolsSelect = () => {
         <Drawer open={isOpen} onOpenChange={setIsOpen}>
           <DrawerTrigger asChild>{triggerButton}</DrawerTrigger>
           <DrawerContent className="p-0">
-            <DrawerHeader className="items-start">
+            <DrawerHeader className="items-start px-3 pb-2">
               <DrawerTitle>Toolkit Selector</DrawerTitle>
               <DrawerDescription>
                 Add tools to give the model more capabilities
