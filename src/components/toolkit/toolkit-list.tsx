@@ -6,10 +6,11 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Tooltip,
   TooltipContent,
@@ -18,7 +19,14 @@ import {
 } from "@/components/ui/tooltip";
 import { HStack } from "@/components/ui/stack";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Input } from "@/components/ui/input";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 
 import { ClientToolkitConfigure } from "@/components/toolkit/toolkit-configure";
 
@@ -27,6 +35,7 @@ import { clientToolkits } from "@/toolkits/toolkits/client";
 import type { ClientToolkit } from "@/toolkits/types";
 import type { Toolkits } from "@/toolkits/toolkits/shared";
 import type { SelectedToolkit } from "./types";
+import { cn } from "@/lib/utils";
 
 interface ToolkitListProps {
   selectedToolkits: SelectedToolkit[];
@@ -34,7 +43,7 @@ interface ToolkitListProps {
   onRemoveToolkit: (id: Toolkits) => void;
 }
 
-const toolkitItemHeight = 53;
+const toolkitItemHeight = 48;
 
 export const ToolkitList: React.FC<ToolkitListProps> = ({
   selectedToolkits,
@@ -46,6 +55,11 @@ export const ToolkitList: React.FC<ToolkitListProps> = ({
   const router = useRouter();
 
   const [searchQuery, setSearchQuery] = useState("");
+  const [configureDialogOpen, setConfigureDialogOpen] = useState(false);
+  const [selectedToolkitForConfig, setSelectedToolkitForConfig] = useState<{
+    id: Toolkits;
+    toolkit: ClientToolkit;
+  } | null>(null);
 
   const filteredToolkits = useMemo(() => {
     return Object.entries(clientToolkits).filter(([, toolkit]) => {
@@ -76,156 +90,130 @@ export const ToolkitList: React.FC<ToolkitListProps> = ({
     }
   }, [searchParams, onAddToolkit, selectedToolkits, router, pathname]);
 
+  const handleToolkitAction = (id: Toolkits, toolkit: ClientToolkit) => {
+    const isSelected = selectedToolkits.some((t) => t.id === id);
+    const needsConfiguration = Object.keys(toolkit.parameters.shape).length > 0;
+
+    if (isSelected) {
+      onRemoveToolkit(id);
+    } else if (needsConfiguration) {
+      setSelectedToolkitForConfig({ id, toolkit });
+      setConfigureDialogOpen(true);
+    } else {
+      onAddToolkit({ id, toolkit, parameters: {} });
+    }
+  };
+
+  const handleConfigureSubmit = (parameters: Record<string, unknown>) => {
+    if (selectedToolkitForConfig) {
+      onAddToolkit({
+        id: selectedToolkitForConfig.id,
+        toolkit: selectedToolkitForConfig.toolkit,
+        parameters,
+      });
+      setConfigureDialogOpen(false);
+      setSelectedToolkitForConfig(null);
+    }
+  };
+
   return (
     <div className="overflow-hidden">
       <TooltipProvider>
-        <div className="flex h-full max-h-full flex-col gap-2 overflow-hidden p-2 pb-0">
-          <div className="relative">
-            <Search className="text-muted-foreground absolute top-2.5 left-2 size-4" />
-            <Input
+        <div className="flex h-full max-h-full flex-col gap-2 overflow-hidden">
+          <Command className="bg-transparent">
+            <CommandInput
               placeholder="Search toolkits..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-8"
+              onValueChange={setSearchQuery}
             />
-          </div>
-          <ScrollArea
-            style={{
-              height: `${toolkitItemHeight * 3}px`,
-              paddingRight: "10px",
-            }}
-          >
-            {filteredToolkits.length === 0 ? (
-              <div className="flex-1 items-center justify-center">
-                <p className="text-muted-foreground text-sm">
-                  No toolkits match your search
-                </p>
-              </div>
-            ) : (
-              filteredToolkits.map(([id, toolkit]) => {
-                return (
-                  <ToolkitItem
-                    key={id}
-                    id={id as Toolkits}
-                    toolkit={toolkit as ClientToolkit}
-                    selectedToolkits={selectedToolkits}
-                    onAddToolkit={onAddToolkit}
-                    onRemoveToolkit={onRemoveToolkit}
-                  />
-                );
-              })
-            )}
-          </ScrollArea>
+            <CommandList style={{ height: `${toolkitItemHeight * 3.5}px` }}>
+              <CommandEmpty>No toolkits match your search</CommandEmpty>
+              <CommandGroup className="p-0">
+                {filteredToolkits.map(([id, toolkit]) => {
+                  const isSelected = selectedToolkits.some(
+                    (t) => t.id === (id as Toolkits),
+                  );
+
+                  return (
+                    <CommandItem
+                      key={id}
+                      onSelect={() =>
+                        handleToolkitAction(
+                          id as Toolkits,
+                          toolkit as ClientToolkit,
+                        )
+                      }
+                      className="flex items-center justify-between gap-4 rounded-none px-3"
+                    >
+                      <div className="flex flex-1 flex-col">
+                        <HStack>
+                          <toolkit.icon
+                            className={cn(
+                              "size-4",
+                              isSelected && "text-primary",
+                            )}
+                          />
+                          <h3 className="text-sm font-medium">
+                            {toolkit.name}
+                          </h3>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Info className="text-muted-foreground size-3 cursor-pointer" />
+                            </TooltipTrigger>
+                            <TooltipContent side="right" className="max-w-64">
+                              <div className="space-y-2">
+                                <p className="text-sm font-medium">
+                                  Available Tools
+                                </p>
+                                <ul className="space-y-1">
+                                  {Object.entries(toolkit.tools).map(
+                                    ([name, tool]) => (
+                                      <li
+                                        key={name}
+                                        className="flex items-start gap-2"
+                                      >
+                                        <div className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-current" />
+                                        <p className="text-xs">
+                                          {tool.description}
+                                        </p>
+                                      </li>
+                                    ),
+                                  )}
+                                </ul>
+                              </div>
+                            </TooltipContent>
+                          </Tooltip>
+                        </HStack>
+                        <p className="text-muted-foreground text-xs">
+                          {toolkit.description}
+                        </p>
+                      </div>
+                    </CommandItem>
+                  );
+                })}
+              </CommandGroup>
+            </CommandList>
+          </Command>
         </div>
       </TooltipProvider>
-    </div>
-  );
-};
 
-interface ToolkitItemProps {
-  id: Toolkits;
-  toolkit: ClientToolkit;
-  selectedToolkits: SelectedToolkit[];
-  onAddToolkit: (toolkit: SelectedToolkit) => void;
-  onRemoveToolkit: (id: Toolkits) => void;
-}
-
-const ToolkitItem = ({
-  id,
-  toolkit,
-  selectedToolkits,
-  onAddToolkit,
-  onRemoveToolkit,
-}: ToolkitItemProps) => {
-  const isSelected = selectedToolkits.some((t) => t.id === id);
-  const needsConfiguration = Object.keys(toolkit.parameters.shape).length > 0;
-
-  const addToolkitButtons = isSelected ? (
-    <Button
-      size="sm"
-      onClick={() => onRemoveToolkit(id)}
-      className="user-message"
-      type="button"
-    >
-      Active
-    </Button>
-  ) : needsConfiguration ? (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          size="sm"
-          className="bg-transparent"
-          type="button"
-        >
-          Enable
-          <Plus className="size-4" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-80">
-        <ClientToolkitConfigure
-          toolkit={toolkit}
-          id={id}
-          schema={toolkit.parameters}
-          onAdd={onAddToolkit}
-        />
-      </PopoverContent>
-    </Popover>
-  ) : (
-    <Button
-      variant="outline"
-      size="sm"
-      onClick={() => onAddToolkit({ id, toolkit, parameters: {} })}
-      className="bg-transparent"
-      type="button"
-    >
-      Enable
-      <Plus className="size-4" />
-    </Button>
-  );
-
-  return (
-    <div
-      key={id}
-      className="border-border/50 w-full border-b p-2 last:border-b-0"
-    >
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex flex-1 flex-col">
-          <HStack>
-            <toolkit.icon className="size-4" />
-            <h3 className="text-sm font-medium">{toolkit.name}</h3>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Info className="text-muted-foreground size-3 cursor-pointer" />
-              </TooltipTrigger>
-              <TooltipContent side="right" className="max-w-64">
-                <div className="space-y-2">
-                  <p className="text-sm font-medium">Available Tools</p>
-                  <ul className="space-y-1">
-                    {Object.entries(toolkit.tools).map(([name, tool]) => (
-                      <li key={name} className="flex items-start gap-2">
-                        <div className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-current" />
-                        <p className="text-xs">{tool.description}</p>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </TooltipContent>
-            </Tooltip>
-          </HStack>
-          <p className="text-muted-foreground text-xs">{toolkit.description}</p>
-        </div>
-
-        <div className="flex w-28 justify-end gap-2">
-          {toolkit.addToolkitWrapper ? (
-            <toolkit.addToolkitWrapper>
-              {addToolkitButtons}
-            </toolkit.addToolkitWrapper>
-          ) : (
-            addToolkitButtons
+      <Dialog open={configureDialogOpen} onOpenChange={setConfigureDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>
+              Configure {selectedToolkitForConfig?.toolkit.name}
+            </DialogTitle>
+          </DialogHeader>
+          {selectedToolkitForConfig && (
+            <ClientToolkitConfigure
+              toolkit={selectedToolkitForConfig.toolkit}
+              id={selectedToolkitForConfig.id}
+              schema={selectedToolkitForConfig.toolkit.parameters}
+              onAdd={handleConfigureSubmit}
+            />
           )}
-        </div>
-      </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

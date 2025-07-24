@@ -32,13 +32,9 @@ import { LanguageModelCapability } from "@/ai/types";
 
 import { cn } from "@/lib/utils";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
   Drawer,
   DrawerContent,
+  DrawerDescription,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
@@ -47,7 +43,6 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import type { SelectedToolkit } from "@/components/toolkit/types";
 import type { Workbench } from "@prisma/client";
 import type { Toolkits } from "@/toolkits/toolkits/shared";
-import { VStack } from "@/components/ui/stack";
 
 // Shared content component for both dropdown and drawer
 const ToolkitSelectContent: React.FC<{
@@ -65,53 +60,27 @@ const ToolkitSelectContent: React.FC<{
   workbench,
   handleSave,
   isPending,
-  isMobile = false,
 }) => (
-  <>
-    <div
-      className={cn(
-        "bg-background border-b",
-        isMobile ? "p-4" : "sticky top-0 z-10 p-2",
-      )}
-    >
-      <h2 className={cn("mb-1 font-bold", isMobile ? "text-lg" : "text-sm")}>
-        Toolkit Selector
-      </h2>
-      <div
-        className={cn(
-          "text-muted-foreground",
-          isMobile ? "text-base" : "text-sm",
-        )}
-      >
-        Add or remove tools to enhance your chat experience
+  <div className={cn("w-full max-w-full")}>
+    <ToolkitList
+      selectedToolkits={toolkits}
+      onAddToolkit={addToolkit}
+      onRemoveToolkit={removeToolkit}
+    />
+    {workbench !== undefined && (
+      <div className="border-t p-2">
+        <Button
+          variant={"outline"}
+          className="w-full bg-transparent"
+          onClick={handleSave}
+          disabled={isPending}
+        >
+          {isPending ? <Loader2 className="animate-spin" /> : <Save />}
+          Save
+        </Button>
       </div>
-    </div>
-    <div
-      className={cn(
-        "w-full max-w-full overflow-x-hidden overflow-y-auto px-2 py-2",
-        isMobile ? "max-h-[50vh] pb-4" : "max-h-56 pr-1 pl-2 md:max-h-80",
-      )}
-    >
-      <ToolkitList
-        selectedToolkits={toolkits}
-        onAddToolkit={addToolkit}
-        onRemoveToolkit={removeToolkit}
-      />
-      {workbench !== undefined && (
-        <div className="border-t p-2">
-          <Button
-            variant={"outline"}
-            className="w-full bg-transparent"
-            onClick={handleSave}
-            disabled={isPending}
-          >
-            {isPending ? <Loader2 className="animate-spin" /> : <Save />}
-            Save
-          </Button>
-        </div>
-      )}
-    </div>
-  </>
+    )}
+  </div>
 );
 
 export const ToolsSelect = () => {
@@ -221,9 +190,12 @@ export const ToolsSelect = () => {
       {isMobile ? (
         <Drawer open={isOpen} onOpenChange={setIsOpen}>
           <DrawerTrigger asChild>{triggerButton}</DrawerTrigger>
-          <DrawerContent>
-            <DrawerHeader className="sr-only">
+          <DrawerContent className="p-0">
+            <DrawerHeader className="items-start">
               <DrawerTitle>Toolkit Selector</DrawerTitle>
+              <DrawerDescription>
+                Add tools to give the model more capabilities
+              </DrawerDescription>
             </DrawerHeader>
             <ToolkitSelectContent {...contentProps} isMobile={true} />
           </DrawerContent>
@@ -237,20 +209,12 @@ export const ToolsSelect = () => {
             align="start"
             sideOffset={8}
           >
-            <div className="flex h-full max-h-full flex-col overflow-hidden">
-              <VStack className="items-start gap-0 p-2 pb-0">
-                <h2 className="mb-1 font-bold">Toolkit Selector</h2>
-                <p className="text-muted-foreground text-sm">
-                  Add or remove tools to augment your chat experience
-                </p>
-              </VStack>
-              <div className="h-0 flex-1 overflow-hidden">
-                <ToolkitList
-                  selectedToolkits={toolkits}
-                  onAddToolkit={addToolkit}
-                  onRemoveToolkit={removeToolkit}
-                />
-              </div>
+            <div className="flex flex-col">
+              <ToolkitList
+                selectedToolkits={toolkits}
+                onAddToolkit={addToolkit}
+                onRemoveToolkit={removeToolkit}
+              />
               {workbench !== undefined && (
                 <div className="border-t p-2">
                   <Button
