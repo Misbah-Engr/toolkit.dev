@@ -1,3 +1,9 @@
+import React, { useEffect, useMemo, useState } from "react";
+
+import { Plus, Info, Search } from "lucide-react";
+
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -10,16 +16,16 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Plus, Info } from "lucide-react";
 import { HStack, VStack } from "@/components/ui/stack";
+
+import { ClientToolkitConfigure } from "@/components/toolkit/toolkit-configure";
+
 import { clientToolkits } from "@/toolkits/toolkits/client";
+
 import type { ClientToolkit } from "@/toolkits/types";
 import type { Toolkits } from "@/toolkits/toolkits/shared";
-import { ClientToolkitConfigure } from "@/components/toolkit/toolkit-configure";
 import type { SelectedToolkit } from "./types";
-import { toolkitGroups } from "@/toolkits/toolkit-groups";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { Input } from "../ui/input";
 
 interface ToolkitListProps {
   selectedToolkits: SelectedToolkit[];
@@ -35,6 +41,17 @@ export const ToolkitList: React.FC<ToolkitListProps> = ({
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
+
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredToolkits = useMemo(() => {
+    return Object.entries(clientToolkits).filter(([, toolkit]) => {
+      return (
+        searchQuery.toLowerCase() === "" ||
+        toolkit.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    });
+  }, [searchQuery]);
 
   useEffect(() => {
     const updatedToolkits = Object.entries(clientToolkits).filter(([id]) => {
@@ -58,31 +75,26 @@ export const ToolkitList: React.FC<ToolkitListProps> = ({
 
   return (
     <TooltipProvider>
-      <VStack className="w-full items-start gap-4">
-        {toolkitGroups.map((group) => {
+      <div className="relative mb-2">
+        <Search className="text-muted-foreground absolute top-2.5 left-2 size-4" />
+        <Input
+          placeholder="Search toolkits..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="pl-8"
+        />
+      </div>
+      <VStack className="w-full items-start">
+        {filteredToolkits.map(([id, toolkit]) => {
           return (
-            <VStack key={group.id} className="w-full items-start">
-              <HStack className="gap-2">
-                <group.icon className="size-4" />
-                <h3 className="font-bold">{group.name}</h3>
-              </HStack>
-              <div className="bg-muted/50 w-full rounded-md border">
-                {Object.entries(clientToolkits)
-                  .filter(([, toolkit]) => toolkit.type === group.id)
-                  .map(([id, toolkit]) => {
-                    return (
-                      <ToolkitItem
-                        key={id}
-                        id={id as Toolkits}
-                        toolkit={toolkit as ClientToolkit}
-                        selectedToolkits={selectedToolkits}
-                        onAddToolkit={onAddToolkit}
-                        onRemoveToolkit={onRemoveToolkit}
-                      />
-                    );
-                  })}
-              </div>
-            </VStack>
+            <ToolkitItem
+              key={id}
+              id={id as Toolkits}
+              toolkit={toolkit as ClientToolkit}
+              selectedToolkits={selectedToolkits}
+              onAddToolkit={onAddToolkit}
+              onRemoveToolkit={onRemoveToolkit}
+            />
           );
         })}
       </VStack>
@@ -153,7 +165,10 @@ const ToolkitItem = ({
   );
 
   return (
-    <div key={id} className="border-border/50 border-b p-2 last:border-b-0">
+    <div
+      key={id}
+      className="border-border/50 w-full border-b p-2 last:border-b-0"
+    >
       <div className="flex items-center justify-between gap-4">
         <div className="flex flex-1 flex-col">
           <HStack>
