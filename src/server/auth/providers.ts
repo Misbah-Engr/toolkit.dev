@@ -61,6 +61,17 @@ export const providers: (
           clientId: env.AUTH_NOTION_ID,
           clientSecret: env.AUTH_NOTION_SECRET,
           redirectUri: `${env.NEXTAUTH_URL}/api/auth/callback/notion`,
+          token: {
+            conform: async (response: Response) => {
+              const body = (await response.json()) as {
+                refresh_token?: string;
+              };
+              if (body?.refresh_token === null) {
+                delete body.refresh_token;
+              }
+              return new Response(JSON.stringify(body), response);
+            },
+          },
         }),
       ]
     : []),
