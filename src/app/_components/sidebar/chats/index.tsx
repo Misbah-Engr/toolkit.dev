@@ -34,7 +34,7 @@ export const NavChats = () => {
   const workbenchId =
     type === "workbench" && resourceId !== "new" ? resourceId : undefined;
 
-  const { setOpenMobile } = useSidebar();
+  const { setOpenMobile, state } = useSidebar();
 
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -71,7 +71,7 @@ export const NavChats = () => {
 
   const allChats = chats?.pages.flatMap((page) => page.items) ?? [];
 
-  if (isLoading || !chats) return null;
+  if (isLoading || !chats || state === "collapsed") return null;
 
   const starredChats = allChats.filter((chat) => chat.starred);
   const regularChats = allChats.filter((chat) => !chat.starred);
