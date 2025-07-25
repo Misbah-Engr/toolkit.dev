@@ -60,7 +60,7 @@ export const providers: (
         NotionProvider({
           clientId: env.AUTH_NOTION_ID,
           clientSecret: env.AUTH_NOTION_SECRET,
-          redirectUri: `${env.APP_URL}/api/auth/callback/notion`,
+          redirectUri: `${env.NEXTAUTH_URL}/api/auth/callback/notion`,
         }),
       ]
     : []),
