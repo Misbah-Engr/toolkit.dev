@@ -24,18 +24,21 @@ export const Authenticated: React.FC<Props> = ({ session }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline">
+        <Button
+          variant="outline"
+          className="flex size-8 items-center justify-center overflow-hidden p-0"
+          size="icon"
+        >
           {session.user.image ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={session.user.image}
               alt={session.user.name ?? ""}
-              className="size-4 rounded-full"
+              className="size-full"
             />
           ) : (
-            <User className="size-4" />
+            <User className="size-8" />
           )}
-          {session.user.name ?? "Signed In"}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
