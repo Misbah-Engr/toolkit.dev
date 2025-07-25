@@ -96,7 +96,6 @@ export const authConfig = {
     ? {
         jwt: {
           encode: async function (params) {
-            console.log("encode", params);
             if (params.token?.credentials) {
               const sessionToken = uuid();
 
@@ -112,8 +111,6 @@ export const authConfig = {
                   expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
                 },
               });
-
-              console.log("createdSession", createdSession);
 
               if (!createdSession) {
                 throw new Error("Failed to create session");

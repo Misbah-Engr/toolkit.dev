@@ -109,7 +109,7 @@ export const providers: (
               data: {
                 name: "Guest",
                 email: "guest@toolkit.dev",
-                image: "https://toolkit.dev/logo.png",
+                image: "/manifest/web-app-manifest-512x512.png",
               },
             });
 
