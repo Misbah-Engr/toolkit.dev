@@ -9,7 +9,7 @@ export const AccountHeader: React.FC<Props> = ({ user }) => {
   return (
     <div>
       <div className="flex items-center gap-4">
-        <Avatar className="size-16 md:size-20">
+        <Avatar className="size-16 rounded-md md:size-20">
           <AvatarImage src={user.image ?? undefined} />
           <AvatarFallback>
             {(user.name ?? user.email)?.charAt(0).toUpperCase() ?? "?"}

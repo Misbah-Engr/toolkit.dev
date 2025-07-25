@@ -17,7 +17,7 @@ We also have a [Discord Community](https://discord.gg/cnNBsSfY) to discuss all t
 ### Prerequisites
 
 - **Node.js** 18+
-- **pnpm** (recommended) or npm
+- **pnpm** (recommended), npm, bun, or yarn
 - **Docker** or **Podman**
 
 #### 1) Clone the Repository
@@ -30,12 +30,38 @@ git clone https://github.com/jasonhedman/toolkit.dev.git
 
 ```bash
 pnpm install
+
+# or
+npm install
+
+# or
+yarn install
+
+# or
+bun install
 ```
 
-#### 3) Copy the `.env.example` file into `.env`
+#### 3) Copy the `.env.example` file into `.env.local` and set up your Auth secret
+
+Create your `.env.local` from the example
 
 ```bash
-cp .env.example .env
+cp .env.example .env.local
+```
+
+Create a secure `AUTH_SECRET` with the
+
+```bash
+pnpm dlx auth secret
+
+# or
+npx auth secret
+
+# or
+yarn dlx auth secret
+
+# or
+bunx auth secret
 ```
 
 #### 4) Set up the database
@@ -48,13 +74,26 @@ Toolkit uses Postgres as a database. You have two options for running the databa
 ./start-database.sh
 ```
 
-This will also run all database migrations
-
 > This requires either Docker or Podman to be installed on your machine.
 >
 > Docker installation guide: https://docs.docker.com/engine/install/
 >
 > Podman installation guide: https://podman.io/getting-started/installation
+
+You will also need to run the migrations
+
+```bash
+pnpm db:generate
+
+# or
+npm run db:generate
+
+# or
+yarn db:generate
+
+# or
+bun run db:generate
+```
 
 ##### 4.2) Use your own Postgres instance
 
@@ -64,10 +103,19 @@ Update `DATABASE_URL` in your `.env` to point to your Postgres instance.
 DATABASE_URL=<your Postgres instance URL>
 ```
 
-You will also need to run all of the migrations
+Then run the migrations
 
 ```bash
 pnpm db:generate
+
+# or
+npm run db:generate
+
+# or
+yarn db:generate
+
+# or
+bun run db:generate
 ```
 
 #### 5) Add an OpenRouter Key
@@ -78,11 +126,28 @@ Toolkit uses OpenRouter for inference. Get a key [here](https://openrouter.ai/se
 OPENROUTER_API_KEY=<your API key>
 ```
 
-#### 6) Add an auth provider
+#### 6) Start the development server
+
+```bash
+pnpm dev
+
+# or
+npm run dev
+
+# or
+yarn dev
+
+# or
+bun run dev
+```
+
+#### 7) [OPTIONAL] Add extra auth providers
 
 Toolkit uses [Auth.js](https://authjs.dev/) for user authentication.
 
-You will need one of these providers to run the app:
+In local development you have the option of logging in as a guest (this is not available in production).
+
+You can also add these providers:
 
 - [Discord Provider](https://authjs.dev/getting-started/providers/discord)
 - [Google Provider](https://authjs.dev/getting-started/providers/google)
@@ -90,13 +155,7 @@ You will need one of these providers to run the app:
 - [Twitter Provider](https://authjs.dev/getting-started/providers/twitter)
 - [Notion Provider](https://authjs.dev/getting-started/providers/notion)
 
-> We are currently working on adding anonymous auth in the development environment so that you do not have to set up a provider ([Issue #127](https://github.com/jasonhedman/toolkit.dev/issues/127))
-
-#### 7) Start the development server
-
-```bash
-pnpm dev
-```
+> We would love to see more auth providers integrated. Feel free to add any from the [Auth.js](https://authjs.dev/getting-started/providers/apple) supported providers list!
 
 #### 8) [OPTIONAL] Set up Toolkits
 

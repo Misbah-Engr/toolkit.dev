@@ -13,7 +13,7 @@
 
 # import env variables from .env
 set -a
-source .env
+source .env.local
 
 DB_PASSWORD=$(echo "$DATABASE_URL" | awk -F':' '{print $3}' | awk -F'@' '{print $1}')
 DB_PORT=$(echo "$DATABASE_URL" | awk -F':' '{print $4}' | awk -F'\/' '{print $1}')
@@ -81,5 +81,3 @@ $DOCKER_CMD run -d \
   -e POSTGRES_DB="$DB_NAME" \
   -p "$DB_PORT":5432 \
   docker.io/postgres && echo "Database container '$DB_CONTAINER_NAME' was successfully created"
-
-pnpm db:generate
