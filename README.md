@@ -145,7 +145,9 @@ bun run dev
 
 Toolkit uses [Auth.js](https://authjs.dev/) for user authentication.
 
-You will need one of these providers to run the app:
+In local development you have the option of logging in as a guest (this is not available in production).
+
+You can also add these providers:
 
 - [Discord Provider](https://authjs.dev/getting-started/providers/discord)
 - [Google Provider](https://authjs.dev/getting-started/providers/google)
