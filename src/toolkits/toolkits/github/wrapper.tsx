@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { SiGithub, SiNotion } from "@icons-pack/react-simple-icons";
+import { SiGithub } from "@icons-pack/react-simple-icons";
 
 import { signIn } from "next-auth/react";
 

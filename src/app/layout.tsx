@@ -12,6 +12,8 @@ import { InstallPromptProvider } from "@/contexts/install-prompt-context";
 import { AppSidebar } from "./_components/sidebar";
 import { Navbar } from "./_components/navbar";
 
+import { env } from "@/env";
+
 import type { Metadata, Viewport } from "next";
 
 import "@/styles/globals.css";
@@ -24,6 +26,7 @@ export const metadata: Metadata = {
     statusBarStyle: "black",
   },
   manifest: "/manifest.json",
+  metadataBase: new URL(env.NEXTAUTH_URL),
 };
 
 export const viewport: Viewport = {
