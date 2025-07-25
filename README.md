@@ -17,7 +17,7 @@ We also have a [Discord Community](https://discord.gg/cnNBsSfY) to discuss all t
 ### Prerequisites
 
 - **Node.js** 18+
-- **pnpm** (recommended) or npm
+- **pnpm** (recommended), npm, bun, or yarn
 - **Docker** or **Podman**
 
 #### 1) Clone the Repository
@@ -30,12 +30,38 @@ git clone https://github.com/jasonhedman/toolkit.dev.git
 
 ```bash
 pnpm install
+
+# or
+npm install
+
+# or
+yarn install
+
+# or
+bun install
 ```
 
-#### 3) Copy the `.env.example` file into `.env`
+#### 3) Copy the `.env.example` file into `.env.local` and set up your Auth secret
+
+Create your `.env.local` from the example
 
 ```bash
-cp .env.example .env
+cp .env.example .env.local
+```
+
+Create a secure `AUTH_SECRET` with the
+
+```bash
+pnpm dlx auth secret
+
+# or
+npx auth secret
+
+# or
+yarn dlx auth secret
+
+# or
+bunx auth secret
 ```
 
 #### 4) Set up the database
@@ -58,6 +84,15 @@ You will also need to run the migrations
 
 ```bash
 pnpm db:generate
+
+# or
+npm run db:generate
+
+# or
+yarn db:generate
+
+# or
+bun run db:generate
 ```
 
 ##### 4.2) Use your own Postgres instance
@@ -72,6 +107,15 @@ Then run the migrations
 
 ```bash
 pnpm db:generate
+
+# or
+npm run db:generate
+
+# or
+yarn db:generate
+
+# or
+bun run db:generate
 ```
 
 #### 5) Add an OpenRouter Key
@@ -86,6 +130,15 @@ OPENROUTER_API_KEY=<your API key>
 
 ```bash
 pnpm dev
+
+# or
+npm run dev
+
+# or
+yarn dev
+
+# or
+bun run dev
 ```
 
 #### 7) [OPTIONAL] Add extra auth providers
