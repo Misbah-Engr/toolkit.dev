@@ -17,6 +17,7 @@ import type {
   OAuthConfig,
 } from "next-auth/providers";
 import { IS_DEVELOPMENT } from "@/lib/constants";
+import { db } from "../db";
 
 export const providers: (
   | OAuthConfig<DiscordProfile>
@@ -89,11 +90,34 @@ export const providers: (
           name: "Guest",
           credentials: {},
           async authorize() {
+            const existingUser = await db.user.findUnique({
+              where: {
+                email: "guest@toolkit.dev",
+              },
+            });
+
+            if (existingUser) {
+              return {
+                id: existingUser.id,
+                name: existingUser.name,
+                email: existingUser.email,
+                image: existingUser.image,
+              };
+            }
+
+            const user = await db.user.create({
+              data: {
+                name: "Guest",
+                email: "guest@toolkit.dev",
+                image: "https://toolkit.dev/logo.png",
+              },
+            });
+
             return {
-              id: "guest",
-              name: "Guest",
-              email: "guest@toolkit.dev",
-              image: "https://toolkit.dev/logo.png",
+              id: user.id,
+              name: user.name,
+              email: user.email,
+              image: user.image,
             };
           },
         }),
