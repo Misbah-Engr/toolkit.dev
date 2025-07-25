@@ -63,3 +63,17 @@ Toolkit uses OpenRouter for inference. Get a key [here](https://openrouter.ai/se
 ```
 OPENROUTER_API_KEY=<your API key>
 ```
+
+### 6) Add an auth provider
+
+Toolkit uses [Auth.js](https://authjs.dev/) for user authentication.
+
+You will need one of these providers to run the app:
+
+- [Discord Provider](https://authjs.dev/getting-started/providers/discord)
+- [Google Provider](https://authjs.dev/getting-started/providers/google)
+- [Github Provider](https://authjs.dev/getting-started/providers/github)
+- [Twitter Provider](https://authjs.dev/getting-started/providers/twitter)
+- [Notion Provider](https://authjs.dev/getting-started/providers/notion)
+
+> We are currently working on adding anonymous auth in the development environment so that you do not have to set up a provider ([Issue #127](https://github.com/jasonhedman/toolkit.dev/issues/127))
