@@ -4,33 +4,29 @@ import { z } from "zod";
 const createAuthSchema = () => {
   const authSchema = {};
 
-  if (process.env.AUTH_DISCORD_ID && process.env.AUTH_DISCORD_SECRET) {
+  if (process.env.AUTH_DISCORD_ID || process.env.AUTH_DISCORD_SECRET) {
     authSchema.AUTH_DISCORD_ID = z.string();
     authSchema.AUTH_DISCORD_SECRET = z.string();
   }
 
-  if (process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET) {
+  if (process.env.AUTH_GOOGLE_ID || process.env.AUTH_GOOGLE_SECRET) {
     authSchema.AUTH_GOOGLE_ID = z.string();
     authSchema.AUTH_GOOGLE_SECRET = z.string();
   }
 
-  if (process.env.AUTH_GITHUB_ID && process.env.AUTH_GITHUB_SECRET) {
+  if (process.env.AUTH_GITHUB_ID || process.env.AUTH_GITHUB_SECRET) {
     authSchema.AUTH_GITHUB_ID = z.string();
     authSchema.AUTH_GITHUB_SECRET = z.string();
   }
 
-  if (process.env.AUTH_TWITTER_ID && process.env.AUTH_TWITTER_SECRET) {
+  if (process.env.AUTH_TWITTER_ID || process.env.AUTH_TWITTER_SECRET) {
     authSchema.AUTH_TWITTER_ID = z.string();
     authSchema.AUTH_TWITTER_SECRET = z.string();
   }
 
-  if (process.env.AUTH_NOTION_ID && process.env.AUTH_NOTION_SECRET) {
+  if (process.env.AUTH_NOTION_ID || process.env.AUTH_NOTION_SECRET) {
     authSchema.AUTH_NOTION_ID = z.string();
     authSchema.AUTH_NOTION_SECRET = z.string();
-  }
-
-  if (Object.keys(authSchema).length === 0) {
-    throw new Error("No authentication provider configured");
   }
 
   return authSchema;
@@ -39,32 +35,32 @@ const createAuthSchema = () => {
 const authRuntimeEnv = () => {
   const object = {};
 
-  if (process.env.AUTH_DISCORD_ID && process.env.AUTH_DISCORD_SECRET) {
+  if (process.env.AUTH_DISCORD_ID || process.env.AUTH_DISCORD_SECRET) {
     object.AUTH_DISCORD_ID = process.env.AUTH_DISCORD_ID;
     object.AUTH_DISCORD_SECRET = process.env.AUTH_DISCORD_SECRET;
   }
 
-  if (process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET) {
+  if (process.env.AUTH_GOOGLE_ID || process.env.AUTH_GOOGLE_SECRET) {
     object.AUTH_GOOGLE_ID = process.env.AUTH_GOOGLE_ID;
     object.AUTH_GOOGLE_SECRET = process.env.AUTH_GOOGLE_SECRET;
   }
 
-  if (process.env.AUTH_GITHUB_ID && process.env.AUTH_GITHUB_SECRET) {
+  if (process.env.AUTH_GITHUB_ID || process.env.AUTH_GITHUB_SECRET) {
     object.AUTH_GITHUB_ID = process.env.AUTH_GITHUB_ID;
     object.AUTH_GITHUB_SECRET = process.env.AUTH_GITHUB_SECRET;
   }
 
-  if (process.env.AUTH_TWITTER_ID && process.env.AUTH_TWITTER_SECRET) {
+  if (process.env.AUTH_TWITTER_ID || process.env.AUTH_TWITTER_SECRET) {
     object.AUTH_TWITTER_ID = process.env.AUTH_TWITTER_ID;
     object.AUTH_TWITTER_SECRET = process.env.AUTH_TWITTER_SECRET;
   }
 
-  if (process.env.AUTH_NOTION_ID && process.env.AUTH_NOTION_SECRET) {
+  if (process.env.AUTH_NOTION_ID || process.env.AUTH_NOTION_SECRET) {
     object.AUTH_NOTION_ID = process.env.AUTH_NOTION_ID;
     object.AUTH_NOTION_SECRET = process.env.AUTH_NOTION_SECRET;
   }
 
-  if (process.env.AUTH_NOTION_ID && process.env.AUTH_NOTION_SECRET) {
+  if (process.env.AUTH_NOTION_ID || process.env.AUTH_NOTION_SECRET) {
     object.AUTH_NOTION_ID = process.env.AUTH_NOTION_ID;
     object.AUTH_NOTION_SECRET = process.env.AUTH_NOTION_SECRET;
   }
