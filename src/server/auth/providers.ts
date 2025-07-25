@@ -9,8 +9,14 @@ import TwitterProvider, {
   type TwitterProfile,
 } from "next-auth/providers/twitter";
 import NotionProvider, { type NotionProfile } from "next-auth/providers/notion";
+import CredentialsProvider from "next-auth/providers/credentials";
 
-import type { OAuthConfig } from "next-auth/providers";
+import type {
+  CredentialInput,
+  CredentialsConfig,
+  OAuthConfig,
+} from "next-auth/providers";
+import { IS_DEVELOPMENT } from "@/lib/constants";
 
 export const providers: (
   | OAuthConfig<DiscordProfile>
@@ -18,6 +24,7 @@ export const providers: (
   | OAuthConfig<GitHubProfile>
   | OAuthConfig<TwitterProfile>
   | OAuthConfig<NotionProfile>
+  | CredentialsConfig<Record<string, CredentialInput>>
 )[] = [
   ...("AUTH_DISCORD_ID" in env && "AUTH_DISCORD_SECRET" in env
     ? [
@@ -71,6 +78,23 @@ export const providers: (
               }
               return new Response(JSON.stringify(body), response);
             },
+          },
+        }),
+      ]
+    : []),
+  ...(IS_DEVELOPMENT
+    ? [
+        CredentialsProvider({
+          id: "guest",
+          name: "Guest",
+          credentials: {},
+          async authorize() {
+            return {
+              id: "guest",
+              name: "Guest",
+              email: "guest@toolkit.dev",
+              image: "https://toolkit.dev/logo.png",
+            };
           },
         }),
       ]

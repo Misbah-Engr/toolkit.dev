@@ -97,7 +97,6 @@ export const ToolkitList: React.FC<ToolkitListProps> = ({
   };
 
   const handleConfigureSubmit = (toolkit: SelectedToolkit) => {
-    console.log("handleConfigureSubmit", toolkit);
     if (selectedToolkitForConfig) {
       onAddToolkit(toolkit);
       setSelectedToolkitForConfig(null);
