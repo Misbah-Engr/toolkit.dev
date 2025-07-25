@@ -20,29 +20,29 @@ We also have a [Discord Community](https://discord.gg/cnNBsSfY) to discuss all t
 - **pnpm** (recommended) or npm
 - **Docker** or **Podman**
 
-### 1) Clone the Repository
+#### 1) Clone the Repository
 
 ```bash
 git clone https://github.com/jasonhedman/toolkit.dev.git
 ```
 
-### 2) Install Dependencies
+#### 2) Install Dependencies
 
 ```bash
 pnpm install
 ```
 
-### 3) Copy the `.env.example` file into `.env`
+#### 3) Copy the `.env.example` file into `.env`
 
 ```bash
 cp .env.example .env
 ```
 
-### 4) Set up the database
+#### 4) Set up the database
 
 Toolkit uses Postgres as a database. You have two options for running the database
 
-#### 4.1) Use the `./start-database.sh` script (recommended)
+##### 4.1) Use the `./start-database.sh` script (recommended)
 
 ```bash
 ./start-database.sh
@@ -56,7 +56,7 @@ This will also run all database migrations
 >
 > Podman installation guide: https://podman.io/getting-started/installation
 
-#### 4.2) Use your own Postgres instance
+##### 4.2) Use your own Postgres instance
 
 Update `DATABASE_URL` in your `.env` to point to your Postgres instance.
 
@@ -70,7 +70,7 @@ You will also need to run all of the migrations
 pnpm db:generate
 ```
 
-### 5) Add an OpenRouter Key
+#### 5) Add an OpenRouter Key
 
 Toolkit uses OpenRouter for inference. Get a key [here](https://openrouter.ai/settings/keys) and add it to your `.env`
 
@@ -78,7 +78,7 @@ Toolkit uses OpenRouter for inference. Get a key [here](https://openrouter.ai/se
 OPENROUTER_API_KEY=<your API key>
 ```
 
-### 6) Add an auth provider
+#### 6) Add an auth provider
 
 Toolkit uses [Auth.js](https://authjs.dev/) for user authentication.
 
@@ -92,17 +92,17 @@ You will need one of these providers to run the app:
 
 > We are currently working on adding anonymous auth in the development environment so that you do not have to set up a provider ([Issue #127](https://github.com/jasonhedman/toolkit.dev/issues/127))
 
-### 7) Start the development server
+#### 7) Start the development server
 
 ```bash
 pnpm dev
 ```
 
-### 8) [OPTIONAL] Set up Toolkits
+#### 8) [OPTIONAL] Set up Toolkits
 
 Many of our Toolkits require extra keys. You can run Toolkit without these keys, but if you want to use a certain Toolkit locally, you will need to do some additional configuration
 
-#### 8.1) Web Search Toolkit
+##### 8.1) Web Search Toolkit
 
 Toolkit uses Exa for web search. Get an API key [here](https://dashboard.exa.ai/api-keys) and add it to your `.env`
 
@@ -110,7 +110,7 @@ Toolkit uses Exa for web search. Get an API key [here](https://dashboard.exa.ai/
 EXA_API_KEY=<your API key>
 ```
 
-#### 8.2) Code Interpreter Toolkit
+##### 8.2) Code Interpreter Toolkit
 
 Toolkit uses E2B for secure code execution. Get an API key [here](https://e2b.dev/dashboard) and add it to your `.env`
 
@@ -118,7 +118,7 @@ Toolkit uses E2B for secure code execution. Get an API key [here](https://e2b.de
 E2B_API_KEY=<your API key>
 ```
 
-#### 8.3) Memory Toolkit
+##### 8.3) Memory Toolkit
 
 Toolkit uses Mem0 for memory storage and retrieval. Get an API key [here](https://app.mem0.ai/dashboard/api-keys)
 
@@ -126,7 +126,7 @@ Toolkit uses Mem0 for memory storage and retrieval. Get an API key [here](https:
 MEM0_API_KEY=<your API key>
 ```
 
-#### 8.4) Image Toolkit
+##### 8.4) Image Toolkit
 
 To use the Image Toolkit, you will need a key to **generate images** and a key to **store images**
 
@@ -148,9 +148,9 @@ BLOB_READ_WRITE_TOKEN=<your token>
 
 > We are [working on building a local mock of this SDK] so you dont have to get a key, but for now you will need to get a key from Vercel.
 
-### 9) [OPTIONAL] Set up secondary data storage
+#### 9) [OPTIONAL] Set up secondary data storage
 
-#### 9.1) Resumable streams with Redis
+##### 9.1) Resumable streams with Redis
 
 Toolkit uses Redis to power resumable streams. If you want to enable this functionality, create a Redis instance and update your `.env`
 
@@ -158,7 +158,7 @@ Toolkit uses Redis to power resumable streams. If you want to enable this functi
 REDIS_URL=<your Redis URL>
 ```
 
-#### 9.2) Blob storage with Vercel Blob
+##### 9.2) Blob storage with Vercel Blob
 
 If you want to be able to upload files, you will to be able to write to and read from Vercel Blob. More details on getting a key are [here](https://vercel.com/docs/vercel-blob)
 
