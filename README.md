@@ -14,7 +14,39 @@ We also have a [Discord Community](https://discord.gg/cnNBsSfY) to discuss all t
 
 ## Getting Started
 
-### Prerequisites
+### Quick Setup (Recommended)
+
+The easiest way to get started is to use our automated setup script:
+
+```bash
+# Clone the repository
+git clone https://github.com/jasonhedman/toolkit.dev.git
+cd toolkit.dev
+
+# Run the automated setup
+pnpm dev:setup
+# or
+npm run dev:setup
+# or
+yarn dev:setup
+```
+
+The setup script will:
+
+- Create your `.env.local` file with all necessary environment variables
+- Install dependencies
+- Set up the database using Docker/Podman
+- Run database migrations
+- Optionally set up Redis and other services
+- Guide you through API key configuration
+
+For detailed setup instructions, see the setup script comments in `setup.ts`.
+
+### Manual Setup
+
+If you prefer to set up manually:
+
+#### Prerequisites
 
 - **Node.js** 18+
 - **pnpm** (recommended), npm, bun, or yarn
@@ -24,6 +56,7 @@ We also have a [Discord Community](https://discord.gg/cnNBsSfY) to discuss all t
 
 ```bash
 git clone https://github.com/jasonhedman/toolkit.dev.git
+cd toolkit.dev
 ```
 
 #### 2) Install Dependencies
