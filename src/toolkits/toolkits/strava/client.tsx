@@ -3,7 +3,17 @@ import { createClientToolkit } from "@/toolkits/create-toolkit";
 import { SiStrava } from "@icons-pack/react-simple-icons";
 import { baseStravaToolkitConfig } from "./base";
 import { StravaTools } from "./tools";
-import { stravaGetAthleteProfileToolConfigClient } from "./tools/client";
+import { 
+  stravaGetAthleteProfileToolConfigClient,
+  stravaGetAthleteActivitiesToolConfigClient,
+  stravaGetActivityDetailsToolConfigClient,
+  stravaGetAthleteStatsToolConfigClient,
+  stravaSearchSegmentsToolConfigClient,
+  stravaGetSegmentDetailsToolConfigClient,
+  stravaGetSegmentLeaderboardToolConfigClient,
+  stravaGetRoutesToolConfigClient,
+  stravaGetAthleteZonesToolConfigClient,
+} from "./tools/client";
 import { ToolkitGroups } from "@/toolkits/types";
 
 export const stravaClientToolkit = createClientToolkit(
@@ -18,5 +28,13 @@ export const stravaClientToolkit = createClientToolkit(
   },
   {
     [StravaTools.GetAthleteProfile]: stravaGetAthleteProfileToolConfigClient,
+    [StravaTools.GetAthleteActivities]: stravaGetAthleteActivitiesToolConfigClient,
+    [StravaTools.GetActivityDetails]: stravaGetActivityDetailsToolConfigClient,
+    [StravaTools.GetAthleteStats]: stravaGetAthleteStatsToolConfigClient,
+    [StravaTools.SearchSegments]: stravaSearchSegmentsToolConfigClient,
+    [StravaTools.GetSegmentDetails]: stravaGetSegmentDetailsToolConfigClient,
+    [StravaTools.GetSegmentLeaderboard]: stravaGetSegmentLeaderboardToolConfigClient,
+    [StravaTools.GetRoutes]: stravaGetRoutesToolConfigClient,
+    [StravaTools.GetAthleteZones]: stravaGetAthleteZonesToolConfigClient,
   }
 ); 
