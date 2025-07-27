@@ -29,6 +29,11 @@ const createAuthSchema = () => {
     authSchema.AUTH_NOTION_SECRET = z.string();
   }
 
+  if (process.env.AUTH_STRAVA_ID || process.env.AUTH_STRAVA_SECRET) {
+    authSchema.AUTH_STRAVA_ID = z.string();
+    authSchema.AUTH_STRAVA_SECRET = z.string();
+  }
+
   return authSchema;
 };
 
@@ -60,9 +65,9 @@ const authRuntimeEnv = () => {
     object.AUTH_NOTION_SECRET = process.env.AUTH_NOTION_SECRET;
   }
 
-  if (process.env.AUTH_NOTION_ID || process.env.AUTH_NOTION_SECRET) {
-    object.AUTH_NOTION_ID = process.env.AUTH_NOTION_ID;
-    object.AUTH_NOTION_SECRET = process.env.AUTH_NOTION_SECRET;
+  if (process.env.AUTH_STRAVA_ID || process.env.AUTH_STRAVA_SECRET) {
+    object.AUTH_STRAVA_ID = process.env.AUTH_STRAVA_ID;
+    object.AUTH_STRAVA_SECRET = process.env.AUTH_STRAVA_SECRET;
   }
 
   return object;
