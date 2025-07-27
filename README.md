@@ -207,6 +207,32 @@ BLOB_READ_WRITE_TOKEN=<your token>
 
 > We are [working on building a local mock of this SDK] so you dont have to get a key, but for now you will need to get a key from Vercel.
 
+##### 8.5) Strava Toolkit
+
+The Strava Toolkit provides comprehensive access to Strava's API for fitness and activity data. You'll need to set up a Strava application to get the required credentials.
+
+1. Create a Strava application at [https://www.strava.com/settings/api](https://www.strava.com/settings/api)
+2. Get your Client ID and Client Secret
+3. Add the following to your `.env`:
+
+```
+STRAVA_CLIENT_ID=<your client id>
+STRAVA_CLIENT_SECRET=<your client secret>
+STRAVA_REDIRECT_URI=http://localhost:3000/api/auth/strava/callback
+```
+
+**Available Strava Tools:**
+
+- **Get Athlete Profile** - Retrieve the authenticated athlete's profile information
+- **Get Athlete Activities** - Fetch the athlete's activities with filtering options (date range, pagination)
+- **Get Activity Details** - Get detailed information about a specific activity
+- **Get Athlete Stats** - Retrieve comprehensive statistics for the authenticated athlete
+- **Search Segments** - Find segments within geographical bounds (running/riding)
+- **Get Segment Details** - Get detailed information about a specific segment
+- **Get Segment Leaderboard** - Retrieve leaderboard data for segments
+- **Get Routes** - Access the athlete's saved routes (requires Premium)
+- **Get Athlete Zones** - Retrieve heart rate and power zones for the athlete
+
 #### 9) [OPTIONAL] Set up secondary data storage
 
 ##### 9.1) Resumable streams with Redis
