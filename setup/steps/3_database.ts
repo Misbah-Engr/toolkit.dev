@@ -1,10 +1,31 @@
 import { execSync } from "child_process";
+import { existsSync, readFileSync } from "fs";
+import { join } from "path";
 
-import { logStep, logInfo, logSuccess, logError, checkDocker } from "../utils";
+import {
+  logStep,
+  logInfo,
+  logSuccess,
+  logError,
+  checkDocker,
+  getProjectRoot,
+  logWarning,
+} from "../utils";
 
 // Setup database
 export async function setupDatabase(): Promise<boolean> {
   logStep("Database Setup", "Setting up the database...");
+
+  // Check if DATABASE_URL is set to use external database
+  if (isExternalDatabase()) {
+    logWarning(
+      "DATABASE_URL is configured for external database. Skipping local database setup.",
+    );
+    logWarning(
+      "Please ensure your external PostgreSQL instance is running and accessible",
+    );
+    return true; // Assume external database is available
+  }
 
   const dockerCmd = checkDocker();
   if (!dockerCmd) {
@@ -44,6 +65,34 @@ export async function setupDatabase(): Promise<boolean> {
     logError("Failed to start database container");
     return false;
   }
+}
+
+// Check if DATABASE_URL is configured for external database
+function isExternalDatabase(): boolean {
+  const projectRoot = getProjectRoot();
+  const envPath = join(projectRoot, ".env.local");
+
+  if (!existsSync(envPath)) {
+    return false;
+  }
+
+  const envContent = readFileSync(envPath, "utf8");
+  const databaseUrlMatch = /DATABASE_URL=(.+)/.exec(envContent);
+
+  if (databaseUrlMatch?.[1]) {
+    const databaseUrl = databaseUrlMatch[1].trim();
+    // Check if DATABASE_URL is not the expected local format
+    const expectedLocalUrl =
+      "postgresql://postgres:password@localhost:5432/toolkit";
+    if (
+      databaseUrl !== expectedLocalUrl &&
+      !databaseUrl.includes("localhost:5432")
+    ) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 // Run database migrations

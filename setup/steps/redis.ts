@@ -9,13 +9,13 @@ import {
   commandExists,
 } from "../utils";
 
-// Setup Docker Compose services
-export async function setupDockerCompose(): Promise<boolean> {
-  logStep("Docker Compose Setup", "Setting up services with Docker Compose...");
+// Setup Redis
+export async function setupRedis(): Promise<boolean> {
+  logStep("Redis Setup", "Setting up Redis with Docker Compose...");
 
   const dockerCmd = checkDocker();
   if (!dockerCmd) {
-    logError("Docker or Podman is required for Docker Compose setup");
+    logError("Docker or Podman is required for Redis setup");
     return false;
   }
 
@@ -26,28 +26,24 @@ export async function setupDockerCompose(): Promise<boolean> {
     !commandExists("podman")
   ) {
     logError("Docker Compose is not available");
-    logInfo("Please install Docker Compose or use individual containers");
+    logInfo("Please install Docker Compose to continue");
     return false;
   }
 
   try {
-    logInfo("Starting services with Docker Compose...");
+    logInfo("Starting Redis with Docker Compose...");
 
     // Use docker compose (newer) or docker-compose (older)
     const composeCmd = commandExists("docker")
       ? "docker compose"
       : "docker-compose";
 
-    execSync(`${composeCmd} up -d`, { stdio: "inherit" });
-    logSuccess("Docker Compose services started successfully");
-
-    logInfo("Services available:");
-    logInfo("- PostgreSQL: localhost:5432");
-    logInfo("- Redis: localhost:6379");
-
+    execSync(`${composeCmd} up -d redis`, { stdio: "inherit" });
+    logSuccess("Redis started successfully with Docker Compose");
+    logInfo("Redis is now available at localhost:6379");
     return true;
   } catch (error) {
-    logError("Failed to start Docker Compose services");
+    logError("Failed to start Redis with Docker Compose");
     return false;
   }
 }

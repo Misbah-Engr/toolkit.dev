@@ -35,7 +35,7 @@ The setup script will:
 
 - Create your `.env.local` file with all necessary environment variables
 - Install dependencies
-- Set up the database using Docker/Podman
+- Automatically set up the database using Docker/Podman (unless external database is configured)
 - Run database migrations
 - Optionally set up Redis and other services
 - Guide you through API key configuration
@@ -99,13 +99,15 @@ bunx auth secret
 
 #### 4) Set up the database
 
-Toolkit uses Postgres as a database. You have two options for running the database
+Toolkit uses Postgres as a database. The setup script will automatically configure a local database using Docker/Podman unless you specify an external database.
 
-##### 4.1) Use the `./start-database.sh` script (recommended)
+##### 4.1) Automatic local database setup (default)
 
-```bash
-./start-database.sh
-```
+The setup script will automatically:
+
+- Start a PostgreSQL container using Docker/Podman
+- Configure the database connection
+- Run database migrations
 
 > This requires either Docker or Podman to be installed on your machine.
 >
@@ -113,43 +115,15 @@ Toolkit uses Postgres as a database. You have two options for running the databa
 >
 > Podman installation guide: https://podman.io/getting-started/installation
 
-You will also need to run the migrations
-
-```bash
-pnpm db:generate
-
-# or
-npm run db:generate
-
-# or
-yarn db:generate
-
-# or
-bun run db:generate
-```
-
 ##### 4.2) Use your own Postgres instance
 
-Update `DATABASE_URL` in your `.env` to point to your Postgres instance.
+If you want to use an external PostgreSQL instance, update `DATABASE_URL` in your `.env.local` to point to your Postgres instance:
 
 ```
 DATABASE_URL=<your Postgres instance URL>
 ```
 
-Then run the migrations
-
-```bash
-pnpm db:generate
-
-# or
-npm run db:generate
-
-# or
-yarn db:generate
-
-# or
-bun run db:generate
-```
+The setup script will detect this and skip the local database setup.
 
 #### 5) Add an OpenRouter Key
 

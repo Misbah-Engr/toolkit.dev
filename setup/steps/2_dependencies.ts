@@ -18,7 +18,7 @@ export function installDependencies(): void {
 
     logInfo(`Using ${packageManager} as package manager`);
 
-    execSync(`${packageManager} install`, { stdio: "inherit" });
+    execSync(`${packageManager} install`, { stdio: "ignore" });
     logSuccess("Dependencies installed successfully");
   } catch (error) {
     logError("Failed to install dependencies");

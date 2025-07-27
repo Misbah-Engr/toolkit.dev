@@ -19,11 +19,49 @@ export function createEnvFile() {
   }
 
   const envLocalPath = join(projectRoot, ".env.example");
-  if (!existsSync(envLocalPath)) {
-    logWarning(".env.example not found. Cannot copy environment file.");
-    return;
+  let envContent: string;
+
+  if (existsSync(envLocalPath)) {
+    envContent = readFileSync(envLocalPath, "utf8");
+  } else {
+    // Create default environment configuration for local development
+    envContent = `# Database
+DATABASE_URL="postgresql://postgres:password@localhost:5432/toolkit"
+
+# Auth
+AUTH_SECRET=""
+NEXTAUTH_URL="http://localhost:3000"
+
+# AI/Inference
+OPENROUTER_API_KEY=""
+
+# Optional: Web Search
+EXA_API_KEY=""
+
+# Optional: Code Interpreter
+E2B_API_KEY=""
+
+# Optional: Memory
+MEM0_API_KEY=""
+
+# Optional: Image Generation
+OPENAI_API_KEY=""
+XAI_API_KEY=""
+
+# Optional: File Storage
+BLOB_READ_WRITE_TOKEN=""
+
+# Optional: Redis for resumable streams
+REDIS_URL="redis://localhost:6379"
+
+# Optional: GitHub integration
+GITHUB_TOKEN=""
+
+# Development
+NODE_ENV="development"
+PRISMA_LOG_QUERIES="false"
+`;
   }
-  const envContent = readFileSync(envLocalPath, "utf8");
 
   writeFileSync(envPath, envContent);
   logSuccess("Created .env.local file");

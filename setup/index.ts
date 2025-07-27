@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { confirm, select, checkbox } from "@inquirer/prompts";
+import { confirm, checkbox } from "@inquirer/prompts";
 
 import { log, logStep, logError, logWarning } from "./utils";
 
@@ -10,7 +10,6 @@ import {
   setupDatabase,
   runMigrations,
   setupRedis,
-  setupDockerCompose,
   configureApiKeys,
   getAvailableServices,
   startDevServer,
@@ -26,71 +25,39 @@ async function main(): Promise<void> {
 
   try {
     // Step 1: Create .env.local
-    logStep("Step 1/6", "Creating environment configuration...");
+    logStep("Step 1/7", "Creating environment configuration...");
     createEnvFile();
 
     // Step 2: Install dependencies
-    logStep("Step 2/6", "Installing project dependencies...");
+    logStep("Step 2/7", "Installing project dependencies...");
     installDependencies();
 
     // Step 3: Setup database
-    logStep("Step 3/6", "Setting up the database...");
-    const useDocker = await confirm({
-      message: "Do you want to use Docker/Podman to run the database locally?",
-      default: true,
-    });
+    logStep("Step 3/7", "Setting up the database...");
 
-    let dbSuccess = false;
-    if (useDocker) {
-      dbSuccess = await setupDatabase();
-    } else {
-      logWarning(
-        "Please set up your own PostgreSQL instance and update DATABASE_URL in .env.local",
-      );
-    }
+    const dbSuccess = await setupDatabase();
 
     if (dbSuccess) {
       // Step 4: Run migrations
-      logStep("Step 4/6", "Running database migrations...");
+      logStep("Step 4/7", "Running database migrations...");
       runMigrations();
     } else {
-      logWarning("Skipping migrations due to database setup issues");
+      logWarning("Step 4/7: Skipping migrations due to database setup issues");
     }
 
-    // Step 5: Setup additional services
-    logStep("Step 5/6", "Setting up additional services...");
-    const setupServices = await confirm({
-      message:
-        "Do you want to set up additional development services (Redis, etc.)?",
-      default: false,
+    // Step 5: Setup Redis
+    logStep("Step 5/7", "Setting up Redis for resumable streams...");
+    const setupRedisService = await confirm({
+      message: "Do you want to set up Redis for resumable streams?",
+      default: true,
     });
 
-    if (setupServices) {
-      const serviceType = await select({
-        message: "How would you like to set up additional services?",
-        choices: [
-          {
-            name: "Use Docker Compose (recommended)",
-            value: "docker-compose",
-            description: "Easier management of multiple services",
-          },
-          {
-            name: "Use individual containers",
-            value: "individual",
-            description: "Manual setup of each service",
-          },
-        ],
-      });
-
-      if (serviceType === "docker-compose") {
-        await setupDockerCompose();
-      } else {
-        await setupRedis();
-      }
+    if (setupRedisService) {
+      await setupRedis();
     }
 
     // Step 6: Configure API keys
-    logStep("Step 6/6", "Configuring API keys...");
+    logStep("Step 6/7", "Configuring API keys...");
     const configureNow = await confirm({
       message: "Do you want to configure API keys now?",
       default: false,
