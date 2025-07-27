@@ -64,7 +64,7 @@ export const stravaGetAthleteActivitiesToolConfigClient = createClientTool(
                 <div>
                   <h4 className="font-medium text-sm">{activity.name}</h4>
                   <p className="text-xs text-muted-foreground">
-                    {activity.type} • {(activity.distance / 1000).toFixed(1)}km • {Math.floor(activity.moving_time / 60)}min
+                    {activity.type} • {activity.distance ? (activity.distance / 1000).toFixed(1) : 'N/A'}km • {activity.moving_time ? Math.floor(activity.moving_time / 60) : 'N/A'}min
                   </p>
                 </div>
                 <span className="text-xs text-muted-foreground">
@@ -99,16 +99,16 @@ export const stravaGetActivityDetailsToolConfigClient = createClientTool(
         </div>
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
-            <span className="font-medium">Distance:</span> {(result.distance / 1000).toFixed(1)}km
+            <span className="font-medium">Distance:</span> {result.distance ? (result.distance / 1000).toFixed(1) : 'N/A'}km
           </div>
           <div>
-            <span className="font-medium">Time:</span> {Math.floor(result.moving_time / 60)}min
+            <span className="font-medium">Time:</span> {result.moving_time ? Math.floor(result.moving_time / 60) : 'N/A'}min
           </div>
           <div>
-            <span className="font-medium">Elevation:</span> {result.total_elevation_gain}m
+            <span className="font-medium">Elevation:</span> {result.total_elevation_gain || 'N/A'}m
           </div>
           <div>
-            <span className="font-medium">Avg Speed:</span> {(result.average_speed * 3.6).toFixed(1)}km/h
+            <span className="font-medium">Avg Speed:</span> {result.average_speed ? (result.average_speed * 3.6).toFixed(1) : 'N/A'}km/h
           </div>
         </div>
         {result.description && (
@@ -138,17 +138,17 @@ export const stravaGetAthleteStatsToolConfigClient = createClientTool(
               <div className="bg-muted p-2 rounded">
                 <div className="font-medium">Rides</div>
                 <div>{result.recent_ride_totals.count} rides</div>
-                <div>{(result.recent_ride_totals.distance / 1000).toFixed(0)}km</div>
+                <div>{result.recent_ride_totals.distance ? (result.recent_ride_totals.distance / 1000).toFixed(0) : 'N/A'}km</div>
               </div>
               <div className="bg-muted p-2 rounded">
                 <div className="font-medium">Runs</div>
                 <div>{result.recent_run_totals.count} runs</div>
-                <div>{(result.recent_run_totals.distance / 1000).toFixed(0)}km</div>
+                <div>{result.recent_run_totals.distance ? (result.recent_run_totals.distance / 1000).toFixed(0) : 'N/A'}km</div>
               </div>
               <div className="bg-muted p-2 rounded">
                 <div className="font-medium">Swims</div>
                 <div>{result.recent_swim_totals.count} swims</div>
-                <div>{(result.recent_swim_totals.distance / 1000).toFixed(0)}km</div>
+                <div>{result.recent_swim_totals.distance ? (result.recent_swim_totals.distance / 1000).toFixed(0) : 'N/A'}km</div>
               </div>
             </div>
           </div>
@@ -182,7 +182,7 @@ export const stravaSearchSegmentsToolConfigClient = createClientTool(
                 <div>
                   <h4 className="font-medium text-sm">{segment.name}</h4>
                   <p className="text-xs text-muted-foreground">
-                    {segment.activity_type} • {(segment.distance / 1000).toFixed(1)}km • {segment.average_grade.toFixed(1)}% grade
+                    {segment.activity_type} • {segment.distance ? (segment.distance / 1000).toFixed(1) : 'N/A'}km • {segment.average_grade ? segment.average_grade.toFixed(1) : 'N/A'}% grade
                   </p>
                   <p className="text-xs text-muted-foreground">
                     {segment.city}, {segment.state}
@@ -220,10 +220,10 @@ export const stravaGetSegmentDetailsToolConfigClient = createClientTool(
         </div>
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
-            <span className="font-medium">Distance:</span> {(result.distance / 1000).toFixed(1)}km
+            <span className="font-medium">Distance:</span> {result.distance ? (result.distance / 1000).toFixed(1) : 'N/A'}km
           </div>
           <div>
-            <span className="font-medium">Avg Grade:</span> {result.average_grade.toFixed(1)}%
+            <span className="font-medium">Avg Grade:</span> {result.average_grade ? result.average_grade.toFixed(1) : 'N/A'}%
           </div>
           <div>
             <span className="font-medium">Elevation:</span> {result.total_elevation_gain}m
@@ -303,7 +303,7 @@ export const stravaGetRoutesToolConfigClient = createClientTool(
                 <div>
                   <h4 className="font-medium text-sm">{route.name}</h4>
                   <p className="text-xs text-muted-foreground">
-                    {(route.distance / 1000).toFixed(1)}km • {route.elevation_gain}m elevation
+                    {route.distance ? (route.distance / 1000).toFixed(1) : 'N/A'}km • {route.elevation_gain || 'N/A'}m elevation
                   </p>
                   {route.description && (
                     <p className="text-xs text-muted-foreground">{route.description}</p>
