@@ -2,41 +2,18 @@ import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { VStack } from "@/components/ui/stack";
 import { Clock, Users, User } from "lucide-react";
+import type { calendar_v3 } from "googleapis";
 
 interface EventCardProps {
-  event: {
-    id: string;
-    summary?: string;
-    description?: string;
-    start: {
-      dateTime?: string;
-      date?: string;
-      timeZone?: string;
-    };
-    end: {
-      dateTime?: string;
-      date?: string;
-      timeZone?: string;
-    };
-    status?: string;
-    organizer?: {
-      email?: string;
-      displayName?: string;
-    };
-    attendees?: {
-      email?: string;
-      displayName?: string;
-    }[];
-    htmlLink?: string;
-  };
+  event: calendar_v3.Schema$Event;
   showDetails?: boolean;
 }
 
-const getEventDateTime = (eventTime: { dateTime?: string; date?: string }): string => {
+const getEventDateTime = (eventTime: calendar_v3.Schema$EventDateTime): string => {
   return eventTime.dateTime || eventTime.date || new Date().toISOString();
 };
 
-const isAllDayEvent = (start: { dateTime?: string; date?: string }): boolean => {
+const isAllDayEvent = (start: calendar_v3.Schema$EventDateTime): boolean => {
   return !start.dateTime && !!start.date;
 };
 
@@ -63,9 +40,9 @@ export const EventCard: React.FC<EventCardProps> = ({
   event,
   showDetails = false,
 }) => {
-  const startDateTime = getEventDateTime(event.start);
-  const endDateTime = getEventDateTime(event.end);
-  const isAllDay = isAllDayEvent(event.start);
+  const startDateTime = getEventDateTime(event.start!);
+  const endDateTime = getEventDateTime(event.end!);
+  const isAllDay = isAllDayEvent(event.start!);
   
   const startDate = formatDateTime(startDateTime);
   const endDate = formatDateTime(endDateTime);

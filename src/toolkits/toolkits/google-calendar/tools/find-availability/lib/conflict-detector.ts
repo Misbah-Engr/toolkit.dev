@@ -12,7 +12,7 @@ export const hasConflict = (slot: TimeSlot, events: CalendarEvent[]): boolean =>
   const slotEnd = new Date(slot.end);
   
   return events.some(event => {
-    if (!event.start.dateTime || !event.end.dateTime) return false;
+    if (!event.start?.dateTime || !event.end?.dateTime) return false;
     
     const eventStart = new Date(event.start.dateTime);
     const eventEnd = new Date(event.end.dateTime);
@@ -48,7 +48,7 @@ export const extractConflictingEvents = (
 ): ConflictingEvent[] => {
   return events
     .filter(event => {
-      if (!event.start.dateTime || !event.end.dateTime) return false;
+      if (!event.start?.dateTime || !event.end?.dateTime) return false;
       
       const eventStart = new Date(event.start.dateTime);
       const eventEnd = new Date(event.end.dateTime);
@@ -56,9 +56,9 @@ export const extractConflictingEvents = (
       return doRangesOverlap(startDate, endDate, eventStart, eventEnd);
     })
     .map(event => ({
-      id: event.id,
-      summary: event.summary,
-      start: event.start.dateTime!,
-      end: event.end.dateTime!,
+      id: event.id || '',
+      summary: event.summary || undefined,
+      start: event.start!.dateTime!,
+      end: event.end!.dateTime!,
     }));
 }; 

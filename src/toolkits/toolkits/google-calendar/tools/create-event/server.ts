@@ -48,68 +48,19 @@ export const googleCalendarCreateEventToolConfigServer = (
 
       try {
         const response = await calendar.events.insert({
-          calendarId: "primary",
+          calendarId: 'primary',
           requestBody: eventResource,
-          sendNotifications: true,
         });
 
-        const event = response.data;
+        console.log('[CreateEvent] Event created successfully:', response.data.id);
 
         return {
-          id: event.id!,
-          summary: event.summary ?? undefined,
-          description: event.description ?? undefined,
-          location: event.location ?? undefined,
-          start: {
-            dateTime: event.start?.dateTime ?? undefined,
-            date: event.start?.date ?? undefined,
-            timeZone: event.start?.timeZone ?? undefined,
-          },
-          end: {
-            dateTime: event.end?.dateTime ?? undefined,
-            date: event.end?.date ?? undefined,
-            timeZone: event.end?.timeZone ?? undefined,
-          },
-          status: event.status ?? undefined,
-          visibility: event.visibility ?? undefined,
-          organizer: event.organizer
-            ? {
-                email: event.organizer.email ?? undefined,
-                displayName: event.organizer.displayName ?? undefined,
-              }
-            : undefined,
-          attendees: event.attendees?.map((attendee: calendar_v3.Schema$EventAttendee) => ({
-            email: attendee.email ?? undefined,
-            displayName: attendee.displayName ?? undefined,
-            responseStatus: attendee.responseStatus ?? undefined,
-            optional: attendee.optional ?? undefined,
-          })),
-          htmlLink: event.htmlLink ?? undefined,
-          created: event.created ?? undefined,
-          updated: event.updated ?? undefined,
+          event: response.data,
         };
       } catch (error) {
-        console.error('[CreateEvent] Error creating event:', {
-          error: error instanceof Error ? error.message : String(error),
-          eventResource,
-          userTimeZone
-        });
-        
-        // Provide more specific error messages based on the error type
-        if (error instanceof Error) {
-          if (error.message.includes('403')) {
-            throw new Error("Permission denied: You don't have permission to create events in this calendar");
-          } else if (error.message.includes('400')) {
-            throw new Error("Invalid request: Please check the event details and try again");
-          } else if (error.message.includes('401')) {
-            throw new Error("Authentication failed: Please reconnect your Google Calendar account");
-          }
-        }
-        
-        throw new Error(`Failed to create calendar event: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        console.error('[CreateEvent] Error creating event:', error);
+        throw new Error(`Failed to create event: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
     },
-    message:
-      "The user is shown the created event details. Give a brief confirmation that the event was created successfully and ask if they need to modify anything or create additional events.",
   };
 }; 

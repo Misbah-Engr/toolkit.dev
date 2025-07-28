@@ -1,6 +1,13 @@
 // Calendar client utilities
 export { createCalendarClient } from './calendar-client';
 
+// Event fetching utilities
+export { 
+  fetchEvents, 
+  fetchEventsFromMultipleCalendars, 
+  filterTimedEvents 
+} from './event-fetcher';
+
 // Timezone utilities
 export { 
   getUserTimezone, 
@@ -19,17 +26,13 @@ export {
   msToMinutes 
 } from './date-utils';
 
-// Event fetching utilities
-export { 
-  fetchEvents, 
-  fetchEventsFromMultipleCalendars, 
-  filterTimedEvents 
-} from './event-fetcher';
-
 // Types
 export type {
   CalendarEvent,
   Calendar,
+  EventAttendee,
+  EventDateTime,
+  EventReminder,
   TimeSlot,
   ConflictingEvent,
   SearchPeriod,

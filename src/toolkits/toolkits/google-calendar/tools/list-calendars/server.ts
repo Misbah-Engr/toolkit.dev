@@ -20,23 +20,9 @@ export const googleCalendarListCalendarsToolConfigServer = (
         pageToken: pageToken,
       });
 
-      const calendars =
-        response.data.items?.map((cal) => ({
-          id: cal.id!,
-          summary: cal.summary!,
-          description: cal.description ?? undefined,
-          timeZone: cal.timeZone!,
-          colorId: cal.colorId ?? undefined,
-          backgroundColor: cal.backgroundColor ?? undefined,
-          foregroundColor: cal.foregroundColor ?? undefined,
-          selected: cal.selected ?? undefined,
-          accessRole: cal.accessRole!,
-          primary: cal.primary ?? undefined,
-        })) ?? [];
-
       return {
-        calendars,
-        nextPageToken: response.data.nextPageToken ?? undefined,
+        calendars: response.data.items || [],
+        nextPageToken: response.data.nextPageToken || undefined,
       };
     },
   };

@@ -24,45 +24,10 @@ export const fetchEvents = async (
     timeZone: params.timeZone || undefined,
   });
 
-  const events = (response.data.items ?? []).map((event): CalendarEvent => ({
-    id: event.id!,
-    summary: event.summary ?? undefined,
-    description: event.description ?? undefined,
-    location: event.location ?? undefined,
-    start: {
-      dateTime: event.start?.dateTime ?? undefined,
-      date: event.start?.date ?? undefined,
-      timeZone: event.start?.timeZone ?? undefined,
-    },
-    end: {
-      dateTime: event.end?.dateTime ?? undefined,
-      date: event.end?.date ?? undefined,
-      timeZone: event.end?.timeZone ?? undefined,
-    },
-    status: event.status ?? undefined,
-    visibility: event.visibility ?? undefined,
-    organizer: event.organizer
-      ? {
-          email: event.organizer.email ?? undefined,
-          displayName: event.organizer.displayName ?? undefined,
-        }
-      : undefined,
-    attendees: event.attendees?.map((attendee) => ({
-      email: attendee.email ?? undefined,
-      displayName: attendee.displayName ?? undefined,
-      responseStatus: attendee.responseStatus ?? undefined,
-      optional: attendee.optional ?? undefined,
-    })),
-    recurringEventId: event.recurringEventId ?? undefined,
-    created: event.created ?? undefined,
-    updated: event.updated ?? undefined,
-    htmlLink: event.htmlLink ?? undefined,
-  }));
-
   return {
-    events,
-    nextPageToken: response.data.nextPageToken ?? undefined,
-    timeZone: response.data.timeZone ?? undefined,
+    events: response.data.items || [],
+    nextPageToken: response.data.nextPageToken || undefined,
+    timeZone: response.data.timeZone || undefined,
   };
 };
 
@@ -71,7 +36,7 @@ export const fetchEvents = async (
  * @param calendar - The Google Calendar client
  * @param calendarIds - Array of calendar IDs to fetch from
  * @param params - Event fetching parameters
- * @returns Array of calendar events from all calendars
+ * @returns Array of events from all calendars
  */
 export const fetchEventsFromMultipleCalendars = async (
   calendar: calendar_v3.Calendar,
@@ -88,8 +53,7 @@ export const fetchEventsFromMultipleCalendars = async (
       });
       allEvents.push(...result.events);
     } catch (error) {
-      // Failed to fetch calendar for this calendar ID
-      // Continue with other calendars
+      console.warn(`Failed to fetch events from calendar ${calendarId}:`, error);
     }
   }
   
@@ -97,12 +61,13 @@ export const fetchEventsFromMultipleCalendars = async (
 };
 
 /**
- * Filters events to only include timed events (events with start and end times)
+ * Filters events to only include timed events (not all-day events)
  * @param events - Array of calendar events
  * @returns Array of timed events only
  */
 export const filterTimedEvents = (events: CalendarEvent[]): CalendarEvent[] => {
-  return events.filter(event => 
-    event.start.dateTime && event.end.dateTime
-  );
+  return events.filter(event => {
+    // Check if the event has a start time with dateTime (timed event)
+    return event.start?.dateTime && !event.start?.date;
+  });
 }; 

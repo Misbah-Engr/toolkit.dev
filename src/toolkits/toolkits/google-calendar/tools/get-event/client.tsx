@@ -22,7 +22,7 @@ export const googleCalendarGetEventToolConfigClient: ClientToolConfig<
     return (
       <VStack className="items-start gap-2">
         <h3 className="text-sm font-medium">Event Details</h3>
-        <EventCard event={result} showDetails={true} />
+        <EventCard event={result.event} showDetails={true} />
       </VStack>
     );
   },

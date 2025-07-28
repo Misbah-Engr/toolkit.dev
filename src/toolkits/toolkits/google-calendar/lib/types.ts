@@ -1,57 +1,11 @@
 import type { calendar_v3 } from "googleapis";
 
-/**
- * Common event structure used across Google Calendar tools
- */
-export interface CalendarEvent {
-  id: string;
-  summary?: string;
-  description?: string;
-  location?: string;
-  start: {
-    dateTime?: string;
-    date?: string;
-    timeZone?: string;
-  };
-  end: {
-    dateTime?: string;
-    date?: string;
-    timeZone?: string;
-  };
-  status?: string;
-  visibility?: string;
-  organizer?: {
-    email?: string;
-    displayName?: string;
-  };
-  attendees?: Array<{
-    email?: string;
-    displayName?: string;
-    responseStatus?: string;
-    optional?: boolean;
-  }>;
-  recurringEventId?: string;
-  created?: string;
-  updated?: string;
-  htmlLink?: string;
-}
-
-/**
- * Common calendar structure used across Google Calendar tools
- */
-export interface Calendar {
-  id: string;
-  summary: string;
-  description?: string;
-  timeZone: string;
-  colorId?: string;
-  backgroundColor?: string;
-  foregroundColor?: string;
-  selected?: boolean;
-  accessRole: string;
-  primary?: boolean;
-  location?: string;
-}
+// Re-export SDK types for convenience
+export type CalendarEvent = calendar_v3.Schema$Event;
+export type Calendar = calendar_v3.Schema$CalendarListEntry;
+export type EventAttendee = calendar_v3.Schema$EventAttendee;
+export type EventDateTime = calendar_v3.Schema$EventDateTime;
+export type EventReminder = calendar_v3.Schema$EventReminder;
 
 /**
  * Time slot structure for availability analysis

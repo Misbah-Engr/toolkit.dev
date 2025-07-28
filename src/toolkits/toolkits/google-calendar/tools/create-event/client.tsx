@@ -31,12 +31,7 @@ export const googleCalendarCreateEventToolConfigClient: ClientToolConfig<
     );
   },
   ResultComponent: ({ result }) => {
-    // EventCard now handles optional dateTime fields directly
-    const eventForCard = {
-      ...result,
-      start: result.start,
-      end: result.end
-    };
+    const event = result.event;
 
     return (
       <div className="w-full space-y-4">
@@ -56,8 +51,8 @@ export const googleCalendarCreateEventToolConfigClient: ClientToolConfig<
             </div>
           </div>
           
-          {result.htmlLink && (
-            <Link href={result.htmlLink} target="_blank">
+          {event.htmlLink && (
+            <Link href={event.htmlLink} target="_blank">
               <Button variant="outline" size="sm" className="text-xs">
                 <ExternalLink className="size-3 mr-1" />
                 View in Calendar
@@ -67,7 +62,7 @@ export const googleCalendarCreateEventToolConfigClient: ClientToolConfig<
         </div>
 
         {/* Event Details Card */}
-        <EventCard event={eventForCard} showDetails={true} />
+        <EventCard event={event} showDetails={true} />
         
         {/* Event Metadata */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -75,28 +70,28 @@ export const googleCalendarCreateEventToolConfigClient: ClientToolConfig<
             <Calendar className="size-4 text-muted-foreground" />
             <div className="min-w-0">
               <p className="text-xs text-muted-foreground">Event ID</p>
-              <p className="text-sm font-mono truncate">{result.id}</p>
+              <p className="text-sm font-mono truncate">{event.id}</p>
             </div>
           </div>
           
-          {result.attendees && result.attendees.length > 0 && (
+          {event.attendees && event.attendees.length > 0 && (
             <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/50 border">
               <Users className="size-4 text-muted-foreground" />
               <div>
                 <p className="text-xs text-muted-foreground">Attendees</p>
                 <p className="text-sm font-medium">
-                  {result.attendees.length} invite{result.attendees.length !== 1 ? 'd' : 'd'}
+                  {event.attendees.length} invite{event.attendees.length !== 1 ? 'd' : 'd'}
                 </p>
               </div>
             </div>
           )}
           
-          {result.status && (
+          {event.status && (
             <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/50 border">
               <div className="w-2 h-2 rounded-full bg-green-500" />
               <div>
                 <p className="text-xs text-muted-foreground">Status</p>
-                <p className="text-sm font-medium capitalize">{result.status}</p>
+                <p className="text-sm font-medium capitalize">{event.status}</p>
               </div>
             </div>
           )}
