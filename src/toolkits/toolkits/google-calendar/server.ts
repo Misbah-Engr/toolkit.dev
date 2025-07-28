@@ -11,78 +11,7 @@ import {
 } from "./tools/server";
 import { GoogleCalendarTools } from "./tools";
 import { api } from "@/trpc/server";
-import { google } from "googleapis";
-import { db } from "@/server/db";
 import { Client } from "@notionhq/client";
-
-// Utility function to refresh Google OAuth token
-async function refreshGoogleToken(account: {
-  access_token: string | null;
-  refresh_token: string | null;
-  expires_at: number | null;
-  providerAccountId: string;
-}) {
-  if (!account.refresh_token) {
-    throw new Error("No refresh token available");
-  }
-
-  const oauth2Client = new google.auth.OAuth2(
-    process.env.AUTH_GOOGLE_ID,
-    process.env.AUTH_GOOGLE_SECRET
-  );
-
-  oauth2Client.setCredentials({
-    refresh_token: account.refresh_token,
-  });
-
-  try {
-    const { credentials } = await oauth2Client.refreshAccessToken();
-    
-    // Update the account with new tokens
-    await db.account.update({
-      where: {
-        provider_providerAccountId: {
-          provider: "google",
-          providerAccountId: account.providerAccountId,
-        },
-      },
-      data: {
-        access_token: credentials.access_token,
-        refresh_token: credentials.refresh_token ?? account.refresh_token,
-        expires_at: credentials.expiry_date ? Math.floor(credentials.expiry_date / 1000) : null,
-        token_type: credentials.token_type,
-      },
-    });
-
-    return credentials.access_token;
-  } catch (error) {
-    console.error("Error refreshing token:", error);
-    throw new Error("Failed to refresh access token");
-  }
-}
-
-// Utility function to get valid access token
-async function getValidAccessToken(account: {
-  access_token: string | null;
-  refresh_token: string | null;
-  expires_at: number | null;
-  providerAccountId: string;
-}) {
-  if (!account.access_token) {
-    throw new Error("No access token available");
-  }
-
-  // Check if token is expired or about to expire (within 5 minutes)
-  const now = Math.floor(Date.now() / 1000);
-  const expiresAt = account.expires_at ?? 0;
-  const isExpired = expiresAt - now < 300; // 5 minutes buffer
-
-  if (isExpired) {
-    return refreshGoogleToken(account);
-  }
-
-  return account.access_token;
-}
 
 export const googleCalendarToolkitServer = createServerToolkit(
   baseGoogleCalendarToolkitConfig,
@@ -119,15 +48,12 @@ export const googleCalendarToolkitServer = createServerToolkit(
       throw new Error("No Google account found");
     }
 
-    if (!notionAccount?.access_token) {
-      throw new Error("No Notion account found or access token missing");
+    if (!account.access_token) {
+      throw new Error("No Google access token found");
     }
 
-    // Get a valid access token, refreshing if necessary
-    const accessToken = await getValidAccessToken(account);
-
-    if (!accessToken) {
-      throw new Error("Failed to obtain valid access token");
+    if (!notionAccount?.access_token) {
+      throw new Error("No Notion account found or access token missing");
     }
 
     // Create Notion client
@@ -137,20 +63,20 @@ export const googleCalendarToolkitServer = createServerToolkit(
 
     return {
       [GoogleCalendarTools.ListCalendars]:
-        googleCalendarListCalendarsToolConfigServer(accessToken),
+        googleCalendarListCalendarsToolConfigServer(account.access_token),
       [GoogleCalendarTools.GetCalendar]:
-        googleCalendarGetCalendarToolConfigServer(accessToken),
+        googleCalendarGetCalendarToolConfigServer(account.access_token),
       [GoogleCalendarTools.ListEvents]:
-        googleCalendarListEventsToolConfigServer(accessToken),
+        googleCalendarListEventsToolConfigServer(account.access_token),
       [GoogleCalendarTools.GetEvent]: googleCalendarGetEventToolConfigServer(
-        accessToken,
+        account.access_token,
       ),
       [GoogleCalendarTools.SearchEvents]:
-        googleCalendarSearchEventsToolConfigServer(accessToken),
+        googleCalendarSearchEventsToolConfigServer(account.access_token),
       [GoogleCalendarTools.CreateEvent]:
-        googleCalendarCreateEventToolConfigServer(accessToken),
+        googleCalendarCreateEventToolConfigServer(account.access_token),
       [GoogleCalendarTools.FindAvailability]:
-        googleCalendarFindAvailabilityToolConfigServer(accessToken, notion),
+        googleCalendarFindAvailabilityToolConfigServer(account.access_token, notion),
     };
   },
 );
