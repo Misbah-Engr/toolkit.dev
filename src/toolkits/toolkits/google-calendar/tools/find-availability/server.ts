@@ -12,15 +12,8 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
   typeof findAvailabilityTool.outputSchema.shape
 > => {
   return {
-    message: (result) => {
-      if (result.conflictingEvents.length > 0) {
-        return `Found ${result.totalSlotsFound} available slots between ${result.searchPeriod.start} and ${result.searchPeriod.end}. There are ${result.conflictingEvents.length} conflicting events during this period.`;
-      } else if (result.totalSlotsFound > 0) {
-        return `Found ${result.totalSlotsFound} available slots between ${result.searchPeriod.start} and ${result.searchPeriod.end}.`;
-      } else {
-        return `No available slots found between ${result.searchPeriod.start} and ${result.searchPeriod.end}.`;
-      }
-    },
+    message:
+      "The user is shown available time slots in an organized grid. Give a brief summary of the availability found and ask if they would like to schedule a meeting for any of the suggested times.",
     callback: async ({
       startDate,
       endDate,
@@ -28,6 +21,10 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
       attendeeNames,
       maxResults,
     }) => {
+      if (!accessToken) {
+        throw new Error("Google Calendar access token is not available");
+      }
+
       // Apply intelligent defaults following the || pattern from other toolkits
       const today = new Date().toISOString().split('T')[0];
       const searchStartDate = startDate || today;
@@ -56,180 +53,185 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
       });
 
       // Fetch existing events in the time range
-      const response = await calendar.events.list({
-        calendarId: "primary",
-        timeMin,
-        timeMax,
-        singleEvents: true,
-        orderBy: "startTime",
-        maxResults: 2500,
-        timeZone: 'America/New_York'
-      });
-
-      const events = response.data.items ?? [];
-      const timedEvents = events.filter(event => 
-        event.start?.dateTime && event.end?.dateTime
-      );
-
-      console.log('[FindAvailability] Found events:', {
-        total: events.length,
-        timed: timedEvents.length
-      });
-
-      // If attendees are specified, get their emails from Notion and check their calendars
-      if (attendeeNames && attendeeNames.length > 0) {
-        const notionUsers = await notionListUsersToolConfigServer(notion).callback({
-          start_cursor: "",
-          page_size: 100,
+      try {
+        const response = await calendar.events.list({
+          calendarId: "primary",
+          timeMin,
+          timeMax,
+          singleEvents: true,
+          orderBy: "startTime",
+          maxResults: 2500,
+          timeZone: 'America/New_York'
         });
 
-        const nameToEmail = new Map(
-          notionUsers.results.map((user: UserObjectResponse) => {
-            if (user.type === "person") {
-              return [user.name?.toLowerCase() ?? "", user.person?.email ?? ""];
-            }
-            return [user.name?.toLowerCase() ?? "", ""];
-          })
+        const events = response.data.items ?? [];
+        const timedEvents = events.filter(event => 
+          event.start?.dateTime && event.end?.dateTime
         );
 
-        const attendeeEmails = attendeeNames
-          .map(name => nameToEmail.get(name.toLowerCase()))
-          .filter((email): email is string => !!email);
+        console.log('[FindAvailability] Found events:', {
+          total: events.length,
+          timed: timedEvents.length
+        });
 
-        for (const email of attendeeEmails) {
-          try {
-            const attendeeResponse = await calendar.events.list({
-              calendarId: email,
-              timeMin,
-              timeMax,
-              singleEvents: true,
-              orderBy: "startTime",
-              maxResults: 2500,
-            });
-            
-            const attendeeEvents = attendeeResponse.data.items ?? [];
-            const attendeeTimedEvents = attendeeEvents.filter(event => 
-              event.start?.dateTime && event.end?.dateTime
-            );
-            
-            timedEvents.push(...attendeeTimedEvents);
-          } catch (error) {
-            console.error(`Failed to fetch calendar for ${email}:`, error);
+        // If attendees are specified, get their emails from Notion and check their calendars
+        if (attendeeNames && attendeeNames.length > 0) {
+          const notionUsers = await notionListUsersToolConfigServer(notion).callback({
+            start_cursor: "",
+            page_size: 100,
+          });
+
+          const nameToEmail = new Map(
+            notionUsers.results.map((user: UserObjectResponse) => {
+              if (user.type === "person") {
+                return [user.name?.toLowerCase() ?? "", user.person?.email ?? ""];
+              }
+              return [user.name?.toLowerCase() ?? "", ""];
+            })
+          );
+
+          const attendeeEmails = attendeeNames
+            .map(name => nameToEmail.get(name.toLowerCase()))
+            .filter((email): email is string => !!email);
+
+          for (const email of attendeeEmails) {
+            try {
+              const attendeeResponse = await calendar.events.list({
+                calendarId: email,
+                timeMin,
+                timeMax,
+                singleEvents: true,
+                orderBy: "startTime",
+                maxResults: 2500,
+              });
+              
+              const attendeeEvents = attendeeResponse.data.items ?? [];
+              const attendeeTimedEvents = attendeeEvents.filter(event => 
+                event.start?.dateTime && event.end?.dateTime
+              );
+              
+              timedEvents.push(...attendeeTimedEvents);
+            } catch (error) {
+              console.error(`Failed to fetch calendar for ${email}:`, error);
+            }
           }
         }
-      }
 
-      // Find available slots
-      const availableSlots: Array<{
-        start: string;
-        end: string;
-        duration: number;
-        dayOfWeek: string;
-        date: string;
-        timeRange: string;
-      }> = [];
+        // Find available slots
+        const availableSlots: Array<{
+          start: string;
+          end: string;
+          duration: number;
+          dayOfWeek: string;
+          date: string;
+          timeRange: string;
+        }> = [];
 
-      const conflictingEvents: Array<{
-        id: string;
-        summary?: string;
-        start: string;
-        end: string;
-      }> = [];
+        const conflictingEvents: Array<{
+          id: string;
+          summary?: string;
+          start: string;
+          end: string;
+        }> = [];
 
-      // Generate slots across the entire day (24 hours)
-      const startDateObj = new Date(timeMin);
-      const endDateObj = new Date(timeMax);
-      const currentDate = new Date(startDateObj);
-      
-      while (currentDate <= endDateObj && availableSlots.length < searchMaxResults) {
-        const year = currentDate.getFullYear();
-        const month = currentDate.getMonth();
-        const date = currentDate.getDate();
+        // Generate slots across the entire day (24 hours)
+        const startDateObj = new Date(timeMin);
+        const endDateObj = new Date(timeMax);
+        const currentDate = new Date(startDateObj);
         
-        // Full day: 12 AM - 11:59 PM
-        const dayStart = new Date(year, month, date, 0, 0, 0, 0);
-        const dayEnd = new Date(year, month, date, 23, 59, 59, 999);
-
-        // Get events for this day
-        const dayEvents = timedEvents.filter(event => {
-          const eventStart = new Date(event.start!.dateTime!);
-          const eventEnd = new Date(event.end!.dateTime!);
-          return (eventStart < dayEnd && eventEnd > dayStart);
-        });
-
-        dayEvents.sort((a, b) => 
-          new Date(a.start!.dateTime!).getTime() - new Date(b.start!.dateTime!).getTime()
-        );
-
-        // Add conflicting events
-        dayEvents.forEach(event => {
-          conflictingEvents.push({
-            id: event.id!,
-            summary: event.summary ?? undefined,
-            start: event.start!.dateTime!,
-            end: event.end!.dateTime!,
-          });
-        });
-
-        // Generate time slots every hour
-        let currentSlotStart = new Date(dayStart);
-        
-        while (currentSlotStart.getTime() + (searchDuration * 60 * 1000) <= dayEnd.getTime()) {
-          const slotEnd = new Date(currentSlotStart.getTime() + (searchDuration * 60 * 1000));
+        while (currentDate <= endDateObj && availableSlots.length < searchMaxResults) {
+          const year = currentDate.getFullYear();
+          const month = currentDate.getMonth();
+          const date = currentDate.getDate();
           
-          // Check if this slot conflicts with any existing events
-          const hasConflict = dayEvents.some(event => {
+          // Full day: 12 AM - 11:59 PM
+          const dayStart = new Date(year, month, date, 0, 0, 0, 0);
+          const dayEnd = new Date(year, month, date, 23, 59, 59, 999);
+
+          // Get events for this day
+          const dayEvents = timedEvents.filter(event => {
             const eventStart = new Date(event.start!.dateTime!);
             const eventEnd = new Date(event.end!.dateTime!);
-            return (currentSlotStart < eventEnd && slotEnd > eventStart);
+            return (eventStart < dayEnd && eventEnd > dayStart);
           });
+
+          dayEvents.sort((a, b) => 
+            new Date(a.start!.dateTime!).getTime() - new Date(b.start!.dateTime!).getTime()
+          );
+
+          // Add conflicting events
+          dayEvents.forEach(event => {
+            conflictingEvents.push({
+              id: event.id!,
+              summary: event.summary ?? undefined,
+              start: event.start!.dateTime!,
+              end: event.end!.dateTime!,
+            });
+          });
+
+          // Generate time slots every hour
+          let currentSlotStart = new Date(dayStart);
           
-          if (!hasConflict) {
-            availableSlots.push({
-              start: currentSlotStart.toISOString(),
-              end: slotEnd.toISOString(),
-              duration: searchDuration,
-              dayOfWeek: currentSlotStart.toLocaleDateString('en-US', { weekday: 'long', timeZone: 'America/New_York' }),
-              date: currentSlotStart.toLocaleDateString('en-US', { timeZone: 'America/New_York' }),
-              timeRange: `${currentSlotStart.toLocaleTimeString('en-US', { 
-                hour: '2-digit', 
-                minute: '2-digit', 
-                timeZone: 'America/New_York',
-                hour12: true 
-              })} - ${slotEnd.toLocaleTimeString('en-US', { 
-                hour: '2-digit', 
-                minute: '2-digit', 
-                timeZone: 'America/New_York',
-                hour12: true 
-              })}`,
+          while (currentSlotStart.getTime() + (searchDuration * 60 * 1000) <= dayEnd.getTime()) {
+            const slotEnd = new Date(currentSlotStart.getTime() + (searchDuration * 60 * 1000));
+            
+            // Check if this slot conflicts with any existing events
+            const hasConflict = dayEvents.some(event => {
+              const eventStart = new Date(event.start!.dateTime!);
+              const eventEnd = new Date(event.end!.dateTime!);
+              return (currentSlotStart < eventEnd && slotEnd > eventStart);
             });
             
-            if (availableSlots.length >= searchMaxResults) break;
+            if (!hasConflict) {
+              availableSlots.push({
+                start: currentSlotStart.toISOString(),
+                end: slotEnd.toISOString(),
+                duration: searchDuration,
+                dayOfWeek: currentSlotStart.toLocaleDateString('en-US', { weekday: 'long', timeZone: 'America/New_York' }),
+                date: currentSlotStart.toLocaleDateString('en-US', { timeZone: 'America/New_York' }),
+                timeRange: `${currentSlotStart.toLocaleTimeString('en-US', { 
+                  hour: '2-digit', 
+                  minute: '2-digit', 
+                  timeZone: 'America/New_York',
+                  hour12: true 
+                })} - ${slotEnd.toLocaleTimeString('en-US', { 
+                  hour: '2-digit', 
+                  minute: '2-digit', 
+                  timeZone: 'America/New_York',
+                  hour12: true 
+                })}`,
+              });
+              
+              if (availableSlots.length >= searchMaxResults) break;
+            }
+            
+            // Move to next hour
+            currentSlotStart = new Date(currentSlotStart.getTime() + (60 * 60 * 1000));
           }
           
-          // Move to next hour
-          currentSlotStart = new Date(currentSlotStart.getTime() + (60 * 60 * 1000));
+          if (availableSlots.length >= searchMaxResults) break;
+          currentDate.setDate(currentDate.getDate() + 1);
         }
-        
-        if (availableSlots.length >= searchMaxResults) break;
-        currentDate.setDate(currentDate.getDate() + 1);
+
+        console.log('[FindAvailability] Results:', {
+          availableSlots: availableSlots.length,
+          conflictingEvents: conflictingEvents.length
+        });
+
+        return {
+          availableSlots,
+          totalSlotsFound: availableSlots.length,
+          searchPeriod: {
+            start: timeMin,
+            end: timeMax,
+            duration: searchDuration,
+          },
+          conflictingEvents,
+        };
+      } catch (error) {
+        console.error('[FindAvailability] Failed to find availability:', error);
+        throw new Error("Failed to analyze calendar availability");
       }
-
-      console.log('[FindAvailability] Results:', {
-        availableSlots: availableSlots.length,
-        conflictingEvents: conflictingEvents.length
-      });
-
-      return {
-        availableSlots,
-        totalSlotsFound: availableSlots.length,
-        searchPeriod: {
-          start: timeMin,
-          end: timeMax,
-          duration: searchDuration,
-        },
-        conflictingEvents,
-      };
     },
   };
 }; 

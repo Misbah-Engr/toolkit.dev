@@ -15,6 +15,10 @@ export const googleCalendarCreateEventToolConfigServer = (
       startDateTime,
       endDateTime,
     }) => {
+      if (!accessToken) {
+        throw new Error("Google Calendar access token is not available");
+      }
+
       const auth = new google.auth.OAuth2();
       auth.setCredentials({ access_token: accessToken });
 
@@ -73,56 +77,63 @@ export const googleCalendarCreateEventToolConfigServer = (
 
       console.log('[CreateEvent] Event resource:', eventResource);
 
-      const response = await calendar.events.insert({
-        calendarId: "primary", // Use primary calendar by default
-        requestBody: eventResource,
-        sendNotifications: true, // Send notifications to attendees
-      });
+      try {
+        const response = await calendar.events.insert({
+          calendarId: "primary",
+          requestBody: eventResource,
+          sendNotifications: true,
+        });
 
-      const event = response.data;
+        const event = response.data;
 
-      console.log('[CreateEvent] Event created successfully:', {
-        id: event.id,
-        summary: event.summary,
-        start: event.start?.dateTime,
-        end: event.end?.dateTime,
-        status: event.status,
-        timeZone: event.start?.timeZone
-      });
+        console.log('[CreateEvent] Event created successfully:', {
+          id: event.id,
+          summary: event.summary,
+          start: event.start?.dateTime,
+          end: event.end?.dateTime,
+          status: event.status,
+          timeZone: event.start?.timeZone
+        });
 
-      return {
-        id: event.id!,
-        summary: event.summary ?? undefined,
-        description: event.description ?? undefined,
-        location: event.location ?? undefined,
-        start: {
-          dateTime: event.start?.dateTime ?? undefined,
-          date: event.start?.date ?? undefined,
-          timeZone: event.start?.timeZone ?? undefined,
-        },
-        end: {
-          dateTime: event.end?.dateTime ?? undefined,
-          date: event.end?.date ?? undefined,
-          timeZone: event.end?.timeZone ?? undefined,
-        },
-        status: event.status ?? undefined,
-        visibility: event.visibility ?? undefined,
-        organizer: event.organizer
-          ? {
-              email: event.organizer.email ?? undefined,
-              displayName: event.organizer.displayName ?? undefined,
-            }
-          : undefined,
-        attendees: event.attendees?.map((attendee: calendar_v3.Schema$EventAttendee) => ({
-          email: attendee.email ?? undefined,
-          displayName: attendee.displayName ?? undefined,
-          responseStatus: attendee.responseStatus ?? undefined,
-          optional: attendee.optional ?? undefined,
-        })),
-        htmlLink: event.htmlLink ?? undefined,
-        created: event.created ?? undefined,
-        updated: event.updated ?? undefined,
-      };
+        return {
+          id: event.id!,
+          summary: event.summary ?? undefined,
+          description: event.description ?? undefined,
+          location: event.location ?? undefined,
+          start: {
+            dateTime: event.start?.dateTime ?? undefined,
+            date: event.start?.date ?? undefined,
+            timeZone: event.start?.timeZone ?? undefined,
+          },
+          end: {
+            dateTime: event.end?.dateTime ?? undefined,
+            date: event.end?.date ?? undefined,
+            timeZone: event.end?.timeZone ?? undefined,
+          },
+          status: event.status ?? undefined,
+          visibility: event.visibility ?? undefined,
+          organizer: event.organizer
+            ? {
+                email: event.organizer.email ?? undefined,
+                displayName: event.organizer.displayName ?? undefined,
+              }
+            : undefined,
+          attendees: event.attendees?.map((attendee: calendar_v3.Schema$EventAttendee) => ({
+            email: attendee.email ?? undefined,
+            displayName: attendee.displayName ?? undefined,
+            responseStatus: attendee.responseStatus ?? undefined,
+            optional: attendee.optional ?? undefined,
+          })),
+          htmlLink: event.htmlLink ?? undefined,
+          created: event.created ?? undefined,
+          updated: event.updated ?? undefined,
+        };
+      } catch (error) {
+        console.error('[CreateEvent] Failed to create event:', error);
+        throw new Error("Failed to create calendar event");
+      }
     },
+    message:
+      "The user is shown the created event details. Give a brief confirmation that the event was created successfully and ask if they need to modify anything or create additional events.",
   };
 }; 
