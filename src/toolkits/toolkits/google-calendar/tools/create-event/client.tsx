@@ -5,7 +5,9 @@ import { HStack, VStack } from "@/components/ui/stack";
 import { EventCard } from "../../components/event-card";
 import { ToolCallComponent } from "../../components/tool-call";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, Users, Calendar } from "lucide-react";
+import { CheckCircle, Users, Calendar, ExternalLink } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export const googleCalendarCreateEventToolConfigClient: ClientToolConfig<
   typeof createEventTool.inputSchema.shape,
@@ -39,34 +41,69 @@ export const googleCalendarCreateEventToolConfigClient: ClientToolConfig<
     };
 
     return (
-      <VStack className="items-start gap-3">
-        <HStack className="items-center gap-2">
-          <CheckCircle className="size-4 text-green-600" />
-          <span className="text-sm font-medium text-green-700">Event Created Successfully</span>
-        </HStack>
+      <div className="w-full space-y-4">
+        {/* Success Header */}
+        <div className="flex items-center justify-between p-4 rounded-lg bg-green-50 border border-green-200 dark:bg-green-950/20 dark:border-green-800">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30">
+              <CheckCircle className="size-5 text-green-600 dark:text-green-400" />
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-green-800 dark:text-green-200">
+                Event Created Successfully
+              </h3>
+              <p className="text-xs text-green-600 dark:text-green-400">
+                Your event has been added to Google Calendar
+              </p>
+            </div>
+          </div>
+          
+          {result.htmlLink && (
+            <Link href={result.htmlLink} target="_blank">
+              <Button variant="outline" size="sm" className="text-xs">
+                <ExternalLink className="size-3 mr-1" />
+                View in Calendar
+              </Button>
+            </Link>
+          )}
+        </div>
 
+        {/* Event Details Card */}
         <EventCard event={eventForCard} showDetails={true} />
         
-        <HStack className="flex-wrap gap-2">
-          <Badge variant="outline" className="text-xs">
-            <Calendar className="size-3 mr-1" />
-            Event ID: {result.id}
-          </Badge>
+        {/* Event Metadata */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/50 border">
+            <Calendar className="size-4 text-muted-foreground" />
+            <div className="min-w-0">
+              <p className="text-xs text-muted-foreground">Event ID</p>
+              <p className="text-sm font-mono truncate">{result.id}</p>
+            </div>
+          </div>
           
           {result.attendees && result.attendees.length > 0 && (
-            <Badge variant="outline" className="text-xs">
-              <Users className="size-3 mr-1" />
-              {result.attendees.length} attendee{result.attendees.length !== 1 ? 's' : ''} invited
-            </Badge>
+            <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/50 border">
+              <Users className="size-4 text-muted-foreground" />
+              <div>
+                <p className="text-xs text-muted-foreground">Attendees</p>
+                <p className="text-sm font-medium">
+                  {result.attendees.length} invite{result.attendees.length !== 1 ? 'd' : 'd'}
+                </p>
+              </div>
+            </div>
           )}
           
           {result.status && (
-            <Badge variant="secondary" className="text-xs">
-              Status: {result.status}
-            </Badge>
+            <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/50 border">
+              <div className="w-2 h-2 rounded-full bg-green-500" />
+              <div>
+                <p className="text-xs text-muted-foreground">Status</p>
+                <p className="text-sm font-medium capitalize">{result.status}</p>
+              </div>
+            </div>
           )}
-        </HStack>
-      </VStack>
+        </div>
+      </div>
     );
   },
 }; 
