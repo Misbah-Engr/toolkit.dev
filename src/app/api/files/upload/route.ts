@@ -7,6 +7,8 @@ import { put } from "@vercel/blob";
 import { auth } from "@/server/auth";
 import { api } from "@/trpc/server";
 import { FILE_MAX_SIZE } from "@/lib/constants";
+import { IS_LOCAL_BLOB } from "@/lib/constants";
+
 
 // Use Blob instead of File since File is not available in Node.js environment
 const FileSchema = z.object({
@@ -59,17 +61,27 @@ export async function POST(request: Request) {
     const fileBuffer = await file.arrayBuffer();
 
     try {
-      const data = await put(
-        `${session.user.id}/${crypto.randomUUID()}`,
-        fileBuffer,
-        {
-          access: "public",
-        },
-      );
+      let fileUrl: string;
+
+      if (IS_LOCAL_BLOB) {
+        // Create base64 data URL for local development
+        const base64 = Buffer.from(fileBuffer).toString('base64');
+        fileUrl = `data:${validatedFile.data.file.type};base64,${base64}`;
+      } else {
+        // Upload to Vercel Blob for production
+        const data = await put(
+          `${session.user.id}/${crypto.randomUUID()}`,
+          fileBuffer,
+          {
+            access: "public",
+          },
+        );
+        fileUrl = data.url;
+      }
 
       const file = await api.files.createFile({
         name: filename,
-        url: data.url,
+        url: fileUrl,
         contentType: validatedFile.data.file.type,
       });
 

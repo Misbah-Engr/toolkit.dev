@@ -7,6 +7,7 @@ import { api } from "@/trpc/server";
 import type { imageParameters } from "../../base";
 import type z from "zod";
 import { registry } from "@/ai/registry";
+import { IS_LOCAL_BLOB } from "@/lib/constants";
 
 export const generateToolConfigServer = (
   parameters: z.infer<typeof imageParameters>,
@@ -36,9 +37,16 @@ export const generateToolConfigServer = (
         },
       );
 
-      const { url: imageUrl } = await put(file.name, file, {
-        access: "public",
-      });
+      let imageUrl: string;
+
+      if (IS_LOCAL_BLOB) {
+        imageUrl = `data:${image.mimeType};base64,${image.base64}`;
+      } else {
+        const { url } = await put(file.name, file, {
+          access: "public",
+        });
+        imageUrl = url;
+      }
 
       await api.images.createImage({
         url: imageUrl,
