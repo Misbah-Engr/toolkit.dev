@@ -31,17 +31,7 @@ export const ClientToolkitConfigure: React.FC<ClientToolkitConfigureProps> = ({
   };
 
   return (
-    <div className="space-y-4">
-      <div>
-        <h4 className="font-medium">{toolkit.name}</h4>
-      </div>
-
-      <div className="space-y-4">
-        {toolkit.form && (
-          <toolkit.form parameters={parameters} setParameters={setParameters} />
-        )}
-      </div>
-
+    <>
       <Button
         onClick={handleSubmit}
         disabled={!schema.safeParse(parameters).success}
@@ -50,6 +40,6 @@ export const ClientToolkitConfigure: React.FC<ClientToolkitConfigureProps> = ({
         <Plus className="mr-2 size-4" />
         Add {toolkit.name}
       </Button>
-    </div>
+    </>
   );
 };

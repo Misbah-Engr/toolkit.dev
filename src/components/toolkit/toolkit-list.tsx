@@ -1,12 +1,15 @@
 import React, { useEffect, useMemo, useState } from "react";
 
-import { Loader2 } from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -20,15 +23,17 @@ import {
   CommandList,
 } from "@/components/ui/command";
 
-import { ClientToolkitConfigure } from "@/components/toolkit/toolkit-configure";
-
 import { clientToolkits } from "@/toolkits/toolkits/client";
 
 import { cn } from "@/lib/utils";
 
 import type { ClientToolkit } from "@/toolkits/types";
-import type { Toolkits } from "@/toolkits/toolkits/shared";
+import type {
+  ServerToolkitParameters,
+  Toolkits,
+} from "@/toolkits/toolkits/shared";
 import type { SelectedToolkit } from "./types";
+import type z from "zod";
 
 interface ToolkitListProps {
   selectedToolkits: SelectedToolkit[];
@@ -180,22 +185,67 @@ export const ToolkitList: React.FC<ToolkitListProps> = ({
         open={selectedToolkitForConfig !== null}
         onOpenChange={() => setSelectedToolkitForConfig(null)}
       >
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>
-              Configure {selectedToolkitForConfig?.toolkit.name}
-            </DialogTitle>
-          </DialogHeader>
-          {selectedToolkitForConfig && (
-            <ClientToolkitConfigure
-              toolkit={selectedToolkitForConfig.toolkit}
-              id={selectedToolkitForConfig.id}
-              schema={selectedToolkitForConfig.toolkit.parameters}
-              onAdd={handleConfigureSubmit}
-            />
-          )}
-        </DialogContent>
+        {selectedToolkitForConfig && (
+          <ClientToolkitDialogContent
+            onAdd={handleConfigureSubmit}
+            id={selectedToolkitForConfig.id}
+            toolkit={selectedToolkitForConfig.toolkit}
+            close={() => setSelectedToolkitForConfig(null)}
+          />
+        )}
       </Dialog>
     </>
+  );
+};
+
+interface ClientToolkitConfigureProps {
+  id: Toolkits;
+  toolkit: ClientToolkit;
+  close: () => void;
+  onAdd: (toolkit: SelectedToolkit) => void;
+}
+
+const ClientToolkitDialogContent: React.FC<ClientToolkitConfigureProps> = ({
+  onAdd,
+  id,
+  toolkit,
+  close,
+}) => {
+  const [parameters, setParameters] = useState<
+    ServerToolkitParameters[typeof id]
+  >({} as ServerToolkitParameters[typeof id]);
+
+  const handleSubmit = () => {
+    onAdd({ id, toolkit, parameters });
+  };
+
+  return (
+    <DialogContent className="gap-2 p-0 sm:max-w-[425px]">
+      <DialogHeader className="p-4 pb-0">
+        <DialogTitle>Configure {toolkit.name}</DialogTitle>
+        <DialogDescription className="sr-only">
+          Configure the {toolkit.name} toolkit
+        </DialogDescription>
+      </DialogHeader>
+      {toolkit.form && (
+        <toolkit.form
+          parameters={toolkit.parameters}
+          setParameters={setParameters}
+        />
+      )}
+      <DialogFooter className="flex justify-end gap-2 p-4">
+        <Button variant="outline" onClick={close} className="flex-1">
+          Cancel
+        </Button>
+        <Button
+          onClick={handleSubmit}
+          disabled={!toolkit.parameters.safeParse(parameters).success}
+          className="flex-1"
+        >
+          <Plus className="size-4" />
+          Add
+        </Button>
+      </DialogFooter>
+    </DialogContent>
   );
 };
