@@ -240,7 +240,7 @@ const ClientToolkitDialogContent: React.FC<ClientToolkitConfigureProps> = ({
           className="flex-1"
         >
           <Plus className="size-4" />
-          Add
+          Enable
         </Button>
       </DialogFooter>
     </DialogContent>
