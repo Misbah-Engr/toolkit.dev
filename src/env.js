@@ -154,24 +154,7 @@ export const env = createEnv({
     // NEXT_PUBLIC_CLIENTVAR: z.string(),
   },
 
-  /**
-   * You can't destruct `process.env` as a regular object in the Next.js edge runtimes (e.g.
-   * middlewares) or client-side so we need to destruct manually.
-   */
-  runtimeEnv: {
-    NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-    AUTH_SECRET: process.env.AUTH_SECRET,
-    DATABASE_URL: process.env.DATABASE_URL,
-    NODE_ENV: process.env.NODE_ENV,
-    PRISMA_LOG_QUERIES: process.env.PRISMA_LOG_QUERIES,
-    OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY,
-    EXA_API_KEY: process.env.EXA_API_KEY,
-    MEM0_API_KEY: process.env.MEM0_API_KEY,
-    E2B_API_KEY: process.env.E2B_API_KEY,
-    GITHUB_TOKEN: process.env.GITHUB_TOKEN,
-    ...authRuntimeEnv(),
-    ...imageModelRuntimeEnv(),
-  },
+  experimental__runtimeEnv: {},
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
    * useful for Docker builds.

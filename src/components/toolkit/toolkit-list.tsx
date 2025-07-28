@@ -33,7 +33,6 @@ import type {
   Toolkits,
 } from "@/toolkits/toolkits/shared";
 import type { SelectedToolkit } from "./types";
-import type z from "zod";
 
 interface ToolkitListProps {
   selectedToolkits: SelectedToolkit[];
