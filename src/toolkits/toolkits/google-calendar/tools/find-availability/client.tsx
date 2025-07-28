@@ -1,10 +1,12 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import { type findAvailabilityTool } from "./base";
 import type { ClientToolConfig } from "@/toolkits/types";
 import { HStack, VStack } from "@/components/ui/stack";
 import { ToolCallComponent } from "../../components/tool-call";
 import { Badge } from "@/components/ui/badge";
-import { Clock, AlertCircle, CheckCircle } from "lucide-react";
+import { Clock, AlertCircle, CheckCircle, ChevronDown, ChevronUp } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
@@ -27,6 +29,11 @@ export const googleCalendarFindAvailabilityToolConfigClient: ClientToolConfig<
   },
   ResultComponent: ({ result, append }) => {
     const { availableSlots, totalSlotsFound, searchPeriod, conflictingEvents } = result;
+    const [showAllSlots, setShowAllSlots] = useState(false);
+    
+    const INITIAL_SLOTS_TO_SHOW = 6;
+    const displayedSlots = showAllSlots ? availableSlots : availableSlots.slice(0, INITIAL_SLOTS_TO_SHOW);
+    const hasMoreSlots = availableSlots.length > INITIAL_SLOTS_TO_SHOW;
 
     const handleSlotSelect = (slot: typeof availableSlots[0]) => {
       append({
@@ -93,9 +100,9 @@ export const googleCalendarFindAvailabilityToolConfigClient: ClientToolConfig<
           </HStack>
         </HStack>
 
-        {/* Simple grid of available slots */}
+        {/* Grid of available slots with pagination */}
         <div className="grid w-full gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {availableSlots.map((slot, index) => (
+          {displayedSlots.map((slot, index) => (
             <Card 
               key={index}
               className="cursor-pointer hover:shadow-md transition-shadow"
@@ -131,6 +138,30 @@ export const googleCalendarFindAvailabilityToolConfigClient: ClientToolConfig<
             </Card>
           ))}
         </div>
+
+        {/* Show More/Less button */}
+        {hasMoreSlots && (
+          <div className="w-full flex justify-center">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowAllSlots(!showAllSlots)}
+              className="flex items-center gap-2"
+            >
+              {showAllSlots ? (
+                <>
+                  <ChevronUp className="size-4" />
+                  Show Less
+                </>
+              ) : (
+                <>
+                  <ChevronDown className="size-4" />
+                  Show {availableSlots.length - INITIAL_SLOTS_TO_SHOW} More Slots
+                </>
+              )}
+            </Button>
+          </div>
+        )}
 
         {conflictingEvents.length > 0 && (
           <VStack className="w-full items-start gap-2">
