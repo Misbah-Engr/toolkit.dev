@@ -46,8 +46,9 @@ export const Form: React.ComponentType<{
                   });
                 }}
                 className={cn(
-                  "cursor-pointer rounded-none",
-                  isSelected && "bg-primary/10",
+                  "data-[selected=true]:bg-primary/10 cursor-pointer rounded-none transition-colors",
+                  isSelected &&
+                    "bg-primary/20 data-[selected=true]:bg-primary/20",
                 )}
                 style={{ height: `${imageModelHeight}px` }}
               >
