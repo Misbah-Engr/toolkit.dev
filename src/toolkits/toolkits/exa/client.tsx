@@ -21,6 +21,7 @@ export const exaClientToolkit = createClientToolkit(
     icon: Search,
     form: null,
     type: ToolkitGroups.DataSource,
+    envVars: ["EXA_API_KEY"],
   },
   {
     [ExaTools.Search]: exaSearchToolConfigClient,

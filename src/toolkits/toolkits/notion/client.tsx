@@ -28,6 +28,7 @@ export const notionClientToolkit = createClientToolkit(
     form: null,
     Wrapper: NotionWrapper,
     type: ToolkitGroups.KnowledgeBase,
+    envVars: ["AUTH_NOTION_ID", "AUTH_NOTION_SECRET"],
   },
   {
     [NotionTools.ListDatabases]: notionListDatabasesToolConfigClient,

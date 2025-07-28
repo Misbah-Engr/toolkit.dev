@@ -25,6 +25,7 @@ export const googleCalendarClientToolkit = createClientToolkit(
     form: null,
     Wrapper: GoogleCalendarWrapper,
     type: ToolkitGroups.DataSource,
+    envVars: ["GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET"],
   },
   {
     [GoogleCalendarTools.ListCalendars]:

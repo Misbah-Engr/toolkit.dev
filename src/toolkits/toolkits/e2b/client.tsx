@@ -14,6 +14,7 @@ export const e2bClientToolkit = createClientToolkit(
     icon: Terminal,
     form: null,
     type: ToolkitGroups.Native,
+    envVars: ["E2B_API_KEY"],
   },
   {
     [E2BTools.RunCode]: e2bRunCodeToolConfigClient,

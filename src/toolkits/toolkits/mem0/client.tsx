@@ -15,6 +15,7 @@ export const mem0ClientToolkit = createClientToolkit(
     icon: ({ className }) => <Brain className={className} />,
     form: null,
     type: ToolkitGroups.Native,
+    envVars: ["MEM0_API_KEY"],
   },
   {
     [Mem0Tools.AddMemory]: mem0AddMemoryToolConfigClient,

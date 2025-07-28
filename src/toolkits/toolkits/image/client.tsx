@@ -18,6 +18,16 @@ export const imageClientToolkit = createClientToolkit<
     icon: ImageIcon,
     form: Form,
     type: ToolkitGroups.Native,
+    envVars: [
+      [
+        "FAL_API_KEY",
+        "FIREWORKS_API_KEY",
+        "LUMA_API_KEY",
+        "OPENAI_API_KEY",
+        "XAI_API_KEY",
+      ],
+      ["BLOB_READ_WRITE_TOKEN"],
+    ],
   },
   {
     [ImageTools.Generate]: generateToolConfigClient,

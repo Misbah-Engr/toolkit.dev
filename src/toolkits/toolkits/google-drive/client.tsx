@@ -20,6 +20,7 @@ export const googleDriveClientToolkit = createClientToolkit(
     form: null,
     Wrapper: GoogleDriveWrapper,
     type: ToolkitGroups.DataSource,
+    envVars: ["GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET"],
   },
   {
     [GoogleDriveTools.SearchFiles]: googleDriveSearchFilesToolConfigClient,

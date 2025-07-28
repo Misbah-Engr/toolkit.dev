@@ -24,6 +24,7 @@ export const githubClientToolkit = createClientToolkit(
     form: null,
     Wrapper: GithubWrapper,
     type: ToolkitGroups.DataSource,
+    envVars: ["AUTH_GITHUB_ID", "AUTH_GITHUB_SECRET"],
   },
   {
     [GithubTools.SearchRepos]: githubSearchReposToolConfigClient,

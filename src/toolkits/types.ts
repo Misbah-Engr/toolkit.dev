@@ -23,6 +23,7 @@ export type ClientToolkitConifg<Parameters extends ZodRawShape = ZodRawShape> =
     name: string;
     description: string;
     icon: React.FC<{ className?: string }>;
+    envVars: string[] | string[][];
     form: React.ComponentType<{
       parameters: z.infer<ZodObject<Parameters>>;
       setParameters: (parameters: z.infer<ZodObject<Parameters>>) => void;
