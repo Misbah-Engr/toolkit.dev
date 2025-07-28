@@ -19,20 +19,8 @@ export const googleCalendarGetCalendarToolConfigServer = (
         calendarId,
       });
 
-      const cal = response.data;
-
       return {
-        id: cal.id!,
-        summary: cal.summary!,
-        description: cal.description ?? undefined,
-        timeZone: cal.timeZone!,
-        colorId: cal.etag ?? undefined,
-        backgroundColor: cal.etag ?? undefined,
-        foregroundColor: cal.etag ?? undefined,
-        selected: undefined,
-        accessRole: "owner",
-        primary: false,
-        location: cal.location ?? undefined,
+        calendar: response.data,
       };
     },
   };
