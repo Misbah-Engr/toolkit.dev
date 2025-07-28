@@ -3,8 +3,6 @@ export type ImageModelProvider =
   | "xai"
   | "fal"
   | "fireworks"
-  | "vertex"
-  | "bedrock"
   | "luma";
 
 export type ImageModel = {
