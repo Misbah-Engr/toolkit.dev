@@ -141,6 +141,7 @@ export const env = createEnv({
     MEM0_API_KEY: z.string().optional(),
     E2B_API_KEY: z.string().optional(),
     GITHUB_TOKEN: z.string().optional(),
+    BLOB_READ_WRITE_TOKEN: z.string().optional(),
     ...createAuthSchema(),
     ...createImageModelSchema(),
   },

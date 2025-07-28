@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Loader2, Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { CommandItem } from "@/components/ui/command";
+import { CommandItem as BaseCommandItem } from "@/components/ui/command";
 import {
   Dialog,
   DialogContent,
@@ -22,6 +22,8 @@ import type {
 } from "@/toolkits/toolkits/shared";
 import type { ClientToolkit } from "@/toolkits/types";
 import type { SelectedToolkit } from "../types";
+import { useToolkitEnvVarsAvailable } from "@/contexts/env/available-env-vars";
+import { IS_PRODUCTION } from "@/lib/constants";
 
 interface Props {
   id: Toolkits;
@@ -38,7 +40,7 @@ export const ToolkitItem: React.FC<Props> = ({
   addToolkit,
   removeToolkit,
 }) => {
-  const BaseItem = ({
+  const CommandItem = ({
     onSelect,
     isLoading,
   }: {
@@ -46,7 +48,7 @@ export const ToolkitItem: React.FC<Props> = ({
     isLoading: boolean;
   }) => {
     return (
-      <CommandItem
+      <BaseCommandItem
         onSelect={onSelect}
         className="flex items-center gap-2 rounded-none px-3"
         disabled={isLoading}
@@ -71,8 +73,48 @@ export const ToolkitItem: React.FC<Props> = ({
           <h3 className="text-sm font-medium">{toolkit.name}</h3>
           <p className="text-muted-foreground text-xs">{toolkit.description}</p>
         </VStack>
-      </CommandItem>
+      </BaseCommandItem>
     );
+  };
+
+  // This prevents devs from trying to use tools for which they don't have the required env vars
+  const BaseDevItem = ({
+    onSelect,
+    isLoading,
+  }: {
+    onSelect: () => void;
+    isLoading: boolean;
+  }) => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const hasEnvVars = useToolkitEnvVarsAvailable(toolkit);
+
+    return (
+      <>
+        <CommandItem
+          isLoading={isLoading}
+          onSelect={!hasEnvVars ? () => setIsOpen(true) : onSelect}
+        />
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+          <DialogContent className="gap-2 p-0 sm:max-w-[425px]">
+            <DialogHeader className="p-4 pb-0">
+              <DialogTitle>Configure {toolkit.name}</DialogTitle>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
+      </>
+    );
+  };
+
+  const BaseItem = ({
+    onSelect,
+    isLoading,
+  }: {
+    onSelect: () => void;
+    isLoading: boolean;
+  }) => {
+    const Item = IS_PRODUCTION ? BaseCommandItem : BaseDevItem;
+    return <Item onSelect={onSelect} isLoading={isLoading} />;
   };
 
   const ItemWithForm = ({
@@ -91,7 +133,10 @@ export const ToolkitItem: React.FC<Props> = ({
       <>
         <BaseItem
           isLoading={isLoading}
-          onSelect={onSelect ?? (() => setIsOpen(true))}
+          onSelect={
+            onSelect ??
+            (isSelected ? () => removeToolkit(id) : () => setIsOpen(true))
+          }
         />
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogContent className="gap-2 p-0 sm:max-w-[425px]">
@@ -139,7 +184,7 @@ export const ToolkitItem: React.FC<Props> = ({
     isLoading: boolean;
     onSelect?: () => void;
   }) => {
-    if (Object.keys(toolkit.parameters.shape).length > 0 && !isSelected) {
+    if (Object.keys(toolkit.parameters.shape).length > 0) {
       return <ItemWithForm isLoading={isLoading} onSelect={onSelect} />;
     }
 

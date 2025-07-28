@@ -36,6 +36,7 @@ export const useToolkitEnvVarsAvailable = (toolkit: ClientToolkit) => {
   if (!context) {
     return true;
   }
+  console.log(context);
   return toolkit.envVars.every((envVar) =>
     Array.isArray(envVar)
       ? envVar.some((envVar) => context[envVar])
