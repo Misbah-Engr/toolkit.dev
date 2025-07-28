@@ -1,10 +1,8 @@
 import React from "react";
 import { type createEventTool } from "./base";
 import type { ClientToolConfig } from "@/toolkits/types";
-import { HStack, VStack } from "@/components/ui/stack";
 import { EventCard } from "../../components/event-card";
 import { ToolCallComponent } from "../../components/tool-call";
-import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Users, Calendar, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";

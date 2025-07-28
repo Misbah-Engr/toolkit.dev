@@ -49,7 +49,7 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
         });
         userTimeZone = calendarResponse.data.timeZone || userTimeZone;
       } catch (error) {
-        console.warn('[FindAvailability] Could not get user timezone, using fallback:', userTimeZone);
+        // Using fallback timezone
       }
 
       // Create proper RFC3339 timestamps for the search range
@@ -58,16 +58,6 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
       
       const timeMin = startOfDay.toISOString();
       const timeMax = endOfDay.toISOString();
-
-      console.log('[FindAvailability] Search parameters:', {
-        startDate: searchStartDate,
-        endDate: searchEndDate,
-        duration: searchDuration,
-        maxResults: searchMaxResults,
-        timeMin,
-        timeMax,
-        userTimeZone
-      });
 
       // Fetch existing events in the time range
       try {
@@ -85,11 +75,6 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
         const timedEvents = events.filter(event => 
           event.start?.dateTime && event.end?.dateTime
         );
-
-        console.log('[FindAvailability] Found events:', {
-          total: events.length,
-          timed: timedEvents.length
-        });
 
         // If attendees are specified, get their emails from Notion and check their calendars
         if (attendeeNames && attendeeNames.length > 0) {
@@ -129,7 +114,7 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
               
               timedEvents.push(...attendeeTimedEvents);
             } catch (error) {
-              console.error(`Failed to fetch calendar for ${email}:`, error);
+              // Failed to fetch calendar for attendee
             }
           }
         }
@@ -230,11 +215,6 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
           currentDate.setDate(currentDate.getDate() + 1);
         }
 
-        console.log('[FindAvailability] Results:', {
-          availableSlots: availableSlots.length,
-          conflictingEvents: conflictingEvents.length
-        });
-
         return {
           availableSlots,
           totalSlotsFound: availableSlots.length,
@@ -246,7 +226,6 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
           conflictingEvents,
         };
       } catch (error) {
-        console.error('[FindAvailability] Failed to find availability:', error);
         throw new Error("Failed to analyze calendar availability");
       }
     },

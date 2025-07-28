@@ -1,6 +1,6 @@
 import React from "react";
 import { Badge } from "@/components/ui/badge";
-import { HStack, VStack } from "@/components/ui/stack";
+import { VStack } from "@/components/ui/stack";
 import { Clock, Users, User } from "lucide-react";
 
 interface EventCardProps {

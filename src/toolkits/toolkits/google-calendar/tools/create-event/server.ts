@@ -24,12 +24,6 @@ export const googleCalendarCreateEventToolConfigServer = (
 
       const calendar = google.calendar({ version: "v3", auth });
 
-      console.log('[CreateEvent] Creating event with parameters:', {
-        title,
-        startDateTime,
-        endDateTime
-      });
-
       // Get user's primary calendar timezone
       let userTimeZone = 'America/New_York'; // fallback
       try {
@@ -37,9 +31,8 @@ export const googleCalendarCreateEventToolConfigServer = (
           calendarId: 'primary'
         });
         userTimeZone = calendarResponse.data.timeZone || userTimeZone;
-        console.log('[CreateEvent] Using timezone:', userTimeZone);
       } catch (error) {
-        console.warn('[CreateEvent] Could not get user timezone, using fallback:', userTimeZone);
+        // Using fallback timezone
       }
 
       // Convert input times to user's timezone
@@ -49,12 +42,6 @@ export const googleCalendarCreateEventToolConfigServer = (
       // Create RFC3339 timestamps with user's timezone
       const startDateTimeFormatted = startDate.toISOString();
       const endDateTimeFormatted = endDate.toISOString();
-
-      console.log('[CreateEvent] Formatted timestamps:', {
-        startDateTimeFormatted,
-        endDateTimeFormatted,
-        timezone: userTimeZone
-      });
 
       // Build the event object with user's timezone
       const eventResource: calendar_v3.Schema$Event = {
@@ -69,8 +56,6 @@ export const googleCalendarCreateEventToolConfigServer = (
         },
       };
 
-      console.log('[CreateEvent] Event resource:', eventResource);
-
       try {
         const response = await calendar.events.insert({
           calendarId: "primary",
@@ -79,15 +64,6 @@ export const googleCalendarCreateEventToolConfigServer = (
         });
 
         const event = response.data;
-
-        console.log('[CreateEvent] Event created successfully:', {
-          id: event.id,
-          summary: event.summary,
-          start: event.start?.dateTime,
-          end: event.end?.dateTime,
-          status: event.status,
-          timeZone: event.start?.timeZone
-        });
 
         return {
           id: event.id!,
@@ -123,7 +99,6 @@ export const googleCalendarCreateEventToolConfigServer = (
           updated: event.updated ?? undefined,
         };
       } catch (error) {
-        console.error('[CreateEvent] Failed to create event:', error);
         throw new Error("Failed to create calendar event");
       }
     },
