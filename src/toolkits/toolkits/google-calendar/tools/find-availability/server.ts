@@ -25,55 +25,79 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
       startDate,
       endDate,
       durationMinutes,
+      timeOfDay,
+      workingHours,
       attendeeNames,
+      maxResults,
     }) => {
+      // Apply intelligent defaults following the || pattern from other toolkits
+      const today = new Date().toISOString().split('T')[0];
+      const searchStartDate = startDate || today;
+      const searchEndDate = endDate || (() => {
+        const defaultEnd = new Date(searchStartDate!);
+        defaultEnd.setDate(defaultEnd.getDate() + 7);
+        return defaultEnd.toISOString().split('T')[0];
+      })();
+      const searchDuration = durationMinutes || 60;
+      const searchTimeOfDay = timeOfDay || 'any';
+      const searchMaxResults = maxResults || 10;
+      
+      // Working hours with sensible defaults
+      const defaultWorkingHours = {
+        start: "09:00",
+        end: "17:00",
+      };
+      const searchWorkingHours = {
+        start: workingHours?.start || defaultWorkingHours.start,
+        end: workingHours?.end || defaultWorkingHours.end,
+      };
+
       const auth = new google.auth.OAuth2();
       auth.setCredentials({ access_token: accessToken });
 
       const calendar = google.calendar({ version: "v3", auth });
 
       // Convert date strings to RFC3339 timestamps with timezone
-      const timeMin = `${startDate}T00:00:00-04:00`;  // Use Eastern Time
-      const timeMax = `${endDate}T23:59:59-04:00`;    // Use Eastern Time
+      const timeMin = `${searchStartDate}T00:00:00-04:00`;
+      const timeMax = `${searchEndDate}T23:59:59-04:00`;
 
-      console.log('[FindAvailability] Search time range:', { timeMin, timeMax });
+      console.log('[FindAvailability] Search parameters:', {
+        startDate: searchStartDate,
+        endDate: searchEndDate,
+        duration: searchDuration,
+        timeOfDay: searchTimeOfDay,
+        workingHours: searchWorkingHours,
+        maxResults: searchMaxResults
+      });
 
       // Fetch existing events in the time range
       const response = await calendar.events.list({
-        calendarId: "primary", // Use primary calendar by default
+        calendarId: "primary",
         timeMin,
         timeMax,
         singleEvents: true,
         orderBy: "startTime",
-        maxResults: 2500, // Get all events in the range
-        timeZone: 'America/New_York'  // Explicitly set timezone
+        maxResults: 2500,
+        timeZone: 'America/New_York'
       });
 
       const events = response.data.items ?? [];
-      
-      console.log('[FindAvailability] Total events found:', events.length);
-      
-      // Filter events that actually have start/end times (not all-day events without times)
       const timedEvents = events.filter(event => 
         event.start?.dateTime && event.end?.dateTime
       );
-      
-      console.log('[FindAvailability] Timed events:', timedEvents.length);
-      console.log('[FindAvailability] First few timed events:', timedEvents.slice(0, 3).map(e => ({
-        summary: e.summary,
-        start: e.start?.dateTime,
-        end: e.end?.dateTime
-      })));
+
+      console.log('[FindAvailability] Found events:', {
+        total: events.length,
+        timed: timedEvents.length
+      });
 
       // If attendees are specified, get their emails from Notion and check their calendars
       if (attendeeNames && attendeeNames.length > 0) {
-        // Fetch all Notion users
         const notionUsers = await notionListUsersToolConfigServer(notion).callback({
           start_cursor: "",
           page_size: 100,
         });
 
-        // Map names to emails
         const nameToEmail = new Map(
           notionUsers.results.map((user: UserObjectResponse) => {
             if (user.type === "person") {
@@ -83,12 +107,10 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
           })
         );
 
-        // Get attendee emails
         const attendeeEmails = attendeeNames
           .map(name => nameToEmail.get(name.toLowerCase()))
           .filter((email): email is string => !!email);
 
-        // Check each attendee's calendar
         for (const email of attendeeEmails) {
           try {
             const attendeeResponse = await calendar.events.list({
@@ -112,17 +134,6 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
         }
       }
 
-      // Use sensible defaults for working hours - now 6 AM to 11 PM to allow evening slots
-      const workingHours = {
-        startTime: "06:00",
-        endTime: "23:00", // Changed from 24:00 to 23:00 to avoid setHours(24) issues
-        workingDays: [0, 1, 2, 3, 4, 5, 6], // Include all days of the week
-        timeZone: 'America/New_York'
-      };
-
-      const gapMinutes = 15; // 15 minute buffer between meetings
-      const maxSlots = 50; // Increased to show more slots
-
       // Find available slots
       const availableSlots: Array<{
         start: string;
@@ -139,59 +150,45 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
         start: string;
         end: string;
       }> = [];
-      
-      console.log('[FindAvailability] Search parameters:', {
-        startDate: timeMin,
-        endDate: timeMax,
-        durationMinutes,
-        workingHours,
-        gapMinutes
-      });
-      
+
+      // Generate slots based on working hours and time preferences
       const startDateObj = new Date(timeMin);
       const endDateObj = new Date(timeMax);
-      
-      // Iterate through each day
       const currentDate = new Date(startDateObj);
       
-      while (currentDate <= endDateObj && availableSlots.length < maxSlots) {
-        const dayOfWeek = currentDate.getDay();
-        
-        // Skip non-working days (now includes all days)
-        if (!workingHours.workingDays.includes(dayOfWeek)) {
-          currentDate.setDate(currentDate.getDate() + 1);
-          continue;
-        }
-
-        // Create a proper date for this day in Eastern Time
+      while (currentDate <= endDateObj && availableSlots.length < searchMaxResults) {
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth();
         const date = currentDate.getDate();
         
         // Set working hours for this day
-        const [startHour, startMin] = workingHours.startTime.split(':').map(Number);
-        const [endHour, endMin] = workingHours.endTime.split(':').map(Number);
+        const [startHour, startMin] = searchWorkingHours.start.split(':').map(Number);
+        const [endHour, endMin] = searchWorkingHours.end.split(':').map(Number);
         
-        const dayStart = new Date(year, month, date, startHour ?? 6, startMin ?? 0, 0, 0);
-        const dayEnd = new Date(year, month, date, endHour ?? 23, endMin ?? 0, 0, 0);
+        const dayStart = new Date(year, month, date, startHour ?? 9, startMin ?? 0, 0, 0);
+        const dayEnd = new Date(year, month, date, endHour ?? 17, endMin ?? 0, 0, 0);
 
-        console.log(`[FindAvailability] Processing day ${currentDate.toISOString().split('T')[0]}:`, {
-          dayStart: dayStart.toISOString(),
-          dayEnd: dayEnd.toISOString()
-        });
+        // Apply time of day filter
+        let searchStart = dayStart;
+        let searchEnd = dayEnd;
+        
+        if (searchTimeOfDay === 'morning') {
+          searchEnd = new Date(year, month, date, 12, 0, 0, 0); // End at noon
+        } else if (searchTimeOfDay === 'afternoon') {
+          searchStart = new Date(year, month, date, 12, 0, 0, 0); // Start at noon
+          searchEnd = new Date(year, month, date, 17, 0, 0, 0); // End at 5 PM
+        } else if (searchTimeOfDay === 'evening') {
+          searchStart = new Date(year, month, date, 17, 0, 0, 0); // Start at 5 PM
+          searchEnd = new Date(year, month, date, 21, 0, 0, 0); // End at 9 PM
+        }
 
         // Get events for this day
         const dayEvents = timedEvents.filter(event => {
           const eventStart = new Date(event.start!.dateTime!);
           const eventEnd = new Date(event.end!.dateTime!);
-          
-          // Check if event overlaps with this day's working hours
-          return (eventStart < dayEnd && eventEnd > dayStart);
+          return (eventStart < searchEnd && eventEnd > searchStart);
         });
 
-        console.log(`[FindAvailability] Day ${currentDate.toISOString().split('T')[0]} events:`, dayEvents.length);
-
-        // Sort events by start time
         dayEvents.sort((a, b) => 
           new Date(a.start!.dateTime!).getTime() - new Date(b.start!.dateTime!).getTime()
         );
@@ -206,30 +203,24 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
           });
         });
 
-        // Generate all possible slots for this day
-        let currentSlotStart = new Date(dayStart);
+        // Generate time slots every hour
+        let currentSlotStart = new Date(searchStart);
         
-        while (currentSlotStart.getTime() + (durationMinutes * 60 * 1000) <= dayEnd.getTime()) {
-          const slotEnd = new Date(currentSlotStart.getTime() + (durationMinutes * 60 * 1000));
+        while (currentSlotStart.getTime() + (searchDuration * 60 * 1000) <= searchEnd.getTime()) {
+          const slotEnd = new Date(currentSlotStart.getTime() + (searchDuration * 60 * 1000));
           
           // Check if this slot conflicts with any existing events
           const hasConflict = dayEvents.some(event => {
             const eventStart = new Date(event.start!.dateTime!);
             const eventEnd = new Date(event.end!.dateTime!);
-            
-            // Check for overlap: slot starts before event ends AND slot ends after event starts
             return (currentSlotStart < eventEnd && slotEnd > eventStart);
           });
           
           if (!hasConflict) {
-            // Convert times to Eastern Time for display
-            const slotStartET = new Date(currentSlotStart.toLocaleString('en-US', { timeZone: 'America/New_York' }));
-            const slotEndET = new Date(slotEnd.toLocaleString('en-US', { timeZone: 'America/New_York' }));
-            
             availableSlots.push({
               start: currentSlotStart.toISOString(),
               end: slotEnd.toISOString(),
-              duration: durationMinutes,
+              duration: searchDuration,
               dayOfWeek: currentSlotStart.toLocaleDateString('en-US', { weekday: 'long', timeZone: 'America/New_York' }),
               date: currentSlotStart.toLocaleDateString('en-US', { timeZone: 'America/New_York' }),
               timeRange: `${currentSlotStart.toLocaleTimeString('en-US', { 
@@ -245,80 +236,29 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
               })}`,
             });
             
-            console.log('[FindAvailability] Found available slot:', {
-              start: currentSlotStart.toISOString(),
-              end: slotEnd.toISOString(),
-              timeRange: `${currentSlotStart.toLocaleTimeString('en-US', { 
-                hour: '2-digit', 
-                minute: '2-digit', 
-                timeZone: 'America/New_York',
-                hour12: true 
-              })} - ${slotEnd.toLocaleTimeString('en-US', { 
-                hour: '2-digit', 
-                minute: '2-digit', 
-                timeZone: 'America/New_York',
-                hour12: true 
-              })}`
-            });
-            
-            if (availableSlots.length >= maxSlots) break;
+            if (availableSlots.length >= searchMaxResults) break;
           }
           
-          // Move to next hour (every 60 minutes instead of 15)
+          // Move to next hour
           currentSlotStart = new Date(currentSlotStart.getTime() + (60 * 60 * 1000));
         }
         
-        if (availableSlots.length >= maxSlots) break;
+        if (availableSlots.length >= searchMaxResults) break;
         currentDate.setDate(currentDate.getDate() + 1);
       }
 
-      console.log('[FindAvailability] Final results:', {
-        totalSlotsFound: availableSlots.length,
-        firstSlot: availableSlots[0],
-        conflictingEventsCount: conflictingEvents.length
+      console.log('[FindAvailability] Results:', {
+        availableSlots: availableSlots.length,
+        conflictingEvents: conflictingEvents.length
       });
 
-      // If the search period is only 1-2 days and there are many slots, 
-      // try to filter to more relevant times based on the time range
-      let filteredSlots = availableSlots;
-      const searchDays = Math.ceil((endDateObj.getTime() - startDateObj.getTime()) / (1000 * 60 * 60 * 24));
-      
-      if (searchDays <= 2 && availableSlots.length > 10) {
-        // Look for evening slots (6 PM - 11 PM) if there are many options
-        const eveningSlots = availableSlots.filter(slot => {
-          const slotTime = new Date(slot.start);
-          // Get the hour in Eastern Time
-          const etTime = new Date(slotTime.toLocaleString('en-US', { timeZone: 'America/New_York' }));
-          const etHour = etTime.getHours();
-          return etHour >= 18 && etHour <= 23; // 6 PM to 11 PM Eastern
-        });
-        
-        // If we found evening slots, prefer those
-        if (eveningSlots.length > 0) {
-          console.log('[FindAvailability] Filtering to evening slots for better relevance:', eveningSlots.length);
-          filteredSlots = eveningSlots;
-          
-          // If there's a 10 PM slot specifically, prioritize it
-          const tenPmSlots = eveningSlots.filter(slot => {
-            const slotTime = new Date(slot.start);
-            const etTime = new Date(slotTime.toLocaleString('en-US', { timeZone: 'America/New_York' }));
-            return etTime.getHours() === 22; // 10 PM Eastern
-          });
-          
-          if (tenPmSlots.length > 0) {
-            console.log('[FindAvailability] Found 10 PM slots, prioritizing those:', tenPmSlots.length);
-            filteredSlots = tenPmSlots;
-          }
-        }
-      }
-
       return {
-        availableSlots: filteredSlots,
-        totalSlotsFound: filteredSlots.length,
+        availableSlots,
+        totalSlotsFound: availableSlots.length,
         searchPeriod: {
           start: timeMin,
           end: timeMax,
-          duration: durationMinutes,
+          duration: searchDuration,
         },
         conflictingEvents,
       };

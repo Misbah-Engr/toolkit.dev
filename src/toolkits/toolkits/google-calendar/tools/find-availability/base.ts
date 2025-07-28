@@ -2,13 +2,19 @@ import { z } from "zod";
 import { createBaseTool } from "@/toolkits/create-tool";
 
 export const findAvailabilityTool = createBaseTool({
-  description: "Find available time slots in a calendar by analyzing existing events. When looking for availability on a specific day, use the same date for both startDate and endDate.",
+  description: "Find available time slots in a calendar by analyzing existing events. Provides intelligent defaults for minimal input while supporting detailed configuration.",
   inputSchema: z.object({
-    startDate: z.string().describe("Start date to search (YYYY-MM-DD format). For single-day searches, use the same date as endDate."),
-    endDate: z.string().describe("End date to search (YYYY-MM-DD format). For single-day searches, use the same date as startDate."),
-    durationMinutes: z.number().describe("Meeting duration in minutes"),
-    attendeeNames: z.array(z.string()).optional().describe("List of Notion workspace user names to check availability for"),
-  }).required(),
+    startDate: z.string().optional().describe("Start date to search (YYYY-MM-DD format). Defaults to today if not provided."),
+    endDate: z.string().optional().describe("End date to search (YYYY-MM-DD format). Defaults to startDate + 7 days if not provided."),
+    durationMinutes: z.number().optional().describe("Meeting duration in minutes. Defaults to 60 minutes if not provided."),
+    timeOfDay: z.enum(['morning', 'afternoon', 'evening', 'any']).optional().describe("Preferred time of day. Defaults to 'any' if not provided."),
+    workingHours: z.object({
+      start: z.string().optional().describe("Start time (HH:MM format). Defaults to '09:00'."),
+      end: z.string().optional().describe("End time (HH:MM format). Defaults to '17:00'."),
+    }).optional().describe("Custom working hours. Uses 9 AM - 5 PM if not provided."),
+    attendeeNames: z.array(z.string()).optional().describe("List of Notion workspace user names to check availability for. Optional."),
+    maxResults: z.number().optional().describe("Maximum number of slots to return. Defaults to 10."),
+  }),
   outputSchema: z.object({
     availableSlots: z.array(
       z.object({
