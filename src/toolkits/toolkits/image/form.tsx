@@ -1,7 +1,5 @@
 import type { z, ZodObject } from "zod";
 
-import { CheckIcon } from "lucide-react";
-
 import {
   Command,
   CommandEmpty,
@@ -15,8 +13,11 @@ import { ModelProviderIcon } from "@/components/ui/model-icon";
 
 import { allImageModels } from "@/ai/image";
 
-import type { imageParameters } from "./base";
 import { cn } from "@/lib/utils";
+
+import type { imageParameters } from "./base";
+
+const imageModelHeight = 48;
 
 export const Form: React.ComponentType<{
   parameters: z.infer<ZodObject<typeof imageParameters.shape>>;
@@ -24,12 +25,13 @@ export const Form: React.ComponentType<{
     parameters: z.infer<ZodObject<typeof imageParameters.shape>>,
   ) => void;
 }> = ({ parameters, setParameters }) => {
+  console.log(parameters);
   return (
-    <Command>
+    <Command className="bg-transparent">
       <CommandInput placeholder="Search models..." />
-      <CommandList>
+      <CommandList style={{ height: `${imageModelHeight * 4.5}px` }}>
         <CommandEmpty>No models found.</CommandEmpty>
-        <CommandGroup>
+        <CommandGroup className="p-0">
           {allImageModels.map((model) => {
             const modelValue = `${model.provider}:${model.modelId}`;
             const isSelected = parameters.model === modelValue;
@@ -43,7 +45,11 @@ export const Form: React.ComponentType<{
                     model: modelValue as typeof parameters.model,
                   });
                 }}
-                className={cn(isSelected && "bg-primary/10")}
+                className={cn(
+                  "cursor-pointer rounded-none",
+                  isSelected && "bg-primary/10",
+                )}
+                style={{ height: `${imageModelHeight}px` }}
               >
                 <HStack className="flex-1">
                   <ModelProviderIcon provider={model.provider} />

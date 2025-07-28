@@ -228,10 +228,7 @@ const ClientToolkitDialogContent: React.FC<ClientToolkitConfigureProps> = ({
         </DialogDescription>
       </DialogHeader>
       {toolkit.form && (
-        <toolkit.form
-          parameters={toolkit.parameters}
-          setParameters={setParameters}
-        />
+        <toolkit.form parameters={parameters} setParameters={setParameters} />
       )}
       <DialogFooter className="flex justify-end gap-2 p-4">
         <Button variant="outline" onClick={close} className="flex-1">
