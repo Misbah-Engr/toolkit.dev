@@ -47,4 +47,8 @@ export const modelProviderNames: Record<string, string> = {
   "meta-llama": "Llama",
   qwen: "Qwen",
   deepseek: "DeepSeek",
+  fireworks: "Fireworks AI",
+  azure: "Azure (DALL-E)",
+  vertex: "Google Vertex AI",
+  xai: "xAI",
 };

@@ -26,7 +26,7 @@ export enum SearchOptions {
   Exa = "Exa Search",
 }
 
-export type ImageModelProvider = "openai" | "xai";
+export type ImageModelProvider = "openai" | "xai" | "fireworks" | "azure" | "vertex";
 
 export type ImageModel = {
   name: string;

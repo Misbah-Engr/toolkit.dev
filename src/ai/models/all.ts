@@ -8,6 +8,9 @@ import { anthropicModels } from "./anthropic";
 import { llamaModels } from "./llama";
 import { qwenModels } from "./qwen";
 import { deepseekModels } from "./deepseek";
+import { fireworksImageModels, fireworksLanguageModels } from "./fireworks";
+import { azureImageModels, azureLanguageModels } from "./azure";
+import { googleVertexImageModels, googleVertexLanguageModels } from "./google-vertex";
 
 export const allLanguageModels = [
   ...anthropicModels,
@@ -18,6 +21,15 @@ export const allLanguageModels = [
   ...llamaModels,
   ...qwenModels,
   ...deepseekModels,
+  ...fireworksLanguageModels,
+  ...azureLanguageModels,
+  ...googleVertexLanguageModels,
 ];
 
-export const allImageModels = [...openAiImageModels, ...xaiImageModels];
+export const allImageModels = [
+  ...openAiImageModels, 
+  ...xaiImageModels,
+  ...fireworksImageModels,
+  ...azureImageModels,
+  ...googleVertexImageModels,
+];
