@@ -33,11 +33,11 @@ export const googleCalendarCreateEventToolConfigClient: ClientToolConfig<
     );
   },
   ResultComponent: ({ result }) => {
-    // Transform result to match EventCard requirements
+    // EventCard now handles optional dateTime fields directly
     const eventForCard = {
       ...result,
-      start: { dateTime: result.start.dateTime ?? result.start.date ?? new Date().toISOString() },
-      end: { dateTime: result.end.dateTime ?? result.end.date ?? new Date().toISOString() }
+      start: result.start,
+      end: result.end
     };
 
     return (

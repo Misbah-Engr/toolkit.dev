@@ -9,10 +9,14 @@ interface EventCardProps {
     summary?: string;
     description?: string;
     start: {
-      dateTime: string;
+      dateTime?: string;
+      date?: string;
+      timeZone?: string;
     };
     end: {
-      dateTime: string;
+      dateTime?: string;
+      date?: string;
+      timeZone?: string;
     };
     status?: string;
     organizer?: {
@@ -27,6 +31,14 @@ interface EventCardProps {
   };
   showDetails?: boolean;
 }
+
+const getEventDateTime = (eventTime: { dateTime?: string; date?: string }): string => {
+  return eventTime.dateTime || eventTime.date || new Date().toISOString();
+};
+
+const isAllDayEvent = (start: { dateTime?: string; date?: string }): boolean => {
+  return !start.dateTime && !!start.date;
+};
 
 const formatDateTime = (dateTime: string): string => {
   return new Date(dateTime).toLocaleString();
@@ -51,11 +63,15 @@ export const EventCard: React.FC<EventCardProps> = ({
   event,
   showDetails = false,
 }) => {
-  const startDate = formatDateTime(event.start.dateTime);
-  const endDate = formatDateTime(event.end.dateTime);
-  const startTime = formatTime(event.start.dateTime);
-  const endTime = formatTime(event.end.dateTime);
-  const formattedDate = formatDate(event.start.dateTime);
+  const startDateTime = getEventDateTime(event.start);
+  const endDateTime = getEventDateTime(event.end);
+  const isAllDay = isAllDayEvent(event.start);
+  
+  const startDate = formatDateTime(startDateTime);
+  const endDate = formatDateTime(endDateTime);
+  const startTime = isAllDay ? null : formatTime(startDateTime);
+  const endTime = isAllDay ? null : formatTime(endDateTime);
+  const formattedDate = formatDate(startDateTime);
 
   return (
     <div className="w-full rounded-lg border bg-card p-4">
@@ -69,7 +85,9 @@ export const EventCard: React.FC<EventCardProps> = ({
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Clock className="size-4" />
               <span>
-                {startDate.split(" ")[0] === endDate.split(" ")[0]
+                {isAllDay
+                  ? `${formattedDate} • All day`
+                  : startDate.split(" ")[0] === endDate.split(" ")[0]
                   ? `${formattedDate} • ${startTime} - ${endTime}`
                   : `${startDate} ${startTime} - ${endDate} ${endTime}`}
               </span>

@@ -30,48 +30,42 @@ export const googleCalendarCreateEventToolConfigServer = (
         endDateTime
       });
 
-      // Convert UTC times to Eastern Time
-      const startDateET = new Date(startDateTime);
-      const endDateET = new Date(endDateTime);
+      // Get user's primary calendar timezone
+      let userTimeZone = 'America/New_York'; // fallback
+      try {
+        const calendarResponse = await calendar.calendars.get({
+          calendarId: 'primary'
+        });
+        userTimeZone = calendarResponse.data.timeZone || userTimeZone;
+        console.log('[CreateEvent] Using timezone:', userTimeZone);
+      } catch (error) {
+        console.warn('[CreateEvent] Could not get user timezone, using fallback:', userTimeZone);
+      }
+
+      // Convert input times to user's timezone
+      const startDate = new Date(startDateTime);
+      const endDate = new Date(endDateTime);
       
-      // Format as RFC3339 with timezone
-      const startDateTimeET = startDateET.toLocaleString('en-US', { 
-        timeZone: 'America/New_York',
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false
-      }).replace(/(\d+)\/(\d+)\/(\d+),\s(\d+):(\d+):(\d+)/, '$3-$1-$2T$4:$5:$6-04:00');
+      // Create RFC3339 timestamps with user's timezone
+      const startDateTimeFormatted = startDate.toISOString();
+      const endDateTimeFormatted = endDate.toISOString();
 
-      const endDateTimeET = endDateET.toLocaleString('en-US', { 
-        timeZone: 'America/New_York',
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false
-      }).replace(/(\d+)\/(\d+)\/(\d+),\s(\d+):(\d+):(\d+)/, '$3-$1-$2T$4:$5:$6-04:00');
-
-      console.log('[CreateEvent] Converted to Eastern Time:', {
-        startDateTimeET,
-        endDateTimeET
+      console.log('[CreateEvent] Formatted timestamps:', {
+        startDateTimeFormatted,
+        endDateTimeFormatted,
+        timezone: userTimeZone
       });
 
-      // Build the event object with simplified parameters
+      // Build the event object with user's timezone
       const eventResource: calendar_v3.Schema$Event = {
         summary: title,
         start: {
-          dateTime: startDateTimeET,
-          timeZone: 'America/New_York'
+          dateTime: startDateTimeFormatted,
+          timeZone: userTimeZone
         },
         end: {
-          dateTime: endDateTimeET,
-          timeZone: 'America/New_York'
+          dateTime: endDateTimeFormatted,
+          timeZone: userTimeZone
         },
       };
 

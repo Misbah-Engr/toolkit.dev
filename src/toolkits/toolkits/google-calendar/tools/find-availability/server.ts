@@ -41,15 +41,32 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
 
       const calendar = google.calendar({ version: "v3", auth });
 
-      // Convert date strings to RFC3339 timestamps with timezone
-      const timeMin = `${searchStartDate}T00:00:00-04:00`;
-      const timeMax = `${searchEndDate}T23:59:59-04:00`;
+      // Get user's primary calendar timezone
+      let userTimeZone = 'America/New_York'; // fallback
+      try {
+        const calendarResponse = await calendar.calendars.get({
+          calendarId: 'primary'
+        });
+        userTimeZone = calendarResponse.data.timeZone || userTimeZone;
+      } catch (error) {
+        console.warn('[FindAvailability] Could not get user timezone, using fallback:', userTimeZone);
+      }
+
+      // Create proper RFC3339 timestamps for the search range
+      const startOfDay = new Date(`${searchStartDate}T00:00:00`);
+      const endOfDay = new Date(`${searchEndDate}T23:59:59`);
+      
+      const timeMin = startOfDay.toISOString();
+      const timeMax = endOfDay.toISOString();
 
       console.log('[FindAvailability] Search parameters:', {
         startDate: searchStartDate,
         endDate: searchEndDate,
         duration: searchDuration,
-        maxResults: searchMaxResults
+        maxResults: searchMaxResults,
+        timeMin,
+        timeMax,
+        userTimeZone
       });
 
       // Fetch existing events in the time range
@@ -61,7 +78,7 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
           singleEvents: true,
           orderBy: "startTime",
           maxResults: 2500,
-          timeZone: 'America/New_York'
+          timeZone: userTimeZone
         });
 
         const events = response.data.items ?? [];
@@ -187,17 +204,17 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
                 start: currentSlotStart.toISOString(),
                 end: slotEnd.toISOString(),
                 duration: searchDuration,
-                dayOfWeek: currentSlotStart.toLocaleDateString('en-US', { weekday: 'long', timeZone: 'America/New_York' }),
-                date: currentSlotStart.toLocaleDateString('en-US', { timeZone: 'America/New_York' }),
+                dayOfWeek: currentSlotStart.toLocaleDateString('en-US', { weekday: 'long', timeZone: userTimeZone }),
+                date: currentSlotStart.toLocaleDateString('en-US', { timeZone: userTimeZone }),
                 timeRange: `${currentSlotStart.toLocaleTimeString('en-US', { 
                   hour: '2-digit', 
                   minute: '2-digit', 
-                  timeZone: 'America/New_York',
+                  timeZone: userTimeZone,
                   hour12: true 
                 })} - ${slotEnd.toLocaleTimeString('en-US', { 
                   hour: '2-digit', 
                   minute: '2-digit', 
-                  timeZone: 'America/New_York',
+                  timeZone: userTimeZone,
                   hour12: true 
                 })}`,
               });
