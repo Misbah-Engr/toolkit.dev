@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { languageModels } from "@/ai/models";
+import { languageModels } from "@/ai/language";
 import { MESSAGE_MAX_LENGTH, FILE_NAME_MAX_LENGTH } from "@/lib/constants";
 
 import { Toolkits } from "@/toolkits/toolkits/shared";

@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ModelProviderIcon } from "@/components/ui/model-icon";
 import { HStack } from "@/components/ui/stack";
 import { ToolkitGroups } from "@/toolkits/types";
-import { allImageModels } from "@/ai/models/all";
+import { allImageModels } from "@/ai/image";
 
 export const imageClientToolkit = createClientToolkit<
   ImageTools,

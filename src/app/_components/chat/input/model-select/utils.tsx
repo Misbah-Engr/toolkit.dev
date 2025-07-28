@@ -2,7 +2,7 @@
 
 import { Eye, Search, Sparkles, File, Wrench } from "lucide-react";
 
-import { LanguageModelCapability } from "@/ai/types";
+import { LanguageModelCapability } from "@/ai/language/types";
 
 export const capabilityIcons: Record<
   LanguageModelCapability,

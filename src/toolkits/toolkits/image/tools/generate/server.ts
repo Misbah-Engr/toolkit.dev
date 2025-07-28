@@ -1,12 +1,10 @@
-import { experimental_generateImage as generateImage } from "ai";
-
 import { type baseGenerateTool } from "./base";
 import type { ServerToolConfig } from "@/toolkits/types";
 import { put } from "@vercel/blob";
 import { api } from "@/trpc/server";
 import type { imageParameters } from "../../base";
 import type z from "zod";
-import { registry } from "@/ai/registry";
+import { generateImage } from "@/ai/image/generate";
 
 export const generateToolConfigServer = (
   parameters: z.infer<typeof imageParameters>,
@@ -16,10 +14,7 @@ export const generateToolConfigServer = (
 > => {
   return {
     callback: async ({ prompt }) => {
-      const { image } = await generateImage({
-        model: registry.imageModel(parameters.model),
-        prompt,
-      });
+      const image = await generateImage(parameters.model, prompt);
 
       if (!image) {
         console.error("No image generated");
