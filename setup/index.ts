@@ -8,7 +8,6 @@ import {
   createEnvFile,
   installDependencies,
   setupDatabase,
-  runMigrations,
   setupRedis,
   configureApiKeys,
   getAvailableServices,
@@ -25,28 +24,24 @@ async function main(): Promise<void> {
 
   try {
     // Step 1: Create .env.local
-    logStep("Step 1/7", "Creating environment configuration...");
+    logStep("Step 1/6", "Creating environment configuration...");
     createEnvFile();
 
     // Step 2: Install dependencies
-    logStep("Step 2/7", "Installing project dependencies...");
+    logStep("Step 2/6", "Installing project dependencies...");
     installDependencies();
 
     // Step 3: Setup database
-    logStep("Step 3/7", "Setting up the database...");
+    logStep("Step 3/6", "Setting up the database...");
 
     const dbSuccess = await setupDatabase();
 
-    if (dbSuccess) {
-      // Step 4: Run migrations
-      logStep("Step 4/7", "Running database migrations...");
-      runMigrations();
-    } else {
-      logWarning("Step 4/7: Skipping migrations due to database setup issues");
+    if (!dbSuccess) {
+      logWarning("Database setup failed. Some features may not work properly.");
     }
 
-    // Step 5: Setup Redis
-    logStep("Step 5/7", "Setting up Redis for resumable streams...");
+    // Step 4: Setup Redis
+    logStep("Step 4/6", "Setting up Redis for resumable streams...");
     const setupRedisService = await confirm({
       message: "Do you want to set up Redis for resumable streams?",
       default: true,
@@ -56,8 +51,8 @@ async function main(): Promise<void> {
       await setupRedis();
     }
 
-    // Step 6: Configure API keys
-    logStep("Step 6/7", "Configuring API keys...");
+    // Step 5: Configure API keys
+    logStep("Step 5/6", "Configuring API keys...");
     const configureNow = await confirm({
       message: "Do you want to configure API keys now?",
       default: false,

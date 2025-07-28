@@ -24,6 +24,8 @@ export async function setupDatabase(): Promise<boolean> {
     logWarning(
       "Please ensure your external PostgreSQL instance is running and accessible",
     );
+    // Still run migrations for external database
+    runMigrations();
     return true; // Assume external database is available
   }
 
@@ -47,6 +49,8 @@ export async function setupDatabase(): Promise<boolean> {
 
     if (isRunning) {
       logSuccess("Database container is already running");
+      // Run migrations even if container is already running
+      runMigrations();
       return true;
     }
   } catch (error) {
@@ -60,6 +64,9 @@ export async function setupDatabase(): Promise<boolean> {
     execSync("docker-compose up -d postgres", { stdio: "inherit" });
 
     logSuccess("Database container started successfully");
+
+    // Run migrations after successful database setup
+    runMigrations();
     return true;
   } catch (error) {
     logError("Failed to start database container");
