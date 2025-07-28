@@ -19,7 +19,7 @@ import { createServerOnlyCaller } from "@/server/api/root";
 
 import { postRequestBodySchema, type PostRequestBody } from "./schema";
 
-import { generateText, streamText } from "@/ai/generate";
+import { generateText, streamText } from "@/ai/language/generate";
 import { generateUUID } from "@/lib/utils";
 
 import { ChatSDKError } from "@/lib/errors";
