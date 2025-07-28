@@ -25,8 +25,6 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
       startDate,
       endDate,
       durationMinutes,
-      timeOfDay,
-      workingHours,
       attendeeNames,
       maxResults,
     }) => {
@@ -39,18 +37,7 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
         return defaultEnd.toISOString().split('T')[0];
       })();
       const searchDuration = durationMinutes || 60;
-      const searchTimeOfDay = timeOfDay || 'any';
       const searchMaxResults = maxResults || 10;
-      
-      // Working hours with sensible defaults
-      const defaultWorkingHours = {
-        start: "09:00",
-        end: "17:00",
-      };
-      const searchWorkingHours = {
-        start: workingHours?.start || defaultWorkingHours.start,
-        end: workingHours?.end || defaultWorkingHours.end,
-      };
 
       const auth = new google.auth.OAuth2();
       auth.setCredentials({ access_token: accessToken });
@@ -65,8 +52,6 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
         startDate: searchStartDate,
         endDate: searchEndDate,
         duration: searchDuration,
-        timeOfDay: searchTimeOfDay,
-        workingHours: searchWorkingHours,
         maxResults: searchMaxResults
       });
 
@@ -151,7 +136,7 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
         end: string;
       }> = [];
 
-      // Generate slots based on working hours and time preferences
+      // Generate slots using standard business hours (9 AM - 5 PM)
       const startDateObj = new Date(timeMin);
       const endDateObj = new Date(timeMax);
       const currentDate = new Date(startDateObj);
@@ -161,32 +146,15 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
         const month = currentDate.getMonth();
         const date = currentDate.getDate();
         
-        // Set working hours for this day
-        const [startHour, startMin] = searchWorkingHours.start.split(':').map(Number);
-        const [endHour, endMin] = searchWorkingHours.end.split(':').map(Number);
-        
-        const dayStart = new Date(year, month, date, startHour ?? 9, startMin ?? 0, 0, 0);
-        const dayEnd = new Date(year, month, date, endHour ?? 17, endMin ?? 0, 0, 0);
-
-        // Apply time of day filter
-        let searchStart = dayStart;
-        let searchEnd = dayEnd;
-        
-        if (searchTimeOfDay === 'morning') {
-          searchEnd = new Date(year, month, date, 12, 0, 0, 0); // End at noon
-        } else if (searchTimeOfDay === 'afternoon') {
-          searchStart = new Date(year, month, date, 12, 0, 0, 0); // Start at noon
-          searchEnd = new Date(year, month, date, 17, 0, 0, 0); // End at 5 PM
-        } else if (searchTimeOfDay === 'evening') {
-          searchStart = new Date(year, month, date, 17, 0, 0, 0); // Start at 5 PM
-          searchEnd = new Date(year, month, date, 21, 0, 0, 0); // End at 9 PM
-        }
+        // Standard business hours: 9 AM - 5 PM
+        const dayStart = new Date(year, month, date, 9, 0, 0, 0);
+        const dayEnd = new Date(year, month, date, 17, 0, 0, 0);
 
         // Get events for this day
         const dayEvents = timedEvents.filter(event => {
           const eventStart = new Date(event.start!.dateTime!);
           const eventEnd = new Date(event.end!.dateTime!);
-          return (eventStart < searchEnd && eventEnd > searchStart);
+          return (eventStart < dayEnd && eventEnd > dayStart);
         });
 
         dayEvents.sort((a, b) => 
@@ -204,9 +172,9 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
         });
 
         // Generate time slots every hour
-        let currentSlotStart = new Date(searchStart);
+        let currentSlotStart = new Date(dayStart);
         
-        while (currentSlotStart.getTime() + (searchDuration * 60 * 1000) <= searchEnd.getTime()) {
+        while (currentSlotStart.getTime() + (searchDuration * 60 * 1000) <= dayEnd.getTime()) {
           const slotEnd = new Date(currentSlotStart.getTime() + (searchDuration * 60 * 1000));
           
           // Check if this slot conflicts with any existing events

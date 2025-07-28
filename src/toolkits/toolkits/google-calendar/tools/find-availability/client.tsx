@@ -16,13 +16,12 @@ export const googleCalendarFindAvailabilityToolConfigClient: ClientToolConfig<
     const startDate = args.startDate || "today";
     const endDate = args.endDate || "next 7 days";
     const duration = args.durationMinutes || 60;
-    const timePreference = args.timeOfDay || "any time";
     
     return (
       <ToolCallComponent
         action="Finding Availability"
         primaryText={`${duration} minute slots`}
-        secondaryText={`${startDate} to ${endDate} • ${timePreference}`}
+        secondaryText={`${startDate} to ${endDate} • Business hours (9 AM - 5 PM)`}
       />
     );
   },
