@@ -11,7 +11,9 @@ export const EnvProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <AvailableEnvVarsProvider
-      envVars={Object.fromEntries(Object.keys(env).map((key) => [key, true]))}
+      initialEnvVars={Object.fromEntries(
+        Object.keys(env).map((key) => [key, true]),
+      )}
     >
       {children}
     </AvailableEnvVarsProvider>

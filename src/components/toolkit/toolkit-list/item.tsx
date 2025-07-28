@@ -23,8 +23,9 @@ import type {
 } from "@/toolkits/toolkits/shared";
 import type { ClientToolkit } from "@/toolkits/types";
 import type { SelectedToolkit } from "../types";
-import { useToolkitEnvVarsAvailable } from "@/contexts/env/available-env-vars";
+import { useToolkitMissingEnvVars } from "@/contexts/env/available-env-vars";
 import { IS_PRODUCTION } from "@/lib/constants";
+import { EnvVarForm } from "./env-var-form";
 
 interface Props {
   id: Toolkits;
@@ -88,16 +89,18 @@ export const ToolkitItem: React.FC<Props> = ({
   }) => {
     const [isOpen, setIsOpen] = useState(false);
 
-    const hasEnvVars = useToolkitEnvVarsAvailable(toolkit);
+    const missingEnvVars = useToolkitMissingEnvVars(toolkit);
 
     return (
       <>
         <CommandItem
           isLoading={isLoading}
-          onSelect={!hasEnvVars ? () => setIsOpen(true) : onSelect}
+          onSelect={
+            missingEnvVars.length > 0 ? () => setIsOpen(true) : onSelect
+          }
         />
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-          <DialogContent className="gap-2 sm:max-w-[425px]">
+          <DialogContent className="gap-4 sm:max-w-[425px]">
             <DialogHeader>
               <Badge className="w-fit gap-2" variant="warning">
                 <AlertTriangle className="size-4" />
@@ -110,22 +113,7 @@ export const ToolkitItem: React.FC<Props> = ({
                 In order to use this toolkit, you will need the following
                 environment variables:
               </DialogDescription>
-              <ul className="list-disc pl-4">
-                {toolkit.envVars.map((envVar, index) =>
-                  Array.isArray(envVar) ? (
-                    <li key={`list-${index}`}>
-                      <span>One of the following:</span>
-                      <ul className="list-disc pl-4">
-                        {envVar.map((env) => (
-                          <li key={env}>{env}</li>
-                        ))}
-                      </ul>
-                    </li>
-                  ) : (
-                    <li key={envVar}>{envVar}</li>
-                  ),
-                )}
-              </ul>
+              <EnvVarForm envVars={missingEnvVars} />
             </DialogHeader>
           </DialogContent>
         </Dialog>

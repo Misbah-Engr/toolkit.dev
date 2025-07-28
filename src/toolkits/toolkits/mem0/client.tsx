@@ -1,5 +1,7 @@
 import { Brain } from "lucide-react";
 
+import { Link } from "../components/link";
+
 import { Mem0Tools } from "./tools/tools";
 import { createClientToolkit } from "@/toolkits/create-toolkit";
 import { mem0AddMemoryToolConfigClient } from "./tools/add_memory/client";
@@ -15,7 +17,18 @@ export const mem0ClientToolkit = createClientToolkit(
     icon: ({ className }) => <Brain className={className} />,
     form: null,
     type: ToolkitGroups.Native,
-    envVars: ["MEM0_API_KEY"],
+    envVars: [
+      {
+        type: "all",
+        keys: ["MEM0_API_KEY"],
+        description: (
+          <span>
+            Get an Mem0 API Key{" "}
+            <Link href="https://app.mem0.ai/dashboard/api-keys">here</Link>
+          </span>
+        ),
+      },
+    ],
   },
   {
     [Mem0Tools.AddMemory]: mem0AddMemoryToolConfigClient,

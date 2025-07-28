@@ -18,6 +18,7 @@ import {
 import { ToolkitGroups } from "@/toolkits/types";
 
 import { NotionWrapper } from "./wrapper";
+import { Link } from "../components/link";
 
 export const notionClientToolkit = createClientToolkit(
   baseNotionToolkitConfig,
@@ -28,7 +29,18 @@ export const notionClientToolkit = createClientToolkit(
     form: null,
     Wrapper: NotionWrapper,
     type: ToolkitGroups.KnowledgeBase,
-    envVars: ["AUTH_NOTION_ID", "AUTH_NOTION_SECRET"],
+    envVars: [
+      {
+        type: "all",
+        keys: ["AUTH_NOTION_ID", "AUTH_NOTION_SECRET"],
+        description: (
+          <span>
+            Get an Auth Notion ID from{" "}
+            <Link href="https://www.notion.so/my-integrations">here</Link>
+          </span>
+        ),
+      },
+    ],
   },
   {
     [NotionTools.ListDatabases]: notionListDatabasesToolConfigClient,

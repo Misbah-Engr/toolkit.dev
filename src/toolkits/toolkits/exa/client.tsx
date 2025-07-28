@@ -1,5 +1,7 @@
 import { Search } from "lucide-react";
 
+import { Link } from "../components/link";
+
 import { ExaTools } from "./tools/tools";
 import { createClientToolkit } from "@/toolkits/create-toolkit";
 import { exaSearchToolConfigClient } from "./tools/search/client";
@@ -21,7 +23,18 @@ export const exaClientToolkit = createClientToolkit(
     icon: Search,
     form: null,
     type: ToolkitGroups.DataSource,
-    envVars: ["EXA_API_KEY"],
+    envVars: [
+      {
+        type: "all",
+        keys: ["EXA_API_KEY"],
+        description: (
+          <span>
+            Get an Exa API Key{" "}
+            <Link href="https://dashboard.exa.ai/api-keys">here</Link>
+          </span>
+        ),
+      },
+    ],
   },
   {
     [ExaTools.Search]: exaSearchToolConfigClient,

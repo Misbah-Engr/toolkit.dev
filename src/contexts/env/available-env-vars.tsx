@@ -1,42 +1,79 @@
 "use client";
 
-import type { ClientToolkit } from "@/toolkits/types";
-import { createContext, useContext, type ReactNode } from "react";
+import type { ClientToolkit, EnvVarGroupAll } from "@/toolkits/types";
+import { createContext, useContext, useState, type ReactNode } from "react";
 
-const AvailableEnvVarsContext = createContext<Record<string, boolean> | null>(
-  null,
-);
+interface AvailableEnvVarsContextType {
+  envVars: Record<string, boolean>;
+  updateEnvVars: (envVars: Record<string, boolean>) => void;
+}
+
+const AvailableEnvVarsContext =
+  createContext<AvailableEnvVarsContextType | null>(null);
 
 export function AvailableEnvVarsProvider({
   children,
-  envVars,
+  initialEnvVars,
 }: {
   children: ReactNode;
-  envVars: Record<string, boolean>;
+  initialEnvVars: Record<string, boolean>;
 }) {
+  const [envVars, setEnvVars] =
+    useState<Record<string, boolean>>(initialEnvVars);
+
+  const updateEnvVars = (envVars: Record<string, boolean>) => {
+    setEnvVars((prev) => ({ ...prev, ...envVars }));
+  };
+
   return (
-    <AvailableEnvVarsContext.Provider value={envVars}>
+    <AvailableEnvVarsContext.Provider value={{ envVars, updateEnvVars }}>
       {children}
     </AvailableEnvVarsContext.Provider>
   );
 }
+
+export const useUpdateEnvVars = () => {
+  const context = useContext(AvailableEnvVarsContext);
+  if (!context) {
+    return () => {
+      void 0;
+    };
+  }
+  return context.updateEnvVars;
+};
 
 export const useSomeEnvVarsAvailable = (envVars: string[]) => {
   const context = useContext(AvailableEnvVarsContext);
   if (!context) {
     return true;
   }
-  return envVars.some((envVar) => context[envVar]);
+  return envVars.some((envVar) => context.envVars[envVar]);
 };
 
-export const useToolkitEnvVarsAvailable = (toolkit: ClientToolkit) => {
+export const useToolkitMissingEnvVars = (toolkit: ClientToolkit) => {
   const context = useContext(AvailableEnvVarsContext);
   if (!context) {
-    return true;
+    return [];
   }
-  return toolkit.envVars.every((envVar) =>
-    Array.isArray(envVar)
-      ? envVar.some((envVar) => context[envVar])
-      : context[envVar],
-  );
+  return toolkit.envVars
+    .map((envVar) => {
+      if (envVar.type === "all") {
+        const missingKeys = envVar.keys.filter((key) => !context.envVars[key]);
+        if (missingKeys.length === 0) {
+          return null;
+        }
+        return {
+          type: "all",
+          keys: missingKeys,
+          description: envVar.description,
+        } as EnvVarGroupAll;
+      } else if (envVar.type === "any") {
+        if (envVar.keys.some((key) => context.envVars[key.key])) {
+          return null;
+        }
+        return envVar;
+      }
+      return null;
+    })
+    .filter((envVar) => envVar !== null);
 };

@@ -15,6 +15,7 @@ import {
 import { ToolkitGroups } from "@/toolkits/types";
 
 import { GoogleCalendarWrapper } from "./wrapper";
+import { Link } from "../components/link";
 
 export const googleCalendarClientToolkit = createClientToolkit(
   baseGoogleCalendarToolkitConfig,
@@ -25,7 +26,20 @@ export const googleCalendarClientToolkit = createClientToolkit(
     form: null,
     Wrapper: GoogleCalendarWrapper,
     type: ToolkitGroups.DataSource,
-    envVars: ["GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET"],
+    envVars: [
+      {
+        type: "all",
+        keys: ["AUTH_GOOGLE_ID", "AUTH_GOOGLE_SECRET"],
+        description: (
+          <span>
+            Get an Auth Client ID and Secret from{" "}
+            <Link href="https://console.cloud.google.com/apis/credentials">
+              here
+            </Link>
+          </span>
+        ),
+      },
+    ],
   },
   {
     [GoogleCalendarTools.ListCalendars]:
