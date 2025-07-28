@@ -139,7 +139,7 @@ export const ToolkitItem: React.FC<Props> = ({
     isLoading: boolean;
     onSelect?: () => void;
   }) => {
-    if (Object.keys(toolkit.parameters.shape).length > 0) {
+    if (Object.keys(toolkit.parameters.shape).length > 0 && !isSelected) {
       return <ItemWithForm isLoading={isLoading} onSelect={onSelect} />;
     }
 
