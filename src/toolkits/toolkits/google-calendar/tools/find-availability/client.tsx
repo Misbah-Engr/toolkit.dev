@@ -4,7 +4,7 @@ import type { ClientToolConfig } from "@/toolkits/types";
 import { HStack, VStack } from "@/components/ui/stack";
 import { ToolCallComponent } from "../../components/tool-call";
 import { Badge } from "@/components/ui/badge";
-import { Clock, Calendar, AlertCircle, CheckCircle } from "lucide-react";
+import { Clock, AlertCircle, CheckCircle } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
@@ -21,7 +21,7 @@ export const googleCalendarFindAvailabilityToolConfigClient: ClientToolConfig<
       <ToolCallComponent
         action="Finding Availability"
         primaryText={`${duration} minute slots`}
-        secondaryText={`${startDate} to ${endDate} • Business hours (9 AM - 5 PM)`}
+        secondaryText={`${startDate} to ${endDate}`}
       />
     );
   },

@@ -2,7 +2,7 @@ import { z } from "zod";
 import { createBaseTool } from "@/toolkits/create-tool";
 
 export const findAvailabilityTool = createBaseTool({
-  description: "Find available time slots in a calendar by analyzing existing events. Uses standard business hours (9 AM - 5 PM) by default.",
+  description: "Find available time slots in a calendar by analyzing existing events.",
   inputSchema: z.object({
     startDate: z.string().optional().describe("Start date to search (YYYY-MM-DD format). Defaults to today if not provided."),
     endDate: z.string().optional().describe("End date to search (YYYY-MM-DD format). Defaults to startDate + 7 days if not provided."),

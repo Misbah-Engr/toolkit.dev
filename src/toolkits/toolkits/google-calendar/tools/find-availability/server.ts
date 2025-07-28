@@ -136,7 +136,7 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
         end: string;
       }> = [];
 
-      // Generate slots using standard business hours (9 AM - 5 PM)
+      // Generate slots across the entire day (24 hours)
       const startDateObj = new Date(timeMin);
       const endDateObj = new Date(timeMax);
       const currentDate = new Date(startDateObj);
@@ -146,9 +146,9 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
         const month = currentDate.getMonth();
         const date = currentDate.getDate();
         
-        // Standard business hours: 9 AM - 5 PM
-        const dayStart = new Date(year, month, date, 9, 0, 0, 0);
-        const dayEnd = new Date(year, month, date, 17, 0, 0, 0);
+        // Full day: 12 AM - 11:59 PM
+        const dayStart = new Date(year, month, date, 0, 0, 0, 0);
+        const dayEnd = new Date(year, month, date, 23, 59, 59, 999);
 
         // Get events for this day
         const dayEvents = timedEvents.filter(event => {
