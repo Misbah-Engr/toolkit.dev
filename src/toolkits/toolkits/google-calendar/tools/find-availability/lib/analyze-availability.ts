@@ -1,4 +1,3 @@
-import type { calendar_v3 } from "googleapis";
 import type { Client } from "@notionhq/client";
 import { 
   createCalendarClient, 
@@ -10,8 +9,7 @@ import {
 } from "../../../lib";
 import type { 
   FindAvailabilityParams, 
-  AvailabilityResult, 
-  CalendarEvent 
+  AvailabilityResult
 } from "../../../lib/types";
 import { generateTimeSlots } from "./slot-generator";
 import { filterConflictingSlots, extractConflictingEvents } from "./conflict-detector";
@@ -31,15 +29,15 @@ export const analyzeAvailability = async (
 ): Promise<AvailabilityResult> => {
   // Apply intelligent defaults based on user intent
   const { searchStartDate, searchEndDate } = applyDateDefaults(params.startDate, params.endDate);
-  const searchDuration = params.durationMinutes || 60; // Default 60 minutes for meetings
-  const searchMaxResults = params.maxResults || 10; // Default 10 results
+  const searchDuration = params.durationMinutes ?? 60; // Default 60 minutes for meetings
+  const searchMaxResults = params.maxResults ?? 10; // Default 10 results
   
   // Apply time constraints with defaults
-  const startTime = params.startTime || "09:00"; // Default 9 AM
-  const endTime = params.endTime || "17:00"; // Default 5 PM
+  const startTime = params.startTime ?? "09:00"; // Default 9 AM
+  const endTime = params.endTime ?? "17:00"; // Default 5 PM
   
   // If no attendees specified, that's fine - just check user's calendar
-  const attendeeNames = params.attendeeNames || [];
+  const attendeeNames = params.attendeeNames ?? [];
 
   // Create calendar client
   const calendar = createCalendarClient(accessToken);
@@ -64,9 +62,10 @@ export const analyzeAvailability = async (
     }
   );
 
-  let allEvents = filterTimedEvents(primaryEvents);
-
+  const primaryEventsFiltered = filterTimedEvents(primaryEvents);
+  
   // If attendees are specified, get their events
+  let allEvents = [...primaryEventsFiltered];
   if (attendeeNames.length > 0 && notion) {
     const attendeeEmails = await resolveAttendeeEmails(notion, attendeeNames);
     
@@ -83,7 +82,7 @@ export const analyzeAvailability = async (
         }
       );
       
-      allEvents.push(...filterTimedEvents(attendeeEvents));
+      allEvents = [...allEvents, ...filterTimedEvents(attendeeEvents)];
     }
   }
 

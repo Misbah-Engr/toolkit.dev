@@ -10,7 +10,7 @@ interface EventCardProps {
 }
 
 const getEventDateTime = (eventTime: calendar_v3.Schema$EventDateTime): string => {
-  return eventTime.dateTime || eventTime.date || new Date().toISOString();
+  return eventTime.dateTime ?? eventTime.date ?? new Date().toISOString();
 };
 
 const isAllDayEvent = (start: calendar_v3.Schema$EventDateTime): boolean => {

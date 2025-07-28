@@ -12,8 +12,8 @@ export const getUserTimezone = async (calendar: calendar_v3.Calendar): Promise<s
     const calendarResponse = await calendar.calendars.get({
       calendarId: 'primary'
     });
-    return calendarResponse.data.timeZone || DEFAULT_TIMEZONE;
-  } catch (error) {
+    return calendarResponse.data.timeZone ?? DEFAULT_TIMEZONE;
+  } catch {
     // Using fallback timezone
     return DEFAULT_TIMEZONE;
   }

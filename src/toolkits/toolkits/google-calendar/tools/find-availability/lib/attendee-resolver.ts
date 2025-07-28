@@ -34,7 +34,7 @@ export const resolveAttendeeEmails = async (
     return attendeeNames
       .map(name => nameToEmail.get(name.toLowerCase()))
       .filter((email): email is string => !!email);
-  } catch (error) {
+  } catch {
     // Failed to resolve attendees, return empty array
     return [];
   }

@@ -56,8 +56,8 @@ export const extractConflictingEvents = (
       return doRangesOverlap(startDate, endDate, eventStart, eventEnd);
     })
     .map(event => ({
-      id: event.id || '',
-      summary: event.summary || undefined,
+      id: event.id ?? '',
+      summary: event.summary ?? undefined,
       start: event.start!.dateTime!,
       end: event.end!.dateTime!,
     }));

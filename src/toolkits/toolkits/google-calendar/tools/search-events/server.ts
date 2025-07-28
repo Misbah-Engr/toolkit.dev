@@ -24,11 +24,11 @@ export const googleCalendarSearchEventsToolConfigServer = (
       const calendar = google.calendar({ version: "v3", auth });
 
       const response = await calendar.events.list({
-        calendarId: calendarId || "primary",
+        calendarId: calendarId ?? "primary",
         q: query,
-        timeMin: timeMin || undefined,
-        timeMax: timeMax || undefined,
-        maxResults: maxResults || 5,
+        timeMin: timeMin ?? undefined,
+        timeMax: timeMax ?? undefined,
+        maxResults: maxResults ?? 5,
         orderBy:
           orderBy && orderBy !== ""
             ? (orderBy as "startTime" | "updated")
@@ -37,8 +37,8 @@ export const googleCalendarSearchEventsToolConfigServer = (
       });
 
       return {
-        events: response.data.items || [],
-        timeZone: response.data.timeZone || undefined,
+        events: response.data.items ?? [],
+        timeZone: response.data.timeZone ?? undefined,
       };
     },
   };

@@ -15,11 +15,11 @@ export const googleCalendarFindAvailabilityToolConfigClient: ClientToolConfig<
   typeof findAvailabilityTool.outputSchema.shape
 > = {
   CallComponent: ({ args }) => {
-    const startDate = args.startDate || "today";
-    const endDate = args.endDate || "next 7 days";
-    const duration = args.durationMinutes || 60;
-    const startTime = args.startTime || "09:00";
-    const endTime = args.endTime || "17:00";
+    const startDate = args.startDate ?? "today";
+    const endDate = args.endDate ?? "next 7 days";
+    const duration = args.durationMinutes ?? 60;
+    const startTime = args.startTime ?? "09:00";
+    const endTime = args.endTime ?? "17:00";
     
     return (
       <ToolCallComponent

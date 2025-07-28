@@ -18,8 +18,8 @@ export const generateTimeSlots = (
   durationMinutes: number,
   timezone: string,
   maxResults: number,
-  startTime: string = "09:00",
-  endTime: string = "17:00"
+  startTime = "09:00",
+  endTime = "17:00"
 ): TimeSlot[] => {
   const availableSlots: TimeSlot[] = [];
   const currentDate = new Date(startDate);

@@ -21,8 +21,8 @@ export const googleCalendarListCalendarsToolConfigServer = (
       });
 
       return {
-        calendars: response.data.items || [],
-        nextPageToken: response.data.nextPageToken || undefined,
+        calendars: response.data.items ?? [],
+        nextPageToken: response.data.nextPageToken ?? undefined,
       };
     },
   };

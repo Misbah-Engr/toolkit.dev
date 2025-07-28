@@ -34,8 +34,8 @@ export const addDaysToDate = (date: string, days: number): string => {
  */
 export const applyDateDefaults = (startDate?: string, endDate?: string) => {
   const today = getTodayDate();
-  const searchStartDate = startDate || today;
-  const searchEndDate = endDate || addDaysToDate(searchStartDate, 7);
+  const searchStartDate = startDate ?? today;
+  const searchEndDate = endDate ?? addDaysToDate(searchStartDate, 7);
   
   return {
     searchStartDate,
