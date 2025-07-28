@@ -113,7 +113,13 @@ export const ToolkitItem: React.FC<Props> = ({
                 In order to use this toolkit, you will need the following
                 environment variables:
               </DialogDescription>
-              <EnvVarForm envVars={missingEnvVars} />
+              <EnvVarForm
+                envVars={missingEnvVars}
+                onSuccess={() => {
+                  setIsOpen(false);
+                  onSelect();
+                }}
+              />
             </DialogHeader>
           </DialogContent>
         </Dialog>

@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -25,9 +25,10 @@ import { useUpdateEnvVars } from "@/contexts/env/available-env-vars";
 
 interface Props {
   envVars: EnvVars;
+  onSuccess: () => void;
 }
 
-export const EnvVarForm: React.FC<Props> = ({ envVars }) => {
+export const EnvVarForm: React.FC<Props> = ({ envVars, onSuccess }) => {
   const updateEnvVars = useUpdateEnvVars();
   const formSchema = z.object(
     Object.fromEntries(
@@ -94,6 +95,7 @@ export const EnvVarForm: React.FC<Props> = ({ envVars }) => {
           Object.keys(envVarsToUpdate).map((key) => [key, true]),
         ),
       );
+      onSuccess();
     } else {
       toast.error("Failed to set environment variables");
     }
