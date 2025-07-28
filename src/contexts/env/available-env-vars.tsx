@@ -14,8 +14,6 @@ export function AvailableEnvVarsProvider({
   children: ReactNode;
   envVars: Record<string, boolean>;
 }) {
-  console.log(envVars);
-
   return (
     <AvailableEnvVarsContext.Provider value={envVars}>
       {children}
@@ -36,7 +34,6 @@ export const useToolkitEnvVarsAvailable = (toolkit: ClientToolkit) => {
   if (!context) {
     return true;
   }
-  console.log(context);
   return toolkit.envVars.every((envVar) =>
     Array.isArray(envVar)
       ? envVar.some((envVar) => context[envVar])

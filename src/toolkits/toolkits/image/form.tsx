@@ -25,7 +25,6 @@ export const Form: React.ComponentType<{
     parameters: z.infer<ZodObject<typeof imageParameters.shape>>,
   ) => void;
 }> = ({ parameters, setParameters }) => {
-  console.log(parameters);
   return (
     <Command className="bg-transparent">
       <CommandInput placeholder="Search models..." />

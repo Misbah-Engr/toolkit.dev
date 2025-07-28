@@ -1,7 +1,8 @@
 import { useState } from "react";
 
-import { Loader2, Plus } from "lucide-react";
+import { AlertTriangle, Loader2, Plus } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CommandItem as BaseCommandItem } from "@/components/ui/command";
 import {
@@ -96,9 +97,35 @@ export const ToolkitItem: React.FC<Props> = ({
           onSelect={!hasEnvVars ? () => setIsOpen(true) : onSelect}
         />
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-          <DialogContent className="gap-2 p-0 sm:max-w-[425px]">
-            <DialogHeader className="p-4 pb-0">
-              <DialogTitle>Configure {toolkit.name}</DialogTitle>
+          <DialogContent className="gap-2 sm:max-w-[425px]">
+            <DialogHeader>
+              <Badge className="w-fit gap-2" variant="warning">
+                <AlertTriangle className="size-4" />
+                Development Mode
+              </Badge>
+              <DialogTitle>
+                Insufficient Env Vars for {toolkit.name}
+              </DialogTitle>
+              <DialogDescription>
+                In order to use this toolkit, you will need the following
+                environment variables:
+              </DialogDescription>
+              <ul className="list-disc pl-4">
+                {toolkit.envVars.map((envVar, index) =>
+                  Array.isArray(envVar) ? (
+                    <li key={`list-${index}`}>
+                      <span>One of the following:</span>
+                      <ul className="list-disc pl-4">
+                        {envVar.map((env) => (
+                          <li key={env}>{env}</li>
+                        ))}
+                      </ul>
+                    </li>
+                  ) : (
+                    <li key={envVar}>{envVar}</li>
+                  ),
+                )}
+              </ul>
             </DialogHeader>
           </DialogContent>
         </Dialog>
