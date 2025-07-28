@@ -1,13 +1,23 @@
 import type { ImageModel } from "../types";
 
-const xaiImageModelData: Omit<ImageModel, "provider">[] = [
+const fireworksImageModelsData: Omit<ImageModel, "provider">[] = [
   {
-    name: "Grok 2 Image",
-    modelId: "grok-2-image",
+    name: "Playground v2.5 1024",
+    modelId: "accounts/fireworks/models/playground-v2-5-1024px-aesthetic",
+  },
+  {
+    name: "Segmind Stable Diffusion 1B",
+    modelId: "accounts/fireworks/models/SSD-1B",
+  },
+  {
+    name: "Japanese Stable Diffusion XL",
+    modelId: "accounts/fireworks/models/japanese-stable-diffusion-xl",
   },
 ];
 
-export const xaiImageModels: ImageModel[] = xaiImageModelData.map((model) => ({
-  ...model,
-  provider: "xai",
-}));
+export const fireworksImageModels: ImageModel[] = fireworksImageModelsData.map(
+  (model) => ({
+    ...model,
+    provider: "fireworks",
+  }),
+);
