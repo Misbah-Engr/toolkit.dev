@@ -27,7 +27,7 @@ const AccountPage = async ({
   }
 
   return (
-    <div className="mx-auto max-w-4xl space-y-4 px-2 py-4 md:space-y-8">
+    <div className="mx-auto max-w-4xl space-y-4 px-2 py-4 md:space-y-8 md:py-16">
       <AccountHeader user={user} />
       <AccountTabs defaultTab={tab} />
     </div>

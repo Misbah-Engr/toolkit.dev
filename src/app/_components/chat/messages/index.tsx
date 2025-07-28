@@ -1,9 +1,10 @@
-import { memo } from "react";
+import { memo, useEffect, useState } from "react";
 import { motion } from "motion/react";
 import equal from "fast-deep-equal";
 import { PreviewMessage, ThinkingMessage } from "./message";
 import { useMessages } from "@/app/_hooks/use-messages";
 import { useChatContext } from "@/app/_contexts/chat-context";
+import { cn } from "@/lib/utils";
 
 interface Props {
   chatId: string;
@@ -24,7 +25,7 @@ const PureMessages: React.FC<Props> = ({
   onViewportLeave,
   scrollToBottom,
 }) => {
-  const { messages, status } = useChatContext();
+  const { messages, status, streamStopped } = useChatContext();
 
   const { hasSentMessage } = useMessages({
     chatId,
@@ -32,12 +33,25 @@ const PureMessages: React.FC<Props> = ({
     scrollToBottom,
   });
 
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, [hasMounted]);
+
   const lastMessage = messages[messages.length - 1];
+
+  if (!hasMounted) {
+    return null;
+  }
 
   return (
     <div
       ref={containerRef}
-      className="relative mb-20 flex h-full min-w-0 flex-1 flex-col gap-6 overflow-y-scroll py-8"
+      className={cn(
+        "relative flex h-full min-w-0 flex-1 flex-col gap-6 overflow-y-scroll py-8",
+        messages.length > 0 && "mb-20",
+      )}
     >
       {messages
         .filter(
@@ -61,15 +75,16 @@ const PureMessages: React.FC<Props> = ({
           />
         ))}
 
-      {((status === "submitted" &&
-        messages.length > 0 &&
-        lastMessage?.role === "user") ||
-        (lastMessage?.role === "assistant" &&
-          (lastMessage?.parts?.length === 0 ||
-            (lastMessage?.parts?.length === 1 &&
-              lastMessage?.parts?.[0]?.type === "step-start")))) && (
-        <ThinkingMessage />
-      )}
+      {!streamStopped &&
+        ((status === "submitted" &&
+          messages.length > 0 &&
+          lastMessage?.role === "user") ||
+          (lastMessage?.role === "assistant" &&
+            (lastMessage?.parts?.length === 0 ||
+              (lastMessage?.parts?.length === 1 &&
+                lastMessage?.parts?.[0]?.type === "step-start")))) && (
+          <ThinkingMessage />
+        )}
 
       <motion.div
         ref={endRef}

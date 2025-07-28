@@ -4,6 +4,7 @@ import {
   type ServerToolkitNames,
   type ServerToolkitParameters,
 } from "./shared";
+
 import { exaClientToolkit } from "./exa/client";
 import { imageClientToolkit } from "./image/client";
 import { githubClientToolkit } from "./github/client";
@@ -13,7 +14,7 @@ import { mem0ClientToolkit } from "./mem0/client";
 import { notionClientToolkit } from "./notion/client";
 import { e2bClientToolkit } from "./e2b/client";
 
-type ClientToolkits = {
+export type ClientToolkits = {
   [K in Toolkits]: ClientToolkit<
     ServerToolkitNames[K],
     ServerToolkitParameters[K]

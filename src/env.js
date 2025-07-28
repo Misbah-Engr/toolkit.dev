@@ -4,33 +4,29 @@ import { z } from "zod";
 const createAuthSchema = () => {
   const authSchema = {};
 
-  if (process.env.AUTH_DISCORD_ID && process.env.AUTH_DISCORD_SECRET) {
+  if (process.env.AUTH_DISCORD_ID || process.env.AUTH_DISCORD_SECRET) {
     authSchema.AUTH_DISCORD_ID = z.string();
     authSchema.AUTH_DISCORD_SECRET = z.string();
   }
 
-  if (process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET) {
+  if (process.env.AUTH_GOOGLE_ID || process.env.AUTH_GOOGLE_SECRET) {
     authSchema.AUTH_GOOGLE_ID = z.string();
     authSchema.AUTH_GOOGLE_SECRET = z.string();
   }
 
-  if (process.env.AUTH_GITHUB_ID && process.env.AUTH_GITHUB_SECRET) {
+  if (process.env.AUTH_GITHUB_ID || process.env.AUTH_GITHUB_SECRET) {
     authSchema.AUTH_GITHUB_ID = z.string();
     authSchema.AUTH_GITHUB_SECRET = z.string();
   }
 
-  if (process.env.AUTH_TWITTER_ID && process.env.AUTH_TWITTER_SECRET) {
+  if (process.env.AUTH_TWITTER_ID || process.env.AUTH_TWITTER_SECRET) {
     authSchema.AUTH_TWITTER_ID = z.string();
     authSchema.AUTH_TWITTER_SECRET = z.string();
   }
 
-  if (process.env.AUTH_NOTION_ID && process.env.AUTH_NOTION_SECRET) {
+  if (process.env.AUTH_NOTION_ID || process.env.AUTH_NOTION_SECRET) {
     authSchema.AUTH_NOTION_ID = z.string();
     authSchema.AUTH_NOTION_SECRET = z.string();
-  }
-
-  if (Object.keys(authSchema).length === 0) {
-    throw new Error("No authentication provider configured");
   }
 
   return authSchema;
@@ -39,32 +35,32 @@ const createAuthSchema = () => {
 const authRuntimeEnv = () => {
   const object = {};
 
-  if (process.env.AUTH_DISCORD_ID && process.env.AUTH_DISCORD_SECRET) {
+  if (process.env.AUTH_DISCORD_ID || process.env.AUTH_DISCORD_SECRET) {
     object.AUTH_DISCORD_ID = process.env.AUTH_DISCORD_ID;
     object.AUTH_DISCORD_SECRET = process.env.AUTH_DISCORD_SECRET;
   }
 
-  if (process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET) {
+  if (process.env.AUTH_GOOGLE_ID || process.env.AUTH_GOOGLE_SECRET) {
     object.AUTH_GOOGLE_ID = process.env.AUTH_GOOGLE_ID;
     object.AUTH_GOOGLE_SECRET = process.env.AUTH_GOOGLE_SECRET;
   }
 
-  if (process.env.AUTH_GITHUB_ID && process.env.AUTH_GITHUB_SECRET) {
+  if (process.env.AUTH_GITHUB_ID || process.env.AUTH_GITHUB_SECRET) {
     object.AUTH_GITHUB_ID = process.env.AUTH_GITHUB_ID;
     object.AUTH_GITHUB_SECRET = process.env.AUTH_GITHUB_SECRET;
   }
 
-  if (process.env.AUTH_TWITTER_ID && process.env.AUTH_TWITTER_SECRET) {
+  if (process.env.AUTH_TWITTER_ID || process.env.AUTH_TWITTER_SECRET) {
     object.AUTH_TWITTER_ID = process.env.AUTH_TWITTER_ID;
     object.AUTH_TWITTER_SECRET = process.env.AUTH_TWITTER_SECRET;
   }
 
-  if (process.env.AUTH_NOTION_ID && process.env.AUTH_NOTION_SECRET) {
+  if (process.env.AUTH_NOTION_ID || process.env.AUTH_NOTION_SECRET) {
     object.AUTH_NOTION_ID = process.env.AUTH_NOTION_ID;
     object.AUTH_NOTION_SECRET = process.env.AUTH_NOTION_SECRET;
   }
 
-  if (process.env.AUTH_NOTION_ID && process.env.AUTH_NOTION_SECRET) {
+  if (process.env.AUTH_NOTION_ID || process.env.AUTH_NOTION_SECRET) {
     object.AUTH_NOTION_ID = process.env.AUTH_NOTION_ID;
     object.AUTH_NOTION_SECRET = process.env.AUTH_NOTION_SECRET;
   }
@@ -72,58 +68,29 @@ const authRuntimeEnv = () => {
   return object;
 };
 
-const createLlmSchema = () => {
-  const llmSchema = {};
+const createImageModelSchema = () => {
+  const imageModelSchema = {};
 
   if (process.env.OPENAI_API_KEY) {
-    llmSchema.OPENAI_API_KEY = z.string();
-  }
-
-  if (process.env.ANTHROPIC_API_KEY) {
-    llmSchema.ANTHROPIC_API_KEY = z.string();
+    imageModelSchema.OPENAI_API_KEY = z.string();
   }
 
   if (process.env.XAI_API_KEY) {
-    llmSchema.XAI_API_KEY = z.string();
+    imageModelSchema.XAI_API_KEY = z.string();
   }
 
-  if (process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
-    llmSchema.GOOGLE_GENERATIVE_AI_API_KEY = z.string();
-  }
-
-  if (process.env.PERPLEXITY_API_KEY) {
-    llmSchema.PERPLEXITY_API_KEY = z.string();
-  }
-
-  if (Object.keys(llmSchema).length === 0) {
-    throw new Error("No LLM provider configured");
-  }
-
-  return llmSchema;
+  return imageModelSchema;
 };
 
-const llmRuntimeEnv = () => {
+const imageModelRuntimeEnv = () => {
   const object = {};
 
   if (process.env.OPENAI_API_KEY) {
     object.OPENAI_API_KEY = process.env.OPENAI_API_KEY;
   }
 
-  if (process.env.ANTHROPIC_API_KEY) {
-    object.ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
-  }
-
   if (process.env.XAI_API_KEY) {
     object.XAI_API_KEY = process.env.XAI_API_KEY;
-  }
-
-  if (process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
-    object.GOOGLE_GENERATIVE_AI_API_KEY =
-      process.env.GOOGLE_GENERATIVE_AI_API_KEY;
-  }
-
-  if (process.env.PERPLEXITY_API_KEY) {
-    object.PERPLEXITY_API_KEY = process.env.PERPLEXITY_API_KEY;
   }
 
   return object;
@@ -135,7 +102,7 @@ export const env = createEnv({
    * isn't built with invalid env vars.
    */
   server: {
-    APP_URL: z.string().url(),
+    NEXTAUTH_URL: z.string().url(),
     AUTH_SECRET:
       process.env.NODE_ENV === "production"
         ? z.string()
@@ -144,11 +111,14 @@ export const env = createEnv({
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
-    ...createAuthSchema(),
-    ...createLlmSchema(),
+    PRISMA_LOG_QUERIES: z.string().optional(),
+    OPENROUTER_API_KEY: z.string(),
     EXA_API_KEY: z.string().optional(),
     MEM0_API_KEY: z.string().optional(),
     E2B_API_KEY: z.string().optional(),
+    GITHUB_TOKEN: z.string().optional(),
+    ...createAuthSchema(),
+    ...createImageModelSchema(),
   },
 
   /**
@@ -165,15 +135,18 @@ export const env = createEnv({
    * middlewares) or client-side so we need to destruct manually.
    */
   runtimeEnv: {
-    APP_URL: process.env.APP_URL,
+    NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     AUTH_SECRET: process.env.AUTH_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
-    ...authRuntimeEnv(),
-    ...llmRuntimeEnv(),
+    PRISMA_LOG_QUERIES: process.env.PRISMA_LOG_QUERIES,
+    OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY,
     EXA_API_KEY: process.env.EXA_API_KEY,
     MEM0_API_KEY: process.env.MEM0_API_KEY,
     E2B_API_KEY: process.env.E2B_API_KEY,
+    GITHUB_TOKEN: process.env.GITHUB_TOKEN,
+    ...authRuntimeEnv(),
+    ...imageModelRuntimeEnv(),
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

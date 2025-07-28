@@ -1,7 +1,6 @@
 export { chatsRouter } from "./chats";
 export { messagesRouter } from "./messages";
 export { streamsRouter } from "./streams";
-export { modelsRouter } from "./models";
 export { filesRouter } from "./files";
 export { usersRouter } from "./users";
 export { accountsRouter } from "./accounts";
@@ -9,3 +8,5 @@ export { imagesRouter } from "./images";
 export { memoriesRouter } from "./memories";
 export { featuresRouter } from "./features";
 export { workbenchesRouter } from "./workbenches";
+export { toolkitsRouter } from "./toolkits";
+export { toolsRouter } from "./tools";

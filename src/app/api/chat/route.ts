@@ -15,6 +15,7 @@ import { differenceInSeconds } from "date-fns";
 
 import { auth } from "@/server/auth";
 import { api } from "@/trpc/server";
+import { createServerOnlyCaller } from "@/server/api/root";
 
 import { postRequestBodySchema, type PostRequestBody } from "./schema";
 
@@ -31,7 +32,6 @@ import type {
   UIMessage,
 } from "ai";
 import type { Chat } from "@prisma/client";
-import { type providers } from "@/ai/registry";
 import { openai } from "@ai-sdk/openai";
 import { getServerToolkit } from "@/toolkits/toolkits/server";
 import { languageModels } from "@/ai/models";
@@ -166,6 +166,18 @@ export async function POST(request: Request) {
               execute: async (args) => {
                 try {
                   const result = await serverTool.callback(args);
+
+                  // Increment tool usage on successful execution
+                  try {
+                    const serverCaller = await createServerOnlyCaller();
+                    await serverCaller.tools.incrementToolUsageServer({
+                      toolkit: id,
+                      tool: toolName,
+                    });
+                  } catch (error) {
+                    console.error("Failed to increment tool usage:", error);
+                  }
+
                   if (serverTool.message) {
                     return {
                       result,
@@ -221,7 +233,7 @@ export async function POST(request: Request) {
     const isOpenAi = selectedChatModel.startsWith("openai");
 
     // Build comprehensive system prompt
-    const baseSystemPrompt = `You are a helpful assistant. The current date and time is ${new Date().toLocaleString()}.`;
+    const baseSystemPrompt = `You are a helpful assistant. The current date and time is ${new Date().toLocaleString()}. Whenever you are asked to write code, you must include a language with \`\`\``;
 
     const toolkitInstructions =
       toolkitSystemPrompts.length > 0
@@ -233,7 +245,7 @@ export async function POST(request: Request) {
     const stream = createDataStream({
       execute: (dataStream) => {
         const result = streamText(
-          getModelId(selectedChatModel, useNativeSearch),
+          `${selectedChatModel}${useNativeSearch ? ":search" : ""}`,
           {
             system: fullSystemPrompt,
             messages: convertToCoreMessages(messages),
@@ -242,7 +254,28 @@ export async function POST(request: Request) {
             experimental_transform: smoothStream({ chunking: "word" }),
             experimental_generateMessageId: generateUUID,
             onError: (error) => {
-              console.error(error);
+              console.error("Stream error occurred:", error);
+
+              // Check if it's a 402 error and log it specifically
+              if (error && typeof error === "object") {
+                const errorStr = JSON.stringify(error);
+                if (
+                  errorStr.includes("402") ||
+                  errorStr.includes("requires more credits")
+                ) {
+                  console.error(
+                    "OpenRouter credits exhausted - 402 error detected",
+                  );
+                }
+              }
+
+              // Send error to frontend - this will trigger onStreamError which calls stop()
+              dataStream.writeData({
+                type: "error",
+                message: "An error occurred while processing your request",
+              });
+
+              // Don't throw - just let the stream end naturally after sending error data
             },
             onFinish: async ({ response }) => {
               const model = languageModels.find(
@@ -322,7 +355,7 @@ export async function POST(request: Request) {
         });
       },
       onError: (error) => {
-        console.error(error);
+        console.error("Data stream error:", error);
         throw new ChatSDKError("bad_request:api");
       },
     });
@@ -346,7 +379,7 @@ export async function POST(request: Request) {
 }
 
 async function generateTitleFromUserMessage(message: UIMessage) {
-  const { text: title } = await generateText("openai:gpt-4o-mini", {
+  const { text: title } = await generateText("openai/gpt-4o-mini", {
     system: `\n
       - you will generate a short title based on the first message a user begins a conversation with
       - ensure it is not more than 80 characters long
@@ -371,22 +404,6 @@ function getTrailingMessageId({
 
   return trailingMessage.id;
 }
-
-const getModelId = (
-  model: `${keyof typeof providers}:${string}`,
-  useNativeSearch: boolean | undefined,
-): `${keyof typeof providers}:${string}` => {
-  // no need for dynamic mdoel config
-  if (!useNativeSearch) return model;
-
-  const [provider, modelId] = model.split(":");
-
-  if (provider === "google") {
-    return `${provider}:${modelId}-search`;
-  }
-
-  return model;
-};
 
 export async function GET(request: Request) {
   const streamContext = getStreamContext();

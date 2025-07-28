@@ -18,349 +18,316 @@ interface StarterPrompt {
 const DYNAMIC_STARTER_PROMPTS: StarterPrompt[] = [
   // Multi-toolkit prompts (4+ toolkits - highest priority)
   {
-    title: "Comprehensive Project Dashboard",
+    title: "Analyze Toolkit.dev",
     prompt:
-      "Create a comprehensive project dashboard by analyzing my Notion database, GitHub repositories, and generating visual progress charts with memory of key insights",
-    toolkitIds: [
-      Toolkits.Notion,
-      Toolkits.Github,
-      Toolkits.Image,
-      Toolkits.Memory,
-    ],
+      "Search GitHub for jasonhedman/toolkit.dev, analyze the repo, clone the repo and read the readme in a sandbox environment, and give me a getting started guide.",
+    toolkitIds: [Toolkits.Github, Toolkits.E2B, Toolkits.Exa],
     description:
-      "Ultimate project management combining workspace data, code analysis, visualization, and persistent insights",
+      "Complete React/Next.js analysis: repository discovery, component execution, architecture visualization, and pattern learning",
   },
   {
-    title: "Market Research & Competitive Intelligence",
+    title: "AI/ML Competitive Intelligence",
     prompt:
-      "Research market trends, analyze competitor GitHub repos, create infographics, and store findings in Notion with persistent memory",
+      "Research competitors' AI approaches (LLM fine-tuning, RAG systems, vector databases), analyze their GitHub repositories for ML pipelines and model architectures, generate comparison charts, and store findings for future reference",
     toolkitIds: [
       Toolkits.Exa,
       Toolkits.Github,
       Toolkits.Image,
-      Toolkits.Notion,
       Toolkits.Memory,
     ],
     description:
-      "Complete competitive intelligence workflow with research, analysis, visualization, documentation, and memory",
+      "AI/ML competitive analysis with model architecture review, visualization, and strategic insights",
   },
   {
-    title: "Intelligent Meeting Coordination",
+    title: "Transformer Architecture Research Pipeline",
     prompt:
-      "Schedule team meetings based on calendar availability, prepare agenda from Notion pages and Drive documents, and remember meeting preferences",
+      "Search for research papers on transformer architectures and attention mechanisms, find GitHub implementations of BERT/GPT variants, test model performance with Python execution, create architecture comparison visualizations, and store key insights",
     toolkitIds: [
-      Toolkits.GoogleCalendar,
-      Toolkits.Notion,
-      Toolkits.GoogleDrive,
-      Toolkits.Memory,
-    ],
-    description:
-      "Intelligent meeting coordination with multi-source document preparation and learning preferences",
-  },
-  {
-    title: "Data-Driven Productivity Analysis",
-    prompt:
-      "Analyze my Notion task database with Python, create productivity visualizations, and schedule optimization based on calendar patterns",
-    toolkitIds: [
-      Toolkits.Notion,
+      Toolkits.Exa,
+      Toolkits.Github,
       Toolkits.E2B,
       Toolkits.Image,
-      Toolkits.GoogleCalendar,
+      Toolkits.Memory,
     ],
     description:
-      "Data-driven productivity optimization with computational analysis and visual insights",
+      "Complete AI research workflow: paper discovery, implementation analysis, model testing, and knowledge retention",
+  },
+  {
+    title: "Full-Stack Documentation Generator",
+    prompt:
+      "Analyze my Notion API documentation and database schemas, search for similar FastAPI/Django REST implementations on GitHub, generate API architecture diagrams, and create comprehensive technical specifications with memory of project context",
+    toolkitIds: [
+      Toolkits.Notion,
+      Toolkits.Github,
+      Toolkits.Image,
+      Toolkits.Memory,
+    ],
+    description:
+      "API documentation automation with implementation examples, visual diagrams, and contextual memory",
   },
 
   // Multi-toolkit prompts (3 toolkits)
   {
-    title: "Competitor Analysis with Memory",
+    title: "Computer Vision Algorithm Implementation",
     prompt:
-      "Research my competitors and create a comprehensive analysis with visual charts stored in memory for future reference",
-    toolkitIds: [Toolkits.Exa, Toolkits.Image, Toolkits.Memory],
+      "Search for research papers on object detection and image segmentation, find PyTorch/OpenCV implementations on GitHub, and benchmark performance with Python execution",
+    toolkitIds: [Toolkits.Exa, Toolkits.Github, Toolkits.E2B],
     description:
-      "Uses web search, image generation, and memory for comprehensive competitor analysis",
+      "CV research-to-implementation pipeline with performance benchmarking",
   },
   {
-    title: "GitHub Architecture Analysis",
+    title: "Microservices Architecture Visualization",
     prompt:
-      "Analyze this GitHub repository, create a visual architecture diagram, and execute code examples to understand the implementation",
-    toolkitIds: [Toolkits.Github, Toolkits.Image, Toolkits.E2B],
+      "Analyze GitHub repositories with Docker/Kubernetes microservices architectures, execute container orchestration scripts to understand deployment flow, and generate system architecture diagrams",
+    toolkitIds: [Toolkits.Github, Toolkits.E2B, Toolkits.Image],
     description:
-      "Combines GitHub analysis, code execution, and visual diagram generation",
+      "Microservices analysis with deployment testing and visual architecture mapping",
   },
   {
-    title: "AI Research with Code Analysis",
+    title: "AI/ML Framework Knowledge Bank",
     prompt:
-      "Find research papers on AI, summarize key findings with code analysis, and remember important insights for future conversations",
-    toolkitIds: [Toolkits.Exa, Toolkits.Memory, Toolkits.E2B],
+      "Research emerging ML frameworks (LangChain, Hugging Face Transformers, MLflow), analyze trending PyTorch/TensorFlow projects, and build a persistent knowledge base of implementation patterns",
+    toolkitIds: [Toolkits.Exa, Toolkits.Github, Toolkits.Memory],
     description:
-      "Research papers with data analysis and persistent memory storage",
+      "ML technology scouting with repository analysis and pattern retention",
   },
   {
-    title: "Visual Knowledge Base Creation",
+    title: "Web Performance Analysis Dashboard",
     prompt:
-      "Create a knowledge base by analyzing my Notion pages, generating visual summaries, and storing key insights in memory",
-    toolkitIds: [Toolkits.Notion, Toolkits.Image, Toolkits.Memory],
-    description:
-      "Notion content analysis with visual summaries and persistent knowledge storage",
-  },
-  {
-    title: "Data Visualization Dashboard",
-    prompt:
-      "Build a data visualization dashboard by analyzing my Google Drive spreadsheets with Python and creating interactive charts",
-    toolkitIds: [Toolkits.GoogleDrive, Toolkits.E2B, Toolkits.Image],
-    description:
-      "Data processing with computational analysis and visual output generation",
-  },
-  {
-    title: "Industry Trend Infographics",
-    prompt:
-      "Research industry trends, generate infographics, and organize findings in my Notion workspace",
-    toolkitIds: [Toolkits.Exa, Toolkits.Image, Toolkits.Notion],
-    description:
-      "Market research with visual content creation and organized documentation",
-  },
-  {
-    title: "Technical Roadmap Planning",
-    prompt:
-      "Find GitHub repositories for my project idea, create a technical roadmap visualization, and document in Notion",
-    toolkitIds: [Toolkits.Github, Toolkits.Image, Toolkits.Notion],
-    description:
-      "Repository discovery with comprehensive visual planning and documentation",
-  },
-  {
-    title: "Database Analytics with Visualizations",
-    prompt:
-      "Query my Notion database, perform statistical analysis with Python, and create data visualizations",
+      "Extract performance metrics from my Notion project tracking (Core Web Vitals, bundle sizes, API response times), run statistical analysis with Python, and generate performance visualization charts",
     toolkitIds: [Toolkits.Notion, Toolkits.E2B, Toolkits.Image],
     description:
-      "Database analysis with computational processing and visual reporting",
+      "Web performance analysis with computational processing and visualization",
   },
   {
-    title: "Time Management Optimization",
+    title: "JavaScript Framework Comparison Engine",
     prompt:
-      "Analyze my calendar patterns, research productivity techniques, and create a time management visualization",
-    toolkitIds: [Toolkits.GoogleCalendar, Toolkits.Exa, Toolkits.Image],
+      "Research current JavaScript framework trends (React vs Vue vs Svelte), analyze popular GitHub repositories for each framework, and create visual technology comparison charts",
+    toolkitIds: [Toolkits.Exa, Toolkits.Github, Toolkits.Image],
     description:
-      "Calendar analysis with research-backed productivity optimization",
+      "Frontend framework research with repository analysis and comparative visualization",
   },
   {
-    title: "Document Analysis with Memory",
+    title: "ML Design Pattern Recognition",
     prompt:
-      "Search my Google Drive for project files, execute analysis scripts, and remember key findings",
-    toolkitIds: [Toolkits.GoogleDrive, Toolkits.E2B, Toolkits.Memory],
+      "Analyze GitHub repositories for machine learning design patterns (MLOps pipelines, model serving, data preprocessing), execute code examples, and remember successful patterns for future ML projects",
+    toolkitIds: [Toolkits.Github, Toolkits.E2B, Toolkits.Memory],
     description:
-      "Document analysis with computational processing and insight storage",
+      "ML pattern analysis with code execution and persistent learning",
+  },
+  {
+    title: "Web API Project Documentation",
+    prompt:
+      "Search GitHub for similar REST API and GraphQL implementations, create technical documentation in Notion for authentication and data modeling, and remember key architectural decisions",
+    toolkitIds: [Toolkits.Github, Toolkits.Notion, Toolkits.Memory],
+    description:
+      "API documentation with implementation research and decision tracking",
+  },
+  {
+    title: "AI Framework & Library Research",
+    prompt:
+      "Research latest AI/ML libraries (Anthropic SDK, OpenAI API, vector databases like Pinecone), analyze their GitHub repositories for implementation examples, and document findings in Notion",
+    toolkitIds: [Toolkits.Exa, Toolkits.Github, Toolkits.Notion],
+    description:
+      "AI library research with implementation analysis and structured documentation",
   },
 
-  // Two-toolkit prompts
+  // Two-toolkit prompts - High Value Technical Combinations
   {
-    title: "Notion Visual Reports",
+    title: "React Component Deep Dive",
     prompt:
-      "Analyze my Notion database and create beautiful data visualizations and reports",
-    toolkitIds: [Toolkits.Notion, Toolkits.Image],
-    description: "Notion database analysis with visual reporting",
+      "Search for advanced React repositories (state management with Zustand/Redux, custom hooks, performance optimization), then execute and analyze component patterns to understand implementation details",
+    toolkitIds: [Toolkits.Github, Toolkits.E2B],
+    description:
+      "React component discovery with hands-on code analysis and execution",
   },
   {
-    title: "Notion Data Analysis",
+    title: "LLM Fine-tuning Research",
     prompt:
-      "Query my Notion workspace and perform advanced data analysis with Python",
-    toolkitIds: [Toolkits.Notion, Toolkits.E2B],
-    description: "Notion data processing with computational analysis",
-  },
-  {
-    title: "Notion Memory Search",
-    prompt:
-      "Search my Notion pages and remember important information for future conversations",
-    toolkitIds: [Toolkits.Notion, Toolkits.Memory],
-    description: "Notion content search with persistent memory storage",
-  },
-  {
-    title: "Calendar Time Analysis",
-    prompt:
-      "Analyze my calendar patterns and create a time management visualization",
-    toolkitIds: [Toolkits.GoogleCalendar, Toolkits.Image],
-    description: "Calendar analysis with visual insights",
-  },
-  {
-    title: "Research with Code Testing",
-    prompt:
-      "Search for machine learning papers and execute code examples to test concepts",
+      "Find research papers on large language model fine-tuning techniques (LoRA, QLoRA, RLHF), then implement and test the training algorithms using Python with PyTorch",
     toolkitIds: [Toolkits.Exa, Toolkits.E2B],
-    description: "Research with hands-on code experimentation",
+    description:
+      "LLM research with practical fine-tuning implementation and testing",
   },
   {
-    title: "Competitive Intelligence Memory",
-    prompt: "Find competitors in my industry and remember their key strategies",
-    toolkitIds: [Toolkits.Exa, Toolkits.Memory],
-    description: "Competitive intelligence with persistent insights",
-  },
-  {
-    title: "GitHub Portfolio Showcase",
+    title: "System Architecture Diagram Generator",
     prompt:
-      "Analyze my GitHub contributions and generate a portfolio showcase image",
+      "Analyze GitHub repositories with modern web architectures (Next.js + Prisma + tRPC, FastAPI + PostgreSQL), then generate clean architecture diagrams and data flow charts",
     toolkitIds: [Toolkits.Github, Toolkits.Image],
-    description: "Code portfolio visualization",
+    description:
+      "Web architecture analysis with professional diagram generation",
   },
   {
-    title: "Drive Document Analysis",
+    title: "Frontend Performance Intelligence",
     prompt:
-      "Search my Google Drive for project files and run analysis scripts on the data",
-    toolkitIds: [Toolkits.GoogleDrive, Toolkits.E2B],
-    description: "Document analysis with computational processing",
+      "Research web performance optimization techniques (code splitting, lazy loading, CDN strategies), then analyze high-performance GitHub repositories for implementation patterns",
+    toolkitIds: [Toolkits.Exa, Toolkits.Github],
+    description:
+      "Performance research combined with real-world implementation analysis",
   },
   {
-    title: "Smart Calendar Learning",
+    title: "ML Pipeline Visualization",
     prompt:
-      "Remember my meeting preferences and schedule optimization based on calendar analysis",
-    toolkitIds: [Toolkits.GoogleCalendar, Toolkits.Memory],
-    description: "Smart scheduling with learning preferences",
+      "Execute machine learning pipelines (data preprocessing, model training, evaluation metrics) with Python and generate professional ML workflow diagrams and result visualizations",
+    toolkitIds: [Toolkits.E2B, Toolkits.Image],
+    description: "ML pipeline execution with publication-ready visualizations",
   },
   {
-    title: "Research Data Visualizations",
-    prompt: "Create stunning visualizations of research data and trends",
-    toolkitIds: [Toolkits.Exa, Toolkits.Image],
-    description: "Research visualization and infographic creation",
-  },
-  {
-    title: "GitHub Pattern Recognition",
+    title: "Web Development Pattern Memory",
     prompt:
-      "Analyze GitHub repositories and remember coding patterns for future projects",
+      "Analyze GitHub repositories for modern web development patterns (authentication with NextAuth, API design with tRPC, database patterns with Prisma), storing insights for future projects",
     toolkitIds: [Toolkits.Github, Toolkits.Memory],
-    description: "Code analysis with pattern recognition and memory",
+    description:
+      "Web development pattern learning with persistent knowledge retention",
   },
   {
-    title: "Drive to Notion Organization",
+    title: "AI Technology Trend Visualization",
     prompt:
-      "Search my Google Drive documents and organize findings in my Notion workspace",
-    toolkitIds: [Toolkits.GoogleDrive, Toolkits.Notion],
-    description: "Document search with organized knowledge management",
+      "Research emerging AI technologies (multimodal models, agent frameworks, retrieval-augmented generation), then create comprehensive infographics and trend analysis charts",
+    toolkitIds: [Toolkits.Exa, Toolkits.Image],
+    description:
+      "AI technology research with professional visual trend analysis",
   },
   {
-    title: "Team Database Scheduling",
+    title: "Developer Tool Knowledge Base",
     prompt:
-      "Analyze my Notion team database and schedule coordination meetings",
-    toolkitIds: [Toolkits.Notion, Toolkits.GoogleCalendar],
-    description: "Team management with intelligent scheduling",
-  },
-  {
-    title: "GitHub Research Documentation",
-    prompt:
-      "Research GitHub projects and document findings in my Notion knowledge base",
-    toolkitIds: [Toolkits.Github, Toolkits.Notion],
-    description: "Code research with organized documentation",
-  },
-  {
-    title: "Industry Insights Organization",
-    prompt:
-      "Search for industry insights and organize them in my Notion workspace",
+      "Research modern development tools and practices (CI/CD with GitHub Actions, testing with Playwright, deployment with Vercel), then organize findings in Notion engineering documentation",
     toolkitIds: [Toolkits.Exa, Toolkits.Notion],
-    description: "Research with structured knowledge organization",
+    description: "DevOps research with structured knowledge organization",
+  },
+  {
+    title: "Web Project Analysis Dashboard",
+    prompt:
+      "Extract project metrics from Notion workspace (sprint velocity, bug counts, feature completion rates) and perform statistical analysis to identify development bottlenecks and optimization opportunities",
+    toolkitIds: [Toolkits.Notion, Toolkits.E2B],
+    description: "Development project analysis with computational insights",
+  },
+  {
+    title: "Schedule Engineering Meeting",
+    prompt:
+      "Find my soonest available time to meet with my engineering team, and schedule a meeting with them.",
+    toolkitIds: [Toolkits.Notion, Toolkits.GoogleCalendar],
+    description: "Schedule a meeting with my engineering team",
+  },
+  {
+    title: "AI Research Memory Bank",
+    prompt:
+      "Research cutting-edge AI developments (foundation models, prompt engineering techniques, AI safety research), storing detailed insights and findings for future reference and decision-making",
+    toolkitIds: [Toolkits.Exa, Toolkits.Memory],
+    description: "AI technology scouting with persistent strategic knowledge",
+  },
+  {
+    title: "Technical Specification Visualization",
+    prompt:
+      "Analyze my Notion technical specifications and API documentation, creating visual system diagrams and storing key architectural insights for future reference",
+    toolkitIds: [Toolkits.Notion, Toolkits.Image],
+    description: "Technical documentation with visual specification creation",
+  },
+  {
+    title: "Engineering Decision Memory",
+    prompt:
+      "Analyze my Notion engineering notes and architectural decision records (ADRs), remembering key technical choices and trade-offs for future architectural discussions",
+    toolkitIds: [Toolkits.Notion, Toolkits.Memory],
+    description: "Technical decision tracking with persistent context building",
   },
 
-  // Single-toolkit prompts (ensure at least one per server)
+  // Single-toolkit prompts - Core Technical Tools
   {
-    title: "AI & ML Research",
+    title: "Advanced GitHub Code Analysis",
     prompt:
-      "Search for the latest developments in artificial intelligence and machine learning",
-    toolkitIds: [Toolkits.Exa],
-    description: "Comprehensive web research and information gathering",
-  },
-  {
-    title: "Custom Visual Content",
-    prompt:
-      "Generate a beautiful infographic, chart, or custom image for my presentation",
-    toolkitIds: [Toolkits.Image],
-    description:
-      "Custom visual content creation with AI-powered image generation",
-  },
-  {
-    title: "GitHub Code Analysis",
-    prompt:
-      "Find and analyze interesting GitHub repositories, users, and code patterns in my field",
+      "Perform deep analysis of React/Next.js repositories, Node.js APIs, or Python ML projects - search for specific implementations, analyze commit patterns, and discover trending projects in modern web and AI development",
     toolkitIds: [Toolkits.Github],
-    description: "Repository discovery, code analysis, and developer insights",
+    description: "Comprehensive repository analysis for web and AI development",
   },
   {
-    title: "Smart Calendar Management",
+    title: "Python Development Environment",
     prompt:
-      "Help me organize and optimize my calendar schedule with smart scheduling suggestions",
-    toolkitIds: [Toolkits.GoogleCalendar],
-    description: "Intelligent calendar management and scheduling assistance",
-  },
-  {
-    title: "Google Drive Analysis",
-    prompt:
-      "Search and analyze documents in my Google Drive with content extraction",
-    toolkitIds: [Toolkits.GoogleDrive],
-    description: "Document discovery, analysis, and content extraction",
-  },
-  {
-    title: "Conversation Memory",
-    prompt:
-      "Remember important information from our conversation for future reference and context",
-    toolkitIds: [Toolkits.Memory],
-    description: "Persistent memory storage and intelligent context management",
-  },
-  {
-    title: "Notion Workspace Analysis",
-    prompt:
-      "Analyze my Notion workspace, databases, and pages to extract insights and organize information",
-    toolkitIds: [Toolkits.Notion],
-    description:
-      "Comprehensive Notion workspace analysis and knowledge extraction",
-  },
-  {
-    title: "Python Code Execution",
-    prompt:
-      "Execute Python code to analyze data, create visualizations, or solve complex computational problems",
+      "Execute Python code for web scraping with BeautifulSoup, ML model training with scikit-learn/PyTorch, API testing with requests, data analysis with pandas, or algorithm implementation with full execution environment",
     toolkitIds: [Toolkits.E2B],
     description:
-      "Secure code execution, data analysis, and algorithmic problem solving",
+      "Full Python development environment for web and AI development",
+  },
+  {
+    title: "Technical Research Intelligence",
+    prompt:
+      "Research web development trends (Server Components, edge computing, JAMstack), AI/ML breakthroughs (transformer architectures, prompt engineering), technical blogs, and competitive analysis with comprehensive search",
+    toolkitIds: [Toolkits.Exa],
+    description:
+      "Advanced technical research for web and AI development trends",
+  },
+  {
+    title: "Technical Visualization Studio",
+    prompt:
+      "Generate React component hierarchy diagrams, ML model architecture visualizations, API flow charts, database schema diagrams, system architecture blueprints, and technical presentation graphics",
+    toolkitIds: [Toolkits.Image],
+    description:
+      "Professional technical visualization for web and AI architectures",
+  },
+  {
+    title: "Engineering Knowledge System",
+    prompt:
+      "Store and retrieve technical insights about React patterns, ML model architectures, API design decisions, performance optimizations, and engineering context across conversations",
+    toolkitIds: [Toolkits.Memory],
+    description:
+      "Persistent technical knowledge management for web and AI development",
+  },
+  {
+    title: "Notion Engineering Workspace",
+    prompt:
+      "Analyze Notion databases with project specifications, API documentation, technical requirements, code review notes, and engineering documentation to extract insights and organize technical knowledge",
+    toolkitIds: [Toolkits.Notion],
+    description:
+      "Technical workspace analysis and engineering documentation management",
   },
 
-  // Fallback generic prompts (no specific toolkits required)
+  // Generic prompts for technical audience
   {
-    title: "Creative Brainstorming",
+    title: "React/Next.js Architecture Design",
     prompt:
-      "Help me brainstorm creative ideas for my project with innovative approaches",
-    toolkitIds: [],
-    description: "Creative ideation and innovative thinking assistance",
-  },
-  {
-    title: "Concept Explanation",
-    prompt:
-      "Explain a complex topic in simple terms with clear examples and analogies",
-    toolkitIds: [],
-    description: "Educational content and concept explanation",
-  },
-  {
-    title: "Content Review & Feedback",
-    prompt:
-      "Review and improve my writing, code, or presentation with detailed feedback",
-    toolkitIds: [],
-    description: "Content review, optimization, and constructive feedback",
-  },
-  {
-    title: "Strategic Planning",
-    prompt:
-      "Create a strategic plan or roadmap for achieving my goals with actionable steps",
-    toolkitIds: [],
-    description: "Strategic planning, goal setting, and execution roadmaps",
-  },
-  {
-    title: "Problem Solving",
-    prompt:
-      "Help me solve a problem with creative solutions and analytical thinking",
+      "Design scalable React/Next.js application architecture with TypeScript, state management (Zustand/Redux), API layer (tRPC/GraphQL), database design (Prisma/Drizzle), and deployment considerations (Vercel/AWS)",
     toolkitIds: [],
     description:
-      "Problem-solving with innovative approaches and logical analysis",
+      "Complete React/Next.js system design with modern best practices",
   },
   {
-    title: "Expert Consultation",
-    prompt: "Provide expert advice and guidance on a topic I'm working on",
+    title: "ML Algorithm Optimization",
+    prompt:
+      "Analyze machine learning algorithm complexity, suggest model optimizations, review neural network architectures, and provide performance improvement recommendations for training and inference",
     toolkitIds: [],
-    description: "Professional consultation and expert guidance",
+    description:
+      "ML algorithm analysis with performance optimization and architecture assessment",
+  },
+  {
+    title: "Full-Stack Code Review",
+    prompt:
+      "Comprehensive code review for React/Node.js applications or Python ML projects focusing on design patterns, performance, security, maintainability, and modern best practices",
+    toolkitIds: [],
+    description:
+      "Professional code review with architectural and performance insights",
+  },
+  {
+    title: "API Design & Documentation",
+    prompt:
+      "Design RESTful APIs or GraphQL schemas with FastAPI/Express/tRPC, including proper documentation, error handling, authentication (JWT/OAuth), rate limiting, and versioning strategies",
+    toolkitIds: [],
+    description:
+      "Complete API design with modern authentication and documentation",
+  },
+  {
+    title: "Database & ML Data Pipeline Design",
+    prompt:
+      "Design efficient database schemas (PostgreSQL/MongoDB), optimize queries, plan migrations, design ML data pipelines (ETL/ELT), and recommend indexing strategies for web and AI applications",
+    toolkitIds: [],
+    description:
+      "Database and ML data architecture with performance optimization",
+  },
+  {
+    title: "Modern DevOps & MLOps Planning",
+    prompt:
+      "Plan CI/CD pipelines (GitHub Actions), containerization (Docker/Kubernetes), cloud infrastructure (AWS/Vercel), monitoring (DataDog), ML model deployment, and automation for production systems",
+    toolkitIds: [],
+    description:
+      "Complete DevOps and MLOps strategy with modern infrastructure",
   },
 ];
 
@@ -436,8 +403,8 @@ export const StarterPrompts = () => {
 
   return (
     <div className="relative">
-      <div className="from-background absolute top-0 left-0 z-10 hidden h-full w-4 bg-gradient-to-r to-transparent md:block" />
-      <div className="no-scrollbar flex max-w-full flex-col gap-2 overflow-x-auto px-4 md:flex-row">
+      <div className="from-background absolute top-0 left-0 z-10 block h-full w-2 bg-gradient-to-r to-transparent md:w-4" />
+      <div className="no-scrollbar flex max-w-full flex-row gap-2 overflow-x-auto px-2 md:px-4">
         {relevantPrompts.map((prompt, index) => (
           <motion.button
             key={`${prompt.title}-${selectedToolkitIds.size}`} // Key includes toolkit state for proper re-animation
@@ -449,7 +416,7 @@ export const StarterPrompts = () => {
               exit: { delay: 0, duration: 0.1 },
             }}
             onClick={() => handlePromptClick(prompt.prompt)}
-            className="hover:bg-muted/80 text-muted-foreground hover:text-foreground group relative cursor-pointer rounded-xl border p-2 text-left text-sm transition-colors"
+            className="hover:bg-muted/80 text-muted-foreground hover:text-foreground group relative cursor-pointer rounded-xl border px-2 py-1 text-left text-sm transition-colors md:p-2"
             title={prompt.description}
           >
             <HStack className="gap-2 overflow-hidden">
@@ -461,7 +428,7 @@ export const StarterPrompts = () => {
           </motion.button>
         ))}
       </div>
-      <div className="from-background absolute top-0 right-0 z-10 hidden h-full w-4 bg-gradient-to-l to-transparent md:block" />
+      <div className="from-background absolute top-0 right-0 z-10 h-full w-2 bg-gradient-to-l to-transparent md:w-4" />
     </div>
   );
 };

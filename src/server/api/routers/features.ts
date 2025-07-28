@@ -1,29 +1,10 @@
-import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
+import {
+  adminProcedure,
+  createTRPCRouter,
+  protectedProcedure,
+} from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-
-// Admin middleware to check if user has admin feature
-const adminProcedure = protectedProcedure.use(async ({ ctx, next }) => {
-  const adminFeature = await ctx.db.userFeature.findFirst({
-    where: {
-      userId: ctx.session.user.id,
-      feature: {
-        name: "admin",
-      },
-    },
-  });
-
-  if (!adminFeature) {
-    throw new TRPCError({
-      code: "FORBIDDEN",
-      message: "Admin access required",
-    });
-  }
-
-  return next({
-    ctx,
-  });
-});
 
 export const featuresRouter = createTRPCRouter({
   // Get all features (admin only)

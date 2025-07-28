@@ -3,7 +3,7 @@
 
 # TO RUN ON WINDOWS:
 # 1. Install WSL (Windows Subsystem for Linux) - https://learn.microsoft.com/en-us/windows/wsl/install
-# 2. Install Docker Desktop or Podman Deskop
+# 2. Install Docker Desktop or Podman Desktop
 # - Docker Desktop for Windows - https://docs.docker.com/docker-for-windows/install/
 # - Podman Desktop - https://podman.io/getting-started/installation
 # 3. Open WSL - `wsl`
@@ -13,7 +13,7 @@
 
 # import env variables from .env
 set -a
-source .env
+source .env.local
 
 DB_PASSWORD=$(echo "$DATABASE_URL" | awk -F':' '{print $3}' | awk -F'@' '{print $1}')
 DB_PORT=$(echo "$DATABASE_URL" | awk -F':' '{print $4}' | awk -F'\/' '{print $1}')

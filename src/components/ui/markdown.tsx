@@ -107,10 +107,20 @@ const NonMemoizedMarkdown = ({ children, headingClassName, asSpan }: Props) => {
         code({ className, children }) {
           const match = /language-(\w+)/.exec(className ?? "");
 
+          if (match?.[1] === "markdown") {
+            // Markdown in code blocks is an LLM oopsie, so we need to escape the codeblock
+            return (
+              <NonMemoizedMarkdown>{children as string}</NonMemoizedMarkdown>
+            );
+          }
+
           if (!match) {
             return (
               <code
-                className={cn("w-full max-w-full overflow-x-auto", className)}
+                className={cn(
+                  "w-full max-w-full overflow-x-auto whitespace-pre-wrap",
+                  className,
+                )}
               >
                 {children}
               </code>
@@ -165,6 +175,38 @@ const NonMemoizedMarkdown = ({ children, headingClassName, asSpan }: Props) => {
           return (
             <div className="w-full max-w-full overflow-hidden">{children}</div>
           );
+        },
+        table({ children }) {
+          return (
+            <div className="my-4 w-full overflow-x-auto">
+              <table className="border-border w-full border-collapse border text-sm">
+                {children}
+              </table>
+            </div>
+          );
+        },
+        thead({ children }) {
+          return <thead className="bg-muted/50">{children}</thead>;
+        },
+        tbody({ children }) {
+          return <tbody>{children}</tbody>;
+        },
+        tr({ children }) {
+          return (
+            <tr className="border-border hover:bg-muted/25 border-b transition-colors">
+              {children}
+            </tr>
+          );
+        },
+        th({ children }) {
+          return (
+            <th className="border-border border px-3 py-2 text-left font-semibold">
+              {children}
+            </th>
+          );
+        },
+        td({ children }) {
+          return <td className="border-border border px-3 py-2">{children}</td>;
         },
       }}
     >

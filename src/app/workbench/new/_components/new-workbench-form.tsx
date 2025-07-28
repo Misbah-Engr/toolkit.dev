@@ -1,33 +1,34 @@
 "use client";
 
 import { useState } from "react";
+
+import { Anvil, Plus } from "lucide-react";
+
 import { useRouter } from "next/navigation";
-import { api } from "@/trpc/react";
+
+import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { VStack, HStack } from "@/components/ui/stack";
-import { ToolkitList } from "@/components/toolkit/toolkit-list";
+
+import { ToolkitIcons } from "@/components/toolkit/toolkit-icons";
+import { ToolkitSelect } from "@/components/toolkit/toolkit-select";
+
+import { api } from "@/trpc/react";
+
+import { clientToolkits } from "@/toolkits/toolkits/client";
+
 import type { SelectedToolkit } from "@/components/toolkit/types";
 import type { Toolkits } from "@/toolkits/toolkits/shared";
-import { toast } from "sonner";
-import {
-  Dialog,
-  DialogDescription,
-  DialogTitle,
-  DialogHeader,
-  DialogContent,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Anvil, Plus } from "lucide-react";
-import { ToolkitIcons } from "@/components/toolkit/toolkit-icons";
-import { clientToolkits } from "@/toolkits/toolkits/client";
 
 export function NewWorkbenchForm() {
   const router = useRouter();
   const [name, setName] = useState("");
   const [systemPrompt, setSystemPrompt] = useState("");
+  const [isToolkitSelectOpen, setIsToolkitSelectOpen] = useState(false);
   const [selectedToolkits, setSelectedToolkits] = useState<SelectedToolkit[]>(
     [],
   );
@@ -132,58 +133,41 @@ export function NewWorkbenchForm() {
             {/* Toolkit Selection */}
             <VStack className="w-full items-start gap-2">
               <Label className="text-base font-semibold">Select Toolkits</Label>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className="w-full justify-start px-2"
-                  >
-                    {selectedToolkits.length > 0 ? (
-                      <HStack className="w-full">
-                        <ToolkitIcons
-                          toolkits={selectedToolkits.map(
-                            (toolkit) => toolkit.id,
-                          )}
-                        />
+              <ToolkitSelect
+                isOpen={isToolkitSelectOpen}
+                onOpenChange={setIsToolkitSelectOpen}
+                toolkits={selectedToolkits}
+                addToolkit={handleAddToolkit}
+                removeToolkit={handleRemoveToolkit}
+              >
+                <Button variant="outline" className="w-full justify-start px-2">
+                  {selectedToolkits.length > 0 ? (
+                    <HStack className="w-full">
+                      <ToolkitIcons
+                        toolkits={selectedToolkits.map((toolkit) => toolkit.id)}
+                      />
+                      <p className="text-muted-foreground text-xs">
+                        {selectedToolkits.length} Toolkit
+                        {selectedToolkits.length !== 1 ? "s" : ""} selected
+                      </p>
+                    </HStack>
+                  ) : (
+                    <HStack className="w-full justify-between">
+                      <HStack className="flex items-center gap-2">
+                        <Plus className="text-muted-foreground size-4" />
                         <p className="text-muted-foreground text-xs">
-                          {selectedToolkits.length} Toolkit
-                          {selectedToolkits.length !== 1 ? "s" : ""} selected
+                          Select toolkits...
                         </p>
                       </HStack>
-                    ) : (
-                      <HStack className="w-full justify-between">
-                        <HStack className="flex items-center gap-2">
-                          <Plus className="text-muted-foreground size-4" />
-                          <p className="text-muted-foreground text-xs">
-                            Select toolkits...
-                          </p>
-                        </HStack>
-                        <ToolkitIcons
-                          toolkits={Object.keys(clientToolkits) as Toolkits[]}
-                          iconContainerClassName="bg-background"
-                          iconClassName="text-muted-foreground"
-                        />
-                      </HStack>
-                    )}
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-h-[80vh] max-w-lg gap-2 overflow-hidden">
-                  <DialogHeader className="gap-1">
-                    <DialogTitle>Select Toolkits</DialogTitle>
-                    <DialogDescription>
-                      Choose the toolkits that will be available in this
-                      workbench.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="flex-1 overflow-y-auto">
-                    <ToolkitList
-                      selectedToolkits={selectedToolkits}
-                      onAddToolkit={handleAddToolkit}
-                      onRemoveToolkit={handleRemoveToolkit}
-                    />
-                  </div>
-                </DialogContent>
-              </Dialog>
+                      <ToolkitIcons
+                        toolkits={Object.keys(clientToolkits) as Toolkits[]}
+                        iconContainerClassName="bg-background"
+                        iconClassName="text-muted-foreground"
+                      />
+                    </HStack>
+                  )}
+                </Button>
+              </ToolkitSelect>
               <p className="text-muted-foreground text-xs">
                 Select the toolkits that will be available in this workbench.
               </p>

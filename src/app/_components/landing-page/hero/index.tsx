@@ -1,79 +1,81 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
-import { ToolkitDemoList } from "./toolkit-demo-list";
+
 import { SiGithub } from "@icons-pack/react-simple-icons";
+
+import Link from "next/link";
+
 import { Badge } from "@/components/ui/badge";
-import { VStack } from "@/components/ui/stack";
-import { MotionContainer } from "./motion-container";
-import { AuthModal } from "../auth-modal";
+import { Button } from "@/components/ui/button";
+import { HStack, VStack } from "@/components/ui/stack";
+import { MeritLogo } from "@/components/ui/merit-logo";
+
+import { Section } from "../lib/section";
+import { AuthModal } from "../lib/auth-modal";
+import { SECTIONS } from "../sections";
+
+import { Graphic } from "./graphic";
 
 export const HeroSection: React.FC = () => {
   return (
-    <section className="relative flex h-[200svh] items-center overflow-hidden border-b md:h-screen">
-      <div className="container mx-auto flex h-full flex-col items-center pt-[53px] md:flex-row">
-        <div className="w-full flex-1 p-2 md:w-1/2 md:p-16">
-          <MotionContainer
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="flex h-full flex-col items-center justify-center gap-6 md:items-end"
-          >
-            <VStack className="items-center md:items-end">
-              <Badge variant="primary">T3 Cloneathon Project</Badge>
-              <h1 className="from-foreground to-foreground/80 bg-gradient-to-r bg-clip-text text-center text-4xl leading-tight font-bold text-transparent md:text-right md:text-6xl">
-                Open Source
-                <br />
-                <span className="from-primary to-primary/70 bg-gradient-to-r bg-clip-text text-center text-transparent md:text-right">
-                  Generative UI Chatbot
-                </span>
+    <Section id={SECTIONS.Hero}>
+      <div className="flex flex-col items-center gap-8">
+        <VStack className="gap-8">
+          <VStack className="gap-4 text-center">
+            <Badge variant="glass" className="gap-1">
+              <MeritLogo className="size-4" />
+              <span>A Merit Systems Experiment</span>
+            </Badge>
+            <VStack className="gap-1">
+              <h1 className="text-primary overflow-hidden text-5xl font-bold whitespace-nowrap md:text-6xl">
+                Toolkit.dev
               </h1>
+              <h2 className="text-xl font-semibold md:text-2xl">
+                Get Paid to Build LLM Tools
+              </h2>
             </VStack>
-
-            <p className="text-muted-foreground max-w-lg text-center text-lg leading-relaxed md:text-right md:text-xl">
-              Write workflows in normal async code and we&apos;ll handle the
-              rest, from queues to elastic scaling. No timeouts, retries,
-              observability, and zero infrastructure to manage.
+            <p className="text-foreground/80 max-w-md text-sm font-light md:text-base">
+              An open-source project that{" "}
+              <strong className="text-foreground font-bold">
+                pays every merged PR
+              </strong>
+              . <br /> Join us in building a{" "}
+              <strong className="text-foreground font-bold">
+                self-funding AI app
+              </strong>{" "}
+              for the usage-based economy.
             </p>
-
-            <div className="flex flex-col-reverse gap-4 sm:flex-row">
-              <Button
-                variant="outline"
-                size="lg"
-                className="text-base font-semibold"
-              >
-                <span className="flex items-center gap-2">
-                  <SiGithub />
-                  Contribute
-                </span>
-              </Button>
+          </VStack>
+          <HStack className="w-full">
+            <div className="flex-1 shrink-0">
               <AuthModal>
                 <Button
                   size="lg"
-                  className="user-message text-base font-semibold"
+                  className="user-message w-full text-sm font-semibold md:text-base"
                 >
-                  Try it Out
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  Use the Playground
                 </Button>
               </AuthModal>
             </div>
-          </MotionContainer>
-        </div>
-
-        {/* Right Column - Toolkit Demo */}
-        <div className="relative w-full flex-1 overflow-hidden md:h-full md:w-1/2">
-          <MotionContainer
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="flex h-full flex-1 items-center justify-center"
-          >
-            <div className="size-full w-full overflow-y-hidden rounded-none p-2 pr-0 md:border-l md:py-16 md:pl-14">
-              <ToolkitDemoList />
-            </div>
-          </MotionContainer>
+            <Link
+              href="https://github.com/jasonhedman/toolkit.dev"
+              target="_blank"
+              className="flex-1 shrink-0"
+            >
+              <Button
+                variant="outline"
+                size="lg"
+                className="w-full text-sm font-semibold md:text-base"
+              >
+                <SiGithub className="size-4" />
+                Contribute to Toolkit
+              </Button>
+            </Link>
+          </HStack>
+        </VStack>
+        <div className="w-full max-w-2xl">
+          <Graphic />
         </div>
       </div>
-    </section>
+    </Section>
   );
 };

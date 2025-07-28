@@ -1,6 +1,58 @@
 import type { CreateMessage, DeepPartial } from "ai";
 import type { z, ZodObject, ZodRawShape } from "zod";
 
+// ------------------------------------------------------------
+// Toolkits
+// ------------------------------------------------------------
+
+export type ToolkitConfig<
+  ToolNames extends string,
+  Parameters extends ZodRawShape = ZodRawShape,
+  Tool extends BaseTool = BaseTool,
+> = {
+  tools: Record<ToolNames, Tool>;
+  parameters: z.ZodObject<Parameters>;
+};
+
+export type ClientToolkitWrapper = React.FC<{
+  Item: React.FC<{ isLoading: boolean; onSelect?: () => void }>;
+}>;
+
+export type ClientToolkitConifg<Parameters extends ZodRawShape = ZodRawShape> =
+  {
+    name: string;
+    description: string;
+    icon: React.FC<{ className?: string }>;
+    form: React.ComponentType<{
+      parameters: z.infer<ZodObject<Parameters>>;
+      setParameters: (parameters: z.infer<ZodObject<Parameters>>) => void;
+    }> | null;
+    type: ToolkitGroups;
+    Wrapper?: React.FC<{
+      Item: React.FC<{ isLoading: boolean; onSelect?: () => void }>;
+    }>;
+  };
+
+export type ClientToolkit<
+  ToolNames extends string = string,
+  Parameters extends ZodRawShape = ZodRawShape,
+> = ToolkitConfig<ToolNames, Parameters, ClientTool> &
+  ClientToolkitConifg<Parameters>;
+
+export type ServerToolkit<
+  ToolNames extends string = string,
+  Parameters extends ZodRawShape = ZodRawShape,
+> = {
+  systemPrompt: string;
+  tools: (
+    params: z.infer<ZodObject<Parameters>>,
+  ) => Promise<Record<ToolNames, ServerTool>>;
+};
+
+// ------------------------------------------------------------
+// Tool Types
+// ------------------------------------------------------------
+
 export type BaseTool<
   Args extends ZodRawShape = ZodRawShape,
   Result extends ZodRawShape = ZodRawShape,
@@ -46,65 +98,8 @@ export type ClientTool<
 > = ClientToolConfig<Args, Result> & BaseTool<Args, Result>;
 
 // ------------------------------------------------------------
-// Toolkits
+// UI Types
 // ------------------------------------------------------------
-
-export type ToolkitConfig<
-  ToolNames extends string,
-  Parameters extends ZodRawShape = ZodRawShape,
-  Tool extends BaseTool = BaseTool,
-> = {
-  tools: Record<ToolNames, Tool>;
-  parameters: z.ZodObject<Parameters>;
-};
-
-export type ClientToolkitConifg<Parameters extends ZodRawShape = ZodRawShape> =
-  {
-    name: string;
-    description: string;
-    icon: React.FC<{ className?: string }>;
-    form: React.ComponentType<{
-      parameters: z.infer<ZodObject<Parameters>>;
-      setParameters: (parameters: z.infer<ZodObject<Parameters>>) => void;
-    }> | null;
-    addToolkitWrapper?: React.ComponentType<{
-      children: React.ReactNode;
-    }>;
-    type: ToolkitGroups;
-  };
-
-export type ClientToolkit<
-  ToolNames extends string = string,
-  Parameters extends ZodRawShape = ZodRawShape,
-> = ToolkitConfig<ToolNames, Parameters, ClientTool> &
-  ClientToolkitConifg<Parameters>;
-
-export type ServerToolkit<
-  ToolNames extends string = string,
-  Parameters extends ZodRawShape = ZodRawShape,
-> = {
-  systemPrompt: string;
-  tools: (
-    params: z.infer<ZodObject<Parameters>>,
-  ) => Promise<Record<ToolNames, ServerTool>>;
-};
-
-export type McpServerConfigBase<
-  ToolNames extends string,
-  Tool extends BaseTool = BaseTool,
-> = {
-  id: string;
-  name: string;
-  description: string;
-  icon: React.FC<{ className?: string }>;
-  tools: Record<ToolNames, Tool>;
-};
-
-export type McpServerConfigServer<ToolNames extends string> =
-  McpServerConfigBase<`mcp_${string}_${ToolNames}`, ServerTool>;
-
-export type McpServerConfigClient<ToolNames extends string = string> =
-  McpServerConfigBase<ToolNames, ClientTool>;
 
 export type SelectedToolkit = {
   id: string;

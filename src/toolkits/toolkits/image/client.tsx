@@ -5,10 +5,10 @@ import { createClientToolkit } from "@/toolkits/create-toolkit";
 import { generateToolConfigClient } from "./tools/generate/client";
 import { baseImageToolkitConfig } from "./base";
 import { Button } from "@/components/ui/button";
-import { api } from "@/trpc/react";
 import { ModelProviderIcon } from "@/components/ui/model-icon";
 import { HStack } from "@/components/ui/stack";
 import { ToolkitGroups } from "@/toolkits/types";
+import { allImageModels } from "@/ai/models/all";
 
 export const imageClientToolkit = createClientToolkit<
   ImageTools,
@@ -20,11 +20,9 @@ export const imageClientToolkit = createClientToolkit<
     description: "Let your creativity flow",
     icon: ImageIcon,
     form: ({ parameters, setParameters }) => {
-      const { data: imageModels } = api.models.getImageModels.useQuery();
-
       return (
         <div className="flex flex-col gap-2">
-          {imageModels?.map((model) => (
+          {allImageModels.map((model) => (
             <Button
               key={model.modelId}
               variant={

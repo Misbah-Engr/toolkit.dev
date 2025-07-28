@@ -48,6 +48,7 @@ model User {
     email         String?   @unique
     emailVerified DateTime?
     image         String?
+    role          UserRole?    @default(USER)
     accounts      Account[]
     sessions      Session[]
     chats         Chat[]
@@ -55,6 +56,11 @@ model User {
     images        Image[]
     userFeatures  UserFeature[]
     workbenches   Workbench[]
+}
+
+enum UserRole {
+    USER
+    ADMIN
 }
 
 model VerificationToken {
@@ -80,6 +86,7 @@ model Chat {
     workbenchId  String?    // Optional association with workbench
     user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
     parentChat   Chat?      @relation("ChatBranch", fields: [parentChatId], references: [id], onDelete: Cascade)
+    starred      Boolean    @default(false)
     branches     Chat[]     @relation("ChatBranch")
     messages     Message[]
     stream       Stream[]
@@ -155,4 +162,22 @@ model Workbench {
     updatedAt    DateTime @updatedAt
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
     chats        Chat[]
+}
+
+model Toolkit {
+    id        String   @id @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    tools  Tool[]
+}
+
+model Tool {
+    id          String
+    toolkitId   String
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    usageCount  Int @default(0)
+    toolkit     Toolkit  @relation(fields: [toolkitId], references: [id], onDelete: Cascade)
+
+    @@id([id, toolkitId])
 }

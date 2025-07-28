@@ -11,12 +11,12 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Toolkits } from "@/toolkits/toolkits/shared";
 import { ToolkitList } from "@/components/toolkit/toolkit-list";
-import { HStack } from "@/components/ui/stack";
 import { ArrowRight } from "lucide-react";
 import { getClientToolkit } from "@/toolkits/toolkits/client";
 import type { ClientToolkit } from "@/toolkits/types";
 import { useChatContext } from "@/app/_contexts/chat-context";
 import { usePathname, useRouter } from "next/navigation";
+import { VStack } from "@/components/ui/stack";
 
 export function WelcomeDialog() {
   const { toolkits, addToolkit, removeToolkit } = useChatContext();
@@ -60,10 +60,10 @@ export function WelcomeDialog() {
 
   return (
     <AlertDialog defaultOpen>
-      <AlertDialogContent className="w-full sm:max-w-2xl">
-        <HStack className="justify-between">
-          <AlertDialogHeader className="gap-0">
-            <AlertDialogTitle className="text-primary text-2xl font-bold">
+      <AlertDialogContent className="flex w-full flex-col gap-2 overflow-hidden p-0 sm:max-w-2xl md:gap-0">
+        <div className="flex flex-col justify-between gap-2 p-2 md:flex-row md:p-4">
+          <AlertDialogHeader className="gap-0 text-left">
+            <AlertDialogTitle className="text-primary text-lg font-bold md:text-2xl">
               Start by Selecting Your Toolkits
             </AlertDialogTitle>
             <AlertDialogDescription className="text-muted-foreground text-sm">
@@ -71,26 +71,35 @@ export function WelcomeDialog() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogAction
-            className="user-message shrink-0"
+            className="user-message hidden shrink-0 md:block"
             onClick={() => {
               router.replace(pathname);
             }}
           >
             Continue to Chat <ArrowRight className="ml-2 size-4" />
           </AlertDialogAction>
-        </HStack>
+        </div>
 
         <ToolkitList
           selectedToolkits={toolkits}
           onAddToolkit={addToolkit}
           onRemoveToolkit={removeToolkit}
         />
-
-        <p className="text-muted-foreground text-center text-sm">
-          Toolkits are collections of specialized tools that extend the
-          AI&apos;s capabilities. You can add web search, code execution, image
-          generation, and more to customize your experience.
-        </p>
+        <VStack className="p-2 md:p-4">
+          <p className="text-muted-foreground hidden text-center text-sm md:block">
+            Toolkits are collections of specialized tools that extend the
+            AI&apos;s capabilities. You can add web search, code execution,
+            image generation, and more to customize your experience.
+          </p>
+          <AlertDialogAction
+            className="user-message w-full shrink-0 md:hidden"
+            onClick={() => {
+              router.replace(pathname);
+            }}
+          >
+            Continue to Chat <ArrowRight className="ml-2 size-4" />
+          </AlertDialogAction>
+        </VStack>
       </AlertDialogContent>
     </AlertDialog>
   );

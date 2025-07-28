@@ -1,86 +1,99 @@
 "use client";
 
-import React from "react";
-import Link from "next/link";
-import { motion } from "motion/react";
-import { Code, type LucideIcon } from "lucide-react";
-import { CardTitle } from "@/components/ui/card";
-import { CodeBlock } from "@/components/ui/code-block";
+import React, { useState } from "react";
+
+import { AnimatePresence, motion } from "motion/react";
+
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { HStack, VStack } from "@/components/ui/stack";
+
+import { Section } from "../lib/section";
+import { Heading } from "../lib/heading";
+
+import { CodeBlock } from "./code-block";
+
+import { SECTIONS } from "../sections";
+
 import { toolkitCreationSteps } from "./data";
-import { Button } from "@/components/ui/button";
+
+import { cn } from "@/lib/utils";
 
 export const ToolkitCreationSection: React.FC = () => {
-  return (
-    <section className="from-background to-muted/20 bg-gradient-to-b py-24">
-      <div className="container mx-auto px-2 md:px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="mb-16 text-center"
-        >
-          <h2 className="mb-4 text-3xl font-bold md:text-4xl">
-            Create Custom Toolkits
-            <span className="text-primary block">In Minutes, Not Hours</span>
-          </h2>
-          <p className="text-muted-foreground mx-auto mb-4 max-w-2xl text-lg">
-            Building new AI capabilities is as simple as defining your tools.
-            Configure server tools and client tools, and it automatically works
-            with the entire system.
-          </p>
-          <Link href="https://github.com/jasonhedman/open-chat/tree/main/src/toolkits">
-            <Button className="user-message">
-              <Code className="size-4" />
-              Start Building
-            </Button>
-          </Link>
-        </motion.div>
+  const [activeTab, setActiveTab] = useState<number>(0);
 
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-          {toolkitCreationSteps.map((step, index) => (
-            <StepCard key={index} {...step} />
-          ))}
-        </div>
-      </div>
-    </section>
+  return (
+    <Section id={SECTIONS.ToolkitCreation}>
+      <Heading
+        title={["Designed to Facilitate", "Seamless Toolkit Creation"]}
+        description="Create powerful AI agent systems with our intuitive SDK. From simple workflows to complex multi-agent collaborations."
+      />
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        viewport={{ once: true }}
+      >
+        <Tabs
+          value={activeTab.toString()}
+          onValueChange={(value) => setActiveTab(Number(value))}
+          className="flex w-full max-w-full flex-col gap-2 overflow-hidden"
+        >
+          <TabsList className="no-scrollbar flex h-fit w-full flex-row justify-start gap-2 overflow-x-auto bg-transparent">
+            {toolkitCreationSteps.map((step, index) => (
+              <div
+                key={index}
+                className="h-full min-w-64 flex-1 shrink-0 md:min-w-72"
+              >
+                <TabsTrigger
+                  value={index.toString()}
+                  className="hover:border-primary/50 border-border data-[state=active]:border-primary data-[state=active]:bg-card dark:data-[state=active]:border-primary dark:data-[state=active]:bg-card group h-auto w-full shrink-0 overflow-hidden rounded-lg p-2 text-left transition-colors md:p-4"
+                  asChild
+                >
+                  <VStack className="items-start gap-0 md:flex-1">
+                    <HStack className="w-full max-w-full">
+                      <div
+                        className={cn(
+                          "bg-muted/60 flex shrink-0 items-center justify-center font-bold",
+                          "size-4 md:size-6",
+                          "group-data-[state=active]:bg-primary group-data-[state=active]:text-primary-foreground group-hover:bg-primary/10 rounded-full transition-colors",
+                        )}
+                      >
+                        {index + 1}
+                      </div>
+                      <h3 className="w-full max-w-full text-base font-semibold text-wrap md:text-lg">
+                        {step.title}
+                      </h3>
+                    </HStack>
+                    <p className="text-muted-foreground max-w-full text-xs leading-relaxed text-wrap md:text-sm">
+                      {step.description}
+                    </p>
+                  </VStack>
+                </TabsTrigger>
+              </div>
+            ))}
+          </TabsList>
+          <div className="relative col-span-7">
+            <AnimatePresence mode="wait">
+              {toolkitCreationSteps[activeTab]?.code && (
+                <motion.div
+                  key={activeTab}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3 }}
+                  className="absolute inset-0 overflow-hidden rounded-lg border"
+                >
+                  <CodeBlock value={toolkitCreationSteps[activeTab].code} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+            {/* Invisible placeholder to maintain height */}
+            <div className="invisible">
+              <CodeBlock value={toolkitCreationSteps[0]?.code ?? ""} />
+            </div>
+          </div>
+        </Tabs>
+      </motion.div>
+    </Section>
   );
 };
-
-const StepCard: React.FC<{
-  icon: LucideIcon;
-  title: string;
-  description: string;
-  code: string;
-  codeTitle: string;
-  delay: number;
-}> = ({ icon: Icon, title, description, code, codeTitle, delay }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    transition={{ delay, duration: 0.5 }}
-    viewport={{ once: true }}
-  >
-    <VStack className="h-full items-start gap-4">
-      <HStack className="gap-4">
-        <div className="bg-primary/40 rounded-lg p-2">
-          {<Icon className="size-6" />}
-        </div>
-        <div>
-          <CardTitle className="text-lg">{title}</CardTitle>
-          <p className="text-muted-foreground text-sm">{description}</p>
-        </div>
-      </HStack>
-      <CodeBlock
-        language="typescript"
-        value={code}
-        heading={codeTitle}
-        showLineNumbers={false}
-        allowCopy={false}
-        headerClassName="bg-primary/20 dark:bg-primary/20 py-2"
-        headingClassName="text-base font-bold"
-      />
-    </VStack>
-  </motion.div>
-);

@@ -17,6 +17,8 @@ export const ToolkitIcons = ({
   iconContainerClassName,
   iconClassName,
 }: Props) => {
+  if (toolkits.length === 0) return null;
+
   return (
     <div
       className={cn(
@@ -29,7 +31,6 @@ export const ToolkitIcons = ({
       )}
     >
       {toolkits.map((toolkit) => {
-        const Icon = getClientToolkit(toolkit).icon;
         return (
           <div
             className={cn(
@@ -42,10 +43,23 @@ export const ToolkitIcons = ({
             )}
             key={toolkit}
           >
-            <Icon className={cn("text-primary size-4", iconClassName)} />
+            <ToolkitIcon
+              toolkit={toolkit}
+              className={cn(iconClassName, "text-primary")}
+            />
           </div>
         );
       })}
     </div>
   );
+};
+
+interface ToolkitIconProps {
+  toolkit: Toolkits;
+  className?: string;
+}
+
+export const ToolkitIcon = ({ toolkit, className }: ToolkitIconProps) => {
+  const Icon = getClientToolkit(toolkit).icon;
+  return <Icon className={cn("size-3 md:size-4", className)} />;
 };

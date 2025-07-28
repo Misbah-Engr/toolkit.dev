@@ -1,7 +1,4 @@
 import type { ProviderMetadata } from "ai";
-import type { providers } from "./registry";
-
-export type Provider = keyof typeof providers;
 
 export enum LanguageModelCapability {
   Vision = "vision",
@@ -13,7 +10,7 @@ export enum LanguageModelCapability {
 
 export type LanguageModel = {
   name: string;
-  provider: Provider;
+  provider: string;
   modelId: string;
   description?: string;
   capabilities?: LanguageModelCapability[];
