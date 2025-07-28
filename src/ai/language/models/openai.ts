@@ -1,8 +1,7 @@
 import {
   LanguageModelCapability,
-  type ImageModel,
   type LanguageModel,
-} from "@/ai/types";
+} from "@/ai/language/types";
 
 const openAiLanguageModelsData: Omit<LanguageModel, "provider">[] = [
   {
@@ -138,18 +137,3 @@ export const openAiLanguageModels: LanguageModel[] =
     ...model,
     provider: "openai",
   }));
-
-const openAiImageModelsData: Omit<ImageModel, "provider">[] = [
-  {
-    name: "GPT Image",
-    modelId: "gpt-image-1",
-    description: "Most advanced image generation model",
-  },
-];
-
-export const openAiImageModels: ImageModel[] = openAiImageModelsData.map(
-  (model) => ({
-    ...model,
-    provider: "openai",
-  }),
-);

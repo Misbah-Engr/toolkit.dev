@@ -1,4 +1,5 @@
-import type { ImageModel, LanguageModel } from "@/ai/types";
+import type { LanguageModel } from "@/ai/language/types";
+import type { ImageModel } from "@/ai/image/types";
 
 export interface PersistedToolkit {
   id: string;

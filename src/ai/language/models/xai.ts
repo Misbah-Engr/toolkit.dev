@@ -1,4 +1,7 @@
-import { LanguageModelCapability, type LanguageModel } from "@/ai/types";
+import {
+  LanguageModelCapability,
+  type LanguageModel,
+} from "@/ai/language/types";
 
 const xaiLanguageModelData: Omit<LanguageModel, "provider">[] = [
   {

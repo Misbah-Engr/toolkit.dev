@@ -3,7 +3,7 @@ import { ChatProvider } from "@/app/_contexts/chat-context";
 import type { Message, Workbench } from "@prisma/client";
 import { ChatLayout } from "./layout";
 import type { Attachment, UIMessage } from "ai";
-import { languageModels } from "@/ai/models";
+import { languageModels } from "@/ai/language";
 import { ChatContent } from "./chat";
 import { serverCookieUtils } from "@/lib/cookies/server";
 import { clientToolkits } from "@/toolkits/toolkits/client";
