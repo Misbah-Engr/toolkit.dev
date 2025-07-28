@@ -79,6 +79,18 @@ const createImageModelSchema = () => {
     imageModelSchema.XAI_API_KEY = z.string();
   }
 
+  if (process.env.FAL_API_KEY) {
+    imageModelSchema.FAL_API_KEY = z.string();
+  }
+
+  if (process.env.FIREWORKS_API_KEY) {
+    imageModelSchema.FIREWORKS_API_KEY = z.string();
+  }
+
+  if (process.env.LUMA_API_KEY) {
+    imageModelSchema.LUMA_API_KEY = z.string();
+  }
+
   return imageModelSchema;
 };
 
@@ -91,6 +103,18 @@ const imageModelRuntimeEnv = () => {
 
   if (process.env.XAI_API_KEY) {
     object.XAI_API_KEY = process.env.XAI_API_KEY;
+  }
+
+  if (process.env.FAL_API_KEY) {
+    object.FAL_API_KEY = process.env.FAL_API_KEY;
+  }
+
+  if (process.env.FIREWORKS_API_KEY) {
+    object.FIREWORKS_API_KEY = process.env.FIREWORKS_API_KEY;
+  }
+
+  if (process.env.LUMA_API_KEY) {
+    object.LUMA_API_KEY = process.env.LUMA_API_KEY;
   }
 
   return object;
