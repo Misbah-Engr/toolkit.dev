@@ -1,7 +1,7 @@
 import { type createEventTool } from "./base";
-import { google } from "googleapis";
 import type { ServerToolConfig } from "@/toolkits/types";
 import type { calendar_v3 } from "googleapis";
+import { createCalendarClient, getUserTimezone } from "../../lib";
 
 export const googleCalendarCreateEventToolConfigServer = (
   accessToken: string,
@@ -19,42 +19,32 @@ export const googleCalendarCreateEventToolConfigServer = (
         throw new Error("Google Calendar access token is not available");
       }
 
-      const auth = new google.auth.OAuth2();
-      auth.setCredentials({ access_token: accessToken });
+      console.log('[CreateEvent] Creating event with parameters:', {
+        title,
+        startDateTime,
+        endDateTime
+      });
 
-      const calendar = google.calendar({ version: "v3", auth });
+      const calendar = createCalendarClient(accessToken);
 
       // Get user's primary calendar timezone
-      let userTimeZone = 'America/New_York'; // fallback
-      try {
-        const calendarResponse = await calendar.calendars.get({
-          calendarId: 'primary'
-        });
-        userTimeZone = calendarResponse.data.timeZone || userTimeZone;
-      } catch (error) {
-        // Using fallback timezone
-      }
-
-      // Convert input times to user's timezone
-      const startDate = new Date(startDateTime);
-      const endDate = new Date(endDateTime);
-      
-      // Create RFC3339 timestamps with user's timezone
-      const startDateTimeFormatted = startDate.toISOString();
-      const endDateTimeFormatted = endDate.toISOString();
+      const userTimeZone = await getUserTimezone(calendar);
 
       // Build the event object with user's timezone
+      // The input timestamps are already in RFC3339 format from the find-availability tool
       const eventResource: calendar_v3.Schema$Event = {
         summary: title,
         start: {
-          dateTime: startDateTimeFormatted,
+          dateTime: startDateTime,
           timeZone: userTimeZone
         },
         end: {
-          dateTime: endDateTimeFormatted,
+          dateTime: endDateTime,
           timeZone: userTimeZone
         },
       };
+
+      console.log('[CreateEvent] Event resource:', eventResource);
 
       try {
         const response = await calendar.events.insert({
@@ -99,7 +89,24 @@ export const googleCalendarCreateEventToolConfigServer = (
           updated: event.updated ?? undefined,
         };
       } catch (error) {
-        throw new Error("Failed to create calendar event");
+        console.error('[CreateEvent] Error creating event:', {
+          error: error instanceof Error ? error.message : String(error),
+          eventResource,
+          userTimeZone
+        });
+        
+        // Provide more specific error messages based on the error type
+        if (error instanceof Error) {
+          if (error.message.includes('403')) {
+            throw new Error("Permission denied: You don't have permission to create events in this calendar");
+          } else if (error.message.includes('400')) {
+            throw new Error("Invalid request: Please check the event details and try again");
+          } else if (error.message.includes('401')) {
+            throw new Error("Authentication failed: Please reconnect your Google Calendar account");
+          }
+        }
+        
+        throw new Error(`Failed to create calendar event: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
     },
     message:

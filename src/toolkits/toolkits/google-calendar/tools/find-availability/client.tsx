@@ -18,12 +18,14 @@ export const googleCalendarFindAvailabilityToolConfigClient: ClientToolConfig<
     const startDate = args.startDate || "today";
     const endDate = args.endDate || "next 7 days";
     const duration = args.durationMinutes || 60;
+    const startTime = args.startTime || "09:00";
+    const endTime = args.endTime || "17:00";
     
     return (
       <ToolCallComponent
         action="Finding Availability"
         primaryText={`${duration} minute slots`}
-        secondaryText={`${startDate} to ${endDate}`}
+        secondaryText={`${startDate} to ${endDate}, ${startTime}-${endTime}`}
       />
     );
   },
@@ -38,7 +40,7 @@ export const googleCalendarFindAvailabilityToolConfigClient: ClientToolConfig<
     const handleSlotSelect = (slot: typeof availableSlots[0]) => {
       append({
         role: "user",
-        content: `I've selected the time slot on ${slot.dayOfWeek}, ${slot.date} from ${slot.timeRange}`
+        content: `I've selected the time slot on ${slot.dayOfWeek}, ${slot.date} from ${slot.timeRange}. Please create a calendar event for this time slot.`
       });
     };
 

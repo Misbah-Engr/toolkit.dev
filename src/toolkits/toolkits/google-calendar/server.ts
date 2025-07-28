@@ -25,6 +25,14 @@ export const googleCalendarToolkitServer = createServerToolkit(
 - **Create Event**: Create new calendar events with attendees, reminders, and full configuration
 - **Find Availability**: Analyze calendar availability and suggest optimal meeting times
 
+**Find Availability Tool Guidelines:**
+- When users ask for meeting availability without specifying duration, assume 60 minutes
+- When no date range is specified, search from today to 7 days ahead
+- When no attendees are specified, only check the user's own calendar
+- **Extract time constraints from user requests**: If user says "between 1pm and 5pm", set startTime="13:00" and endTime="17:00"
+- Always show the tool component when availability is requested, even with missing parameters
+- Use reasonable defaults rather than asking follow-up questions
+
 **Tool Sequencing Workflows:**
 1. **Calendar Overview**: Start with List Calendars to see available calendars, then use Get Calendar for specific calendar details
 2. **Event Management**: Use List Events to see upcoming events, then Get Event for detailed information about specific events
