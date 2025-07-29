@@ -19,3 +19,6 @@ export const VALIDATION_LIMITS = {
 export const MESSAGE_MAX_LENGTH = VALIDATION_LIMITS.MESSAGE_MAX_LENGTH;
 export const FILE_NAME_MAX_LENGTH = VALIDATION_LIMITS.FILE_NAME_MAX_LENGTH;
 export const FILE_MAX_SIZE = VALIDATION_LIMITS.FILE_MAX_SIZE;
+
+export const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
+export const IS_PRODUCTION = process.env.NODE_ENV === "production";

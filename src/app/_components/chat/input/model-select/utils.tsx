@@ -2,7 +2,7 @@
 
 import { Eye, Search, Sparkles, File, Wrench } from "lucide-react";
 
-import { LanguageModelCapability } from "@/ai/types";
+import { LanguageModelCapability } from "@/ai/language/types";
 
 export const capabilityIcons: Record<
   LanguageModelCapability,
@@ -47,4 +47,8 @@ export const modelProviderNames: Record<string, string> = {
   "meta-llama": "Llama",
   qwen: "Qwen",
   deepseek: "DeepSeek",
+  fireworks: "Fireworks AI",
+  azure: "Azure (DALL-E)",
+  vertex: "Google Vertex AI",
+  xai: "xAI",
 };

@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+} from "react";
 
 import { useChat } from "@ai-sdk/react";
 
@@ -8,29 +14,30 @@ import { toast } from "sonner";
 
 import { api } from "@/trpc/react";
 
+import { useAutoResume } from "@/app/_hooks/use-auto-resume";
+
+import { LanguageModelCapability } from "@/ai/language/types";
+
+import { clientToolkits } from "@/toolkits/toolkits/client";
+
+import { anthropicModels } from "@/ai/language/models/anthropic";
+
+import { clientCookieUtils } from "@/lib/cookies/client";
 import { generateUUID } from "@/lib/utils";
 import { fetchWithErrorHandlers } from "@/lib/fetch";
 import { ChatSDKError } from "@/lib/errors";
 
-import { useAutoResume } from "@/app/_hooks/use-auto-resume";
-
 import type { ReactNode } from "react";
 import type { Attachment, UIMessage } from "ai";
 import type { UseChatHelpers } from "@ai-sdk/react";
-import {
-  LanguageModelCapability,
-  type ImageModel,
-  type LanguageModel,
-} from "@/ai/types";
 import type { ClientToolkit } from "@/toolkits/types";
 import type { z } from "zod";
-import { clientToolkits } from "@/toolkits/toolkits/client";
 import type { SelectedToolkit } from "@/components/toolkit/types";
 import type { Toolkits } from "@/toolkits/toolkits/shared";
 import type { Workbench } from "@prisma/client";
-import { anthropicModels } from "@/ai/models/anthropic";
 import type { PersistedToolkit } from "@/lib/cookies/types";
-import { clientCookieUtils } from "@/lib/cookies/client";
+import type { ImageModel } from "@/ai/image/types";
+import type { LanguageModel } from "@/ai/language/types";
 
 const DEFAULT_CHAT_MODEL = anthropicModels[0]!;
 
@@ -41,6 +48,7 @@ interface ChatContextType {
   input: string;
   setInput: UseChatHelpers["setInput"];
   status: UseChatHelpers["status"];
+  streamStopped: boolean;
   attachments: Array<Attachment>;
   setAttachments: (
     attachments:
@@ -165,6 +173,7 @@ export function ChatProvider({
     return [];
   });
   const [hasInvalidated, setHasInvalidated] = useState(false);
+  const [streamStopped, setStreamStopped] = useState(false);
 
   // Wrapper functions that also save to cookies
   const setSelectedChatModel = (model: LanguageModel) => {
@@ -198,7 +207,7 @@ export function ChatProvider({
   const {
     messages,
     setMessages,
-    handleSubmit,
+    handleSubmit: originalHandleSubmit,
     input,
     setInput,
     append,
@@ -235,6 +244,7 @@ export function ChatProvider({
       workbenchId: workbench?.id,
     }),
     onFinish: () => {
+      setStreamStopped(false);
       void utils.messages.getMessagesForChat.invalidate({ chatId: id });
       if (initialMessages.length === 0 && !hasInvalidated) {
         setHasInvalidated(true);
@@ -253,13 +263,30 @@ export function ChatProvider({
     },
   });
 
+  const onStreamError = useCallback(() => {
+    // Mark stream as stopped to hide thinking message
+    setStreamStopped(true);
+    // Also call stop to change the status away from 'submitted'
+    stop();
+  }, [stop]);
+
   useAutoResume({
     autoResume,
     initialMessages,
     experimental_resume,
     data,
     setMessages,
+    onStreamError,
   });
+
+  const handleSubmit: UseChatHelpers["handleSubmit"] = (
+    event,
+    chatRequestOptions,
+  ) => {
+    // Reset stream stopped flag when submitting new message
+    setStreamStopped(false);
+    originalHandleSubmit(event, chatRequestOptions);
+  };
 
   useEffect(() => {
     if (
@@ -279,6 +306,7 @@ export function ChatProvider({
     input,
     setInput,
     status,
+    streamStopped,
     attachments,
     setAttachments,
     selectedChatModel,

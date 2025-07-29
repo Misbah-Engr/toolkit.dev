@@ -8,8 +8,13 @@ import { TRPCReactProvider } from "@/trpc/react";
 import { Toaster } from "@/components/ui/sonner";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
+import { InstallPromptProvider } from "@/contexts/install-prompt-context";
+import { EnvProvider } from "@/contexts/env";
+
 import { AppSidebar } from "./_components/sidebar";
 import { Navbar } from "./_components/navbar";
+
+import { env } from "@/env";
 
 import type { Metadata, Viewport } from "next";
 
@@ -23,6 +28,7 @@ export const metadata: Metadata = {
     statusBarStyle: "black",
   },
   manifest: "/manifest.json",
+  metadataBase: new URL(env.NEXTAUTH_URL),
 };
 
 export const viewport: Viewport = {
@@ -60,20 +66,24 @@ export default async function RootLayout({
         <Analytics />
 
         <TRPCReactProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <SidebarProvider>
-              <AppSidebar />
-              <SidebarInset className="flex h-dvh flex-col">
-                <Navbar />
-                {children}
-              </SidebarInset>
-            </SidebarProvider>
-          </ThemeProvider>
+          <EnvProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <InstallPromptProvider>
+                <SidebarProvider>
+                  <AppSidebar />
+                  <SidebarInset className="flex h-dvh flex-col">
+                    <Navbar />
+                    {children}
+                  </SidebarInset>
+                </SidebarProvider>
+              </InstallPromptProvider>
+            </ThemeProvider>
+          </EnvProvider>
         </TRPCReactProvider>
         <Toaster />
       </body>

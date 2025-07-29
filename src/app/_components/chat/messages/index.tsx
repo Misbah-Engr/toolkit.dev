@@ -25,7 +25,7 @@ const PureMessages: React.FC<Props> = ({
   onViewportLeave,
   scrollToBottom,
 }) => {
-  const { messages, status } = useChatContext();
+  const { messages, status, streamStopped } = useChatContext();
 
   const { hasSentMessage } = useMessages({
     chatId,
@@ -75,15 +75,16 @@ const PureMessages: React.FC<Props> = ({
           />
         ))}
 
-      {((status === "submitted" &&
-        messages.length > 0 &&
-        lastMessage?.role === "user") ||
-        (lastMessage?.role === "assistant" &&
-          (lastMessage?.parts?.length === 0 ||
-            (lastMessage?.parts?.length === 1 &&
-              lastMessage?.parts?.[0]?.type === "step-start")))) && (
-        <ThinkingMessage />
-      )}
+      {!streamStopped &&
+        ((status === "submitted" &&
+          messages.length > 0 &&
+          lastMessage?.role === "user") ||
+          (lastMessage?.role === "assistant" &&
+            (lastMessage?.parts?.length === 0 ||
+              (lastMessage?.parts?.length === 1 &&
+                lastMessage?.parts?.[0]?.type === "step-start")))) && (
+          <ThinkingMessage />
+        )}
 
       <motion.div
         ref={endRef}

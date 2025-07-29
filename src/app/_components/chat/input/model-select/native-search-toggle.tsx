@@ -1,4 +1,4 @@
-import { LanguageModelCapability } from "@/ai/types";
+import { LanguageModelCapability } from "@/ai/language/types";
 import { useChatContext } from "@/app/_contexts/chat-context";
 import {
   Tooltip,

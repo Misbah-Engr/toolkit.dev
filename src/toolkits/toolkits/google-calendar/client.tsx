@@ -1,5 +1,8 @@
-import { GoogleCalendarTools } from "./tools";
+import { SiGooglecalendar } from "@icons-pack/react-simple-icons";
+
 import { createClientToolkit } from "@/toolkits/create-toolkit";
+
+import { GoogleCalendarTools } from "./tools";
 import { baseGoogleCalendarToolkitConfig } from "./base";
 import {
   googleCalendarListCalendarsToolConfigClient,
@@ -7,24 +10,14 @@ import {
   googleCalendarListEventsToolConfigClient,
   googleCalendarGetEventToolConfigClient,
   googleCalendarSearchEventsToolConfigClient,
+  googleCalendarCreateEventToolConfigClient,
+  googleCalendarFindAvailabilityToolConfigClient,
 } from "./tools/client";
-import { api } from "@/trpc/react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { signIn } from "next-auth/react";
-import { Loader2 } from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import Link from "next/link";
-import { SiGooglecalendar } from "@icons-pack/react-simple-icons";
-import { ToolkitGroups } from "@/toolkits/types";
-import { Toolkits } from "../shared";
 
-const calendarScope = "https://www.googleapis.com/auth/calendar";
+import { ToolkitGroups } from "@/toolkits/types";
+
+import { GoogleCalendarWrapper } from "./wrapper";
+import { Link } from "../components/link";
 
 export const googleCalendarClientToolkit = createClientToolkit(
   baseGoogleCalendarToolkitConfig,
@@ -33,109 +26,22 @@ export const googleCalendarClientToolkit = createClientToolkit(
     description: "Find availability and schedule meetings",
     icon: SiGooglecalendar,
     form: null,
-    addToolkitWrapper: ({ children }) => {
-      const { data: account, isLoading: isLoadingAccount } =
-        api.accounts.getAccountByProvider.useQuery("google");
-
-      const { data: hasAccess, isLoading: isLoadingAccess } =
-        api.features.hasFeature.useQuery({
-          feature: "google-calendar",
-        });
-
-      if (isLoadingAccount || isLoadingAccess) {
-        return (
-          <Button
-            variant="outline"
-            size="sm"
-            disabled
-            className="bg-transparent"
-          >
-            <Loader2 className="size-4 animate-spin" />
-          </Button>
-        );
-      }
-
-      if (!hasAccess) {
-        return (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                <Badge variant="outline">Private Beta</Badge>
-              </TooltipTrigger>
-              <TooltipContent className="max-w-xs text-center">
-                We need to add you as a test user on Google Cloud for us to
-                request sensitive OAuth scopes. <br />
-                <br /> Please contact{" "}
-                <Link
-                  href="https://x.com/jsonhedman"
-                  target="_blank"
-                  className="underline"
-                >
-                  @jsonhedman
-                </Link>{" "}
-                on X to request access.
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        );
-      }
-
-      if (!account) {
-        return (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              void signIn(
-                "google",
-                {
-                  callbackUrl: `${window.location.href}?${Toolkits.GoogleCalendar}=true`,
-                },
-                {
-                  prompt: "consent",
-                  access_type: "offline",
-                  response_type: "code",
-                  include_granted_scopes: true,
-                  scope: `openid email profile ${calendarScope}`,
-                },
-              );
-            }}
-            className="bg-transparent"
-          >
-            Connect
-          </Button>
-        );
-      }
-
-      if (!account?.scope?.includes(calendarScope)) {
-        return (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              void signIn(
-                "google",
-                {
-                  callbackUrl: `${window.location.href}?${Toolkits.GoogleCalendar}=true`,
-                },
-                {
-                  prompt: "consent",
-                  access_type: "offline",
-                  response_type: "code",
-                  include_granted_scopes: true,
-                  scope: `${account?.scope} ${calendarScope}`,
-                },
-              );
-            }}
-          >
-            Grant Access
-          </Button>
-        );
-      }
-
-      return children;
-    },
+    Wrapper: GoogleCalendarWrapper,
     type: ToolkitGroups.DataSource,
+    envVars: [
+      {
+        type: "all",
+        keys: ["AUTH_GOOGLE_ID", "AUTH_GOOGLE_SECRET"],
+        description: (
+          <span>
+            Get an Auth Client ID and Secret from{" "}
+            <Link href="https://console.cloud.google.com/apis/credentials">
+              here
+            </Link>
+          </span>
+        ),
+      },
+    ],
   },
   {
     [GoogleCalendarTools.ListCalendars]:
@@ -146,5 +52,9 @@ export const googleCalendarClientToolkit = createClientToolkit(
     [GoogleCalendarTools.GetEvent]: googleCalendarGetEventToolConfigClient,
     [GoogleCalendarTools.SearchEvents]:
       googleCalendarSearchEventsToolConfigClient,
+    [GoogleCalendarTools.CreateEvent]:
+      googleCalendarCreateEventToolConfigClient,
+    [GoogleCalendarTools.FindAvailability]:
+      googleCalendarFindAvailabilityToolConfigClient,
   },
 );

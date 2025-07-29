@@ -20,6 +20,7 @@ import Link from "next/link";
 import { HStack, VStack } from "@/components/ui/stack";
 import { SiGithub } from "@icons-pack/react-simple-icons";
 import { WorkbenchSelect } from "./workbench-select";
+import { InstallPrompt } from "./install-prompt";
 
 export async function AppSidebar({
   ...props
@@ -60,6 +61,9 @@ export async function AppSidebar({
           <NavChats />
         </SidebarContent>
         <SidebarFooter className="flex flex-col gap-2 p-3 group-data-[collapsible=icon]:p-2">
+          <div className="group-data-[collapsible=icon]:hidden">
+            <InstallPrompt />
+          </div>
           <SidebarMenuButton
             asChild
             className="hover:bg-sidebar-accent/50 h-fit w-full rounded-lg p-2 transition-colors group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-2"

@@ -2,8 +2,8 @@ import type { ToolkitConfig } from "@/toolkits/types";
 import { ImageTools } from "./tools/tools";
 import { baseGenerateTool } from "./tools/generate/base";
 import { z } from "zod";
-import { allImageModels } from "@/ai/models/all";
-import type { ImageModelProvider } from "@/ai/types";
+import { allImageModels } from "@/ai/image";
+import type { ImageModelProvider } from "@/ai/image/types";
 
 export const imageParameters = z.object({
   model: z.enum(

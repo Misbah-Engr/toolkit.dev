@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect } from "react";
+import { toast } from "sonner";
 
 import type { UIMessage } from "ai";
 import type { UseChatHelpers } from "@ai-sdk/react";
 
-type DataPart = { type: "append-message"; message: string };
+type DataPart =
+  | { type: "append-message"; message: string }
+  | { type: "error"; message: string };
 
 export interface UseAutoResumeParams {
   autoResume: boolean;
@@ -13,6 +16,7 @@ export interface UseAutoResumeParams {
   experimental_resume: UseChatHelpers["experimental_resume"];
   data: UseChatHelpers["data"];
   setMessages: UseChatHelpers["setMessages"];
+  onStreamError?: () => void;
 }
 
 export function useAutoResume({
@@ -21,6 +25,7 @@ export function useAutoResume({
   experimental_resume,
   data,
   setMessages,
+  onStreamError,
 }: UseAutoResumeParams) {
   useEffect(() => {
     if (!autoResume) return;
@@ -44,6 +49,9 @@ export function useAutoResume({
     if (dataPart.type === "append-message") {
       const message = JSON.parse(dataPart.message) as UIMessage;
       setMessages([...initialMessages, message]);
+    } else if (dataPart.type === "error") {
+      toast.error(dataPart.message);
+      onStreamError?.();
     }
-  }, [data, initialMessages, setMessages]);
+  }, [data, initialMessages, setMessages, onStreamError]);
 }

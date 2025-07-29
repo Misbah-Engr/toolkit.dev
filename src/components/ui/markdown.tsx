@@ -117,7 +117,10 @@ const NonMemoizedMarkdown = ({ children, headingClassName, asSpan }: Props) => {
           if (!match) {
             return (
               <code
-                className={cn("w-full max-w-full overflow-x-auto", className)}
+                className={cn(
+                  "w-full max-w-full overflow-x-auto whitespace-pre-wrap",
+                  className,
+                )}
               >
                 {children}
               </code>
@@ -176,46 +179,34 @@ const NonMemoizedMarkdown = ({ children, headingClassName, asSpan }: Props) => {
         table({ children }) {
           return (
             <div className="my-4 w-full overflow-x-auto">
-              <table className="w-full border-collapse border border-border text-sm">
+              <table className="border-border w-full border-collapse border text-sm">
                 {children}
               </table>
             </div>
           );
         },
         thead({ children }) {
-          return (
-            <thead className="bg-muted/50">
-              {children}
-            </thead>
-          );
+          return <thead className="bg-muted/50">{children}</thead>;
         },
         tbody({ children }) {
-          return (
-            <tbody>
-              {children}
-            </tbody>
-          );
+          return <tbody>{children}</tbody>;
         },
         tr({ children }) {
           return (
-            <tr className="border-b border-border hover:bg-muted/25 transition-colors">
+            <tr className="border-border hover:bg-muted/25 border-b transition-colors">
               {children}
             </tr>
           );
         },
         th({ children }) {
           return (
-            <th className="border border-border px-3 py-2 text-left font-semibold">
+            <th className="border-border border px-3 py-2 text-left font-semibold">
               {children}
             </th>
           );
         },
         td({ children }) {
-          return (
-            <td className="border border-border px-3 py-2">
-              {children}
-            </td>
-          );
+          return <td className="border-border border px-3 py-2">{children}</td>;
         },
       }}
     >

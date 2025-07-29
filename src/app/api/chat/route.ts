@@ -19,7 +19,7 @@ import { createServerOnlyCaller } from "@/server/api/root";
 
 import { postRequestBodySchema, type PostRequestBody } from "./schema";
 
-import { generateText, streamText } from "@/ai/generate";
+import { generateText, streamText } from "@/ai/language/generate";
 import { generateUUID } from "@/lib/utils";
 
 import { ChatSDKError } from "@/lib/errors";
@@ -34,7 +34,7 @@ import type {
 import type { Chat } from "@prisma/client";
 import { openai } from "@ai-sdk/openai";
 import { getServerToolkit } from "@/toolkits/toolkits/server";
-import { languageModels } from "@/ai/models";
+import { languageModels } from "@/ai/language";
 
 export const maxDuration = 60;
 
@@ -48,7 +48,7 @@ function getStreamContext() {
       });
     } catch (error: unknown) {
       if (error instanceof Error && error.message.includes("REDIS_URL")) {
-        console.log(
+        console.warn(
           " > Resumable streams are disabled due to missing REDIS_URL",
         );
       } else {
@@ -254,8 +254,28 @@ export async function POST(request: Request) {
             experimental_transform: smoothStream({ chunking: "word" }),
             experimental_generateMessageId: generateUUID,
             onError: (error) => {
-              console.error(error);
-              throw new ChatSDKError("bad_request:api");
+              console.error("Stream error occurred:", error);
+
+              // Check if it's a 402 error and log it specifically
+              if (error && typeof error === "object") {
+                const errorStr = JSON.stringify(error);
+                if (
+                  errorStr.includes("402") ||
+                  errorStr.includes("requires more credits")
+                ) {
+                  console.error(
+                    "OpenRouter credits exhausted - 402 error detected",
+                  );
+                }
+              }
+
+              // Send error to frontend - this will trigger onStreamError which calls stop()
+              dataStream.writeData({
+                type: "error",
+                message: "An error occurred while processing your request",
+              });
+
+              // Don't throw - just let the stream end naturally after sending error data
             },
             onFinish: async ({ response }) => {
               const model = languageModels.find(
@@ -335,7 +355,7 @@ export async function POST(request: Request) {
         });
       },
       onError: (error) => {
-        console.error(error);
+        console.error("Data stream error:", error);
         throw new ChatSDKError("bad_request:api");
       },
     });

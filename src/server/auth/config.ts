@@ -1,11 +1,15 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
 
+import { v4 as uuid } from "uuid";
+import { encode as defaultEncode } from "next-auth/jwt";
+
 import { providers } from "./providers";
 
 import { db } from "@/server/db";
 
 import type { DefaultSession, NextAuthConfig } from "next-auth";
 import type { UserRole } from "@prisma/client";
+import { IS_DEVELOPMENT } from "@/lib/constants";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -20,11 +24,6 @@ declare module "next-auth" {
       role: UserRole;
     } & DefaultSession["user"];
   }
-
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
 }
 
 /**
@@ -39,6 +38,7 @@ export const authConfig = {
     newUser: "/?welcome=true",
     signOut: "/",
   },
+  trustHost: true,
   callbacks: {
     session: ({ session, user }) => ({
       ...session,
@@ -81,5 +81,46 @@ export const authConfig = {
       }
       return true;
     },
+    ...(IS_DEVELOPMENT
+      ? {
+          async jwt({ token, account }) {
+            if (account?.provider === "guest") {
+              token.credentials = true;
+            }
+            return token;
+          },
+        }
+      : {}),
   },
+  ...(IS_DEVELOPMENT
+    ? {
+        jwt: {
+          encode: async function (params) {
+            if (params.token?.credentials) {
+              const sessionToken = uuid();
+
+              if (!params.token.sub) {
+                throw new Error("No user ID found in token");
+              }
+
+              const createdSession = await db.session.create({
+                data: {
+                  id: sessionToken,
+                  sessionToken: sessionToken,
+                  userId: params.token.sub,
+                  expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
+                },
+              });
+
+              if (!createdSession) {
+                throw new Error("Failed to create session");
+              }
+
+              return sessionToken;
+            }
+            return defaultEncode(params);
+          },
+        },
+      }
+    : {}),
 } satisfies NextAuthConfig;

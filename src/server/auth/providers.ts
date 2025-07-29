@@ -9,8 +9,15 @@ import TwitterProvider, {
   type TwitterProfile,
 } from "next-auth/providers/twitter";
 import NotionProvider, { type NotionProfile } from "next-auth/providers/notion";
+import CredentialsProvider from "next-auth/providers/credentials";
 
-import type { OAuthConfig } from "next-auth/providers";
+import type {
+  CredentialInput,
+  CredentialsConfig,
+  OAuthConfig,
+} from "next-auth/providers";
+import { IS_DEVELOPMENT } from "@/lib/constants";
+import { db } from "../db";
 
 export const providers: (
   | OAuthConfig<DiscordProfile>
@@ -18,6 +25,7 @@ export const providers: (
   | OAuthConfig<GitHubProfile>
   | OAuthConfig<TwitterProfile>
   | OAuthConfig<NotionProfile>
+  | CredentialsConfig<Record<string, CredentialInput>>
 )[] = [
   ...("AUTH_DISCORD_ID" in env && "AUTH_DISCORD_SECRET" in env
     ? [
@@ -60,7 +68,58 @@ export const providers: (
         NotionProvider({
           clientId: env.AUTH_NOTION_ID,
           clientSecret: env.AUTH_NOTION_SECRET,
-          redirectUri: `${env.APP_URL}/api/auth/callback/notion`,
+          redirectUri: `${env.NEXTAUTH_URL}/api/auth/callback/notion`,
+          token: {
+            conform: async (response: Response) => {
+              const body = (await response.json()) as {
+                refresh_token?: string;
+              };
+              if (body?.refresh_token === null) {
+                delete body.refresh_token;
+              }
+              return new Response(JSON.stringify(body), response);
+            },
+          },
+        }),
+      ]
+    : []),
+  ...(IS_DEVELOPMENT
+    ? [
+        CredentialsProvider({
+          id: "guest",
+          name: "Guest",
+          credentials: {},
+          async authorize() {
+            const existingUser = await db.user.findUnique({
+              where: {
+                email: "guest@toolkit.dev",
+              },
+            });
+
+            if (existingUser) {
+              return {
+                id: existingUser.id,
+                name: existingUser.name,
+                email: existingUser.email,
+                image: existingUser.image,
+              };
+            }
+
+            const user = await db.user.create({
+              data: {
+                name: "Guest",
+                email: "guest@toolkit.dev",
+                image: "/manifest/web-app-manifest-512x512.png",
+              },
+            });
+
+            return {
+              id: user.id,
+              name: user.name,
+              email: user.email,
+              image: user.image,
+            };
+          },
         }),
       ]
     : []),
