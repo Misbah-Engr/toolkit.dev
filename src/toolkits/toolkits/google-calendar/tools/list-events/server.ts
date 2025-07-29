@@ -1,9 +1,10 @@
 import { type listEventsTool } from "./base";
 import type { ServerToolConfig } from "@/toolkits/types";
-import { createCalendarClient, fetchEvents } from "../../lib";
+import { fetchEvents } from "../../lib";
+import type { calendar_v3 } from "googleapis";
 
 export const googleCalendarListEventsToolConfigServer = (
-  accessToken: string,
+  calendar: calendar_v3.Calendar,
 ): ServerToolConfig<
   typeof listEventsTool.inputSchema.shape,
   typeof listEventsTool.outputSchema.shape
@@ -18,8 +19,6 @@ export const googleCalendarListEventsToolConfigServer = (
       orderBy,
       singleEvents,
     }) => {
-      const calendar = createCalendarClient(accessToken);
-
       const result = await fetchEvents(calendar, {
         calendarId,
         timeMin,

@@ -1,10 +1,10 @@
 import { type createEventTool } from "./base";
 import type { ServerToolConfig } from "@/toolkits/types";
 import type { calendar_v3 } from "googleapis";
-import { createCalendarClient, getUserTimezone } from "../../lib";
+import { getUserTimezone } from "../../lib";
 
 export const googleCalendarCreateEventToolConfigServer = (
-  accessToken: string,
+  calendar: calendar_v3.Calendar,
 ): ServerToolConfig<
   typeof createEventTool.inputSchema.shape,
   typeof createEventTool.outputSchema.shape
@@ -15,17 +15,11 @@ export const googleCalendarCreateEventToolConfigServer = (
       startDateTime,
       endDateTime,
     }) => {
-      if (!accessToken) {
-        throw new Error("Google Calendar access token is not available");
-      }
-
       console.log('[CreateEvent] Creating event with parameters:', {
         title,
         startDateTime,
         endDateTime
       });
-
-      const calendar = createCalendarClient(accessToken);
 
       // Get user's primary calendar timezone
       const userTimeZone = await getUserTimezone(calendar);

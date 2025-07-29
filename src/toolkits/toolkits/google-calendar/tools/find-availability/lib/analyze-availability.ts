@@ -1,6 +1,6 @@
 import type { Client } from "@notionhq/client";
+import type { calendar_v3 } from "googleapis";
 import { 
-  createCalendarClient, 
   getUserTimezone, 
   createTimeRange, 
   applyDateDefaults,
@@ -18,13 +18,13 @@ import { resolveAttendeeEmails } from "./attendee-resolver";
 /**
  * Analyzes calendar availability for a given time period
  * @param params - Availability analysis parameters
- * @param accessToken - Google Calendar access token
+ * @param calendar - Google Calendar client
  * @param notion - Optional Notion client for attendee resolution
  * @returns Availability analysis result
  */
 export const analyzeAvailability = async (
   params: FindAvailabilityParams,
-  accessToken: string,
+  calendar: calendar_v3.Calendar,
   notion?: Client
 ): Promise<AvailabilityResult> => {
   // Apply intelligent defaults based on user intent
@@ -39,8 +39,6 @@ export const analyzeAvailability = async (
   // If no attendees specified, that's fine - just check user's calendar
   const attendeeNames = params.attendeeNames ?? [];
 
-  // Create calendar client
-  const calendar = createCalendarClient(accessToken);
   const userTimeZone = await getUserTimezone(calendar);
 
   // Create time range

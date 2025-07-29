@@ -25,9 +25,10 @@ export const listEventsTool = createBaseTool({
       .string()
       .describe("Token for pagination (use empty string for first page)"),
     orderBy: z
-      .string()
+      .enum(["startTime", "updated"])
+      .optional()
       .describe(
-        "Order of the events returned ('startTime' or 'updated', use empty string for default)",
+        "Order of the events returned ('startTime' or 'updated', default: 'updated')",
       ),
     singleEvents: z
       .boolean()

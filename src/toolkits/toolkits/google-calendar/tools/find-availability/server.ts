@@ -1,11 +1,12 @@
 import { type findAvailabilityTool } from "./base";
 import type { ServerToolConfig } from "@/toolkits/types";
 import type { Client } from "@notionhq/client";
+import type { calendar_v3 } from "googleapis";
 import { analyzeAvailability } from "./lib";
 
 export const googleCalendarFindAvailabilityToolConfigServer = (
-  accessToken: string,
-  notion: Client, // Properly typed now
+  calendar: calendar_v3.Calendar,
+  notion: Client,
 ): ServerToolConfig<
   typeof findAvailabilityTool.inputSchema.shape,
   typeof findAvailabilityTool.outputSchema.shape
@@ -14,11 +15,7 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
     message:
       "The user is shown available time slots in an organized grid. Give a brief summary of the availability found and ask if they would like to schedule a meeting for any of the suggested times. If defaults were used (60-minute duration, 7-day search, 9 AM-5 PM), mention this briefly.",
     callback: async (params) => {
-      if (!accessToken) {
-        throw new Error("Google Calendar access token is not available");
-      }
-
-      return await analyzeAvailability(params, accessToken, notion);
+      return await analyzeAvailability(params, calendar, notion);
     },
   };
 }; 

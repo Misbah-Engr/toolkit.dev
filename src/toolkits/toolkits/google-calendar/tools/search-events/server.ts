@@ -1,9 +1,9 @@
 import { type searchEventsTool } from "./base";
-import { google } from "googleapis";
 import type { ServerToolConfig } from "@/toolkits/types";
+import type { calendar_v3 } from "googleapis";
 
 export const googleCalendarSearchEventsToolConfigServer = (
-  accessToken: string,
+  calendar: calendar_v3.Calendar,
 ): ServerToolConfig<
   typeof searchEventsTool.inputSchema.shape,
   typeof searchEventsTool.outputSchema.shape
@@ -18,11 +18,6 @@ export const googleCalendarSearchEventsToolConfigServer = (
       orderBy,
       singleEvents,
     }) => {
-      const auth = new google.auth.OAuth2();
-      auth.setCredentials({ access_token: accessToken });
-
-      const calendar = google.calendar({ version: "v3", auth });
-
       const response = await calendar.events.list({
         calendarId: calendarId ?? "primary",
         q: query,

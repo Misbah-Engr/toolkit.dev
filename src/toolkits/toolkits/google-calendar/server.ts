@@ -12,6 +12,7 @@ import {
 import { GoogleCalendarTools } from "./tools";
 import { api } from "@/trpc/server";
 import { Client } from "@notionhq/client";
+import { createCalendarClient } from "./lib";
 
 export const googleCalendarToolkitServer = createServerToolkit(
   baseGoogleCalendarToolkitConfig,
@@ -64,6 +65,9 @@ export const googleCalendarToolkitServer = createServerToolkit(
       throw new Error("No Notion account found or access token missing");
     }
 
+    // Create Google Calendar client
+    const calendar = createCalendarClient(account.access_token);
+
     // Create Notion client
     const notion = new Client({
       auth: notionAccount.access_token,
@@ -71,20 +75,18 @@ export const googleCalendarToolkitServer = createServerToolkit(
 
     return {
       [GoogleCalendarTools.ListCalendars]:
-        googleCalendarListCalendarsToolConfigServer(account.access_token),
+        googleCalendarListCalendarsToolConfigServer(calendar),
       [GoogleCalendarTools.GetCalendar]:
-        googleCalendarGetCalendarToolConfigServer(account.access_token),
+        googleCalendarGetCalendarToolConfigServer(calendar),
       [GoogleCalendarTools.ListEvents]:
-        googleCalendarListEventsToolConfigServer(account.access_token),
-      [GoogleCalendarTools.GetEvent]: googleCalendarGetEventToolConfigServer(
-        account.access_token,
-      ),
+        googleCalendarListEventsToolConfigServer(calendar),
+      [GoogleCalendarTools.GetEvent]: googleCalendarGetEventToolConfigServer(calendar),
       [GoogleCalendarTools.SearchEvents]:
-        googleCalendarSearchEventsToolConfigServer(account.access_token),
+        googleCalendarSearchEventsToolConfigServer(calendar),
       [GoogleCalendarTools.CreateEvent]:
-        googleCalendarCreateEventToolConfigServer(account.access_token),
+        googleCalendarCreateEventToolConfigServer(calendar),
       [GoogleCalendarTools.FindAvailability]:
-        googleCalendarFindAvailabilityToolConfigServer(account.access_token, notion),
+        googleCalendarFindAvailabilityToolConfigServer(calendar, notion),
     };
   },
 );

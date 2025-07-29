@@ -11,22 +11,12 @@ export const googleCalendarCreateEventToolConfigClient: ClientToolConfig<
   typeof createEventTool.inputSchema.shape,
   typeof createEventTool.outputSchema.shape
 > = {
-  CallComponent: ({ args, isPartial }) => {
-    if (isPartial || !args.title || !args.startDateTime) {
-      return (
-        <ToolCallComponent
-          action="Creating Event"
-          primaryText="New Event"
-          secondaryText="No time specified"
-        />
-      );
-    }
-
+  CallComponent: ({ args }) => {
     return (
       <ToolCallComponent
         action="Creating Event"
-        primaryText={args.title}
-        secondaryText={new Date(args.startDateTime).toLocaleString()}
+        primaryText={args.title ?? "New Event"}
+        secondaryText={args.startDateTime ? new Date(args.startDateTime).toLocaleString() : "No time specified"}
       />
     );
   },
