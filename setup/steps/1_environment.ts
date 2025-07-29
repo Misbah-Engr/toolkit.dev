@@ -32,7 +32,10 @@ export function createEnvFile() {
 
   // Generate a secure AUTH_SECRET and append it to .env.local
   try {
-    execSync(`${getPackageRunner()} auth secret`, { encoding: "utf8" }).trim();
+    execSync(`${getPackageRunner()} auth secret`, {
+      encoding: "utf8",
+      stdio: "ignore",
+    }).trim();
   } catch (e) {
     logWarning(
       `Failed to generate AUTH_SECRET with '${getPackageRunner()} auth secret'. Please run it manually and add the value to .env.local.`,
