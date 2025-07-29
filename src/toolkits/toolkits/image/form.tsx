@@ -122,7 +122,7 @@ const DevImageModelItem = ({
   onSelect,
 }: ImageModelItemProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const hasEnvVar = useEnvVarAvailable([imageKeyMap[model.provider]]);
+  const hasEnvVar = useEnvVarAvailable(imageKeyMap[model.provider]);
 
   const envVar = imageEnvVarMap[model.provider];
 

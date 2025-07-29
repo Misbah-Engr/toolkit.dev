@@ -78,7 +78,7 @@ export const env = createEnv({
     DATABASE_URL: z.string().url(),
 
     // inference
-    OPENROUTER_API_KEY: z.string(),
+    OPENROUTER_API_KEY: z.string().optional(),
 
     // toolkits
     ...createToolkitsSchema(),

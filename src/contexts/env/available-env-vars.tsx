@@ -1,7 +1,13 @@
 "use client";
 
 import type { ClientToolkit, EnvVarGroupAll } from "@/toolkits/types";
-import { createContext, useContext, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
 
 interface AvailableEnvVarsContextType {
   envVars: Record<string, boolean>;
@@ -25,6 +31,12 @@ export function AvailableEnvVarsProvider({
     setEnvVars((prev) => ({ ...prev, ...envVars }));
   };
 
+  useEffect(() => {
+    setEnvVars(initialEnvVars);
+  }, [initialEnvVars]);
+
+  console.log(envVars);
+
   return (
     <AvailableEnvVarsContext.Provider value={{ envVars, updateEnvVars }}>
       {children}
@@ -42,12 +54,12 @@ export const useUpdateEnvVars = () => {
   return context.updateEnvVars;
 };
 
-export const useEnvVarAvailable = (envVars: string[]) => {
+export const useEnvVarAvailable = (envVar: string) => {
   const context = useContext(AvailableEnvVarsContext);
   if (!context) {
     return true;
   }
-  return envVars.some((envVar) => context.envVars[envVar]);
+  return Boolean(context.envVars[envVar]);
 };
 
 export const useToolkitMissingEnvVars = (toolkit: ClientToolkit) => {
