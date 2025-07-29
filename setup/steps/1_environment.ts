@@ -6,6 +6,7 @@ import {
   logWarning,
   getProjectRoot,
   getPackageRunner,
+  logInfo,
 } from "../utils";
 
 // Create .env.local file
@@ -14,7 +15,7 @@ export function createEnvFile() {
   const envLocalPath = join(projectRoot, ".env.local");
 
   if (existsSync(envLocalPath)) {
-    logWarning(".env.local already exists. Skipping creation.");
+    logInfo(".env.local already exists. Skipping creation.");
     return;
   }
 
@@ -30,15 +31,26 @@ export function createEnvFile() {
   writeFileSync(envLocalPath, envContent);
   logSuccess("Created .env.local file");
 
-  // Generate a secure AUTH_SECRET and append it to .env.local
-  try {
-    execSync(`${getPackageRunner()} auth secret`, {
-      encoding: "utf8",
-      stdio: "ignore",
-    }).trim();
-  } catch (e) {
-    logWarning(
-      `Failed to generate AUTH_SECRET with '${getPackageRunner()} auth secret'. Please run it manually and add the value to .env.local.`,
-    );
+  // Check if AUTH_SECRET is empty and generate it if needed
+  const authSecretRegex = /^AUTH_SECRET=(.*)$/m;
+  const authSecretMatch = authSecretRegex.exec(envContent);
+  const authSecretValue = authSecretMatch?.[1]?.trim() ?? "";
+
+  if (authSecretValue === "" || authSecretValue === '""') {
+    try {
+      execSync(`${getPackageRunner()} auth secret`, {
+        input: "y\n",
+        encoding: "utf8",
+        stdio: ["pipe", "ignore", "ignore"],
+      });
+      logSuccess("Generated AUTH_SECRET");
+    } catch (e) {
+      console.log(e);
+      logWarning(
+        `Failed to generate AUTH_SECRET with '${getPackageRunner()} auth secret'. Please run it manually and add the value to .env.local.`,
+      );
+    }
+  } else {
+    logSuccess("AUTH_SECRET already configured");
   }
 }

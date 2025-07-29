@@ -3,7 +3,6 @@ import { existsSync } from "fs";
 import { join } from "path";
 
 import {
-  logStep,
   logInfo,
   logSuccess,
   logError,
@@ -13,11 +12,6 @@ import {
 
 // Start Docker Compose services
 export function startDockerServices(): void {
-  logStep(
-    "Starting Docker Services",
-    "Starting PostgreSQL, Redis, and Vercel Blob services...",
-  );
-
   try {
     // Check if Docker is available
     const dockerCommand = checkDocker();
@@ -47,10 +41,6 @@ export function startDockerServices(): void {
     });
 
     logSuccess("Docker services started successfully");
-    logInfo("Services running:");
-    logInfo("  - PostgreSQL: localhost:5432");
-    logInfo("  - Redis: localhost:6379");
-    logInfo("  - Vercel Blob: localhost:6969");
   } catch (error) {
     logError("Failed to start Docker services");
     if (error instanceof Error) {

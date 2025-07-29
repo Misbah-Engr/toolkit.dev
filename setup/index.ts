@@ -19,18 +19,18 @@ async function main(): Promise<void> {
 
   try {
     // Step 1: Create .env.local
-    logStep("Step 1/6", "Creating environment configuration...");
+    logStep("Step 1/4", "Creating environment configuration...");
     createEnvFile();
 
     // Step 2: Install dependencies
-    logStep("Step 2/6", "Installing project dependencies...");
+    logStep("Step 2/4", "Installing project dependencies...");
     installDependencies();
 
-    logStep("Step 3/6", "Starting Docker services...");
+    logStep("Step 3/4", "Starting Docker services...");
     startDockerServices();
 
     // Step 3: Setup database
-    logStep("Step 4/6", "Running database migrations...");
+    logStep("Step 4/4", "Running database migrations...");
     runMigrations();
   } catch (error) {
     logError("Setup failed: " + (error as Error).message);
