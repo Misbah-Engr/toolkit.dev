@@ -89,7 +89,7 @@ export const ToolkitList: React.FC<ToolkitListProps> = ({
           </CommandGroup>
         )}
         {Object.keys(clientToolkits).length > selectedToolkits.length && (
-          <CommandGroup className="p-0" heading="Available">
+          <CommandGroup className="p-0">
             {Object.entries(clientToolkits)
               .filter(
                 ([id]) =>

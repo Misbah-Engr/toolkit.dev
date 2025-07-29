@@ -38,6 +38,7 @@ export const authConfig = {
     newUser: "/?welcome=true",
     signOut: "/",
   },
+  trustHost: true,
   callbacks: {
     session: ({ session, user }) => ({
       ...session,
