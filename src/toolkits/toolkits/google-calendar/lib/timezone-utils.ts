@@ -1,16 +1,18 @@
 import type { calendar_v3 } from "googleapis";
 
-const DEFAULT_TIMEZONE = 'America/New_York';
+const DEFAULT_TIMEZONE = "America/New_York";
 
 /**
  * Gets the user's primary calendar timezone
  * @param calendar - The Google Calendar client
  * @returns The user's timezone or a fallback timezone
  */
-export const getUserTimezone = async (calendar: calendar_v3.Calendar): Promise<string> => {
+export const getUserTimezone = async (
+  calendar: calendar_v3.Calendar,
+): Promise<string> => {
   try {
     const calendarResponse = await calendar.calendars.get({
-      calendarId: 'primary'
+      calendarId: "primary",
     });
     return calendarResponse.data.timeZone ?? DEFAULT_TIMEZONE;
   } catch {
@@ -28,7 +30,7 @@ export const getUserTimezone = async (calendar: calendar_v3.Calendar): Promise<s
 export const createTimeRange = (startDate: string, endDate: string) => {
   const startOfDay = new Date(`${startDate}T00:00:00`);
   const endOfDay = new Date(`${endDate}T23:59:59`);
-  
+
   return {
     timeMin: startOfDay.toISOString(),
     timeMax: endOfDay.toISOString(),
@@ -45,10 +47,13 @@ export const createTimeRange = (startDate: string, endDate: string) => {
 export const formatDateInTimezone = (
   date: Date | string,
   timezone: string,
-  options: Intl.DateTimeFormatOptions = {}
+  options: Intl.DateTimeFormatOptions = {},
 ): string => {
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
-  return dateObj.toLocaleDateString('en-US', { timeZone: timezone, ...options });
+  const dateObj = typeof date === "string" ? new Date(date) : date;
+  return dateObj.toLocaleDateString("en-US", {
+    timeZone: timezone,
+    ...options,
+  });
 };
 
 /**
@@ -61,12 +66,12 @@ export const formatDateInTimezone = (
 export const formatTimeInTimezone = (
   date: Date | string,
   timezone: string,
-  options: Intl.DateTimeFormatOptions = {}
+  options: Intl.DateTimeFormatOptions = {},
 ): string => {
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
-  return dateObj.toLocaleTimeString('en-US', { 
+  const dateObj = typeof date === "string" ? new Date(date) : date;
+  return dateObj.toLocaleTimeString("en-US", {
     timeZone: timezone,
     hour12: true,
-    ...options 
+    ...options,
   });
-}; 
+};

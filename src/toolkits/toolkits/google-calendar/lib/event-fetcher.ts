@@ -9,8 +9,12 @@ import type { CalendarEvent, EventFetchParams } from "./types";
  */
 export const fetchEvents = async (
   calendar: calendar_v3.Calendar,
-  params: EventFetchParams
-): Promise<{ events: CalendarEvent[]; nextPageToken?: string; timeZone?: string }> => {
+  params: EventFetchParams,
+): Promise<{
+  events: CalendarEvent[];
+  nextPageToken?: string;
+  timeZone?: string;
+}> => {
   const response = await calendar.events.list({
     calendarId: params.calendarId,
     timeMin: params.timeMin,
@@ -39,10 +43,10 @@ export const fetchEvents = async (
 export const fetchEventsFromMultipleCalendars = async (
   calendar: calendar_v3.Calendar,
   calendarIds: string[],
-  params: Omit<EventFetchParams, 'calendarId'>
+  params: Omit<EventFetchParams, "calendarId">,
 ): Promise<CalendarEvent[]> => {
   const allEvents: CalendarEvent[] = [];
-  
+
   for (const calendarId of calendarIds) {
     try {
       const result = await fetchEvents(calendar, {
@@ -51,10 +55,13 @@ export const fetchEventsFromMultipleCalendars = async (
       });
       allEvents.push(...result.events);
     } catch (error) {
-      console.warn(`Failed to fetch events from calendar ${calendarId}:`, error);
+      console.warn(
+        `Failed to fetch events from calendar ${calendarId}:`,
+        error,
+      );
     }
   }
-  
+
   return allEvents;
 };
 
@@ -64,8 +71,8 @@ export const fetchEventsFromMultipleCalendars = async (
  * @returns Array of timed events only
  */
 export const filterTimedEvents = (events: CalendarEvent[]): CalendarEvent[] => {
-  return events.filter(event => {
+  return events.filter((event) => {
     // Check if the event has a start time with dateTime (timed event)
     return event.start?.dateTime && !event.start?.date;
   });
-}; 
+};

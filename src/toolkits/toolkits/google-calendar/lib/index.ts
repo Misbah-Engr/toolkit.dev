@@ -1,30 +1,30 @@
 // Calendar client utilities
-export { createCalendarClient } from './calendar-client';
+export { createCalendarClient } from "./calendar-client";
 
 // Event fetching utilities
-export { 
-  fetchEvents, 
-  fetchEventsFromMultipleCalendars, 
-  filterTimedEvents 
-} from './event-fetcher';
+export {
+  fetchEvents,
+  fetchEventsFromMultipleCalendars,
+  filterTimedEvents,
+} from "./event-fetcher";
 
 // Timezone utilities
-export { 
-  getUserTimezone, 
-  createTimeRange, 
-  formatDateInTimezone, 
-  formatTimeInTimezone 
-} from './timezone-utils';
+export {
+  getUserTimezone,
+  createTimeRange,
+  formatDateInTimezone,
+  formatTimeInTimezone,
+} from "./timezone-utils";
 
 // Date utilities
-export { 
-  getTodayDate, 
-  addDaysToDate, 
-  applyDateDefaults, 
-  doRangesOverlap, 
-  minutesToMs, 
-  msToMinutes 
-} from './date-utils';
+export {
+  getTodayDate,
+  addDaysToDate,
+  applyDateDefaults,
+  doRangesOverlap,
+  minutesToMs,
+  msToMinutes,
+} from "./date-utils";
 
 // Types
 export type {
@@ -40,4 +40,4 @@ export type {
   FindAvailabilityParams,
   EventFetchParams,
   CalendarClientConfig,
-} from './types'; 
+} from "./types";
