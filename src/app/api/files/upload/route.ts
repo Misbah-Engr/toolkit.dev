@@ -7,7 +7,7 @@ import { put } from "@vercel/blob";
 import { auth } from "@/server/auth";
 import { api } from "@/trpc/server";
 import { FILE_MAX_SIZE } from "@/lib/constants";
-import { IS_LOCAL_BLOB } from "@/lib/constants";
+import { IS_DEVELOPMENT } from "@/lib/constants";
 
 
 // Use Blob instead of File since File is not available in Node.js environment
@@ -61,29 +61,27 @@ export async function POST(request: Request) {
     const fileBuffer = await file.arrayBuffer();
 
     try {
-      let fileUrl: string;
-
-      if (IS_LOCAL_BLOB) {
-        // Create base64 data URL for local development
-        const base64 = Buffer.from(fileBuffer).toString('base64');
-        fileUrl = `data:${validatedFile.data.file.type};base64,${base64}`;
-      } else {
-        // Upload to Vercel Blob for production
-        const data = await put(
-          `${session.user.id}/${crypto.randomUUID()}`,
-          fileBuffer,
-          {
-            access: "public",
-          },
-        );
-        fileUrl = data.url;
-      }
+      // Upload to Vercel Blob for production
+      const data = await put(
+        `${session.user.id}/${crypto.randomUUID()}`,
+        fileBuffer,
+        {
+          access: "public",
+        },
+      );
 
       const file = await api.files.createFile({
         name: filename,
-        url: fileUrl,
+        url: data.url,
         contentType: validatedFile.data.file.type,
       });
+
+      if (IS_DEVELOPMENT) {
+        const base64 = Buffer.from(fileBuffer).toString('base64');
+        const fileUrl = `data:${validatedFile.data.file.type};base64,${base64}`;
+        console.log("file url", fileUrl);
+        file.url = fileUrl;
+      }
 
       return NextResponse.json(file);
     } catch (error) {
