@@ -6,7 +6,6 @@ import {
   logWarning,
   getProjectRoot,
   getPackageRunner,
-  logInfo,
 } from "../utils";
 
 // Create .env.local file
@@ -15,7 +14,7 @@ export function createEnvFile() {
   const envLocalPath = join(projectRoot, ".env.local");
 
   if (existsSync(envLocalPath)) {
-    logInfo(".env.local already exists. Skipping creation.");
+    logSuccess(".env.local already exists.");
     return;
   }
 
