@@ -1,18 +1,21 @@
 import type { Client } from "@notionhq/client";
 import type { calendar_v3 } from "googleapis";
-import { 
-  getUserTimezone, 
-  createTimeRange, 
+import {
+  getUserTimezone,
+  createTimeRange,
   applyDateDefaults,
   fetchEventsFromMultipleCalendars,
-  filterTimedEvents
+  filterTimedEvents,
 } from "../../../lib";
-import type { 
-  FindAvailabilityParams, 
-  AvailabilityResult
+import type {
+  FindAvailabilityParams,
+  AvailabilityResult,
 } from "../../../lib/types";
 import { generateTimeSlots } from "./slot-generator";
-import { filterConflictingSlots, extractConflictingEvents } from "./conflict-detector";
+import {
+  filterConflictingSlots,
+  extractConflictingEvents,
+} from "./conflict-detector";
 import { resolveAttendeeEmails } from "./attendee-resolver";
 
 /**
@@ -25,17 +28,20 @@ import { resolveAttendeeEmails } from "./attendee-resolver";
 export const analyzeAvailability = async (
   params: FindAvailabilityParams,
   calendar: calendar_v3.Calendar,
-  notion?: Client
+  notion?: Client,
 ): Promise<AvailabilityResult> => {
   // Apply intelligent defaults based on user intent
-  const { searchStartDate, searchEndDate } = applyDateDefaults(params.startDate, params.endDate);
+  const { searchStartDate, searchEndDate } = applyDateDefaults(
+    params.startDate,
+    params.endDate,
+  );
   const searchDuration = params.durationMinutes ?? 60; // Default 60 minutes for meetings
   const searchMaxResults = params.maxResults ?? 10; // Default 10 results
-  
+
   // Apply time constraints with defaults
   const startTime = params.startTime ?? "09:00"; // Default 9 AM
   const endTime = params.endTime ?? "17:00"; // Default 5 PM
-  
+
   // If no attendees specified, that's fine - just check user's calendar
   const attendeeNames = params.attendeeNames ?? [];
 
@@ -56,17 +62,17 @@ export const analyzeAvailability = async (
       maxResults: 2500,
       orderBy: "startTime",
       singleEvents: true,
-      timeZone: userTimeZone
-    }
+      timeZone: userTimeZone,
+    },
   );
 
   const primaryEventsFiltered = filterTimedEvents(primaryEvents);
-  
+
   // If attendees are specified, get their events
   let allEvents = [...primaryEventsFiltered];
   if (attendeeNames.length > 0 && notion) {
     const attendeeEmails = await resolveAttendeeEmails(notion, attendeeNames);
-    
+
     if (attendeeEmails.length > 0) {
       const attendeeEvents = await fetchEventsFromMultipleCalendars(
         calendar,
@@ -77,9 +83,9 @@ export const analyzeAvailability = async (
           maxResults: 2500,
           orderBy: "startTime",
           singleEvents: true,
-        }
+        },
       );
-      
+
       allEvents = [...allEvents, ...filterTimedEvents(attendeeEvents)];
     }
   }
@@ -92,14 +98,21 @@ export const analyzeAvailability = async (
     userTimeZone,
     searchMaxResults * 10, // Generate more slots than needed to account for conflicts
     startTime,
-    endTime
+    endTime,
   );
 
   // Filter out conflicting slots
-  const availableSlots = filterConflictingSlots(allSlots, allEvents).slice(0, searchMaxResults);
+  const availableSlots = filterConflictingSlots(allSlots, allEvents).slice(
+    0,
+    searchMaxResults,
+  );
 
   // Extract conflicting events for the search period
-  const conflictingEvents = extractConflictingEvents(allEvents, startDateObj, endDateObj);
+  const conflictingEvents = extractConflictingEvents(
+    allEvents,
+    startDateObj,
+    endDateObj,
+  );
 
   return {
     availableSlots,
@@ -111,4 +124,4 @@ export const analyzeAvailability = async (
     },
     conflictingEvents,
   };
-}; 
+};

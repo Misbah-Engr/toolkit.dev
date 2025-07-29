@@ -1,11 +1,11 @@
-import { format, addDays, areIntervalsOverlapping } from 'date-fns';
+import { format, addDays, areIntervalsOverlapping } from "date-fns";
 
 /**
  * Gets today's date in YYYY-MM-DD format
  * @returns Today's date as a string
  */
 export const getTodayDate = (): string => {
-  return format(new Date(), 'yyyy-MM-dd');
+  return format(new Date(), "yyyy-MM-dd");
 };
 
 /**
@@ -16,7 +16,7 @@ export const getTodayDate = (): string => {
  */
 export const addDaysToDate = (date: string, days: number): string => {
   const dateObj = new Date(date);
-  return format(addDays(dateObj, days), 'yyyy-MM-dd');
+  return format(addDays(dateObj, days), "yyyy-MM-dd");
 };
 
 /**
@@ -26,12 +26,13 @@ export const addDaysToDate = (date: string, days: number): string => {
  * @returns Object with searchStartDate and searchEndDate
  */
 export const applyDateDefaults = (startDate?: string, endDate?: string) => {
-  const today = format(new Date(), 'yyyy-MM-dd');
+  const today = format(new Date(), "yyyy-MM-dd");
   const searchStartDate = startDate ?? today;
-  
+
   // If no end date, just add 7 days to the start date
-  const searchEndDate = endDate ?? format(addDays(new Date(searchStartDate), 7), 'yyyy-MM-dd');
-  
+  const searchEndDate =
+    endDate ?? format(addDays(new Date(searchStartDate), 7), "yyyy-MM-dd");
+
   return {
     searchStartDate,
     searchEndDate,
@@ -50,11 +51,11 @@ export const doRangesOverlap = (
   start1: Date,
   end1: Date,
   start2: Date,
-  end2: Date
+  end2: Date,
 ): boolean => {
   return areIntervalsOverlapping(
     { start: start1, end: end1 },
-    { start: start2, end: end2 }
+    { start: start2, end: end2 },
   );
 };
 
@@ -74,4 +75,4 @@ export const minutesToMs = (minutes: number): number => {
  */
 export const msToMinutes = (ms: number): number => {
   return Math.floor(ms / (60 * 1000));
-}; 
+};

@@ -1,5 +1,9 @@
 import { doRangesOverlap } from "../../../lib";
-import type { CalendarEvent, TimeSlot, ConflictingEvent } from "../../../lib/types";
+import type {
+  CalendarEvent,
+  TimeSlot,
+  ConflictingEvent,
+} from "../../../lib/types";
 
 /**
  * Checks if a time slot conflicts with any existing events
@@ -7,16 +11,19 @@ import type { CalendarEvent, TimeSlot, ConflictingEvent } from "../../../lib/typ
  * @param events - Array of existing events
  * @returns True if there's a conflict
  */
-export const hasConflict = (slot: TimeSlot, events: CalendarEvent[]): boolean => {
+export const hasConflict = (
+  slot: TimeSlot,
+  events: CalendarEvent[],
+): boolean => {
   const slotStart = new Date(slot.start);
   const slotEnd = new Date(slot.end);
-  
-  return events.some(event => {
+
+  return events.some((event) => {
     if (!event.start?.dateTime || !event.end?.dateTime) return false;
-    
+
     const eventStart = new Date(event.start.dateTime);
     const eventEnd = new Date(event.end.dateTime);
-    
+
     return doRangesOverlap(slotStart, slotEnd, eventStart, eventEnd);
   });
 };
@@ -29,9 +36,9 @@ export const hasConflict = (slot: TimeSlot, events: CalendarEvent[]): boolean =>
  */
 export const filterConflictingSlots = (
   slots: TimeSlot[],
-  events: CalendarEvent[]
+  events: CalendarEvent[],
 ): TimeSlot[] => {
-  return slots.filter(slot => !hasConflict(slot, events));
+  return slots.filter((slot) => !hasConflict(slot, events));
 };
 
 /**
@@ -44,21 +51,21 @@ export const filterConflictingSlots = (
 export const extractConflictingEvents = (
   events: CalendarEvent[],
   startDate: Date,
-  endDate: Date
+  endDate: Date,
 ): ConflictingEvent[] => {
   return events
-    .filter(event => {
+    .filter((event) => {
       if (!event.start?.dateTime || !event.end?.dateTime) return false;
-      
+
       const eventStart = new Date(event.start.dateTime);
       const eventEnd = new Date(event.end.dateTime);
-      
+
       return doRangesOverlap(startDate, endDate, eventStart, eventEnd);
     })
-    .map(event => ({
-      id: event.id ?? '',
+    .map((event) => ({
+      id: event.id ?? "",
       summary: event.summary ?? undefined,
       start: event.start!.dateTime!,
       end: event.end!.dateTime!,
     }));
-}; 
+};

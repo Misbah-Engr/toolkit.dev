@@ -18,4 +18,4 @@ export const googleCalendarFindAvailabilityToolConfigServer = (
       return await analyzeAvailability(params, calendar, notion);
     },
   };
-}; 
+};

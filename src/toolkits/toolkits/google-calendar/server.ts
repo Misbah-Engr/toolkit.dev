@@ -80,7 +80,8 @@ export const googleCalendarToolkitServer = createServerToolkit(
         googleCalendarGetCalendarToolConfigServer(calendar),
       [GoogleCalendarTools.ListEvents]:
         googleCalendarListEventsToolConfigServer(calendar),
-      [GoogleCalendarTools.GetEvent]: googleCalendarGetEventToolConfigServer(calendar),
+      [GoogleCalendarTools.GetEvent]:
+        googleCalendarGetEventToolConfigServer(calendar),
       [GoogleCalendarTools.SearchEvents]:
         googleCalendarSearchEventsToolConfigServer(calendar),
       [GoogleCalendarTools.CreateEvent]:
