@@ -22,6 +22,7 @@ interface ToolkitListProps {
   selectedToolkits: SelectedToolkit[];
   onAddToolkit: (toolkit: SelectedToolkit) => void;
   onRemoveToolkit: (id: Toolkits) => void;
+  gradientClassName?: string;
 }
 
 const toolkitItemHeight = 48;
@@ -31,6 +32,7 @@ export const ToolkitList: React.FC<ToolkitListProps> = ({
   selectedToolkits,
   onAddToolkit,
   onRemoveToolkit,
+  gradientClassName,
 }) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -69,6 +71,7 @@ export const ToolkitList: React.FC<ToolkitListProps> = ({
         style={{
           height: `${toolkitItemHeight * (numToolkitsToShow + 0.5)}px`,
         }}
+        gradientClassName={gradientClassName}
       >
         <CommandEmpty>No toolkits match your search</CommandEmpty>
         {selectedToolkits.length > 0 && (

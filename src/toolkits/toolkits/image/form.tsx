@@ -41,7 +41,10 @@ export const Form: React.ComponentType<{
   return (
     <Command className="bg-transparent">
       <CommandInput placeholder="Search models..." />
-      <CommandList style={{ height: `${imageModelHeight * 4.5}px` }}>
+      <CommandList
+        style={{ maxHeight: `${imageModelHeight * 4.5}px` }}
+        gradientClassName="from-background"
+      >
         <CommandEmpty>No models found.</CommandEmpty>
         <CommandGroup className="p-0">
           {allImageModels.map((model) => {
