@@ -6,6 +6,7 @@ import { generateToolConfigClient } from "./tools/generate/client";
 import { baseImageToolkitConfig } from "./base";
 import { ToolkitGroups } from "@/toolkits/types";
 import { Form } from "./form";
+import { imageEnvVars } from "./env-vars";
 
 export const imageClientToolkit = createClientToolkit<
   ImageTools,
@@ -18,6 +19,7 @@ export const imageClientToolkit = createClientToolkit<
     icon: ImageIcon,
     form: Form,
     type: ToolkitGroups.Native,
+    envVars: imageEnvVars,
   },
   {
     [ImageTools.Generate]: generateToolConfigClient,

@@ -83,7 +83,6 @@ export const authConfig = {
     ...(IS_DEVELOPMENT
       ? {
           async jwt({ token, account }) {
-            console.log(account);
             if (account?.provider === "guest") {
               token.credentials = true;
             }

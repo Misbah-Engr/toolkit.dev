@@ -17,8 +17,6 @@ export async function GET(request: Request) {
     secureCookie: false,
   });
 
-  console.log(token);
-
   if (token) {
     return NextResponse.redirect(new URL("/", request.url));
   }

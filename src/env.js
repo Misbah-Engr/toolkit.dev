@@ -32,92 +32,35 @@ const createAuthSchema = () => {
   return authSchema;
 };
 
-const authRuntimeEnv = () => {
-  const object = {};
-
-  if (process.env.AUTH_DISCORD_ID || process.env.AUTH_DISCORD_SECRET) {
-    object.AUTH_DISCORD_ID = process.env.AUTH_DISCORD_ID;
-    object.AUTH_DISCORD_SECRET = process.env.AUTH_DISCORD_SECRET;
-  }
-
-  if (process.env.AUTH_GOOGLE_ID || process.env.AUTH_GOOGLE_SECRET) {
-    object.AUTH_GOOGLE_ID = process.env.AUTH_GOOGLE_ID;
-    object.AUTH_GOOGLE_SECRET = process.env.AUTH_GOOGLE_SECRET;
-  }
-
-  if (process.env.AUTH_GITHUB_ID || process.env.AUTH_GITHUB_SECRET) {
-    object.AUTH_GITHUB_ID = process.env.AUTH_GITHUB_ID;
-    object.AUTH_GITHUB_SECRET = process.env.AUTH_GITHUB_SECRET;
-  }
-
-  if (process.env.AUTH_TWITTER_ID || process.env.AUTH_TWITTER_SECRET) {
-    object.AUTH_TWITTER_ID = process.env.AUTH_TWITTER_ID;
-    object.AUTH_TWITTER_SECRET = process.env.AUTH_TWITTER_SECRET;
-  }
-
-  if (process.env.AUTH_NOTION_ID || process.env.AUTH_NOTION_SECRET) {
-    object.AUTH_NOTION_ID = process.env.AUTH_NOTION_ID;
-    object.AUTH_NOTION_SECRET = process.env.AUTH_NOTION_SECRET;
-  }
-
-  if (process.env.AUTH_NOTION_ID || process.env.AUTH_NOTION_SECRET) {
-    object.AUTH_NOTION_ID = process.env.AUTH_NOTION_ID;
-    object.AUTH_NOTION_SECRET = process.env.AUTH_NOTION_SECRET;
-  }
-
-  return object;
-};
-
 const createImageModelSchema = () => {
   const imageModelSchema = {};
-
-  if (process.env.OPENAI_API_KEY) {
-    imageModelSchema.OPENAI_API_KEY = z.string();
-  }
-
-  if (process.env.XAI_API_KEY) {
-    imageModelSchema.XAI_API_KEY = z.string();
-  }
-
-  if (process.env.FAL_API_KEY) {
-    imageModelSchema.FAL_API_KEY = z.string();
-  }
-
-  if (process.env.FIREWORKS_API_KEY) {
-    imageModelSchema.FIREWORKS_API_KEY = z.string();
-  }
-
-  if (process.env.LUMA_API_KEY) {
-    imageModelSchema.LUMA_API_KEY = z.string();
-  }
 
   return imageModelSchema;
 };
 
-const imageModelRuntimeEnv = () => {
-  const object = {};
+const createToolkitsSchema = () => {
+  const toolkitsSchema = {};
 
-  if (process.env.OPENAI_API_KEY) {
-    object.OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-  }
+  // Web search toolkit
+  if (process.env.EXA_API_KEY) toolkitsSchema.EXA_API_KEY = z.string();
 
-  if (process.env.XAI_API_KEY) {
-    object.XAI_API_KEY = process.env.XAI_API_KEY;
-  }
+  // Mem0 toolkit
+  if (process.env.MEM0_API_KEY) toolkitsSchema.MEM0_API_KEY = z.string();
 
-  if (process.env.FAL_API_KEY) {
-    object.FAL_API_KEY = process.env.FAL_API_KEY;
-  }
+  // Code Interpreter toolkit
+  if (process.env.E2B_API_KEY) toolkitsSchema.E2B_API_KEY = z.string();
 
-  if (process.env.FIREWORKS_API_KEY) {
-    object.FIREWORKS_API_KEY = process.env.FIREWORKS_API_KEY;
-  }
+  // Image toolkit
+  if (process.env.BLOB_READ_WRITE_TOKEN)
+    toolkitsSchema.BLOB_READ_WRITE_TOKEN = z.string();
+  if (process.env.OPENAI_API_KEY) toolkitsSchema.OPENAI_API_KEY = z.string();
+  if (process.env.XAI_API_KEY) toolkitsSchema.XAI_API_KEY = z.string();
+  if (process.env.FAL_API_KEY) toolkitsSchema.FAL_API_KEY = z.string();
+  if (process.env.FIREWORKS_API_KEY)
+    toolkitsSchema.FIREWORKS_API_KEY = z.string();
+  if (process.env.LUMA_API_KEY) toolkitsSchema.LUMA_API_KEY = z.string();
 
-  if (process.env.LUMA_API_KEY) {
-    object.LUMA_API_KEY = process.env.LUMA_API_KEY;
-  }
-
-  return object;
+  return toolkitsSchema;
 };
 
 export const env = createEnv({
@@ -137,10 +80,8 @@ export const env = createEnv({
       .default("development"),
     PRISMA_LOG_QUERIES: z.string().optional(),
     OPENROUTER_API_KEY: z.string(),
-    EXA_API_KEY: z.string().optional(),
-    MEM0_API_KEY: z.string().optional(),
-    E2B_API_KEY: z.string().optional(),
     GITHUB_TOKEN: z.string().optional(),
+    ...createToolkitsSchema(),
     ...createAuthSchema(),
     ...createImageModelSchema(),
   },
@@ -154,24 +95,7 @@ export const env = createEnv({
     // NEXT_PUBLIC_CLIENTVAR: z.string(),
   },
 
-  /**
-   * You can't destruct `process.env` as a regular object in the Next.js edge runtimes (e.g.
-   * middlewares) or client-side so we need to destruct manually.
-   */
-  runtimeEnv: {
-    NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-    AUTH_SECRET: process.env.AUTH_SECRET,
-    DATABASE_URL: process.env.DATABASE_URL,
-    NODE_ENV: process.env.NODE_ENV,
-    PRISMA_LOG_QUERIES: process.env.PRISMA_LOG_QUERIES,
-    OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY,
-    EXA_API_KEY: process.env.EXA_API_KEY,
-    MEM0_API_KEY: process.env.MEM0_API_KEY,
-    E2B_API_KEY: process.env.E2B_API_KEY,
-    GITHUB_TOKEN: process.env.GITHUB_TOKEN,
-    ...authRuntimeEnv(),
-    ...imageModelRuntimeEnv(),
-  },
+  experimental__runtimeEnv: {},
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
    * useful for Docker builds.

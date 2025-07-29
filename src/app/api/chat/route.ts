@@ -48,7 +48,7 @@ function getStreamContext() {
       });
     } catch (error: unknown) {
       if (error instanceof Error && error.message.includes("REDIS_URL")) {
-        console.log(
+        console.warn(
           " > Resumable streams are disabled due to missing REDIS_URL",
         );
       } else {

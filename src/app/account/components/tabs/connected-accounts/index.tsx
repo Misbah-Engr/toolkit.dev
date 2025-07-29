@@ -10,8 +10,6 @@ export const ConnectedAccounts = async () => {
     limit: 100,
   });
 
-  console.log(providers);
-
   return (
     <div className="flex flex-col gap-2">
       {providers
