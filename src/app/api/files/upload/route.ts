@@ -59,7 +59,6 @@ export async function POST(request: Request) {
     const fileBuffer = await file.arrayBuffer();
 
     try {
-      // Upload to Vercel Blob for production
       const data = await put(
         `${session.user.id}/${crypto.randomUUID()}`,
         fileBuffer,
@@ -75,7 +74,9 @@ export async function POST(request: Request) {
       });
 
       if (IS_DEVELOPMENT) {
-        const base64 = Buffer.from(fileBuffer).toString('base64');
+        // In development, use base64 data URLs so openrouter can access the file
+        // We can't use the local blob storage because it's not accessible to openrouter
+        const base64 = Buffer.from(fileBuffer).toString("base64");
         const fileUrl = `data:${validatedFile.data.file.type};base64,${base64}`;
         console.log("file url", fileUrl);
         file.url = fileUrl;
