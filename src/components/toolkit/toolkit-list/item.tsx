@@ -1,8 +1,7 @@
 import { useState } from "react";
 
-import { AlertTriangle, Loader2, Plus } from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CommandItem as BaseCommandItem } from "@/components/ui/command";
 import {
@@ -15,7 +14,12 @@ import {
 } from "@/components/ui/dialog";
 import { VStack } from "@/components/ui/stack";
 
+import { EnvVarDialog } from "@/components/env-vars/env-var-dialog";
+
+import { useToolkitMissingEnvVars } from "@/contexts/env/available-env-vars";
+
 import { cn } from "@/lib/utils";
+import { IS_PRODUCTION } from "@/lib/constants";
 
 import type {
   ServerToolkitParameters,
@@ -23,10 +27,6 @@ import type {
 } from "@/toolkits/toolkits/shared";
 import type { ClientToolkit } from "@/toolkits/types";
 import type { SelectedToolkit } from "../types";
-import { useToolkitMissingEnvVars } from "@/contexts/env/available-env-vars";
-import { IS_PRODUCTION } from "@/lib/constants";
-import { EnvVarForm } from "../../env-vars/env-var-form";
-import { EnvVarDialog } from "@/components/env-vars/env-var-dialog";
 
 interface Props {
   id: Toolkits;
@@ -118,7 +118,7 @@ export const ToolkitItem: React.FC<Props> = ({
     onSelect: () => void;
     isLoading: boolean;
   }) => {
-    const Item = IS_PRODUCTION ? BaseCommandItem : BaseDevItem;
+    const Item = IS_PRODUCTION ? CommandItem : BaseDevItem;
     return <Item onSelect={onSelect} isLoading={isLoading} />;
   };
 
