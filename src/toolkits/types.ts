@@ -18,7 +18,7 @@ export type ClientToolkitWrapper = React.FC<{
   Item: React.FC<{ isLoading: boolean; onSelect?: () => void }>;
 }>;
 
-type EnvVar = {
+export type EnvVar = {
   key: string;
   description: React.ReactNode;
 };

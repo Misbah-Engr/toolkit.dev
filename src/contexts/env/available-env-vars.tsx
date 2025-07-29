@@ -42,7 +42,7 @@ export const useUpdateEnvVars = () => {
   return context.updateEnvVars;
 };
 
-export const useSomeEnvVarsAvailable = (envVars: string[]) => {
+export const useEnvVarAvailable = (envVars: string[]) => {
   const context = useContext(AvailableEnvVarsContext);
   if (!context) {
     return true;

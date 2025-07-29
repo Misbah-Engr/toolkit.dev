@@ -3,8 +3,11 @@ import React from "react";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { toast } from "sonner";
+
 import { useForm } from "react-hook-form";
 
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -15,23 +18,22 @@ import {
   FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-
-import { Button } from "@/components/ui/button";
-
-import type { EnvVars } from "@/toolkits/types";
-import { setEnvVar } from "@/actions/add-env-var";
-import { toast } from "sonner";
-import { useUpdateEnvVars } from "@/contexts/env/available-env-vars";
 import { VStack } from "@/components/ui/stack";
 
+import { setEnvVar } from "@/actions/add-env-var";
+
+import { useUpdateEnvVars } from "@/contexts/env/available-env-vars";
+
+import type { EnvVars } from "@/toolkits/types";
+
 interface Props {
-  toolkitName: string;
+  resourceName: string;
   envVars: EnvVars;
   onSuccess: () => void;
 }
 
 export const EnvVarForm: React.FC<Props> = ({
-  toolkitName,
+  resourceName,
   envVars,
   onSuccess,
 }) => {
@@ -172,7 +174,7 @@ export const EnvVarForm: React.FC<Props> = ({
           </Button>
           <p className="text-center text-xs">
             This will refresh the page. After the refresh you will be able to
-            use the {toolkitName} toolkit.
+            use {resourceName}.
           </p>
         </VStack>
       </form>
