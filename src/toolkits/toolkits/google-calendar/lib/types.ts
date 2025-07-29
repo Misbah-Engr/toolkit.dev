@@ -70,7 +70,7 @@ export interface EventFetchParams {
   timeMax?: string;
   maxResults?: number;
   pageToken?: string;
-  orderBy?: string;
+  orderBy?: "startTime" | "updated";
   singleEvents?: boolean;
   timeZone?: string;
 }

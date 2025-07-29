@@ -13,15 +13,13 @@ export const fetchEvents = async (
 ): Promise<{ events: CalendarEvent[]; nextPageToken?: string; timeZone?: string }> => {
   const response = await calendar.events.list({
     calendarId: params.calendarId,
-    timeMin: params.timeMin ?? undefined,
-    timeMax: params.timeMax ?? undefined,
+    timeMin: params.timeMin,
+    timeMax: params.timeMax,
     maxResults: params.maxResults ?? 2500,
-    pageToken: params.pageToken ?? undefined,
-    orderBy: params.orderBy 
-      ? (params.orderBy as "startTime" | "updated") 
-      : "updated",
+    pageToken: params.pageToken,
+    orderBy: params.orderBy ?? "updated",
     singleEvents: params.singleEvents ?? true,
-    timeZone: params.timeZone ?? undefined,
+    timeZone: params.timeZone,
   });
 
   return {
