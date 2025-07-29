@@ -95,7 +95,6 @@ export const EnvVarForm: React.FC<Props> = ({
 
     if (success) {
       toast.success("Environment variables have been set successfully");
-      console.log(envVarsToUpdate);
       updateEnvVars(
         Object.fromEntries(
           Object.values(envVarsToUpdate).map(({ key }) => [key, true]),

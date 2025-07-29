@@ -10,17 +10,7 @@ export const googleCalendarCreateEventToolConfigServer = (
   typeof createEventTool.outputSchema.shape
 > => {
   return {
-    callback: async ({
-      title,
-      startDateTime,
-      endDateTime,
-    }) => {
-      console.log('[CreateEvent] Creating event with parameters:', {
-        title,
-        startDateTime,
-        endDateTime
-      });
-
+    callback: async ({ title, startDateTime, endDateTime }) => {
       // Get user's primary calendar timezone
       const userTimeZone = await getUserTimezone(calendar);
 
@@ -30,31 +20,29 @@ export const googleCalendarCreateEventToolConfigServer = (
         summary: title,
         start: {
           dateTime: startDateTime,
-          timeZone: userTimeZone
+          timeZone: userTimeZone,
         },
         end: {
           dateTime: endDateTime,
-          timeZone: userTimeZone
+          timeZone: userTimeZone,
         },
       };
 
-      console.log('[CreateEvent] Event resource:', eventResource);
-
       try {
         const response = await calendar.events.insert({
-          calendarId: 'primary',
+          calendarId: "primary",
           requestBody: eventResource,
         });
-
-        console.log('[CreateEvent] Event created successfully:', response.data.id);
 
         return {
           event: response.data,
         };
       } catch (error) {
-        console.error('[CreateEvent] Error creating event:', error);
-        throw new Error(`Failed to create event: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        console.error("[CreateEvent] Error creating event:", error);
+        throw new Error(
+          `Failed to create event: ${error instanceof Error ? error.message : "Unknown error"}`,
+        );
       }
     },
   };
-}; 
+};

@@ -44,7 +44,6 @@ export function createEnvFile() {
       });
       logSuccess("Generated AUTH_SECRET");
     } catch (e) {
-      console.log(e);
       logWarning(
         `Failed to generate AUTH_SECRET with '${getPackageRunner()} auth secret'. Please run it manually and add the value to .env.local.`,
       );

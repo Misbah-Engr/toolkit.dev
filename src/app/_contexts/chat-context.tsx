@@ -334,8 +334,6 @@ export function ChatProvider({
     workbench,
   };
 
-  console.log(hasOpenRouterKey);
-
   return (
     <ChatContext.Provider value={value}>
       {children}

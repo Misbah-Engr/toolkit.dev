@@ -35,8 +35,6 @@ export function AvailableEnvVarsProvider({
     setEnvVars(initialEnvVars);
   }, [initialEnvVars]);
 
-  console.log(envVars);
-
   return (
     <AvailableEnvVarsContext.Provider value={{ envVars, updateEnvVars }}>
       {children}
