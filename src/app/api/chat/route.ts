@@ -380,18 +380,19 @@ export async function POST(request: Request) {
 }
 
 async function generateTitleFromUserMessage(message: UIMessage) {
-  const relevantContent =
-    message.content +
-    message.experimental_attachments
-      ?.map((attachment) => attachment.name)
-      .join("\n");
   const { text: title } = await generateText("openai/gpt-4o-mini", {
     system: `\n
       - you will generate a short title based on the first message a user begins a conversation with
       - ensure it is not more than 80 characters long
       - the title should be a summary of the user's message
       - do not use quotes or colons`,
-    prompt: JSON.stringify(relevantContent),
+    messages: [
+      {
+        role: "user",
+        content: message.content,
+        experimental_attachments: message.experimental_attachments,
+      },
+    ],
   });
 
   return title;
