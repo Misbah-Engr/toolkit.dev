@@ -6,9 +6,7 @@ import { put } from "@vercel/blob";
 
 import { auth } from "@/server/auth";
 import { api } from "@/trpc/server";
-import { FILE_MAX_SIZE } from "@/lib/constants";
-import { IS_DEVELOPMENT } from "@/lib/constants";
-
+import { FILE_MAX_SIZE, IS_DEVELOPMENT } from "@/lib/constants";
 
 // Use Blob instead of File since File is not available in Node.js environment
 const FileSchema = z.object({

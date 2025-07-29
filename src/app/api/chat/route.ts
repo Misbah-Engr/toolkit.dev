@@ -29,7 +29,7 @@ import type {
   CoreAssistantMessage,
   CoreToolMessage,
   Tool,
-  UIMessage
+  UIMessage,
 } from "ai";
 import type { Chat } from "@prisma/client";
 import { openai } from "@ai-sdk/openai";
@@ -136,7 +136,6 @@ export async function POST(request: Request) {
       messages: previousMessages,
       message,
     });
-
 
     await api.messages.createMessage({
       chatId: id,
