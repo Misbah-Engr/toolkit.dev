@@ -69,21 +69,27 @@ export const env = createEnv({
    * isn't built with invalid env vars.
    */
   server: {
+    // environment
     NEXTAUTH_URL: z.string().url(),
-    AUTH_SECRET:
-      process.env.NODE_ENV === "production"
-        ? z.string()
-        : z.string().optional(),
+    AUTH_SECRET: z.string(),
+    ...createAuthSchema(),
+
+    // database
     DATABASE_URL: z.string().url(),
+
+    // inference
+    OPENROUTER_API_KEY: z.string(),
+
+    // toolkits
+    ...createToolkitsSchema(),
+    ...createImageModelSchema(),
+
+    // misc
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
     PRISMA_LOG_QUERIES: z.string().optional(),
-    OPENROUTER_API_KEY: z.string(),
     GITHUB_TOKEN: z.string().optional(),
-    ...createToolkitsSchema(),
-    ...createAuthSchema(),
-    ...createImageModelSchema(),
   },
 
   /**
