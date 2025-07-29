@@ -100,27 +100,28 @@ export const ToolkitItem: React.FC<Props> = ({
           }
         />
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-          <DialogContent className="gap-4 sm:max-w-[425px]">
-            <DialogHeader>
-              <Badge className="w-fit gap-2" variant="warning">
-                <AlertTriangle className="size-4" />
-                Development Mode
-              </Badge>
-              <DialogTitle>
-                Insufficient Env Vars for {toolkit.name}
+          <DialogContent className="gap-4" showCloseButton={false}>
+            <DialogHeader className="">
+              <DialogTitle className="flex justify-between">
+                Insufficient Env Vars
+                <Badge className="size-fit gap-2" variant="warning">
+                  <AlertTriangle className="size-4" />
+                  Dev Mode
+                </Badge>
               </DialogTitle>
               <DialogDescription>
-                In order to use this toolkit, you will need the following
-                environment variables:
+                In order to use {toolkit.name} toolkit, you will need the
+                following environment variables:
               </DialogDescription>
-              <EnvVarForm
-                envVars={missingEnvVars}
-                onSuccess={() => {
-                  setIsOpen(false);
-                  onSelect();
-                }}
-              />
             </DialogHeader>
+            <EnvVarForm
+              envVars={missingEnvVars}
+              onSuccess={() => {
+                setIsOpen(false);
+                onSelect();
+              }}
+              toolkitName={toolkit.name}
+            />
           </DialogContent>
         </Dialog>
       </>

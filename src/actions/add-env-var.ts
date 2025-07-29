@@ -24,10 +24,6 @@ export async function setEnvVar(input: z.infer<typeof setEnvVarSchema>) {
   try {
     const envVars = setEnvVarSchema.parse(input);
 
-    console.log({
-      envVars,
-    });
-
     // Get the path to .env.local
     const envPath = join(process.cwd(), ".env.local");
 

@@ -71,38 +71,42 @@ export const ToolkitList: React.FC<ToolkitListProps> = ({
         }}
       >
         <CommandEmpty>No toolkits match your search</CommandEmpty>
-        <CommandGroup className="p-0" heading="Enabled">
-          {selectedToolkits.map((toolkit) => (
-            <ToolkitItem
-              key={toolkit.id}
-              id={toolkit.id}
-              toolkit={toolkit.toolkit}
-              isSelected={true}
-              addToolkit={onAddToolkit}
-              removeToolkit={onRemoveToolkit}
-            />
-          ))}
-        </CommandGroup>
-        <CommandGroup className="p-0" heading="Available">
-          {Object.entries(clientToolkits)
-            .filter(
-              ([id]) =>
-                !selectedToolkits.some((t) => t.id === (id as Toolkits)),
-            )
-            .map(([id, toolkit]) => {
-              const typedId = id as Toolkits;
-              return (
-                <ToolkitItem
-                  key={typedId}
-                  id={typedId}
-                  toolkit={toolkit as ClientToolkit}
-                  isSelected={selectedToolkits.some((t) => t.id === typedId)}
-                  addToolkit={onAddToolkit}
-                  removeToolkit={onRemoveToolkit}
-                />
-              );
-            })}
-        </CommandGroup>
+        {selectedToolkits.length > 0 && (
+          <CommandGroup className="p-0" heading="Enabled">
+            {selectedToolkits.map((toolkit) => (
+              <ToolkitItem
+                key={toolkit.id}
+                id={toolkit.id}
+                toolkit={toolkit.toolkit}
+                isSelected={true}
+                addToolkit={onAddToolkit}
+                removeToolkit={onRemoveToolkit}
+              />
+            ))}
+          </CommandGroup>
+        )}
+        {Object.keys(clientToolkits).length > selectedToolkits.length && (
+          <CommandGroup className="p-0" heading="Available">
+            {Object.entries(clientToolkits)
+              .filter(
+                ([id]) =>
+                  !selectedToolkits.some((t) => t.id === (id as Toolkits)),
+              )
+              .map(([id, toolkit]) => {
+                const typedId = id as Toolkits;
+                return (
+                  <ToolkitItem
+                    key={typedId}
+                    id={typedId}
+                    toolkit={toolkit as ClientToolkit}
+                    isSelected={selectedToolkits.some((t) => t.id === typedId)}
+                    addToolkit={onAddToolkit}
+                    removeToolkit={onRemoveToolkit}
+                  />
+                );
+              })}
+          </CommandGroup>
+        )}
       </CommandList>
     </Command>
   );
