@@ -134,25 +134,31 @@ export const EnvVarForm: React.FC<Props> = ({
             </div>
           ) : (
             <div key={index} className="flex flex-col gap-2">
-              {vars.keys.map((keyObj) => (
-                <FormField
-                  key={keyObj.key}
-                  control={form.control}
-                  name={`${index}.${keyObj.key}`}
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col gap-1">
-                      <FormLabel className="mb-1 text-sm font-medium">
-                        {keyObj.key}
-                      </FormLabel>
-                      <FormControl>
-                        <Input placeholder={keyObj.key} {...field} />
-                      </FormControl>
-                      <FormDescription>{keyObj.description}</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              ))}
+              <h3 className="text-sm font-medium">
+                You only need{" "}
+                <strong className="text-primary">one of these</strong> keys
+              </h3>
+              <div className="bg-muted/60 flex flex-col gap-2 rounded-md border p-2">
+                {vars.keys.map((keyObj) => (
+                  <FormField
+                    key={keyObj.key}
+                    control={form.control}
+                    name={`${index}.${keyObj.key}`}
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col gap-1">
+                        <FormLabel className="mb-1 text-sm font-medium">
+                          {keyObj.key}
+                        </FormLabel>
+                        <FormControl>
+                          <Input placeholder={keyObj.key} {...field} />
+                        </FormControl>
+                        <FormDescription>{keyObj.description}</FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                ))}
+              </div>
             </div>
           ),
         )}

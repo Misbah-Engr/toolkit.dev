@@ -24,10 +24,28 @@ export const imageClientToolkit = createClientToolkit<
         type: "any",
         keys: [
           {
+            key: "OPENAI_API_KEY",
+            description: (
+              <span>
+                Get an OpenAI API Key{" "}
+                <Link href="https://platform.openai.com/api-keys">here</Link>
+              </span>
+            ),
+          },
+          {
+            key: "XAI_API_KEY",
+            description: (
+              <span>
+                Get an XAI API Key{" "}
+                <Link href="https://console.x.ai/">here</Link>
+              </span>
+            ),
+          },
+          {
             key: "FAL_API_KEY",
             description: (
               <span>
-                Get an FAL API Key{" "}
+                Get a FAL API Key{" "}
                 <Link href="https://fal.ai/dashboard/keys">here</Link>
               </span>
             ),
@@ -49,24 +67,6 @@ export const imageClientToolkit = createClientToolkit<
               <span>
                 Get an Luma API Key{" "}
                 <Link href="https://lumalabs.ai/api/keys">here</Link>
-              </span>
-            ),
-          },
-          {
-            key: "OPENAI_API_KEY",
-            description: (
-              <span>
-                Get an OpenAI API Key{" "}
-                <Link href="https://platform.openai.com/api-keys">here</Link>
-              </span>
-            ),
-          },
-          {
-            key: "XAI_API_KEY",
-            description: (
-              <span>
-                Get an XAI API Key{" "}
-                <Link href="https://console.x.ai/">here</Link>
               </span>
             ),
           },
