@@ -1,17 +1,13 @@
 "use client";
 
+import { createContext, useContext, type ReactNode } from "react";
+
+import { useSearchParams } from "next/navigation";
+
 import type { ClientToolkit, EnvVarGroupAll } from "@/toolkits/types";
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  type ReactNode,
-} from "react";
 
 interface AvailableEnvVarsContextType {
   envVars: Record<string, boolean>;
-  updateEnvVars: (envVars: Record<string, boolean>) => void;
 }
 
 const AvailableEnvVarsContext =
@@ -19,38 +15,27 @@ const AvailableEnvVarsContext =
 
 export function AvailableEnvVarsProvider({
   children,
-  initialEnvVars,
+  envVars,
 }: {
   children: ReactNode;
-  initialEnvVars: Record<string, boolean>;
+  envVars: Record<string, boolean>;
 }) {
-  const [envVars, setEnvVars] =
-    useState<Record<string, boolean>>(initialEnvVars);
-
-  const updateEnvVars = (envVars: Record<string, boolean>) => {
-    setEnvVars((prev) => ({ ...prev, ...envVars }));
-  };
-
-  useEffect(() => {
-    setEnvVars(initialEnvVars);
-  }, [initialEnvVars]);
+  const searchParams = useSearchParams();
+  const openRouterKeySet = searchParams.has("or-key-updated");
 
   return (
-    <AvailableEnvVarsContext.Provider value={{ envVars, updateEnvVars }}>
+    <AvailableEnvVarsContext.Provider
+      value={{
+        envVars: {
+          ...envVars,
+          ...(openRouterKeySet ? { OPENROUTER_API_KEY: true } : {}),
+        },
+      }}
+    >
       {children}
     </AvailableEnvVarsContext.Provider>
   );
 }
-
-export const useUpdateEnvVars = () => {
-  const context = useContext(AvailableEnvVarsContext);
-  if (!context) {
-    return () => {
-      void 0;
-    };
-  }
-  return context.updateEnvVars;
-};
 
 export const useEnvVarAvailable = (envVar: string) => {
   const context = useContext(AvailableEnvVarsContext);
