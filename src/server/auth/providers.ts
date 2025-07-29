@@ -9,6 +9,7 @@ import TwitterProvider, {
   type TwitterProfile,
 } from "next-auth/providers/twitter";
 import NotionProvider, { type NotionProfile } from "next-auth/providers/notion";
+import SpotifyProvider, { type SpotifyProfile } from "next-auth/providers/spotify";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 import type {
@@ -25,6 +26,7 @@ export const providers: (
   | OAuthConfig<GitHubProfile>
   | OAuthConfig<TwitterProfile>
   | OAuthConfig<NotionProfile>
+  | OAuthConfig<SpotifyProfile>
   | CredentialsConfig<Record<string, CredentialInput>>
 )[] = [
   ...("AUTH_DISCORD_ID" in env && "AUTH_DISCORD_SECRET" in env
@@ -83,6 +85,15 @@ export const providers: (
         }),
       ]
     : []),
+    ...("AUTH_SPOTIFY_ID" in env && "AUTH_SPOTIFY_SECRET" in env
+        ? [
+            SpotifyProvider({
+                clientId: env.AUTH_SPOTIFY_ID,
+                clientSecret: env.AUTH_SPOTIFY_SECRET,
+                authorization: "https://accounts.spotify.com/authorize?scope=user-read-email+playlist-read-private+playlist-read-collaborative"
+            }),
+        ]
+        : []),
   ...(IS_DEVELOPMENT
     ? [
         CredentialsProvider({

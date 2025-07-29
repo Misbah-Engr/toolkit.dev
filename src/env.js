@@ -29,6 +29,11 @@ const createAuthSchema = () => {
     authSchema.AUTH_NOTION_SECRET = z.string();
   }
 
+  if (process.env.AUTH_SPOTIFY_ID || process.env.AUTH_SPOTIFY_SECRET) {
+    authSchema.AUTH_SPOTIFY_ID = z.string();
+    authSchema.AUTH_SPOTIFY_SECRET = z.string();
+  }
+
   return authSchema;
 };
 
@@ -63,6 +68,11 @@ const authRuntimeEnv = () => {
   if (process.env.AUTH_NOTION_ID || process.env.AUTH_NOTION_SECRET) {
     object.AUTH_NOTION_ID = process.env.AUTH_NOTION_ID;
     object.AUTH_NOTION_SECRET = process.env.AUTH_NOTION_SECRET;
+  }
+
+  if (process.env.AUTH_SPOTIFY_ID || process.env.AUTH_SPOTIFY_SECRET) {
+    object.AUTH_SPOTIFY_ID = process.env.AUTH_SPOTIFY_ID;
+    object.AUTH_SPOTIFY_SECRET = process.env.AUTH_SPOTIFY_SECRET;
   }
 
   return object;
