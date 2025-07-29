@@ -1,57 +1,38 @@
 import React from "react";
 import { Badge } from "@/components/ui/badge";
-import { HStack, VStack } from "@/components/ui/stack";
-import { Clock, MapPin, Users, ExternalLink, User } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { VStack } from "@/components/ui/stack";
+import { Clock, Users, User } from "lucide-react";
+import type { calendar_v3 } from "googleapis";
 
 interface EventCardProps {
-  event: {
-    id: string;
-    summary?: string;
-    description?: string;
-    location?: string;
-    start: {
-      dateTime?: string;
-      date?: string;
-      timeZone?: string;
-    };
-    end: {
-      dateTime?: string;
-      date?: string;
-      timeZone?: string;
-    };
-    status?: string;
-    visibility?: string;
-    organizer?: {
-      email?: string;
-      displayName?: string;
-    };
-    attendees?: {
-      email?: string;
-      displayName?: string;
-      responseStatus?: string;
-    }[];
-    htmlLink?: string;
-  };
+  event: calendar_v3.Schema$Event;
   showDetails?: boolean;
 }
 
-const formatDateTime = (dateTime?: string, date?: string): string => {
-  if (dateTime) {
-    return new Date(dateTime).toLocaleString();
-  }
-  if (date) {
-    return new Date(date).toLocaleDateString();
-  }
-  return "No date";
+const getEventDateTime = (eventTime: calendar_v3.Schema$EventDateTime): string => {
+  return eventTime.dateTime ?? eventTime.date ?? new Date().toISOString();
 };
 
-const formatTime = (dateTime?: string): string => {
-  if (!dateTime) return "";
+const isAllDayEvent = (start: calendar_v3.Schema$EventDateTime): boolean => {
+  return !start.dateTime && !!start.date;
+};
+
+const formatDateTime = (dateTime: string): string => {
+  return new Date(dateTime).toLocaleString();
+};
+
+const formatTime = (dateTime: string): string => {
   return new Date(dateTime).toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
+  });
+};
+
+const formatDate = (dateTime: string): string => {
+  return new Date(dateTime).toLocaleDateString('en-US', { 
+    weekday: 'short',
+    month: 'short', 
+    day: 'numeric' 
   });
 };
 
@@ -59,90 +40,81 @@ export const EventCard: React.FC<EventCardProps> = ({
   event,
   showDetails = false,
 }) => {
-  const isAllDay = !event.start.dateTime && !event.end.dateTime;
-  const startDate = formatDateTime(event.start.dateTime, event.start.date);
-  const endDate = formatDateTime(event.end.dateTime, event.end.date);
-  const startTime = formatTime(event.start.dateTime);
-  const endTime = formatTime(event.end.dateTime);
+  const startDateTime = getEventDateTime(event.start!);
+  const endDateTime = getEventDateTime(event.end!);
+  const isAllDay = isAllDayEvent(event.start!);
+  
+  const startDate = formatDateTime(startDateTime);
+  const endDate = formatDateTime(endDateTime);
+  const startTime = isAllDay ? null : formatTime(startDateTime);
+  const endTime = isAllDay ? null : formatTime(endDateTime);
+  const formattedDate = formatDate(startDateTime);
 
   return (
-    <VStack className="items-start border-b pb-2 last:border-b-0 last:pb-0">
-      <HStack className="w-full items-start gap-2">
-        <VStack className="flex-1 items-start gap-1">
-          <HStack>
-            <h3 className="text-primary font-medium">
+    <div className="w-full rounded-lg border bg-card p-4">
+      {/* Header Section */}
+      <div className="mb-4">
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex-1 min-w-0">
+            <h3 className="text-lg font-semibold text-primary mb-1">
               {event.summary ?? "Untitled Event"}
             </h3>
-            <HStack className="flex-wrap items-center gap-x-1 text-xs">
-              <Clock className="size-3" />
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Clock className="size-4" />
               <span>
                 {isAllDay
-                  ? `${startDate}${startDate.split(" ")[0] !== endDate.split(" ")[0] ? ` - ${endDate}` : ""}`
+                  ? `${formattedDate} • All day`
                   : startDate.split(" ")[0] === endDate.split(" ")[0]
-                    ? `${startDate.split(" ")[0]} ${startTime} - ${endTime}`
-                    : `${startDate} ${startTime} - ${endDate} ${endTime}`}
+                  ? `${formattedDate} • ${startTime} - ${endTime}`
+                  : `${startDate} ${startTime} - ${endDate} ${endTime}`}
               </span>
-            </HStack>
-            {isAllDay && (
-              <Badge variant="secondary" className="text-xs">
-                All Day
-              </Badge>
-            )}
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-2">
             {event.status && event.status !== "confirmed" && (
               <Badge variant="outline" className="text-xs">
                 {event.status}
               </Badge>
             )}
-          </HStack>
-          <HStack>
-            {event.location && (
-              <HStack className="items-center gap-1">
-                <MapPin className="size-3" />
-                <span className="max-w-32 truncate">{event.location}</span>
-              </HStack>
-            )}
-          </HStack>
+          </div>
+        </div>
 
-          {event.description && showDetails && (
-            <p className="text-muted-foreground line-clamp-3 text-xs">
-              {event.description}
-            </p>
-          )}
-        </VStack>
-      </HStack>
+        {event.description && showDetails && (
+          <p className="text-muted-foreground text-sm mt-2 line-clamp-2">
+            {event.description}
+          </p>
+        )}
+      </div>
 
+      {/* Details Section - Single Column Layout */}
       {showDetails && (
-        <HStack className="w-full flex-wrap gap-2">
-          {event.organizer && (
-            <HStack className="text-muted-foreground items-center gap-2 text-xs">
-              <User className="size-3" />
-              <span>
-                Organized by{" "}
-                {event.organizer.displayName ?? event.organizer.email}
-              </span>
-            </HStack>
-          )}
+        <div className="pt-3 border-t">
+          <VStack className="items-start gap-2">
+            {event.organizer && (
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <User className="size-4" />
+                <span>
+                  Organized by{" "}
+                  <span className="font-medium">
+                    {event.organizer.displayName ?? event.organizer.email}
+                  </span>
+                </span>
+              </div>
+            )}
 
-          {event.attendees && event.attendees.length > 0 && (
-            <HStack className="text-muted-foreground gap-1 text-xs">
-              <Users className="size-3" />
-              <span>
-                {event.attendees.length} attendee
-                {event.attendees.length !== 1 ? "s" : ""}
-              </span>
-            </HStack>
-          )}
-
-          {event.htmlLink && (
-            <Link href={event.htmlLink} target="_blank">
-              <Button variant="outline" size="sm" className="text-xs">
-                <ExternalLink className="size-3" />
-                Open in Google Calendar
-              </Button>
-            </Link>
-          )}
-        </HStack>
+            {event.attendees && event.attendees.length > 0 && (
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Users className="size-4" />
+                <span>
+                  {event.attendees.length} attendee
+                  {event.attendees.length !== 1 ? "s" : ""} invited
+                </span>
+              </div>
+            )}
+          </VStack>
+        </div>
       )}
-    </VStack>
+    </div>
   );
 };

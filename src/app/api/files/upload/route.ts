@@ -78,7 +78,6 @@ export async function POST(request: Request) {
         // We can't use the local blob storage because it's not accessible to openrouter
         const base64 = Buffer.from(fileBuffer).toString("base64");
         const fileUrl = `data:${validatedFile.data.file.type};base64,${base64}`;
-        console.log("file url", fileUrl);
         file.url = fileUrl;
       }
 

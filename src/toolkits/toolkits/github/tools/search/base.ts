@@ -33,7 +33,7 @@ export const searchCodeTool = createBaseTool({
     q: z
       .string()
       .describe(
-        "Search query using GitHub code search syntax. Examples: 'addClass in:file language:js', 'repo:owner/name path:src/ extension:py', 'org:github extension:js', 'filename:test.py', 'user:octocat extension:rb', 'console.log path:/src/components', 'TODO in:comments'",
+        "Search query using GitHub code search syntax. Examples: 'addClass in:file language:js', 'repo:owner/name path:src/ extension:py', 'org:github extension:js', 'filename:test.py', 'user:octocat extension:rb', 'TODO in:comments'",
       ),
     sort: z.enum(["indexed"]).describe("Sort field ('indexed' only)"),
     order: z.enum(["asc", "desc"]).describe("Sort order"),

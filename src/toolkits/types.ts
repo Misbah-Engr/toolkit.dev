@@ -18,11 +18,30 @@ export type ClientToolkitWrapper = React.FC<{
   Item: React.FC<{ isLoading: boolean; onSelect?: () => void }>;
 }>;
 
+export type EnvVar = {
+  key: string;
+  description: React.ReactNode;
+};
+
+export type EnvVarGroupAll = {
+  type: "all";
+  keys: string[];
+  description: React.ReactNode;
+};
+
+export type EnvVarGroupAny = {
+  type: "any";
+  keys: EnvVar[];
+};
+
+export type EnvVars = Array<EnvVarGroupAll | EnvVarGroupAny>;
+
 export type ClientToolkitConifg<Parameters extends ZodRawShape = ZodRawShape> =
   {
     name: string;
     description: string;
     icon: React.FC<{ className?: string }>;
+    envVars: EnvVars;
     form: React.ComponentType<{
       parameters: z.infer<ZodObject<Parameters>>;
       setParameters: (parameters: z.infer<ZodObject<Parameters>>) => void;

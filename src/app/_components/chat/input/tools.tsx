@@ -21,7 +21,7 @@ import { clientToolkits } from "@/toolkits/toolkits/client";
 
 import { cn } from "@/lib/utils";
 
-import { LanguageModelCapability } from "@/ai/types";
+import { LanguageModelCapability } from "@/ai/language/types";
 
 export const ToolsSelect = () => {
   const { toolkits, addToolkit, removeToolkit, selectedChatModel, workbench } =
