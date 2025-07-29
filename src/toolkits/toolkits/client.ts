@@ -13,8 +13,7 @@ import { googleDriveClientToolkit } from "./google-drive/client";
 import { mem0ClientToolkit } from "./mem0/client";
 import { notionClientToolkit } from "./notion/client";
 import { e2bClientToolkit } from "./e2b/client";
-import { stravaClientToolkit } from "./strava/client";
-import { spotifyClientToolkit } from "./spotify/client";
+import { discordClientToolkit } from "./discord/client";
 
 export type ClientToolkits = {
   [K in Toolkits]: ClientToolkit<
@@ -32,8 +31,7 @@ export const clientToolkits: ClientToolkits = {
   [Toolkits.GoogleCalendar]: googleCalendarClientToolkit,
   [Toolkits.Notion]: notionClientToolkit,
   [Toolkits.GoogleDrive]: googleDriveClientToolkit,
-  [Toolkits.Strava]: stravaClientToolkit,
-  [Toolkits.Spotify]: spotifyClientToolkit,
+  [Toolkits.Discord]: discordClientToolkit,
 };
 
 export function getClientToolkit<T extends Toolkits>(
