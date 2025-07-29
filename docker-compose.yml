@@ -35,6 +35,17 @@ services:
       timeout: 5s
       retries: 5
 
+  # Vercel Blob
+  blob:
+    image: masonhall/vercel-blob-server:latest
+    container_name: toolkit-blob
+    ports:
+      - "6969:6969"
+    restart: unless-stopped
+    volumes:
+      - blob_data:/var/vercel-blob-store
+
 volumes:
   postgres_data:
   redis_data:
+  blob_data:
