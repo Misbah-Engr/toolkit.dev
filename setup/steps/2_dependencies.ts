@@ -1,17 +1,9 @@
 import { execSync } from "child_process";
 
-import {
-  logStep,
-  logInfo,
-  logSuccess,
-  logError,
-  getPackageManager,
-} from "../utils";
+import { logInfo, logSuccess, logError, getPackageManager } from "../utils";
 
 // Install dependencies
 export function installDependencies(): void {
-  logStep("Installing Dependencies", "Installing project dependencies...");
-
   try {
     // Check for package manager
     const packageManager = getPackageManager();
