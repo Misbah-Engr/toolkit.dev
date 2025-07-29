@@ -58,6 +58,7 @@ export const ToolkitSelect: React.FC<Props> = ({
         selectedToolkits={toolkits}
         onAddToolkit={addToolkit}
         onRemoveToolkit={removeToolkit}
+        gradientClassName="md:from-popover"
       />
       {workbench !== undefined && (
         <WorkbenchSaveButton

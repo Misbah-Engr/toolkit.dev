@@ -2,17 +2,10 @@ import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { HStack, VStack } from "@/components/ui/stack";
 import { Calendar, Clock, Shield } from "lucide-react";
+import type { calendar_v3 } from "googleapis";
 
 interface CalendarCardProps {
-  calendar: {
-    id: string;
-    summary: string;
-    description?: string;
-    timeZone: string;
-    accessRole: string;
-    primary?: boolean;
-    selected?: boolean;
-  };
+  calendar: calendar_v3.Schema$CalendarListEntry;
   showDetails?: boolean;
 }
 

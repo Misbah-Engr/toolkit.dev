@@ -38,6 +38,7 @@ export const authConfig = {
     newUser: "/?welcome=true",
     signOut: "/",
   },
+  trustHost: true,
   callbacks: {
     session: ({ session, user }) => ({
       ...session,
@@ -83,7 +84,6 @@ export const authConfig = {
     ...(IS_DEVELOPMENT
       ? {
           async jwt({ token, account }) {
-            console.log(account);
             if (account?.provider === "guest") {
               token.credentials = true;
             }
