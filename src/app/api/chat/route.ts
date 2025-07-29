@@ -19,7 +19,7 @@ import { createServerOnlyCaller } from "@/server/api/root";
 
 import { postRequestBodySchema, type PostRequestBody } from "./schema";
 
-import { generateText, streamText } from "@/ai/generate";
+import { generateText, streamText } from "@/ai/language/generate";
 import { generateUUID } from "@/lib/utils";
 
 import { ChatSDKError } from "@/lib/errors";
@@ -34,7 +34,7 @@ import type {
 import type { Chat } from "@prisma/client";
 import { openai } from "@ai-sdk/openai";
 import { getServerToolkit } from "@/toolkits/toolkits/server";
-import { languageModels } from "@/ai/models";
+import { languageModels } from "@/ai/language";
 
 export const maxDuration = 60;
 
@@ -48,7 +48,7 @@ function getStreamContext() {
       });
     } catch (error: unknown) {
       if (error instanceof Error && error.message.includes("REDIS_URL")) {
-        console.log(
+        console.warn(
           " > Resumable streams are disabled due to missing REDIS_URL",
         );
       } else {

@@ -19,18 +19,3 @@ export type LanguageModel = {
   isNew?: boolean;
   providerOptions?: ProviderMetadata;
 };
-
-export enum SearchOptions {
-  Native = "Native",
-  OpenAiResponses = "OpenAI Responses",
-  Exa = "Exa Search",
-}
-
-export type ImageModelProvider = "openai" | "xai";
-
-export type ImageModel = {
-  name: string;
-  provider: ImageModelProvider;
-  modelId: string;
-  description?: string;
-};

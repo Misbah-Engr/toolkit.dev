@@ -1,8 +1,11 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { LanguageModel, LanguageModelCapability } from "@/ai/types";
-import { allLanguageModels } from "@/ai/models/all";
+import type {
+  LanguageModel,
+  LanguageModelCapability,
+} from "@/ai/language/types";
+import { languageModels } from "@/ai/language";
 
 interface UseModelSelectProps {
   selectedChatModel: LanguageModel | undefined;
@@ -26,21 +29,21 @@ export const useModelSelect = ({
 
   const sortedModels = useMemo(() => {
     const providers = Array.from(
-      new Set(allLanguageModels.map((model) => model.provider)),
+      new Set(languageModels.map((model) => model.provider)),
     );
     const modelsByProvider = providers.reduce(
       (acc, provider) => {
-        acc[provider] = allLanguageModels.filter(
+        acc[provider] = languageModels.filter(
           (model) => model.provider === provider,
         );
         return acc;
       },
-      {} as Record<string, typeof allLanguageModels>,
+      {} as Record<string, typeof languageModels>,
     );
 
-    const result: typeof allLanguageModels = [];
+    const result: typeof languageModels = [];
     let index = 0;
-    while (result.length < allLanguageModels.length) {
+    while (result.length < languageModels.length) {
       for (const provider of providers) {
         const providerModels = modelsByProvider[provider];
         const model = providerModels?.[index];

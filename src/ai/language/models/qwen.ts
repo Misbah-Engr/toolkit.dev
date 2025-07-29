@@ -1,4 +1,7 @@
-import { type LanguageModel, LanguageModelCapability } from "@/ai/types";
+import {
+  type LanguageModel,
+  LanguageModelCapability,
+} from "@/ai/language/types";
 
 const qwenModelData: Omit<LanguageModel, "provider">[] = [
   {
