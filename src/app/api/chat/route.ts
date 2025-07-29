@@ -385,6 +385,8 @@ async function generateTitleFromUserMessage(message: UIMessage) {
       - you will generate a short title based on the first message a user begins a conversation with
       - ensure it is not more than 80 characters long
       - the title should be a summary of the user's message
+      - the title should be in the same language as the user's message
+      - the title does not need to be a full sentence, try to pack in the most important information in a few words
       - do not use quotes or colons`,
     messages: [
       {
