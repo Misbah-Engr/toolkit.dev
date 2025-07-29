@@ -10,6 +10,8 @@ import {
   googleCalendarListEventsToolConfigClient,
   googleCalendarGetEventToolConfigClient,
   googleCalendarSearchEventsToolConfigClient,
+  googleCalendarCreateEventToolConfigClient,
+  googleCalendarFindAvailabilityToolConfigClient,
 } from "./tools/client";
 
 import { ToolkitGroups } from "@/toolkits/types";
@@ -50,5 +52,9 @@ export const googleCalendarClientToolkit = createClientToolkit(
     [GoogleCalendarTools.GetEvent]: googleCalendarGetEventToolConfigClient,
     [GoogleCalendarTools.SearchEvents]:
       googleCalendarSearchEventsToolConfigClient,
+    [GoogleCalendarTools.CreateEvent]:
+      googleCalendarCreateEventToolConfigClient,
+    [GoogleCalendarTools.FindAvailability]:
+      googleCalendarFindAvailabilityToolConfigClient,
   },
 );
