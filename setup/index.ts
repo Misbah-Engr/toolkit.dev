@@ -2,7 +2,12 @@
 
 import { log, logStep, logError } from "./utils";
 
-import { createEnvFile, installDependencies, runMigrations } from "./steps";
+import {
+  createEnvFile,
+  installDependencies,
+  runMigrations,
+  startDockerServices,
+} from "./steps";
 
 // Main setup function
 async function main(): Promise<void> {
@@ -21,9 +26,11 @@ async function main(): Promise<void> {
     logStep("Step 2/6", "Installing project dependencies...");
     installDependencies();
 
+    logStep("Step 3/6", "Starting Docker services...");
+    startDockerServices();
+
     // Step 3: Setup database
     logStep("Step 4/6", "Running database migrations...");
-
     runMigrations();
   } catch (error) {
     logError("Setup failed: " + (error as Error).message);
