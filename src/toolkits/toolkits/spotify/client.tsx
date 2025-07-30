@@ -9,6 +9,7 @@ import { getPlaylistsToolConfigClient } from "./tools/playlists/client";
 import { ToolkitGroups } from "@/toolkits/types";
 
 import { SpotifyWrapper } from "./wrapper";
+import { Link } from "../components/link";
 
 export const spotifyClientToolkit = createClientToolkit(
   baseSpotifyToolkitConfig,
@@ -19,6 +20,18 @@ export const spotifyClientToolkit = createClientToolkit(
     form: null,
     Wrapper: SpotifyWrapper,
     type: ToolkitGroups.DataSource,
+    envVars: [
+      {
+        type: "all",
+        keys: ["AUTH_SPOTIFY_ID", "AUTH_SPOTIFY_SECRET"],
+        description: (
+          <span>
+            Create a Spotify OAuth2 application{" "}
+            <Link href="https://developer.spotify.com/dashboard">here</Link>
+          </span>
+        ),
+      },
+    ],
   },
   {
     [SpotifyTools.GetPlaylists]: getPlaylistsToolConfigClient,
