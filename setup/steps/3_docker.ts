@@ -8,6 +8,7 @@ import {
   logError,
   getProjectRoot,
   checkDocker,
+  dockerDaemonRunning,
 } from "../utils";
 
 // Start Docker Compose services
@@ -34,6 +35,12 @@ export function startDockerServices(): void {
     if (!existsSync(dockerComposePath)) {
       logError("docker-compose.yml not found in project root");
       throw new Error("Docker Compose file not found");
+    }
+
+    if (!dockerDaemonRunning(dockerCommand)) {
+      throw new Error(
+        `${dockerCommand} daemon is not running. Please start ${dockerCommand} Desktop.`,
+      );
     }
 
     // Start Docker Compose services in detached mode
