@@ -66,9 +66,10 @@ export function checkDocker(): string | null {
 
 export function dockerDaemonRunning(dockerCommand: string): boolean {
   try {
-    execSync(`${dockerCommand} info`, { stdio: "ignore" });
+    execSync(`${dockerCommand} info`, { stdio: "ignore", timeout: 2000 });
     return true;
-  } catch {
+  } catch (error) {
+    logError(error as string);
     return false;
   }
 }
