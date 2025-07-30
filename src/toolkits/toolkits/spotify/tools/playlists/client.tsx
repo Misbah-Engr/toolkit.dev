@@ -30,11 +30,11 @@ export const getPlaylistsToolConfigClient: ClientToolConfig<
         <h1 className="text-muted-foreground text-sm font-medium">
           Your Spotify Playlists
         </h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-2">
+        <div className="mt-2 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {result.playlists.map((playlist) => (
             <div
               key={playlist.id}
-              className="p-4 border rounded-lg hover:bg-muted/50 cursor-pointer transition-colors"
+              className="hover:bg-muted/50 cursor-pointer rounded-lg border p-4 transition-colors"
               onClick={() => {
                 void append({
                   role: "user",
@@ -48,20 +48,22 @@ export const getPlaylistsToolConfigClient: ClientToolConfig<
                   <img
                     src={playlist.image}
                     alt={playlist.name}
-                    className="w-12 h-12 rounded-md object-cover"
+                    className="h-12 w-12 rounded-md object-cover"
                   />
                 ) : (
-                  <div className="w-12 h-12 bg-muted rounded-md flex items-center justify-center">
-                    <Music className="w-6 h-6 text-muted-foreground" />
+                  <div className="bg-muted flex h-12 w-12 items-center justify-center rounded-md">
+                    <Music className="text-muted-foreground h-6 w-6" />
                   </div>
                 )}
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-medium text-sm truncate">{playlist.name}</h3>
+                <div className="min-w-0 flex-1">
+                  <h3 className="truncate text-sm font-medium">
+                    {playlist.name}
+                  </h3>
                   <a
                     href={playlist.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs text-muted-foreground hover:text-primary transition-colors"
+                    className="text-muted-foreground hover:text-primary text-xs transition-colors"
                     onClick={(e) => e.stopPropagation()}
                   >
                     Open in Spotify
@@ -74,4 +76,4 @@ export const getPlaylistsToolConfigClient: ClientToolConfig<
       </div>
     );
   },
-}; 
+};

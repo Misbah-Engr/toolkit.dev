@@ -30,19 +30,16 @@ export const spotifyToolkitServer = createServerToolkit(
     if (!account.access_token) {
       throw new Error("No Spotify access token found");
     }
-    
+
     // Create Spotify API instance with user's access token
-    const spotify = SpotifyApi.withAccessToken(
-      env.AUTH_SPOTIFY_ID,
-     {
+    const spotify = SpotifyApi.withAccessToken(env.AUTH_SPOTIFY_ID, {
       access_token: account.access_token,
       token_type: "Bearer",
       expires_in: 3600,
       refresh_token: account.refresh_token ?? "",
-     },    
-    );
+    });
 
-    console.log("account",account); 
+    console.log("account", account);
 
     return {
       [SpotifyTools.GetPlaylists]: getPlaylistsToolConfigServer(spotify),

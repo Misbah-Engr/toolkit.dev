@@ -16,7 +16,7 @@ export const getPlaylistsToolConfigServer = (
         const response = await spotify.playlists.getUsersPlaylists(
           "",
           10,
-          offset
+          offset,
         );
         const playlists = response.items.map((playlist) => ({
           id: playlist.id,
@@ -43,9 +43,8 @@ export const getPlaylistsToolConfigServer = (
           playlists,
         };
       } catch (error) {
-
         console.log("Spotify API error:", error);
-       throw new Error("Failed to fetch playlists from Spotify");
+        throw new Error("Failed to fetch playlists from Spotify");
       }
     },
     message:

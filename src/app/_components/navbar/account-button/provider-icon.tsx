@@ -1,14 +1,19 @@
 import Image from "next/image";
 
 import { cn } from "@/lib/utils";
-import { SiGithub, SiNotion, SiX, SiSpotify } from "@icons-pack/react-simple-icons";
+import {
+  SiGithub,
+  SiNotion,
+  SiX,
+  SiSpotify,
+} from "@icons-pack/react-simple-icons";
 
 interface Props {
   provider: string;
   className?: string;
 }
 
-export const AuthProviderIcon: React.FC<Props> = ({ provider, className }) => {  
+export const AuthProviderIcon: React.FC<Props> = ({ provider, className }) => {
   const Icon =
     {
       Discord: ({ className }: { className?: string }) => (
@@ -26,13 +31,13 @@ export const AuthProviderIcon: React.FC<Props> = ({ provider, className }) => {
           alt="Google"
           className={className}
           width={16}
-            height={16}
+          height={16}
         />
       ),
       GitHub: SiGithub,
       Twitter: SiX,
       Notion: SiNotion,
-      Spotify: SiSpotify
+      Spotify: SiSpotify,
     }[provider] ?? null;
 
   return Icon ? <Icon className={cn("size-4", className)} /> : null;

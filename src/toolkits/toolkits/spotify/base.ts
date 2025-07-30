@@ -14,4 +14,4 @@ export const baseSpotifyToolkitConfig: ToolkitConfig<
     [SpotifyTools.GetPlaylists]: getPlaylistsBase,
   },
   parameters: spotifyParameters,
-}; 
+};
