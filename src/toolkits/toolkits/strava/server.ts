@@ -13,12 +13,12 @@ import { getAthleteProfileToolConfigServer } from "./tools/profile/server";
 import { getActivityDetailsToolConfigServer } from "./tools/activity-details/server";
 import { getActivitiesToolConfigServer } from "./tools/activities/server";
 import { getAthleteStatsToolConfigServer } from "./tools/stats/server";
+import { getAthleteZonesToolConfigServer } from "./tools/zones/server";
 
 import { stravaSearchSegmentsToolConfigServer } from "./tools/search-segments-server";
 import { stravaGetSegmentDetailsToolConfigServer } from "./tools/get-segment-details-server";
 import { stravaGetSegmentLeaderboardToolConfigServer } from "./tools/get-segment-leaderboard-server";
 import { stravaGetRoutesToolConfigServer } from "./tools/get-routes-server";
-import { stravaGetAthleteZonesToolConfigServer } from "./tools/get-athlete-zones-server";
 
 export const stravaToolkitServer = createServerToolkit(
   baseStravaToolkitConfig,
@@ -60,8 +60,7 @@ Use these tools to help users analyze their fitness data, track performance tren
       [StravaTools.GetSegmentLeaderboard]:
         stravaGetSegmentLeaderboardToolConfigServer(strava),
       [StravaTools.GetRoutes]: stravaGetRoutesToolConfigServer(strava),
-      [StravaTools.GetAthleteZones]:
-        stravaGetAthleteZonesToolConfigServer(strava),
+      [StravaTools.GetAthleteZones]: getAthleteZonesToolConfigServer(strava),
     };
   },
 );
