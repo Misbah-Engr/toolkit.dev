@@ -2,6 +2,14 @@
 
 import React, { useEffect, useState } from "react";
 
+import { Loader2 } from "lucide-react";
+
+import Link from "next/link";
+
+import { useSearchParams } from "next/navigation";
+
+import { toast } from "sonner";
+
 import {
   Dialog,
   DialogContent,
@@ -11,12 +19,10 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { VStack } from "@/components/ui/stack";
-import { EnvVarForm } from "@/components/env-vars/env-var-form";
-import { toast } from "sonner";
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { AnimatedLogo } from "@/components/ui/logo";
+import { Separator } from "@/components/ui/separator";
+
 import { setEnvVar } from "@/actions/add-env-var";
-import { Loader2 } from "lucide-react";
 
 export const KeyModal = () => {
   const searchParams = useSearchParams();
@@ -78,13 +84,15 @@ export const KeyModal = () => {
 
   return (
     <Dialog open>
-      <DialogContent>
-        <DialogHeader>
+      <DialogContent showCloseButton={false}>
+        <DialogHeader className="items-center text-center">
+          <AnimatedLogo />
           <DialogTitle>Welcome, Toolkit Developer!</DialogTitle>
           <DialogDescription>
             You will need to set an OpenRouter API key to use the chat.
           </DialogDescription>
         </DialogHeader>
+        <Separator />
         <VStack>
           <Link
             href={`https://openrouter.ai/auth?callback_url=${
@@ -99,26 +107,11 @@ export const KeyModal = () => {
               {isLoading && <Loader2 className="size-4 animate-spin" />}
             </Button>
           </Link>
-          <p className="text-center">or</p>
-          <div className="bg-muted/50 w-full rounded-md">
-            <h2 className="border-b p-2 font-medium">Use an existing key</h2>
-            <div className="p-2">
-              <EnvVarForm
-                envVars={[
-                  {
-                    type: "all",
-                    keys: ["OPENROUTER_API_KEY"],
-                    description: "Input your OpenRouter API key.",
-                  },
-                ]}
-                resourceName="the chat"
-                onSuccess={() => {
-                  toast.success("OpenRouter API key has been set.");
-                }}
-                disabled={isLoading}
-              />
-            </div>
-          </div>
+          <p className="text-muted-foreground text-center text-xs">or</p>
+          <p className="text-center text-xs">
+            Update the <code>OPENROUTER_API_KEY</code> environment variable in
+            the <code>env.local</code> file with your OpenRouter key.
+          </p>
         </VStack>
       </DialogContent>
     </Dialog>

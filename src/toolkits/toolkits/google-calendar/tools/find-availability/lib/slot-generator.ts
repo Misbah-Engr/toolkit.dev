@@ -19,54 +19,61 @@ export const generateTimeSlots = (
   timezone: string,
   maxResults: number,
   startTime = "09:00",
-  endTime = "17:00"
+  endTime = "17:00",
 ): TimeSlot[] => {
   const availableSlots: TimeSlot[] = [];
   const currentDate = new Date(startDate);
-  
+
   while (currentDate <= endDate && availableSlots.length < maxResults) {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
     const date = currentDate.getDate();
-    
+
     // Parse time constraints
-    const [startHour, startMinute] = startTime.split(':').map(Number);
-    const [endHour, endMinute] = endTime.split(':').map(Number);
-    
+    const [startHour, startMinute] = startTime.split(":").map(Number);
+    const [endHour, endMinute] = endTime.split(":").map(Number);
+
     // Use specified time range instead of full day
     const dayStart = new Date(year, month, date, startHour, startMinute, 0, 0);
     const dayEnd = new Date(year, month, date, endHour, endMinute, 0, 0);
 
     // Generate time slots every hour within the specified range
     let currentSlotStart = new Date(dayStart);
-    
-    while (currentSlotStart.getTime() + (durationMinutes * 60 * 1000) <= dayEnd.getTime()) {
-      const slotEnd = new Date(currentSlotStart.getTime() + (durationMinutes * 60 * 1000));
-      
+
+    while (
+      currentSlotStart.getTime() + durationMinutes * 60 * 1000 <=
+      dayEnd.getTime()
+    ) {
+      const slotEnd = new Date(
+        currentSlotStart.getTime() + durationMinutes * 60 * 1000,
+      );
+
       availableSlots.push({
         start: currentSlotStart.toISOString(),
         end: slotEnd.toISOString(),
         duration: durationMinutes,
-        dayOfWeek: formatDateInTimezone(currentSlotStart, timezone, { weekday: 'long' }),
+        dayOfWeek: formatDateInTimezone(currentSlotStart, timezone, {
+          weekday: "long",
+        }),
         date: formatDateInTimezone(currentSlotStart, timezone),
-        timeRange: `${formatTimeInTimezone(currentSlotStart, timezone, { 
-          hour: '2-digit', 
-          minute: '2-digit'
-        })} - ${formatTimeInTimezone(slotEnd, timezone, { 
-          hour: '2-digit', 
-          minute: '2-digit'
+        timeRange: `${formatTimeInTimezone(currentSlotStart, timezone, {
+          hour: "2-digit",
+          minute: "2-digit",
+        })} - ${formatTimeInTimezone(slotEnd, timezone, {
+          hour: "2-digit",
+          minute: "2-digit",
         })}`,
       });
-      
+
       if (availableSlots.length >= maxResults) break;
-      
+
       // Move to next hour
-      currentSlotStart = new Date(currentSlotStart.getTime() + (60 * 60 * 1000));
+      currentSlotStart = new Date(currentSlotStart.getTime() + 60 * 60 * 1000);
     }
-    
+
     if (availableSlots.length >= maxResults) break;
     currentDate.setDate(currentDate.getDate() + 1);
   }
-  
+
   return availableSlots;
-}; 
+};

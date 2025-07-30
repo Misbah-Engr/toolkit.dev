@@ -16,7 +16,11 @@ export const googleCalendarCreateEventToolConfigClient: ClientToolConfig<
       <ToolCallComponent
         action="Creating Event"
         primaryText={args.title ?? "New Event"}
-        secondaryText={args.startDateTime ? new Date(args.startDateTime).toLocaleString() : "No time specified"}
+        secondaryText={
+          args.startDateTime
+            ? new Date(args.startDateTime).toLocaleString()
+            : "No time specified"
+        }
       />
     );
   },
@@ -26,9 +30,9 @@ export const googleCalendarCreateEventToolConfigClient: ClientToolConfig<
     return (
       <div className="w-full space-y-4">
         {/* Success Header */}
-        <div className="flex items-center justify-between p-4 rounded-lg bg-green-50 border border-green-200 dark:bg-green-950/20 dark:border-green-800">
+        <div className="flex items-center justify-between rounded-lg border border-green-200 bg-green-50 p-4 dark:border-green-800 dark:bg-green-950/20">
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30">
               <CheckCircle className="size-5 text-green-600 dark:text-green-400" />
             </div>
             <div>
@@ -40,11 +44,11 @@ export const googleCalendarCreateEventToolConfigClient: ClientToolConfig<
               </p>
             </div>
           </div>
-          
+
           {event.htmlLink && (
             <Link href={event.htmlLink} target="_blank">
               <Button variant="outline" size="sm" className="text-xs">
-                <ExternalLink className="size-3 mr-1" />
+                <ExternalLink className="mr-1 size-3" />
                 View in Calendar
               </Button>
             </Link>
@@ -53,34 +57,35 @@ export const googleCalendarCreateEventToolConfigClient: ClientToolConfig<
 
         {/* Event Details Card */}
         <EventCard event={event} showDetails={true} />
-        
+
         {/* Event Metadata */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/50 border">
-            <Calendar className="size-4 text-muted-foreground" />
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="bg-muted/50 flex items-center gap-2 rounded-lg border p-3">
+            <Calendar className="text-muted-foreground size-4" />
             <div className="min-w-0">
-              <p className="text-xs text-muted-foreground">Event ID</p>
-              <p className="text-sm font-mono truncate">{event.id}</p>
+              <p className="text-muted-foreground text-xs">Event ID</p>
+              <p className="truncate font-mono text-sm">{event.id}</p>
             </div>
           </div>
-          
+
           {event.attendees && event.attendees.length > 0 && (
-            <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/50 border">
-              <Users className="size-4 text-muted-foreground" />
+            <div className="bg-muted/50 flex items-center gap-2 rounded-lg border p-3">
+              <Users className="text-muted-foreground size-4" />
               <div>
-                <p className="text-xs text-muted-foreground">Attendees</p>
+                <p className="text-muted-foreground text-xs">Attendees</p>
                 <p className="text-sm font-medium">
-                  {event.attendees.length} invite{event.attendees.length !== 1 ? 'd' : 'd'}
+                  {event.attendees.length} invite
+                  {event.attendees.length !== 1 ? "d" : "d"}
                 </p>
               </div>
             </div>
           )}
-          
+
           {event.status && (
-            <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/50 border">
-              <div className="w-2 h-2 rounded-full bg-green-500" />
+            <div className="bg-muted/50 flex items-center gap-2 rounded-lg border p-3">
+              <div className="h-2 w-2 rounded-full bg-green-500" />
               <div>
-                <p className="text-xs text-muted-foreground">Status</p>
+                <p className="text-muted-foreground text-xs">Status</p>
                 <p className="text-sm font-medium capitalize">{event.status}</p>
               </div>
             </div>
@@ -89,4 +94,4 @@ export const googleCalendarCreateEventToolConfigClient: ClientToolConfig<
       </div>
     );
   },
-}; 
+};

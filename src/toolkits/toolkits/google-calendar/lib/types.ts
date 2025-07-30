@@ -81,4 +81,4 @@ export interface EventFetchParams {
 export interface CalendarClientConfig {
   accessToken: string;
   timezone?: string;
-} 
+}

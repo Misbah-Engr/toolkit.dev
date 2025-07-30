@@ -51,6 +51,7 @@ If you prefer to set up manually:
 - **Node.js** 18+
 - **pnpm** (recommended), npm, bun, or yarn
 - **Docker** or **Podman**
+  - You can install Docker Desktop for free [here](https://www.docker.com/products/docker-desktop/)
 
 #### 1) Clone the Repository
 
@@ -59,81 +60,9 @@ git clone https://github.com/jasonhedman/toolkit.dev.git
 cd toolkit.dev
 ```
 
-#### 2) Install Dependencies
+#### 2) Run the Development Script
 
-```bash
-pnpm install
-
-# or
-npm install
-
-# or
-yarn install
-
-# or
-bun install
-```
-
-#### 3) Copy the `.env.example` file into `.env.local` and set up your Auth secret
-
-Create your `.env.local` from the example
-
-```bash
-cp .env.example .env.local
-```
-
-Create a secure `AUTH_SECRET` with the
-
-```bash
-pnpm dlx auth secret
-
-# or
-npx auth secret
-
-# or
-yarn dlx auth secret
-
-# or
-bunx auth secret
-```
-
-#### 4) Set up the database
-
-Toolkit uses Postgres as a database. The setup script will automatically configure a local database using Docker/Podman unless you specify an external database.
-
-##### 4.1) Automatic local database setup (default)
-
-The setup script will automatically:
-
-- Start a PostgreSQL container using Docker/Podman
-- Configure the database connection
-- Run database migrations
-
-> This requires either Docker or Podman to be installed on your machine.
->
-> Docker installation guide: https://docs.docker.com/engine/install/
->
-> Podman installation guide: https://podman.io/getting-started/installation
-
-##### 4.2) Use your own Postgres instance
-
-If you want to use an external PostgreSQL instance, update `DATABASE_URL` in your `.env.local` to point to your Postgres instance:
-
-```
-DATABASE_URL=<your Postgres instance URL>
-```
-
-The setup script will detect this and skip the local database setup.
-
-#### 5) Add an OpenRouter Key
-
-Toolkit uses OpenRouter for inference. Get a key [here](https://openrouter.ai/settings/keys) and add it to your `.env`
-
-```
-OPENROUTER_API_KEY=<your API key>
-```
-
-#### 6) Start the development server
+This will set up your `.env.local`, install dependencies, start the required Docker containers, set up your database, and run the development server.
 
 ```bash
 pnpm dev
@@ -145,10 +74,18 @@ npm run dev
 yarn dev
 
 # or
-bun run dev
+bun dev
 ```
 
-#### 7) [OPTIONAL] Add extra auth providers
+#### 3) [OPTIONAL] Add an OpenRouter Key
+
+Toolkit uses OpenRouter for inference. Get a key [here](https://openrouter.ai/settings/keys) and add it to your `.env.local`
+
+```
+OPENROUTER_API_KEY=<your API key>
+```
+
+#### 4) [OPTIONAL] Add extra auth providers
 
 Toolkit uses [Auth.js](https://authjs.dev/) for user authentication.
 
@@ -164,11 +101,11 @@ You can also add these providers:
 
 > We would love to see more auth providers integrated. Feel free to add any from the [Auth.js](https://authjs.dev/getting-started/providers/apple) supported providers list!
 
-#### 8) [OPTIONAL] Set up Toolkits
+#### 5) [OPTIONAL] Set up Toolkits
 
 Many of our Toolkits require extra keys. You can run Toolkit without these keys, but if you want to use a certain Toolkit locally, you will need to do some additional configuration
 
-##### 8.1) Web Search Toolkit
+##### 5.1) Web Search Toolkit
 
 Toolkit uses Exa for web search. Get an API key [here](https://dashboard.exa.ai/api-keys) and add it to your `.env`
 
@@ -176,7 +113,7 @@ Toolkit uses Exa for web search. Get an API key [here](https://dashboard.exa.ai/
 EXA_API_KEY=<your API key>
 ```
 
-##### 8.2) Code Interpreter Toolkit
+##### 5.2) Code Interpreter Toolkit
 
 Toolkit uses E2B for secure code execution. Get an API key [here](https://e2b.dev/dashboard) and add it to your `.env`
 
@@ -184,7 +121,7 @@ Toolkit uses E2B for secure code execution. Get an API key [here](https://e2b.de
 E2B_API_KEY=<your API key>
 ```
 
-##### 8.3) Memory Toolkit
+##### 5.3) Memory Toolkit
 
 Toolkit uses Mem0 for memory storage and retrieval. Get an API key [here](https://app.mem0.ai/dashboard/api-keys)
 
@@ -192,44 +129,25 @@ Toolkit uses Mem0 for memory storage and retrieval. Get an API key [here](https:
 MEM0_API_KEY=<your API key>
 ```
 
-##### 8.4) Image Toolkit
+##### 5.4) Image Toolkit
 
 To use the Image Toolkit, you will need a key to **generate images** and a key to **store images**
 
-We currently support OpenAI (get a key [here](https://platform.openai.com/settings/organization/api-keys)) and xAI (get a key [here](https://console.x.ai/)) image models.
+We currently support
 
-> We are [looking for someone to add support for more image models](https://github.com/jasonhedman/toolkit.dev/issues/147)
+- OpenAI
+- xAI
+- FAL AI
+- Luma AI
+- Fireworks AI
 
 ```
 # At least one of these is required for image gen
 OPENAI_API_KEY=
 XAI_API_KEY=
-```
-
-We use [Vercel Blob](https://vercel.com/docs/vercel-blob) for data storage
-
-```
-BLOB_READ_WRITE_TOKEN=<your token>
-```
-
-> We are [working on building a local mock of this SDK] so you dont have to get a key, but for now you will need to get a key from Vercel.
-
-#### 9) [OPTIONAL] Set up secondary data storage
-
-##### 9.1) Resumable streams with Redis
-
-Toolkit uses Redis to power resumable streams. If you want to enable this functionality, create a Redis instance and update your `.env`
-
-```
-REDIS_URL=<your Redis URL>
-```
-
-##### 9.2) Blob storage with Vercel Blob
-
-If you want to be able to upload files, you will to be able to write to and read from Vercel Blob. More details on getting a key are [here](https://vercel.com/docs/vercel-blob)
-
-```
-BLOB_READ_WRITE_TOKEN=<your token>
+FAL_API_KEY=
+FIREWORKS_API_KEY=
+LUMA_API_KEY=
 ```
 
 ## Development

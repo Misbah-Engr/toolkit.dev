@@ -19,6 +19,9 @@ export function startDockerServices(): void {
       logError(
         "Docker or Podman is not installed. Please install Docker or Podman first.",
       );
+      logInfo(
+        "You can install Docker Desktop for free from https://www.docker.com/products/docker-desktop/",
+      );
       throw new Error("Docker not found");
     }
 

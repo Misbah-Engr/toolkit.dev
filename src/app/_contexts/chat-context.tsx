@@ -12,6 +12,8 @@ import { useChat } from "@ai-sdk/react";
 
 import { toast } from "sonner";
 
+import { OpenRouterChecks } from "./openrouter-checks";
+
 import { api } from "@/trpc/react";
 
 import { useAutoResume } from "@/app/_hooks/use-auto-resume";
@@ -26,6 +28,7 @@ import { clientCookieUtils } from "@/lib/cookies/client";
 import { generateUUID } from "@/lib/utils";
 import { fetchWithErrorHandlers } from "@/lib/fetch";
 import { ChatSDKError } from "@/lib/errors";
+import { IS_DEVELOPMENT } from "@/lib/constants";
 
 import type { ReactNode } from "react";
 import type { Attachment, UIMessage } from "ai";
@@ -38,9 +41,6 @@ import type { Workbench } from "@prisma/client";
 import type { PersistedToolkit } from "@/lib/cookies/types";
 import type { ImageModel } from "@/ai/image/types";
 import type { LanguageModel } from "@/ai/language/types";
-import { useEnvVarAvailable } from "@/contexts/env/available-env-vars";
-import { KeyModal } from "./key-modal";
-import { IS_DEVELOPMENT } from "@/lib/constants";
 
 const DEFAULT_CHAT_MODEL = anthropicModels[0]!;
 
@@ -105,7 +105,6 @@ export function ChatProvider({
   initialPreferences,
 }: ChatProviderProps) {
   const utils = api.useUtils();
-  const hasOpenRouterKey = useEnvVarAvailable("OPENROUTER_API_KEY");
 
   const [selectedChatModel, setSelectedChatModelState] =
     useState<LanguageModel>(
@@ -287,11 +286,6 @@ export function ChatProvider({
     event,
     chatRequestOptions,
   ) => {
-    if (!hasOpenRouterKey) {
-      toast.error("You need an OpenRouter key to use the chat.");
-      return;
-    }
-
     // Reset stream stopped flag when submitting new message
     setStreamStopped(false);
     originalHandleSubmit(event, chatRequestOptions);
@@ -337,7 +331,7 @@ export function ChatProvider({
   return (
     <ChatContext.Provider value={value}>
       {children}
-      {!hasOpenRouterKey && IS_DEVELOPMENT && <KeyModal />}
+      {IS_DEVELOPMENT && <OpenRouterChecks />}
     </ChatContext.Provider>
   );
 }
