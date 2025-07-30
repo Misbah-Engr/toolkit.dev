@@ -16,9 +16,7 @@ import { getAthleteStatsToolConfigServer } from "./tools/stats/server";
 import { getAthleteZonesToolConfigServer } from "./tools/zones/server";
 import { getRoutesToolConfigServer } from "./tools/routes/server";
 import { getSegmentDetailsToolConfigServer } from "./tools/segment/server";
-
-import { searchSegmentsToolConfigServer } from "./tools/search-segment/server";
-import { getSegmentLeaderboardToolConfigServer } from "./tools/segment-leaderboard/server";
+import { exploreSegmentsToolConfigServer } from "./tools/explore-segments/server";
 
 export const stravaToolkitServer = createServerToolkit(
   baseStravaToolkitConfig,
@@ -53,11 +51,9 @@ Use these tools to help users analyze their fitness data, track performance tren
       [StravaTools.GetActivityDetails]:
         getActivityDetailsToolConfigServer(strava),
       [StravaTools.GetAthleteStats]: getAthleteStatsToolConfigServer(strava),
-      [StravaTools.SearchSegments]: searchSegmentsToolConfigServer(strava),
+      [StravaTools.ExploreSegments]: exploreSegmentsToolConfigServer(strava),
       [StravaTools.GetSegmentDetails]:
         getSegmentDetailsToolConfigServer(strava),
-      [StravaTools.GetSegmentLeaderboard]:
-        getSegmentLeaderboardToolConfigServer(strava),
       [StravaTools.GetRoutes]: getRoutesToolConfigServer(strava),
       [StravaTools.GetAthleteZones]: getAthleteZonesToolConfigServer(strava),
     };

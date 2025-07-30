@@ -2,16 +2,16 @@ import { z } from "zod";
 
 import { StravaTools } from "./tools";
 
-import { getAthleteBase } from "./tools/profile/base";
-import { getActivityDetailsBase } from "./tools/activity-details/base";
-import { getActivitiesBase } from "./tools/activities/base";
-import { getAthleteStatsBase } from "./tools/stats/base";
-import { getAthleteZonesBase } from "./tools/zones/base";
-import { getRoutesBase } from "./tools/routes/base";
-import { getSegmentDetailsBase } from "./tools/segment/base";
-
-import { searchSegmentsBase } from "./tools/search-segments/base";
-import { getSegmentLeaderboardBase } from "./tools/segment-leaderboard/base";
+import {
+  getAthleteBase,
+  getActivityDetailsBase,
+  getActivitiesBase,
+  getAthleteStatsBase,
+  getAthleteZonesBase,
+  getRoutesBase,
+  getSegmentDetailsBase,
+  exploreSegmentsBase,
+} from "./tools";
 
 import type { ToolkitConfig } from "@/toolkits/types";
 
@@ -26,9 +26,8 @@ export const baseStravaToolkitConfig: ToolkitConfig<
     [StravaTools.GetAthleteActivities]: getActivitiesBase,
     [StravaTools.GetActivityDetails]: getActivityDetailsBase,
     [StravaTools.GetAthleteStats]: getAthleteStatsBase,
-    [StravaTools.SearchSegments]: searchSegmentsBase,
+    [StravaTools.ExploreSegments]: exploreSegmentsBase,
     [StravaTools.GetSegmentDetails]: getSegmentDetailsBase,
-    [StravaTools.GetSegmentLeaderboard]: getSegmentLeaderboardBase,
     [StravaTools.GetRoutes]: getRoutesBase,
     [StravaTools.GetAthleteZones]: getAthleteZonesBase,
   },

@@ -3,9 +3,8 @@ export enum StravaTools {
   GetAthleteActivities = "get-athlete-activities",
   GetActivityDetails = "get-activity-details",
   GetAthleteStats = "get-athlete-stats",
-  SearchSegments = "search-segments",
+  ExploreSegments = "explore-segments",
   GetSegmentDetails = "get-segment-details",
-  GetSegmentLeaderboard = "get-segment-leaderboard",
   GetRoutes = "get-routes",
   GetAthleteZones = "get-athlete-zones",
 }
@@ -13,9 +12,8 @@ export enum StravaTools {
 export { getAthleteBase } from "./profile/base";
 export { getActivitiesBase } from "./activities/base";
 export { getActivityDetailsBase } from "./activity-details/base";
-export { getAthleteStatsBase } from "./get-athlete-stats-base";
-export { searchSegmentsBase } from "./search-segments-base";
-export { getSegmentDetailsBase } from "./get-segment-details-base";
-export { getSegmentLeaderboardBase } from "./get-segment-leaderboard-base";
-export { getRoutesBase } from "./get-routes-base";
-export { getAthleteZonesBase } from "./get-athlete-zones-base";
+export { getAthleteStatsBase } from "./stats/base";
+export { exploreSegmentsBase } from "./explore-segments/base";
+export { getSegmentDetailsBase } from "./segment/base";
+export { getRoutesBase } from "./routes/base";
+export { getAthleteZonesBase } from "./zones/base";

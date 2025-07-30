@@ -15,8 +15,7 @@ import { getAthleteStatsToolConfigClient } from "./tools/stats/client";
 import { getAthleteZonesToolConfigClient } from "./tools/zones/client";
 import { getRoutesToolConfigClient } from "./tools/routes/client";
 import { getSegmentDetailsToolConfigClient } from "./tools/segment/client";
-import { searchSegmentsToolConfigClient } from "./tools/search-segments/client";
-import { getSegmentLeaderboardToolConfigClient } from "./tools/segment-leaderboard/client";
+import { exploreSegmentsToolConfigClient } from "./tools/explore-segments/client";
 
 import { Link } from "../components/link";
 
@@ -49,9 +48,8 @@ export const stravaClientToolkit = createClientToolkit(
     [StravaTools.GetAthleteActivities]: getActivitiesToolConfigClient,
     [StravaTools.GetActivityDetails]: getActivityDetailsToolConfigClient,
     [StravaTools.GetAthleteStats]: getAthleteStatsToolConfigClient,
-    [StravaTools.SearchSegments]: searchSegmentsToolConfigClient,
+    [StravaTools.ExploreSegments]: exploreSegmentsToolConfigClient,
     [StravaTools.GetSegmentDetails]: getSegmentDetailsToolConfigClient,
-    [StravaTools.GetSegmentLeaderboard]: getSegmentLeaderboardToolConfigClient,
     [StravaTools.GetRoutes]: getRoutesToolConfigClient,
     [StravaTools.GetAthleteZones]: getAthleteZonesToolConfigClient,
   },
