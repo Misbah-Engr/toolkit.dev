@@ -21,7 +21,7 @@ export const getTracksToolConfigServer = (
         };
       } catch (error) {
         console.log("Spotify API error:", error);
-        throw new Error("Failed to fetch playlists from Spotify");
+        throw new Error("Failed to fetch tracks from Spotify");
       }
     },
     message:

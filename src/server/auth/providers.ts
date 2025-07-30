@@ -93,7 +93,7 @@ export const providers: (
           clientId: env.AUTH_SPOTIFY_ID,
           clientSecret: env.AUTH_SPOTIFY_SECRET,
           authorization:
-            "https://accounts.spotify.com/authorize?scope=user-read-email+playlist-read-private+playlist-read-collaborative",
+            "https://accounts.spotify.com/authorize?scope=user-read-email+playlist-read-private+playlist-read-collaborative+user-library-read",
           allowDangerousEmailAccountLinking: true,
           // Spotify does not allow localhost redirects, so we need to use the IP of localhost instead
           redirectProxyUrl: `http://127.0.0.1:3000/api/auth`
