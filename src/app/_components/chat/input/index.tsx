@@ -32,7 +32,7 @@ import type { Attachment } from "ai";
 import type { UseChatHelpers } from "@ai-sdk/react";
 import { ToolsSelect } from "./tools";
 import type { File as DbFile } from "@prisma/client";
-import { LanguageModelCapability } from "@/ai/types";
+import { LanguageModelCapability } from "@/ai/language/types";
 import {
   Tooltip,
   TooltipContent,
@@ -417,7 +417,7 @@ const PureMultimodalInput: React.FC<Props> = ({
           value={input}
           onChange={handleInput}
           className={cn(
-            "h-auto max-h-[calc(75dvh-4rem)] min-h-[48px] resize-none overflow-hidden border-0 bg-transparent px-4 py-3 !text-base shadow-none focus-visible:ring-0",
+            "h-auto max-h-[calc(75dvh-4rem)] min-h-[48px] resize-none overflow-hidden border-0 bg-transparent px-4 py-3 !text-base shadow-none focus-visible:ring-0 dark:bg-transparent",
             className,
           )}
           rows={2}

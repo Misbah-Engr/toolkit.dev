@@ -1,6 +1,7 @@
 import { redirect, notFound } from "next/navigation";
 import { auth } from "@/server/auth";
 import { AdminPanel } from "./_components/admin-panel";
+import { IS_DEVELOPMENT } from "@/lib/constants";
 
 export default async function AdminPage() {
   // Check authentication
@@ -12,7 +13,7 @@ export default async function AdminPage() {
 
   // Check if user has admin access
   try {
-    const isAdmin = session.user.role === "ADMIN";
+    const isAdmin = session.user.role === "ADMIN" || IS_DEVELOPMENT;
 
     if (!isAdmin) {
       notFound();

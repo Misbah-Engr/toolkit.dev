@@ -1,14 +1,14 @@
 import { signIn } from "@/server/auth";
 import { IS_DEVELOPMENT } from "@/lib/constants";
 import { getToken } from "next-auth/jwt";
-import { NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   if (!IS_DEVELOPMENT) {
     return NextResponse.json({ error: "Not allowed" }, { status: 403 });
   }
 
-  const { searchParams } = new URL(request.url);
+  const searchParams = request.nextUrl.searchParams;
   const redirectUrl = searchParams.get("redirectUrl") ?? "/";
 
   const token = await getToken({
@@ -16,8 +16,6 @@ export async function GET(request: Request) {
     secret: process.env.AUTH_SECRET,
     secureCookie: false,
   });
-
-  console.log(token);
 
   if (token) {
     return NextResponse.redirect(new URL("/", request.url));

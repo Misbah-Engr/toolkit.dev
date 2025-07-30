@@ -1,11 +1,18 @@
 "use client";
 
-import { X, Search } from "lucide-react";
+import { X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ModelProviderIcon } from "@/components/ui/model-icon";
-import { Input } from "@/components/ui/input";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,7 +32,7 @@ import {
   capabilityLabels,
   modelProviderNames,
 } from "./utils";
-import { LanguageModelCapability } from "@/ai/types";
+import { LanguageModelCapability } from "@/ai/language/types";
 
 import { useModelSelect } from "./use-model-select";
 
@@ -33,7 +40,10 @@ import { useChatContext } from "@/app/_contexts/chat-context";
 import { cn } from "@/lib/utils";
 import { NativeSearchToggle } from "./native-search-toggle";
 import { useIsMobile } from "@/hooks/use-mobile";
-import type { LanguageModel } from "@/ai/types";
+import type { LanguageModel } from "@/ai/language/types";
+
+const MODEL_HEIGHT = 36;
+const NUM_MODELS_TO_SHOW = 5;
 
 // Shared content component for both dropdown and drawer
 const ModelSelectContent: React.FC<{
@@ -45,9 +55,7 @@ const ModelSelectContent: React.FC<{
   toggleCapability: (capability: LanguageModelCapability) => void;
   toggleProvider: (provider: string) => void;
   handleModelSelect: (model: LanguageModel) => void;
-  selectedChatModel: LanguageModel | undefined;
   availableProviders: string[];
-  isMobile?: boolean;
 }> = ({
   models,
   searchQuery,
@@ -57,125 +65,127 @@ const ModelSelectContent: React.FC<{
   toggleCapability,
   toggleProvider,
   handleModelSelect,
-  selectedChatModel,
   availableProviders,
-  isMobile = false,
 }) => (
-  <>
-    <div
-      className={cn(
-        "bg-background border-b p-4",
-        !isMobile && "sticky top-0 z-10 p-2",
-      )}
-    >
-      <h2 className={cn("mb-2 font-bold", isMobile ? "text-lg" : "text-sm")}>
-        Model Selector
-      </h2>
-      <div className="relative mb-2">
-        <Search className="text-muted-foreground absolute top-2.5 left-2 size-4" />
-        <Input
-          placeholder="Search models..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-8"
-        />
+  <Command
+    filter={(value, search) => {
+      const model = models.find((m) => m.modelId === value);
+      if (!model) return 0;
+
+      const nameMatch = model.name.toLowerCase().includes(search.toLowerCase())
+        ? 1
+        : 0;
+      const descriptionMatch = model.description
+        ?.toLowerCase()
+        .includes(search.toLowerCase())
+        ? 1
+        : 0;
+
+      return nameMatch || descriptionMatch;
+    }}
+    className="gap-2 bg-transparent"
+  >
+    <CommandInput
+      placeholder="Search models..."
+      value={searchQuery}
+      onValueChange={setSearchQuery}
+    />
+    <div>
+      <div className="text-muted-foreground mb-1.5 px-2 text-xs font-medium">
+        Providers
       </div>
-      <div className="space-y-2">
-        <div>
-          <div className="text-muted-foreground mb-1.5 text-xs font-medium">
-            Providers
-          </div>
-          <div className="no-scrollbar flex gap-1 overflow-x-auto">
-            {availableProviders.map((provider) => (
-              <Badge
-                key={provider}
-                variant={
-                  selectedProviders.includes(provider) ? "default" : "outline"
-                }
-                className="shrink-0 cursor-pointer gap-1 px-1.5 py-0.5"
-                onClick={() => toggleProvider(provider)}
-              >
-                <ModelProviderIcon provider={provider} className="size-3" />
-                {modelProviderNames[provider]}
-              </Badge>
-            ))}
-          </div>
-        </div>
-        <div>
-          <div className="text-muted-foreground mb-1.5 text-xs font-medium">
-            Capabilities
-          </div>
-          <div className="no-scrollbar flex gap-1 overflow-x-auto">
-            {Object.values(LanguageModelCapability).map((capability) => {
-              const Icon = capabilityIcons[capability];
-              return (
-                <Badge
-                  key={capability}
-                  variant={
-                    selectedCapabilities.includes(capability)
-                      ? "default"
-                      : "outline"
-                  }
-                  className="shrink-0 cursor-pointer gap-1 px-1.5 py-0.5"
-                  onClick={() => toggleCapability(capability)}
-                >
-                  {Icon && <Icon className="size-3" />}
-                  {capabilityLabels[capability]}
-                </Badge>
-              );
-            })}
-          </div>
-        </div>
+      <div className="no-scrollbar flex gap-1 overflow-x-auto px-2">
+        {availableProviders.map((provider) => (
+          <Badge
+            key={provider}
+            variant={
+              selectedProviders.includes(provider) ? "default" : "outline"
+            }
+            className="shrink-0 cursor-pointer gap-1 px-1.5 py-0.5"
+            onClick={() => toggleProvider(provider)}
+          >
+            <ModelProviderIcon provider={provider} className="size-3" />
+            {modelProviderNames[provider]}
+          </Badge>
+        ))}
       </div>
     </div>
-    <div
-      className={cn(
-        "w-full max-w-full overflow-x-hidden overflow-y-auto px-1",
-        isMobile ? "max-h-[50vh] pb-4" : "max-h-32 md:max-h-48",
-      )}
+    <div>
+      <div className="text-muted-foreground mb-1.5 px-2 text-xs font-medium">
+        Capabilities
+      </div>
+      <div className="no-scrollbar flex gap-1 overflow-x-auto px-2">
+        {Object.values(LanguageModelCapability).map((capability) => {
+          const Icon = capabilityIcons[capability];
+          return (
+            <Badge
+              key={capability}
+              variant={
+                selectedCapabilities.includes(capability)
+                  ? "default"
+                  : "outline"
+              }
+              className="shrink-0 cursor-pointer gap-1 px-1.5 py-0.5"
+              onClick={() => toggleCapability(capability)}
+            >
+              {Icon && <Icon className="size-3" />}
+              {capabilityLabels[capability]}
+            </Badge>
+          );
+        })}
+      </div>
+    </div>
+    <CommandList
+      className={cn("w-full max-w-full overflow-x-hidden overflow-y-auto p-0")}
+      style={{
+        height: `${MODEL_HEIGHT * (NUM_MODELS_TO_SHOW + 0.5)}px`,
+      }}
+      gradientClassName="from-background md:from-popover"
     >
-      {models?.map((model) => (
-        <div
-          key={model.modelId}
-          className={cn(
-            "hover:bg-accent/50 flex w-full max-w-full cursor-pointer items-center gap-2 rounded-md px-3 py-2 transition-colors",
-            selectedChatModel?.modelId === model.modelId && "bg-accent",
-            isMobile && "min-h-[44px]",
-          )}
-          onClick={() => handleModelSelect(model)}
-        >
-          {/* Name, provider, new badge stack */}
-          <div className="flex max-w-full min-w-0 flex-1 flex-shrink-0 items-center gap-2 overflow-hidden">
-            <ModelProviderIcon
-              provider={model.provider}
-              className="size-4 flex-shrink-0"
-            />
-            <span className="truncate text-sm font-medium">{model.name}</span>
-            {model.isNew && (
-              <Badge variant="secondary" className="h-5 text-xs">
-                New
-              </Badge>
+      <CommandEmpty>No models found.</CommandEmpty>
+      <CommandGroup className="p-0">
+        {models?.map((model) => (
+          <CommandItem
+            key={model.modelId}
+            value={model.modelId}
+            onSelect={() => handleModelSelect(model)}
+            className={cn(
+              "flex w-full max-w-full cursor-pointer items-center gap-2 rounded-none px-3 py-2 transition-colors",
             )}
-          </div>
-          {/* Capabilities justified to the right */}
-          <div className="flex flex-1 justify-end gap-1">
-            {model.capabilities?.map((capability) => {
-              const Icon = capabilityIcons[capability];
-              return (
-                <Badge
-                  key={capability}
-                  variant="capability"
-                  className={`h-5 gap-1 px-1 text-xs ${capabilityColors[capability]}`}
-                >
-                  {Icon && <Icon className="size-3" />}
+          >
+            {/* Name, provider, new badge stack */}
+            <div className="flex max-w-full min-w-0 flex-1 flex-shrink-0 items-center gap-2 overflow-hidden">
+              <ModelProviderIcon
+                provider={model.provider}
+                className="size-4 flex-shrink-0"
+              />
+              <span className="truncate text-sm font-medium">{model.name}</span>
+              {model.isNew && (
+                <Badge variant="secondary" className="h-5 text-xs">
+                  New
                 </Badge>
-              );
-            })}
-          </div>
-        </div>
-      ))}
-    </div>
-  </>
+              )}
+            </div>
+            {/* Capabilities justified to the right */}
+            <div className="flex flex-1 justify-end gap-1">
+              {model.capabilities?.map((capability) => {
+                const Icon = capabilityIcons[capability];
+                return (
+                  <Badge
+                    key={capability}
+                    variant="capability"
+                    className={`h-5 gap-1 px-1 text-xs ${capabilityColors[capability]}`}
+                  >
+                    {Icon && <Icon className="size-3" />}
+                  </Badge>
+                );
+              })}
+            </div>
+          </CommandItem>
+        ))}
+      </CommandGroup>
+    </CommandList>
+  </Command>
 );
 
 export const ModelSelect: React.FC = () => {
@@ -252,7 +262,6 @@ export const ModelSelect: React.FC = () => {
     toggleCapability,
     toggleProvider,
     handleModelSelect,
-    selectedChatModel,
     availableProviders,
   };
 
@@ -265,7 +274,7 @@ export const ModelSelect: React.FC = () => {
             <DrawerHeader className="sr-only">
               <DrawerTitle>Model Selector</DrawerTitle>
             </DrawerHeader>
-            <ModelSelectContent {...contentProps} isMobile={true} />
+            <ModelSelectContent {...contentProps} />
           </DrawerContent>
         </Drawer>
       ) : (

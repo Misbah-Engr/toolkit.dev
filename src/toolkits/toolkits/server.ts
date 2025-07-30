@@ -8,6 +8,7 @@ import { mem0ToolkitServer } from "./mem0/server";
 import { notionToolkitServer } from "./notion/server";
 import { e2bToolkitServer } from "./e2b/server";
 import { stravaToolkitServer } from "./strava/server";
+import { spotifyToolkitServer } from "./spotify/server";
 import {
   Toolkits,
   type ServerToolkitNames,
@@ -31,6 +32,7 @@ export const serverToolkits: ServerToolkits = {
   [Toolkits.Notion]: notionToolkitServer,
   [Toolkits.E2B]: e2bToolkitServer,
   [Toolkits.Strava]: stravaToolkitServer,
+  [Toolkits.Spotify]: spotifyToolkitServer,
 };
 
 export function getServerToolkit<T extends Toolkits>(
