@@ -105,7 +105,6 @@ export function ChatProvider({
   initialPreferences,
 }: ChatProviderProps) {
   const utils = api.useUtils();
-  const hasOpenRouterKey = useEnvVarAvailable("OPENROUTER_API_KEY");
 
   const [selectedChatModel, setSelectedChatModelState] =
     useState<LanguageModel>(
