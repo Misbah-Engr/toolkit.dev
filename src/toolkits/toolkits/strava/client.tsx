@@ -5,7 +5,6 @@ import { baseStravaToolkitConfig } from "./base";
 import { StravaTools } from "./tools";
 import {
   stravaGetAthleteActivitiesToolConfigClient,
-  stravaGetActivityDetailsToolConfigClient,
   stravaGetAthleteStatsToolConfigClient,
   stravaSearchSegmentsToolConfigClient,
   stravaGetSegmentDetailsToolConfigClient,
@@ -16,6 +15,7 @@ import {
 import { ToolkitGroups } from "@/toolkits/types";
 import { Link } from "../components/link";
 import { getAthleteToolConfigClient } from "./tools/profile/client";
+import { getActivityDetailsToolConfigClient } from "./tools/activity-details/client";
 
 export const stravaClientToolkit = createClientToolkit(
   baseStravaToolkitConfig,
@@ -45,7 +45,7 @@ export const stravaClientToolkit = createClientToolkit(
     [StravaTools.GetAthleteProfile]: getAthleteToolConfigClient,
     [StravaTools.GetAthleteActivities]:
       stravaGetAthleteActivitiesToolConfigClient,
-    [StravaTools.GetActivityDetails]: stravaGetActivityDetailsToolConfigClient,
+    [StravaTools.GetActivityDetails]: getActivityDetailsToolConfigClient,
     [StravaTools.GetAthleteStats]: stravaGetAthleteStatsToolConfigClient,
     [StravaTools.SearchSegments]: stravaSearchSegmentsToolConfigClient,
     [StravaTools.GetSegmentDetails]: stravaGetSegmentDetailsToolConfigClient,

@@ -43,23 +43,22 @@ Use these tools to help users analyze their fitness data, track performance tren
 
     return {
       [StravaTools.GetAthleteProfile]:
-        stravaGetAthleteProfileToolConfigServer(stravaApiHeaders),
+        stravaGetAthleteProfileToolConfigServer(strava),
       [StravaTools.GetAthleteActivities]:
-        stravaGetAthleteActivitiesToolConfigServer(stravaApiHeaders),
+        stravaGetAthleteActivitiesToolConfigServer(strava),
       [StravaTools.GetActivityDetails]:
-        stravaGetActivityDetailsToolConfigServer(stravaApiHeaders),
+        stravaGetActivityDetailsToolConfigServer(strava),
       [StravaTools.GetAthleteStats]:
-        stravaGetAthleteStatsToolConfigServer(stravaApiHeaders),
+        stravaGetAthleteStatsToolConfigServer(strava),
       [StravaTools.SearchSegments]:
-        stravaSearchSegmentsToolConfigServer(stravaApiHeaders),
+        stravaSearchSegmentsToolConfigServer(strava),
       [StravaTools.GetSegmentDetails]:
-        stravaGetSegmentDetailsToolConfigServer(stravaApiHeaders),
+        stravaGetSegmentDetailsToolConfigServer(strava),
       [StravaTools.GetSegmentLeaderboard]:
-        stravaGetSegmentLeaderboardToolConfigServer(stravaApiHeaders),
-      [StravaTools.GetRoutes]:
-        stravaGetRoutesToolConfigServer(stravaApiHeaders),
+        stravaGetSegmentLeaderboardToolConfigServer(strava),
+      [StravaTools.GetRoutes]: stravaGetRoutesToolConfigServer(strava),
       [StravaTools.GetAthleteZones]:
-        stravaGetAthleteZonesToolConfigServer(stravaApiHeaders),
+        stravaGetAthleteZonesToolConfigServer(strava),
     };
   },
 );

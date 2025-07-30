@@ -1,5 +1,5 @@
 import { createClientTool } from "@/toolkits/create-tool";
-import { getAthleteBase } from "./profile/base";  
+import { getAthleteBase } from "./profile/base";
 import { getAthleteActivitiesTool } from "./get-athlete-activities";
 import { getActivityDetailsTool } from "./get-activity-details";
 import { getAthleteStatsTool } from "./get-athlete-stats";
@@ -19,34 +19,6 @@ import {
   Target,
 } from "lucide-react";
 import { HStack, VStack } from "@/components/ui/stack";
-
-export const stravaGetAthleteProfileToolConfigClient = createClientTool(
-  getAthleteBase,
-  {
-    CallComponent: ({ args }) => (
-      <HStack className="gap-2">
-        <User className="text-muted-foreground size-4" />
-        <span className="text-sm">Get Athlete Profile</span>
-      </HStack>
-    ),
-    ResultComponent: ({ result }) => (
-      <div className="space-y-2">
-        <h3 className="font-semibold">
-          {result.firstname} {result.lastname}
-        </h3>
-        <div className="text-muted-foreground text-sm">
-          {result.city && result.state && `${result.city}, ${result.state}`}
-          {result.country && ` (${result.country})`}
-        </div>
-        <div className="flex items-center gap-4 text-sm">
-          <span>Followers: {result.follower_count}</span>
-          <span>Following: {result.friend_count}</span>
-          {result.premium && <span className="text-orange-500">Premium</span>}
-        </div>
-      </div>
-    ),
-  },
-);
 
 export const stravaGetAthleteActivitiesToolConfigClient = createClientTool(
   getAthleteActivitiesTool,
@@ -97,56 +69,6 @@ export const stravaGetAthleteActivitiesToolConfigClient = createClientTool(
             </div>
           ))}
         </div>
-      </div>
-    ),
-  },
-);
-
-export const stravaGetActivityDetailsToolConfigClient = createClientTool(
-  getActivityDetailsTool,
-  {
-    CallComponent: ({ args }) => (
-      <HStack className="gap-2">
-        <Activity className="text-muted-foreground size-4" />
-        <VStack className="items-start gap-0">
-          <span className="text-muted-foreground/80 text-xs font-medium">
-            Activity Details
-          </span>
-          <span className="text-sm">Activity ID: {args.id}</span>
-        </VStack>
-      </HStack>
-    ),
-    ResultComponent: ({ result }) => (
-      <div className="space-y-3">
-        <div>
-          <h3 className="font-semibold">{result.name}</h3>
-          <p className="text-muted-foreground text-sm">{result.type}</p>
-        </div>
-        <div className="grid grid-cols-2 gap-4 text-sm">
-          <div>
-            <span className="font-medium">Distance:</span>{" "}
-            {result.distance ? (result.distance / 1000).toFixed(1) : "N/A"}km
-          </div>
-          <div>
-            <span className="font-medium">Time:</span>{" "}
-            {result.moving_time ? Math.floor(result.moving_time / 60) : "N/A"}
-            min
-          </div>
-          <div>
-            <span className="font-medium">Elevation:</span>{" "}
-            {result.total_elevation_gain || "N/A"}m
-          </div>
-          <div>
-            <span className="font-medium">Avg Speed:</span>{" "}
-            {result.average_speed
-              ? (result.average_speed * 3.6).toFixed(1)
-              : "N/A"}
-            km/h
-          </div>
-        </div>
-        {result.description && (
-          <p className="bg-muted rounded p-2 text-sm">{result.description}</p>
-        )}
       </div>
     ),
   },
