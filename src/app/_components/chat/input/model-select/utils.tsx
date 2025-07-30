@@ -28,7 +28,7 @@ export const capabilityColors: Record<LanguageModelCapability, string> = {
   [LanguageModelCapability.WebSearch]: "bg-blue-100 text-blue-500",
   [LanguageModelCapability.Reasoning]: "bg-orange-100 text-orange-800",
   [LanguageModelCapability.Pdf]: "bg-gray-200 text-gray-800",
-  [LanguageModelCapability.ToolCalling]: "bg-blue-100 text-blue-800",
+  [LanguageModelCapability.ToolCalling]: "bg-yellow-100 text-yellow-800",
 };
 
 export const formatContextLength = (length?: number) => {
