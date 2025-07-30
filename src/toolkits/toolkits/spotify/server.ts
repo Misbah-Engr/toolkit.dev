@@ -3,6 +3,7 @@ import { baseSpotifyToolkitConfig } from "./base";
 import { SpotifyTools } from "./tools";
 import { createServerToolkit } from "../../create-toolkit";
 import { getPlaylistsToolConfigServer } from "./tools/playlists/server";
+import { getTracksToolConfigServer } from "./tools/tracks/server";
 import { api } from "@/trpc/server";
 import { env } from "@/env";
 
@@ -43,7 +44,7 @@ export const spotifyToolkitServer = createServerToolkit(
 
     return {
       [SpotifyTools.GetPlaylists]: getPlaylistsToolConfigServer(spotify),
-      // [SpotifyTools.GetTracks]: getTracksToolConfigServer(spotify),
+      [SpotifyTools.GetTracks]: getTracksToolConfigServer(spotify),
     };
   },
 );
