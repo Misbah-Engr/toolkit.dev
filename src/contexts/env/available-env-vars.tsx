@@ -2,8 +2,6 @@
 
 import { createContext, useContext, type ReactNode } from "react";
 
-import { useSearchParams } from "next/navigation";
-
 import type { ClientToolkit, EnvVarGroupAll } from "@/toolkits/types";
 
 interface AvailableEnvVarsContextType {
@@ -20,16 +18,10 @@ export function AvailableEnvVarsProvider({
   children: ReactNode;
   envVars: Record<string, boolean>;
 }) {
-  const searchParams = useSearchParams();
-  const openRouterKeySet = searchParams.has("or-key-updated");
-
   return (
     <AvailableEnvVarsContext.Provider
       value={{
-        envVars: {
-          ...envVars,
-          ...(openRouterKeySet ? { OPENROUTER_API_KEY: true } : {}),
-        },
+        envVars,
       }}
     >
       {children}
