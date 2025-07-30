@@ -44,6 +44,7 @@ export const getPlaylistsToolConfigClient: ClientToolConfig<
             >
               <div className="flex items-center space-x-3">
                 {playlist.image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={playlist.image}
                     alt={playlist.name}

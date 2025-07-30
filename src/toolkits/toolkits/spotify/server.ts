@@ -1,10 +1,8 @@
-// src/toolkits/toolkits/spotify/server.ts
-import { Scopes, SpotifyApi } from "@spotify/web-api-ts-sdk";
+import { SpotifyApi } from "@spotify/web-api-ts-sdk";
 import { baseSpotifyToolkitConfig } from "./base";
 import { SpotifyTools } from "./tools";
 import { createServerToolkit } from "../../create-toolkit";
 import { getPlaylistsToolConfigServer } from "./tools/playlists/server";
-// import { getTracksToolConfigServer } from "./tools/tracks/server";
 import { api } from "@/trpc/server";
 import { env } from "@/env";
 
@@ -32,13 +30,7 @@ export const spotifyToolkitServer = createServerToolkit(
     if (!account.access_token) {
       throw new Error("No Spotify access token found");
     }
-  //   export interface AccessToken {
-  //     access_token: string;
-  //     token_type: string;
-  //     expires_in: number;
-  //     refresh_token: string;
-  //     expires?: number;
-  // }
+    
     // Create Spotify API instance with user's access token
     const spotify = SpotifyApi.withAccessToken(
       env.AUTH_SPOTIFY_ID,
@@ -46,7 +38,7 @@ export const spotifyToolkitServer = createServerToolkit(
       access_token: account.access_token,
       token_type: "Bearer",
       expires_in: 3600,
-      refresh_token: account.refresh_token || "",
+      refresh_token: account.refresh_token ?? "",
      },    
     );
 
