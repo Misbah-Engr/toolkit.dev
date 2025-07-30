@@ -40,8 +40,6 @@ export const spotifyToolkitServer = createServerToolkit(
       refresh_token: account.refresh_token ?? "",
     });
 
-    console.log("account", account);
-
     return {
       [SpotifyTools.GetPlaylists]: getPlaylistsToolConfigServer(spotify),
       [SpotifyTools.GetTracks]: getTracksToolConfigServer(spotify),

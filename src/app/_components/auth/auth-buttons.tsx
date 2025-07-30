@@ -15,7 +15,7 @@ interface AuthButtonsProps {
 export const AuthButtons = ({ providers, redirect }: AuthButtonsProps) => {
   return (
     <div className="flex flex-col gap-2">
-      {providers.map((provider) =>
+      {providers.filter((provider) => provider.id !== "spotify").map((provider) =>
         provider.id !== "credentials" ? (
           <Button
             key={provider.id}

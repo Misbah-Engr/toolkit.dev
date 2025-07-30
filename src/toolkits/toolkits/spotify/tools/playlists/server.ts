@@ -21,7 +21,7 @@ export const getPlaylistsToolConfigServer = (
           playlists: items,
         };
       } catch (error) {
-        console.log("Spotify API error:", error);
+        console.error("Spotify API error:", error);
         throw new Error("Failed to fetch playlists from Spotify");
       }
     },
