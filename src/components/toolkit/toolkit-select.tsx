@@ -1,10 +1,14 @@
 import { Loader2, Save } from "lucide-react";
-
 import { useRouter } from "next/navigation";
-
 import { toast } from "sonner";
-
 import { Button } from "@/components/ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandList,
+} from "@/components/ui/command";
 import {
   Drawer,
   DrawerContent,
@@ -18,18 +22,14 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-
 import { ToolkitList } from "@/components/toolkit/toolkit-list";
-
 import { api } from "@/trpc/react";
-
 import { useIsMobile } from "@/hooks/use-mobile";
-
 import { cn } from "@/lib/utils";
-
 import type { Workbench } from "@prisma/client";
 import type { SelectedToolkit } from "./types";
 import type { Toolkits } from "@/toolkits/toolkits/shared";
+import { useState } from "react";
 
 interface Props {
   isOpen: boolean;
@@ -51,14 +51,21 @@ export const ToolkitSelect: React.FC<Props> = ({
   children,
 }) => {
   const isMobile = useIsMobile();
+  const [searchQuery, setSearchQuery] = useState("");
 
   const content = (
-    <div className={cn("w-full max-w-full")}>
+    <Command className={cn("w-full max-w-full")}>
+      <CommandInput
+        placeholder="Search toolkits..."
+        value={searchQuery}
+        onValueChange={setSearchQuery}
+      />
       <ToolkitList
         selectedToolkits={toolkits}
         onAddToolkit={addToolkit}
         onRemoveToolkit={removeToolkit}
         gradientClassName="md:from-popover"
+        searchQuery={searchQuery}
       />
       {workbench !== undefined && (
         <WorkbenchSaveButton
@@ -67,7 +74,7 @@ export const ToolkitSelect: React.FC<Props> = ({
           setIsOpen={onOpenChange}
         />
       )}
-    </div>
+    </Command>
   );
 
   if (isMobile) {

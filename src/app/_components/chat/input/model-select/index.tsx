@@ -1,11 +1,18 @@
 "use client";
 
-import { X, Search } from "lucide-react";
+import { X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ModelProviderIcon } from "@/components/ui/model-icon";
-import { Input } from "@/components/ui/input";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -61,25 +68,35 @@ const ModelSelectContent: React.FC<{
   availableProviders,
   isMobile = false,
 }) => (
-  <>
+  <Command
+    filter={(value, search) => {
+      const model = models.find((m) => m.modelId === value);
+      if (!model) return 0;
+
+      const nameMatch = model.name.toLowerCase().includes(search.toLowerCase())
+        ? 1
+        : 0;
+      const descriptionMatch = model.description
+        ?.toLowerCase()
+        .includes(search.toLowerCase())
+        ? 1
+        : 0;
+
+      return nameMatch || descriptionMatch;
+    }}
+  >
     <div
       className={cn(
         "bg-background border-b p-4",
         !isMobile && "sticky top-0 z-10 p-2",
       )}
     >
-      <h2 className={cn("mb-2 font-bold", isMobile ? "text-lg" : "text-sm")}>
-        Model Selector
-      </h2>
-      <div className="relative mb-2">
-        <Search className="text-muted-foreground absolute top-2.5 left-2 size-4" />
-        <Input
-          placeholder="Search models..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-8"
-        />
-      </div>
+      <CommandInput
+        placeholder="Search models..."
+        value={searchQuery}
+        onValueChange={setSearchQuery}
+        className="mb-2"
+      />
       <div className="space-y-2">
         <div>
           <div className="text-muted-foreground mb-1.5 text-xs font-medium">
@@ -128,54 +145,58 @@ const ModelSelectContent: React.FC<{
         </div>
       </div>
     </div>
-    <div
+    <CommandList
       className={cn(
         "w-full max-w-full overflow-x-hidden overflow-y-auto px-1",
         isMobile ? "max-h-[50vh] pb-4" : "max-h-32 md:max-h-48",
       )}
     >
-      {models?.map((model) => (
-        <div
-          key={model.modelId}
-          className={cn(
-            "hover:bg-accent/50 flex w-full max-w-full cursor-pointer items-center gap-2 rounded-md px-3 py-2 transition-colors",
-            selectedChatModel?.modelId === model.modelId && "bg-accent",
-            isMobile && "min-h-[44px]",
-          )}
-          onClick={() => handleModelSelect(model)}
-        >
-          {/* Name, provider, new badge stack */}
-          <div className="flex max-w-full min-w-0 flex-1 flex-shrink-0 items-center gap-2 overflow-hidden">
-            <ModelProviderIcon
-              provider={model.provider}
-              className="size-4 flex-shrink-0"
-            />
-            <span className="truncate text-sm font-medium">{model.name}</span>
-            {model.isNew && (
-              <Badge variant="secondary" className="h-5 text-xs">
-                New
-              </Badge>
+      <CommandEmpty>No models found.</CommandEmpty>
+      <CommandGroup>
+        {models?.map((model) => (
+          <CommandItem
+            key={model.modelId}
+            value={model.modelId}
+            onSelect={() => handleModelSelect(model)}
+            className={cn(
+              "flex w-full max-w-full cursor-pointer items-center gap-2 rounded-md px-3 py-2 transition-colors",
+              selectedChatModel?.modelId === model.modelId && "bg-accent",
+              isMobile && "min-h-[44px]",
             )}
-          </div>
-          {/* Capabilities justified to the right */}
-          <div className="flex flex-1 justify-end gap-1">
-            {model.capabilities?.map((capability) => {
-              const Icon = capabilityIcons[capability];
-              return (
-                <Badge
-                  key={capability}
-                  variant="capability"
-                  className={`h-5 gap-1 px-1 text-xs ${capabilityColors[capability]}`}
-                >
-                  {Icon && <Icon className="size-3" />}
+          >
+            {/* Name, provider, new badge stack */}
+            <div className="flex max-w-full min-w-0 flex-1 flex-shrink-0 items-center gap-2 overflow-hidden">
+              <ModelProviderIcon
+                provider={model.provider}
+                className="size-4 flex-shrink-0"
+              />
+              <span className="truncate text-sm font-medium">{model.name}</span>
+              {model.isNew && (
+                <Badge variant="secondary" className="h-5 text-xs">
+                  New
                 </Badge>
-              );
-            })}
-          </div>
-        </div>
-      ))}
-    </div>
-  </>
+              )}
+            </div>
+            {/* Capabilities justified to the right */}
+            <div className="flex flex-1 justify-end gap-1">
+              {model.capabilities?.map((capability) => {
+                const Icon = capabilityIcons[capability];
+                return (
+                  <Badge
+                    key={capability}
+                    variant="capability"
+                    className={`h-5 gap-1 px-1 text-xs ${capabilityColors[capability]}`}
+                  >
+                    {Icon && <Icon className="size-3" />}
+                  </Badge>
+                );
+              })}
+            </div>
+          </CommandItem>
+        ))}
+      </CommandGroup>
+    </CommandList>
+  </Command>
 );
 
 export const ModelSelect: React.FC = () => {
