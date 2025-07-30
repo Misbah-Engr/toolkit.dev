@@ -2,17 +2,17 @@ import { env } from "@/env";
 
 import { AvailableEnvVarsProvider } from "./available-env-vars";
 
-import { IS_PRODUCTION } from "@/lib/constants";
+import { IS_DEVELOPMENT } from "@/lib/constants";
 
 export const EnvProvider = ({ children }: { children: React.ReactNode }) => {
-  if (IS_PRODUCTION) {
+  if (!IS_DEVELOPMENT) {
     return children;
   }
 
   return (
     <AvailableEnvVarsProvider
-      initialEnvVars={Object.fromEntries(
-        Object.keys(env).map((key) => [key, true]),
+      envVars={Object.fromEntries(
+        Object.entries(env).map(([key, value]) => [key, Boolean(value)]),
       )}
     >
       {children}

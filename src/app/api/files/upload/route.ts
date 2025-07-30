@@ -6,7 +6,7 @@ import { put } from "@vercel/blob";
 
 import { auth } from "@/server/auth";
 import { api } from "@/trpc/server";
-import { FILE_MAX_SIZE } from "@/lib/constants";
+import { FILE_MAX_SIZE, IS_DEVELOPMENT } from "@/lib/constants";
 
 // Use Blob instead of File since File is not available in Node.js environment
 const FileSchema = z.object({
@@ -72,6 +72,14 @@ export async function POST(request: Request) {
         url: data.url,
         contentType: validatedFile.data.file.type,
       });
+
+      if (IS_DEVELOPMENT) {
+        // In development, use base64 data URLs so openrouter can access the file
+        // We can't use the local blob storage because it's not accessible to openrouter
+        const base64 = Buffer.from(fileBuffer).toString("base64");
+        const fileUrl = `data:${validatedFile.data.file.type};base64,${base64}`;
+        file.url = fileUrl;
+      }
 
       return NextResponse.json(file);
     } catch (error) {

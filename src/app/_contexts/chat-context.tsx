@@ -12,6 +12,8 @@ import { useChat } from "@ai-sdk/react";
 
 import { toast } from "sonner";
 
+import { OpenRouterChecks } from "./openrouter-checks";
+
 import { api } from "@/trpc/react";
 
 import { useAutoResume } from "@/app/_hooks/use-auto-resume";
@@ -26,6 +28,7 @@ import { clientCookieUtils } from "@/lib/cookies/client";
 import { generateUUID } from "@/lib/utils";
 import { fetchWithErrorHandlers } from "@/lib/fetch";
 import { ChatSDKError } from "@/lib/errors";
+import { IS_DEVELOPMENT } from "@/lib/constants";
 
 import type { ReactNode } from "react";
 import type { Attachment, UIMessage } from "ai";
@@ -325,7 +328,12 @@ export function ChatProvider({
     workbench,
   };
 
-  return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;
+  return (
+    <ChatContext.Provider value={value}>
+      {children}
+      {IS_DEVELOPMENT && <OpenRouterChecks />}
+    </ChatContext.Provider>
+  );
 }
 
 export function useChatContext() {

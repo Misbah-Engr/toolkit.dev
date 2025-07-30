@@ -35,7 +35,7 @@ export const authConfig = {
   providers,
   adapter: PrismaAdapter(db),
   pages: {
-    newUser: "/?welcome=true",
+    newUser: IS_DEVELOPMENT ? "/" : "/?welcome=true",
     signOut: "/",
   },
   trustHost: true,

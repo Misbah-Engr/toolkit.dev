@@ -4,7 +4,7 @@ import { writeFile, readFile } from "fs/promises";
 import { existsSync } from "fs";
 import { join } from "path";
 import { z } from "zod";
-import { IS_PRODUCTION } from "@/lib/constants";
+import { IS_DEVELOPMENT } from "@/lib/constants";
 
 const setEnvVarSchema = z.array(
   z.object({
@@ -14,7 +14,7 @@ const setEnvVarSchema = z.array(
 );
 
 export async function setEnvVar(input: z.infer<typeof setEnvVarSchema>) {
-  if (IS_PRODUCTION) {
+  if (!IS_DEVELOPMENT) {
     return {
       success: false,
       message: "This action is only available in development mode",

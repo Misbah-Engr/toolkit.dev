@@ -11,12 +11,6 @@ export const googleCalendarCreateEventToolConfigServer = (
 > => {
   return {
     callback: async ({ title, startDateTime, endDateTime }) => {
-      console.log("[CreateEvent] Creating event with parameters:", {
-        title,
-        startDateTime,
-        endDateTime,
-      });
-
       // Get user's primary calendar timezone
       const userTimeZone = await getUserTimezone(calendar);
 
@@ -34,18 +28,11 @@ export const googleCalendarCreateEventToolConfigServer = (
         },
       };
 
-      console.log("[CreateEvent] Event resource:", eventResource);
-
       try {
         const response = await calendar.events.insert({
           calendarId: "primary",
           requestBody: eventResource,
         });
-
-        console.log(
-          "[CreateEvent] Event created successfully:",
-          response.data.id,
-        );
 
         return {
           event: response.data,

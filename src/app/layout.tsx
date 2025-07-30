@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     statusBarStyle: "black",
   },
   manifest: "/manifest.json",
-  metadataBase: new URL(env.NEXTAUTH_URL),
+  metadataBase: new URL(env.NEXTAUTH_URL || "http://localhost:3000"),
 };
 
 export const viewport: Viewport = {

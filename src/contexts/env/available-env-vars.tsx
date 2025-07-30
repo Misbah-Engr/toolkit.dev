@@ -1,11 +1,11 @@
 "use client";
 
+import { createContext, useContext, type ReactNode } from "react";
+
 import type { ClientToolkit, EnvVarGroupAll } from "@/toolkits/types";
-import { createContext, useContext, useState, type ReactNode } from "react";
 
 interface AvailableEnvVarsContextType {
   envVars: Record<string, boolean>;
-  updateEnvVars: (envVars: Record<string, boolean>) => void;
 }
 
 const AvailableEnvVarsContext =
@@ -13,41 +13,28 @@ const AvailableEnvVarsContext =
 
 export function AvailableEnvVarsProvider({
   children,
-  initialEnvVars,
+  envVars,
 }: {
   children: ReactNode;
-  initialEnvVars: Record<string, boolean>;
+  envVars: Record<string, boolean>;
 }) {
-  const [envVars, setEnvVars] =
-    useState<Record<string, boolean>>(initialEnvVars);
-
-  const updateEnvVars = (envVars: Record<string, boolean>) => {
-    setEnvVars((prev) => ({ ...prev, ...envVars }));
-  };
-
   return (
-    <AvailableEnvVarsContext.Provider value={{ envVars, updateEnvVars }}>
+    <AvailableEnvVarsContext.Provider
+      value={{
+        envVars,
+      }}
+    >
       {children}
     </AvailableEnvVarsContext.Provider>
   );
 }
 
-export const useUpdateEnvVars = () => {
-  const context = useContext(AvailableEnvVarsContext);
-  if (!context) {
-    return () => {
-      void 0;
-    };
-  }
-  return context.updateEnvVars;
-};
-
-export const useEnvVarAvailable = (envVars: string[]) => {
+export const useEnvVarAvailable = (envVar: string) => {
   const context = useContext(AvailableEnvVarsContext);
   if (!context) {
     return true;
   }
-  return envVars.some((envVar) => context.envVars[envVar]);
+  return Boolean(context.envVars[envVar]);
 };
 
 export const useToolkitMissingEnvVars = (toolkit: ClientToolkit) => {

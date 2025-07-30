@@ -19,7 +19,7 @@ import { EnvVarDialog } from "@/components/env-vars/env-var-dialog";
 import { useToolkitMissingEnvVars } from "@/contexts/env/available-env-vars";
 
 import { cn } from "@/lib/utils";
-import { IS_PRODUCTION } from "@/lib/constants";
+import { IS_DEVELOPMENT } from "@/lib/constants";
 
 import type {
   ServerToolkitParameters,
@@ -118,7 +118,7 @@ export const ToolkitItem: React.FC<Props> = ({
     onSelect: () => void;
     isLoading: boolean;
   }) => {
-    const Item = IS_PRODUCTION ? CommandItem : BaseDevItem;
+    const Item = IS_DEVELOPMENT ? BaseDevItem : CommandItem;
     return <Item onSelect={onSelect} isLoading={isLoading} />;
   };
 

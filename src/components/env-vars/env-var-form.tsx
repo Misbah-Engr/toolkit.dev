@@ -22,22 +22,21 @@ import { VStack } from "@/components/ui/stack";
 
 import { setEnvVar } from "@/actions/add-env-var";
 
-import { useUpdateEnvVars } from "@/contexts/env/available-env-vars";
-
 import type { EnvVars } from "@/toolkits/types";
 
 interface Props {
   resourceName: string;
   envVars: EnvVars;
   onSuccess: () => void;
+  disabled?: boolean;
 }
 
 export const EnvVarForm: React.FC<Props> = ({
   resourceName,
   envVars,
   onSuccess,
+  disabled,
 }) => {
-  const updateEnvVars = useUpdateEnvVars();
   const formSchema = z.object(
     Object.fromEntries(
       envVars.map((vars, index) => {
@@ -95,11 +94,6 @@ export const EnvVarForm: React.FC<Props> = ({
 
     if (success) {
       toast.success("Environment variables have been set successfully");
-      updateEnvVars(
-        Object.fromEntries(
-          Object.values(envVarsToUpdate).map(({ key }) => [key, true]),
-        ),
-      );
       onSuccess();
     } else {
       toast.error("Failed to set environment variables");
@@ -125,7 +119,11 @@ export const EnvVarForm: React.FC<Props> = ({
                         {key}
                       </FormLabel>
                       <FormControl>
-                        <Input placeholder={key} {...field} />
+                        <Input
+                          placeholder={key}
+                          {...field}
+                          disabled={disabled}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -152,7 +150,11 @@ export const EnvVarForm: React.FC<Props> = ({
                           {keyObj.key}
                         </FormLabel>
                         <FormControl>
-                          <Input placeholder={keyObj.key} {...field} />
+                          <Input
+                            placeholder={keyObj.key}
+                            {...field}
+                            disabled={disabled}
+                          />
                         </FormControl>
                         <FormDescription>{keyObj.description}</FormDescription>
                         <FormMessage />
@@ -167,7 +169,7 @@ export const EnvVarForm: React.FC<Props> = ({
         <VStack className="w-full">
           <Button
             type="submit"
-            disabled={!form.formState.isValid}
+            disabled={!form.formState.isValid || disabled}
             className="w-full"
           >
             Update .env file
