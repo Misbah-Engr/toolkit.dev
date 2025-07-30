@@ -25,7 +25,7 @@ import {
   capabilityLabels,
   modelProviderNames,
 } from "./utils";
-import { LanguageModelCapability } from "@/ai/types";
+import { LanguageModelCapability } from "@/ai/language/types";
 
 import { useModelSelect } from "./use-model-select";
 
@@ -33,7 +33,7 @@ import { useChatContext } from "@/app/_contexts/chat-context";
 import { cn } from "@/lib/utils";
 import { NativeSearchToggle } from "./native-search-toggle";
 import { useIsMobile } from "@/hooks/use-mobile";
-import type { LanguageModel } from "@/ai/types";
+import type { LanguageModel } from "@/ai/language/types";
 
 // Shared content component for both dropdown and drawer
 const ModelSelectContent: React.FC<{

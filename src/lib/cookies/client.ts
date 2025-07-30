@@ -1,6 +1,9 @@
 import { setCookie } from "cookies-next/client";
-import type { ImageModel, LanguageModel } from "@/ai/types";
+
 import { COOKIE_KEYS } from "./keys";
+
+import type { LanguageModel } from "@/ai/language/types";
+import type { ImageModel } from "@/ai/image/types";
 import type { ClientToolkit } from "@/toolkits/types";
 import type { z } from "zod";
 import type { PersistedToolkit } from "./types";

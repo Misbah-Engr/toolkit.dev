@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { createBaseTool } from "@/toolkits/create-tool";
+import type { calendar_v3 } from "googleapis";
 
 export const listEventsTool = createBaseTool({
   description: "List events from a specific calendar",
@@ -24,9 +25,10 @@ export const listEventsTool = createBaseTool({
       .string()
       .describe("Token for pagination (use empty string for first page)"),
     orderBy: z
-      .string()
+      .enum(["startTime", "updated"])
+      .optional()
       .describe(
-        "Order of the events returned ('startTime' or 'updated', use empty string for default)",
+        "Order of the events returned ('startTime' or 'updated', default: 'updated')",
       ),
     singleEvents: z
       .boolean()
@@ -35,58 +37,7 @@ export const listEventsTool = createBaseTool({
       ),
   }),
   outputSchema: z.object({
-    events: z.array(
-      z.object({
-        id: z.string().describe("Event ID"),
-        summary: z.string().optional().describe("Event title"),
-        description: z.string().optional().describe("Event description"),
-        location: z.string().optional().describe("Event location"),
-        start: z.object({
-          dateTime: z
-            .string()
-            .optional()
-            .describe("Start time as RFC3339 timestamp"),
-          date: z
-            .string()
-            .optional()
-            .describe("Start date (for all-day events)"),
-          timeZone: z.string().optional().describe("Time zone"),
-        }),
-        end: z.object({
-          dateTime: z
-            .string()
-            .optional()
-            .describe("End time as RFC3339 timestamp"),
-          date: z.string().optional().describe("End date (for all-day events)"),
-          timeZone: z.string().optional().describe("Time zone"),
-        }),
-        status: z.string().optional().describe("Event status"),
-        visibility: z.string().optional().describe("Event visibility"),
-        organizer: z
-          .object({
-            email: z.string().optional(),
-            displayName: z.string().optional(),
-          })
-          .optional(),
-        attendees: z
-          .array(
-            z.object({
-              email: z.string().optional(),
-              displayName: z.string().optional(),
-              responseStatus: z.string().optional(),
-            }),
-          )
-          .optional(),
-        recurringEventId: z
-          .string()
-          .optional()
-          .describe(
-            "For instances of recurring events, the ID of the recurring event",
-          ),
-        created: z.string().optional().describe("Event creation time"),
-        updated: z.string().optional().describe("Last modification time"),
-      }),
-    ),
+    events: z.array(z.custom<calendar_v3.Schema$Event>()),
     nextPageToken: z
       .string()
       .optional()
