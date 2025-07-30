@@ -47,7 +47,7 @@ export const GoogleCalendarWrapper: ClientToolkitWrapper = ({ Item }) => {
           onOpenChange={setIsPrivateBetaDialogOpen}
           Icon={SiGooglecalendar}
           title="Beta Access Required"
-          description="We need to add you as a test user on Google Cloud for us to request sensitive OAuth scopes. Please contact @jsonhedman on X to request access."
+          description="We need to add you as a test user on Google Cloud for us to request sensitive OAuth scopes. Please contact @jsonhedman on X to request access. You can also run the project locally and use your own Google Cloud project."
           content={null}
         />
       </>
