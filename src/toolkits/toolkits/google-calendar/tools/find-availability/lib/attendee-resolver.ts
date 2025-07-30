@@ -10,7 +10,7 @@ import { notionListUsersToolConfigServer } from "../../../../notion/tools/users/
  */
 export const resolveAttendeeEmails = async (
   notion: Client,
-  attendeeNames: string[]
+  attendeeNames: string[],
 ): Promise<string[]> => {
   if (!attendeeNames || attendeeNames.length === 0) {
     return [];
@@ -28,14 +28,14 @@ export const resolveAttendeeEmails = async (
           return [user.name?.toLowerCase() ?? "", user.person?.email ?? ""];
         }
         return [user.name?.toLowerCase() ?? "", ""];
-      })
+      }),
     );
 
     return attendeeNames
-      .map(name => nameToEmail.get(name.toLowerCase()))
+      .map((name) => nameToEmail.get(name.toLowerCase()))
       .filter((email): email is string => !!email);
   } catch {
     // Failed to resolve attendees, return empty array
     return [];
   }
-}; 
+};

@@ -9,7 +9,9 @@ interface EventCardProps {
   showDetails?: boolean;
 }
 
-const getEventDateTime = (eventTime: calendar_v3.Schema$EventDateTime): string => {
+const getEventDateTime = (
+  eventTime: calendar_v3.Schema$EventDateTime,
+): string => {
   return eventTime.dateTime ?? eventTime.date ?? new Date().toISOString();
 };
 
@@ -29,10 +31,10 @@ const formatTime = (dateTime: string): string => {
 };
 
 const formatDate = (dateTime: string): string => {
-  return new Date(dateTime).toLocaleDateString('en-US', { 
-    weekday: 'short',
-    month: 'short', 
-    day: 'numeric' 
+  return new Date(dateTime).toLocaleDateString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
   });
 };
 
@@ -43,7 +45,7 @@ export const EventCard: React.FC<EventCardProps> = ({
   const startDateTime = getEventDateTime(event.start!);
   const endDateTime = getEventDateTime(event.end!);
   const isAllDay = isAllDayEvent(event.start!);
-  
+
   const startDate = formatDateTime(startDateTime);
   const endDate = formatDateTime(endDateTime);
   const startTime = isAllDay ? null : formatTime(startDateTime);
@@ -51,26 +53,26 @@ export const EventCard: React.FC<EventCardProps> = ({
   const formattedDate = formatDate(startDateTime);
 
   return (
-    <div className="w-full rounded-lg border bg-card p-4">
+    <div className="bg-card w-full rounded-lg border p-4">
       {/* Header Section */}
       <div className="mb-4">
         <div className="flex items-start justify-between gap-3">
-          <div className="flex-1 min-w-0">
-            <h3 className="text-lg font-semibold text-primary mb-1">
+          <div className="min-w-0 flex-1">
+            <h3 className="text-primary mb-1 text-lg font-semibold">
               {event.summary ?? "Untitled Event"}
             </h3>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <div className="text-muted-foreground flex items-center gap-2 text-sm">
               <Clock className="size-4" />
               <span>
                 {isAllDay
                   ? `${formattedDate} • All day`
                   : startDate.split(" ")[0] === endDate.split(" ")[0]
-                  ? `${formattedDate} • ${startTime} - ${endTime}`
-                  : `${startDate} ${startTime} - ${endDate} ${endTime}`}
+                    ? `${formattedDate} • ${startTime} - ${endTime}`
+                    : `${startDate} ${startTime} - ${endDate} ${endTime}`}
               </span>
             </div>
           </div>
-          
+
           <div className="flex items-center gap-2">
             {event.status && event.status !== "confirmed" && (
               <Badge variant="outline" className="text-xs">
@@ -81,7 +83,7 @@ export const EventCard: React.FC<EventCardProps> = ({
         </div>
 
         {event.description && showDetails && (
-          <p className="text-muted-foreground text-sm mt-2 line-clamp-2">
+          <p className="text-muted-foreground mt-2 line-clamp-2 text-sm">
             {event.description}
           </p>
         )}
@@ -89,10 +91,10 @@ export const EventCard: React.FC<EventCardProps> = ({
 
       {/* Details Section - Single Column Layout */}
       {showDetails && (
-        <div className="pt-3 border-t">
+        <div className="border-t pt-3">
           <VStack className="items-start gap-2">
             {event.organizer && (
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <div className="text-muted-foreground flex items-center gap-2 text-sm">
                 <User className="size-4" />
                 <span>
                   Organized by{" "}
@@ -104,7 +106,7 @@ export const EventCard: React.FC<EventCardProps> = ({
             )}
 
             {event.attendees && event.attendees.length > 0 && (
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <div className="text-muted-foreground flex items-center gap-2 text-sm">
                 <Users className="size-4" />
                 <span>
                   {event.attendees.length} attendee
