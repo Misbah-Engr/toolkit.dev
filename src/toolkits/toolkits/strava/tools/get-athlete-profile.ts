@@ -2,7 +2,8 @@ import { z } from "zod";
 import { createBaseTool } from "@/toolkits/create-tool";
 
 export const getAthleteProfileTool = createBaseTool({
-  description: "Get the authenticated athlete's profile information from Strava",
+  description:
+    "Get the authenticated athlete's profile information from Strava",
   inputSchema: z.object({}),
   outputSchema: z.object({
     id: z.number(),
@@ -26,4 +27,4 @@ export const getAthleteProfileTool = createBaseTool({
     measurement_preference: z.string(),
     weight: z.number().nullable(),
   }),
-}); 
+});

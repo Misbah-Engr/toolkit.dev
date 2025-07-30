@@ -40,7 +40,10 @@ interface StravaProfile {
 }
 
 // Strava provider using NextAuth OAuth flow
-const StravaProvider = (options: { clientId: string; clientSecret: string }): OAuthConfig<StravaProfile> => {
+const StravaProvider = (options: {
+  clientId: string;
+  clientSecret: string;
+}): OAuthConfig<StravaProfile> => {
   return {
     id: "strava",
     name: "Strava",

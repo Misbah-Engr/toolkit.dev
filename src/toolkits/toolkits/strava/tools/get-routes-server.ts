@@ -2,7 +2,7 @@ import { getRoutesTool } from "./get-routes";
 import type { ServerToolConfig } from "@/toolkits/types";
 
 export const stravaGetRoutesToolConfigServer = (
-  stravaApiHeaders: Record<string, string>
+  stravaApiHeaders: Record<string, string>,
 ): ServerToolConfig<
   typeof getRoutesTool.inputSchema.shape,
   typeof getRoutesTool.outputSchema.shape
@@ -16,11 +16,13 @@ export const stravaGetRoutesToolConfigServer = (
 
       const response = await fetch(
         `https://www.strava.com/api/v3/athletes/routes?${params}`,
-        { headers: stravaApiHeaders }
+        { headers: stravaApiHeaders },
       );
 
       if (!response.ok) {
-        throw new Error(`Strava API error: ${response.status} ${response.statusText}`);
+        throw new Error(
+          `Strava API error: ${response.status} ${response.statusText}`,
+        );
       }
 
       const routes = await response.json();
@@ -28,4 +30,4 @@ export const stravaGetRoutesToolConfigServer = (
     },
     message: "Successfully retrieved athlete routes from Strava.",
   };
-}; 
+};

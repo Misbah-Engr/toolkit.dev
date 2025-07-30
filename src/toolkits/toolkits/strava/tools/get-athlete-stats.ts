@@ -72,4 +72,4 @@ export const getAthleteStatsTool = createBaseTool({
       elevation_gain: z.number(),
     }),
   }),
-}); 
+});

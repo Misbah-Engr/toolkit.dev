@@ -2,7 +2,7 @@ import { getSegmentDetailsTool } from "./get-segment-details";
 import type { ServerToolConfig } from "@/toolkits/types";
 
 export const stravaGetSegmentDetailsToolConfigServer = (
-  stravaApiHeaders: Record<string, string>
+  stravaApiHeaders: Record<string, string>,
 ): ServerToolConfig<
   typeof getSegmentDetailsTool.inputSchema.shape,
   typeof getSegmentDetailsTool.outputSchema.shape
@@ -11,11 +11,13 @@ export const stravaGetSegmentDetailsToolConfigServer = (
     callback: async ({ id }) => {
       const response = await fetch(
         `https://www.strava.com/api/v3/segments/${id}`,
-        { headers: stravaApiHeaders }
+        { headers: stravaApiHeaders },
       );
 
       if (!response.ok) {
-        throw new Error(`Strava API error: ${response.status} ${response.statusText}`);
+        throw new Error(
+          `Strava API error: ${response.status} ${response.statusText}`,
+        );
       }
 
       const segment = await response.json();
@@ -23,4 +25,4 @@ export const stravaGetSegmentDetailsToolConfigServer = (
     },
     message: "Successfully retrieved segment details from Strava.",
   };
-}; 
+};

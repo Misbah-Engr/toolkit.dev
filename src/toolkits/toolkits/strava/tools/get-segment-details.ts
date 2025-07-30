@@ -35,4 +35,4 @@ export const getSegmentDetailsTool = createBaseTool({
       effort_count: z.number(),
     }),
   }),
-}); 
+});

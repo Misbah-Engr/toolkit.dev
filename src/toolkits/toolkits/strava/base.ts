@@ -29,4 +29,4 @@ export const baseStravaToolkitConfig: ToolkitConfig<
     [StravaTools.GetAthleteZones]: getAthleteZonesTool,
   },
   parameters: stravaParameters,
-}; 
+};

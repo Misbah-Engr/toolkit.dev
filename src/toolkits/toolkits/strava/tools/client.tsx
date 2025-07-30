@@ -8,7 +8,16 @@ import { getSegmentDetailsTool } from "./get-segment-details";
 import { getSegmentLeaderboardTool } from "./get-segment-leaderboard";
 import { getRoutesTool } from "./get-routes";
 import { getAthleteZonesTool } from "./get-athlete-zones";
-import { User, Activity, BarChart3, Search, Route, Trophy, MapPin, Target } from "lucide-react";
+import {
+  User,
+  Activity,
+  BarChart3,
+  Search,
+  Route,
+  Trophy,
+  MapPin,
+  Target,
+} from "lucide-react";
 import { HStack, VStack } from "@/components/ui/stack";
 
 export const stravaGetAthleteProfileToolConfigClient = createClientTool(
@@ -25,7 +34,7 @@ export const stravaGetAthleteProfileToolConfigClient = createClientTool(
         <h3 className="font-semibold">
           {result.firstname} {result.lastname}
         </h3>
-        <div className="text-sm text-muted-foreground">
+        <div className="text-muted-foreground text-sm">
           {result.city && result.state && `${result.city}, ${result.state}`}
           {result.country && ` (${result.country})`}
         </div>
@@ -36,7 +45,7 @@ export const stravaGetAthleteProfileToolConfigClient = createClientTool(
         </div>
       </div>
     ),
-  }
+  },
 );
 
 export const stravaGetAthleteActivitiesToolConfigClient = createClientTool(
@@ -46,9 +55,13 @@ export const stravaGetAthleteActivitiesToolConfigClient = createClientTool(
       <HStack className="gap-2">
         <Activity className="text-muted-foreground size-4" />
         <VStack className="items-start gap-0">
-          <span className="text-muted-foreground/80 text-xs font-medium">Get Activities</span>
+          <span className="text-muted-foreground/80 text-xs font-medium">
+            Get Activities
+          </span>
           <span className="text-sm">
-            {args.per_page ? `${args.per_page} activities` : 'Recent activities'}
+            {args.per_page
+              ? `${args.per_page} activities`
+              : "Recent activities"}
             {args.page && args.page > 1 && ` (page ${args.page})`}
           </span>
         </VStack>
@@ -56,18 +69,28 @@ export const stravaGetAthleteActivitiesToolConfigClient = createClientTool(
     ),
     ResultComponent: ({ result }) => (
       <div className="space-y-3">
-        <h3 className="font-semibold">Activities ({result.activities.length})</h3>
+        <h3 className="font-semibold">
+          Activities ({result.activities.length})
+        </h3>
         <div className="space-y-2">
           {result.activities.slice(0, 10).map((activity) => (
-            <div key={activity.id} className="p-2 border rounded-md">
-              <div className="flex justify-between items-start">
+            <div key={activity.id} className="rounded-md border p-2">
+              <div className="flex items-start justify-between">
                 <div>
-                  <h4 className="font-medium text-sm">{activity.name}</h4>
-                  <p className="text-xs text-muted-foreground">
-                    {activity.type} • {activity.distance ? (activity.distance / 1000).toFixed(1) : 'N/A'}km • {activity.moving_time ? Math.floor(activity.moving_time / 60) : 'N/A'}min
+                  <h4 className="text-sm font-medium">{activity.name}</h4>
+                  <p className="text-muted-foreground text-xs">
+                    {activity.type} •{" "}
+                    {activity.distance
+                      ? (activity.distance / 1000).toFixed(1)
+                      : "N/A"}
+                    km •{" "}
+                    {activity.moving_time
+                      ? Math.floor(activity.moving_time / 60)
+                      : "N/A"}
+                    min
                   </p>
                 </div>
-                <span className="text-xs text-muted-foreground">
+                <span className="text-muted-foreground text-xs">
                   {new Date(activity.start_date_local).toLocaleDateString()}
                 </span>
               </div>
@@ -76,7 +99,7 @@ export const stravaGetAthleteActivitiesToolConfigClient = createClientTool(
         </div>
       </div>
     ),
-  }
+  },
 );
 
 export const stravaGetActivityDetailsToolConfigClient = createClientTool(
@@ -86,7 +109,9 @@ export const stravaGetActivityDetailsToolConfigClient = createClientTool(
       <HStack className="gap-2">
         <Activity className="text-muted-foreground size-4" />
         <VStack className="items-start gap-0">
-          <span className="text-muted-foreground/80 text-xs font-medium">Activity Details</span>
+          <span className="text-muted-foreground/80 text-xs font-medium">
+            Activity Details
+          </span>
           <span className="text-sm">Activity ID: {args.id}</span>
         </VStack>
       </HStack>
@@ -95,28 +120,36 @@ export const stravaGetActivityDetailsToolConfigClient = createClientTool(
       <div className="space-y-3">
         <div>
           <h3 className="font-semibold">{result.name}</h3>
-          <p className="text-sm text-muted-foreground">{result.type}</p>
+          <p className="text-muted-foreground text-sm">{result.type}</p>
         </div>
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
-            <span className="font-medium">Distance:</span> {result.distance ? (result.distance / 1000).toFixed(1) : 'N/A'}km
+            <span className="font-medium">Distance:</span>{" "}
+            {result.distance ? (result.distance / 1000).toFixed(1) : "N/A"}km
           </div>
           <div>
-            <span className="font-medium">Time:</span> {result.moving_time ? Math.floor(result.moving_time / 60) : 'N/A'}min
+            <span className="font-medium">Time:</span>{" "}
+            {result.moving_time ? Math.floor(result.moving_time / 60) : "N/A"}
+            min
           </div>
           <div>
-            <span className="font-medium">Elevation:</span> {result.total_elevation_gain || 'N/A'}m
+            <span className="font-medium">Elevation:</span>{" "}
+            {result.total_elevation_gain || "N/A"}m
           </div>
           <div>
-            <span className="font-medium">Avg Speed:</span> {result.average_speed ? (result.average_speed * 3.6).toFixed(1) : 'N/A'}km/h
+            <span className="font-medium">Avg Speed:</span>{" "}
+            {result.average_speed
+              ? (result.average_speed * 3.6).toFixed(1)
+              : "N/A"}
+            km/h
           </div>
         </div>
         {result.description && (
-          <p className="text-sm bg-muted p-2 rounded">{result.description}</p>
+          <p className="bg-muted rounded p-2 text-sm">{result.description}</p>
         )}
       </div>
     ),
-  }
+  },
 );
 
 export const stravaGetAthleteStatsToolConfigClient = createClientTool(
@@ -135,27 +168,42 @@ export const stravaGetAthleteStatsToolConfigClient = createClientTool(
           <div className="space-y-2">
             <h4 className="font-medium">Recent Totals (4 weeks)</h4>
             <div className="grid grid-cols-3 gap-2 text-sm">
-              <div className="bg-muted p-2 rounded">
+              <div className="bg-muted rounded p-2">
                 <div className="font-medium">Rides</div>
                 <div>{result.recent_ride_totals.count} rides</div>
-                <div>{result.recent_ride_totals.distance ? (result.recent_ride_totals.distance / 1000).toFixed(0) : 'N/A'}km</div>
+                <div>
+                  {result.recent_ride_totals.distance
+                    ? (result.recent_ride_totals.distance / 1000).toFixed(0)
+                    : "N/A"}
+                  km
+                </div>
               </div>
-              <div className="bg-muted p-2 rounded">
+              <div className="bg-muted rounded p-2">
                 <div className="font-medium">Runs</div>
                 <div>{result.recent_run_totals.count} runs</div>
-                <div>{result.recent_run_totals.distance ? (result.recent_run_totals.distance / 1000).toFixed(0) : 'N/A'}km</div>
+                <div>
+                  {result.recent_run_totals.distance
+                    ? (result.recent_run_totals.distance / 1000).toFixed(0)
+                    : "N/A"}
+                  km
+                </div>
               </div>
-              <div className="bg-muted p-2 rounded">
+              <div className="bg-muted rounded p-2">
                 <div className="font-medium">Swims</div>
                 <div>{result.recent_swim_totals.count} swims</div>
-                <div>{result.recent_swim_totals.distance ? (result.recent_swim_totals.distance / 1000).toFixed(0) : 'N/A'}km</div>
+                <div>
+                  {result.recent_swim_totals.distance
+                    ? (result.recent_swim_totals.distance / 1000).toFixed(0)
+                    : "N/A"}
+                  km
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     ),
-  }
+  },
 );
 
 export const stravaSearchSegmentsToolConfigClient = createClientTool(
@@ -165,9 +213,14 @@ export const stravaSearchSegmentsToolConfigClient = createClientTool(
       <HStack className="gap-2">
         <Search className="text-muted-foreground size-4" />
         <VStack className="items-start gap-0">
-          <span className="text-muted-foreground/80 text-xs font-medium">Search Segments</span>
+          <span className="text-muted-foreground/80 text-xs font-medium">
+            Search Segments
+          </span>
           <span className="text-sm">
-            {args.activity_type ? `${args.activity_type} segments` : 'All segments'} in bounds
+            {args.activity_type
+              ? `${args.activity_type} segments`
+              : "All segments"}{" "}
+            in bounds
           </span>
         </VStack>
       </HStack>
@@ -177,14 +230,22 @@ export const stravaSearchSegmentsToolConfigClient = createClientTool(
         <h3 className="font-semibold">Segments ({result.segments.length})</h3>
         <div className="space-y-2">
           {result.segments.slice(0, 10).map((segment) => (
-            <div key={segment.id} className="p-2 border rounded-md">
-              <div className="flex justify-between items-start">
+            <div key={segment.id} className="rounded-md border p-2">
+              <div className="flex items-start justify-between">
                 <div>
-                  <h4 className="font-medium text-sm">{segment.name}</h4>
-                  <p className="text-xs text-muted-foreground">
-                    {segment.activity_type} • {segment.distance ? (segment.distance / 1000).toFixed(1) : 'N/A'}km • {segment.average_grade ? segment.average_grade.toFixed(1) : 'N/A'}% grade
+                  <h4 className="text-sm font-medium">{segment.name}</h4>
+                  <p className="text-muted-foreground text-xs">
+                    {segment.activity_type} •{" "}
+                    {segment.distance
+                      ? (segment.distance / 1000).toFixed(1)
+                      : "N/A"}
+                    km •{" "}
+                    {segment.average_grade
+                      ? segment.average_grade.toFixed(1)
+                      : "N/A"}
+                    % grade
                   </p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-muted-foreground text-xs">
                     {segment.city}, {segment.state}
                   </p>
                 </div>
@@ -195,7 +256,7 @@ export const stravaSearchSegmentsToolConfigClient = createClientTool(
         </div>
       </div>
     ),
-  }
+  },
 );
 
 export const stravaGetSegmentDetailsToolConfigClient = createClientTool(
@@ -205,7 +266,9 @@ export const stravaGetSegmentDetailsToolConfigClient = createClientTool(
       <HStack className="gap-2">
         <MapPin className="text-muted-foreground size-4" />
         <VStack className="items-start gap-0">
-          <span className="text-muted-foreground/80 text-xs font-medium">Segment Details</span>
+          <span className="text-muted-foreground/80 text-xs font-medium">
+            Segment Details
+          </span>
           <span className="text-sm">Segment ID: {args.id}</span>
         </VStack>
       </HStack>
@@ -214,19 +277,22 @@ export const stravaGetSegmentDetailsToolConfigClient = createClientTool(
       <div className="space-y-3">
         <div>
           <h3 className="font-semibold">{result.name}</h3>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             {result.city}, {result.state} • {result.activity_type}
           </p>
         </div>
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
-            <span className="font-medium">Distance:</span> {result.distance ? (result.distance / 1000).toFixed(1) : 'N/A'}km
+            <span className="font-medium">Distance:</span>{" "}
+            {result.distance ? (result.distance / 1000).toFixed(1) : "N/A"}km
           </div>
           <div>
-            <span className="font-medium">Avg Grade:</span> {result.average_grade ? result.average_grade.toFixed(1) : 'N/A'}%
+            <span className="font-medium">Avg Grade:</span>{" "}
+            {result.average_grade ? result.average_grade.toFixed(1) : "N/A"}%
           </div>
           <div>
-            <span className="font-medium">Elevation:</span> {result.total_elevation_gain}m
+            <span className="font-medium">Elevation:</span>{" "}
+            {result.total_elevation_gain}m
           </div>
           <div>
             <span className="font-medium">Efforts:</span> {result.effort_count}
@@ -238,7 +304,7 @@ export const stravaGetSegmentDetailsToolConfigClient = createClientTool(
         </div>
       </div>
     ),
-  }
+  },
 );
 
 export const stravaGetSegmentLeaderboardToolConfigClient = createClientTool(
@@ -248,28 +314,35 @@ export const stravaGetSegmentLeaderboardToolConfigClient = createClientTool(
       <HStack className="gap-2">
         <Trophy className="text-muted-foreground size-4" />
         <VStack className="items-start gap-0">
-          <span className="text-muted-foreground/80 text-xs font-medium">Segment Leaderboard</span>
+          <span className="text-muted-foreground/80 text-xs font-medium">
+            Segment Leaderboard
+          </span>
           <span className="text-sm">Segment ID: {args.id}</span>
         </VStack>
       </HStack>
     ),
     ResultComponent: ({ result }) => (
       <div className="space-y-3">
-        <h3 className="font-semibold">Leaderboard ({result.effort_count} total efforts)</h3>
+        <h3 className="font-semibold">
+          Leaderboard ({result.effort_count} total efforts)
+        </h3>
         <div className="space-y-2">
           {result.entries.slice(0, 10).map((entry) => (
-            <div key={entry.effort_id} className="p-2 border rounded-md">
-              <div className="flex justify-between items-center">
+            <div key={entry.effort_id} className="rounded-md border p-2">
+              <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="font-bold text-sm">#{entry.rank}</span>
+                  <span className="text-sm font-bold">#{entry.rank}</span>
                   <div>
-                    <h4 className="font-medium text-sm">{entry.athlete_name}</h4>
-                    <p className="text-xs text-muted-foreground">
-                      {Math.floor(entry.elapsed_time / 60)}:{(entry.elapsed_time % 60).toString().padStart(2, '0')}
+                    <h4 className="text-sm font-medium">
+                      {entry.athlete_name}
+                    </h4>
+                    <p className="text-muted-foreground text-xs">
+                      {Math.floor(entry.elapsed_time / 60)}:
+                      {(entry.elapsed_time % 60).toString().padStart(2, "0")}
                     </p>
                   </div>
                 </div>
-                <div className="text-xs text-muted-foreground">
+                <div className="text-muted-foreground text-xs">
                   {new Date(entry.start_date_local).toLocaleDateString()}
                 </div>
               </div>
@@ -278,49 +351,51 @@ export const stravaGetSegmentLeaderboardToolConfigClient = createClientTool(
         </div>
       </div>
     ),
-  }
+  },
 );
 
-export const stravaGetRoutesToolConfigClient = createClientTool(
-  getRoutesTool,
-  {
-    CallComponent: ({ args }) => (
-      <HStack className="gap-2">
-        <Route className="text-muted-foreground size-4" />
-        <VStack className="items-start gap-0">
-          <span className="text-muted-foreground/80 text-xs font-medium">Get Routes</span>
-          <span className="text-sm">Premium feature</span>
-        </VStack>
-      </HStack>
-    ),
-    ResultComponent: ({ result }) => (
-      <div className="space-y-3">
-        <h3 className="font-semibold">Routes ({result.routes.length})</h3>
-        <div className="space-y-2">
-          {result.routes.slice(0, 10).map((route) => (
-            <div key={route.id} className="p-2 border rounded-md">
-              <div className="flex justify-between items-start">
-                <div>
-                  <h4 className="font-medium text-sm">{route.name}</h4>
-                  <p className="text-xs text-muted-foreground">
-                    {route.distance ? (route.distance / 1000).toFixed(1) : 'N/A'}km • {route.elevation_gain || 'N/A'}m elevation
+export const stravaGetRoutesToolConfigClient = createClientTool(getRoutesTool, {
+  CallComponent: ({ args }) => (
+    <HStack className="gap-2">
+      <Route className="text-muted-foreground size-4" />
+      <VStack className="items-start gap-0">
+        <span className="text-muted-foreground/80 text-xs font-medium">
+          Get Routes
+        </span>
+        <span className="text-sm">Premium feature</span>
+      </VStack>
+    </HStack>
+  ),
+  ResultComponent: ({ result }) => (
+    <div className="space-y-3">
+      <h3 className="font-semibold">Routes ({result.routes.length})</h3>
+      <div className="space-y-2">
+        {result.routes.slice(0, 10).map((route) => (
+          <div key={route.id} className="rounded-md border p-2">
+            <div className="flex items-start justify-between">
+              <div>
+                <h4 className="text-sm font-medium">{route.name}</h4>
+                <p className="text-muted-foreground text-xs">
+                  {route.distance ? (route.distance / 1000).toFixed(1) : "N/A"}
+                  km • {route.elevation_gain || "N/A"}m elevation
+                </p>
+                {route.description && (
+                  <p className="text-muted-foreground text-xs">
+                    {route.description}
                   </p>
-                  {route.description && (
-                    <p className="text-xs text-muted-foreground">{route.description}</p>
-                  )}
-                </div>
-                <div className="flex items-center gap-1">
-                  {route.starred && <span className="text-yellow-500">⭐</span>}
-                  {route.private && <span className="text-gray-500">🔒</span>}
-                </div>
+                )}
+              </div>
+              <div className="flex items-center gap-1">
+                {route.starred && <span className="text-yellow-500">⭐</span>}
+                {route.private && <span className="text-gray-500">🔒</span>}
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
-    ),
-  }
-);
+    </div>
+  ),
+});
 
 export const stravaGetAthleteZonesToolConfigClient = createClientTool(
   getAthleteZonesTool,
@@ -337,28 +412,40 @@ export const stravaGetAthleteZonesToolConfigClient = createClientTool(
         <div className="space-y-3">
           {result.heart_rate && (
             <div>
-              <h4 className="font-medium text-sm">Heart Rate Zones</h4>
-              <div className="grid grid-cols-1 gap-1 mt-2">
+              <h4 className="text-sm font-medium">Heart Rate Zones</h4>
+              <div className="mt-2 grid grid-cols-1 gap-1">
                 {result.heart_rate.zones.map((zone, index) => (
-                  <div key={index} className="flex justify-between text-sm bg-muted p-2 rounded">
+                  <div
+                    key={index}
+                    className="bg-muted flex justify-between rounded p-2 text-sm"
+                  >
                     <span>Zone {index + 1}</span>
-                    <span>{zone.min} - {zone.max} bpm</span>
+                    <span>
+                      {zone.min} - {zone.max} bpm
+                    </span>
                   </div>
                 ))}
               </div>
               {result.heart_rate.custom_zones && (
-                <p className="text-xs text-muted-foreground mt-1">Custom zones configured</p>
+                <p className="text-muted-foreground mt-1 text-xs">
+                  Custom zones configured
+                </p>
               )}
             </div>
           )}
           {result.power && (
             <div>
-              <h4 className="font-medium text-sm">Power Zones</h4>
-              <div className="grid grid-cols-1 gap-1 mt-2">
+              <h4 className="text-sm font-medium">Power Zones</h4>
+              <div className="mt-2 grid grid-cols-1 gap-1">
                 {result.power.zones.map((zone, index) => (
-                  <div key={index} className="flex justify-between text-sm bg-muted p-2 rounded">
+                  <div
+                    key={index}
+                    className="bg-muted flex justify-between rounded p-2 text-sm"
+                  >
                     <span>Zone {index + 1}</span>
-                    <span>{zone.min} - {zone.max} watts</span>
+                    <span>
+                      {zone.min} - {zone.max} watts
+                    </span>
                   </div>
                 ))}
               </div>
@@ -367,5 +454,5 @@ export const stravaGetAthleteZonesToolConfigClient = createClientTool(
         </div>
       </div>
     ),
-  }
-); 
+  },
+);

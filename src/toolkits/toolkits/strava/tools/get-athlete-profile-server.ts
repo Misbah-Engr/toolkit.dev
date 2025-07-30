@@ -2,7 +2,7 @@ import { getAthleteProfileTool } from "./get-athlete-profile";
 import type { ServerToolConfig } from "@/toolkits/types";
 
 export const stravaGetAthleteProfileToolConfigServer = (
-  stravaApiHeaders: Record<string, string>
+  stravaApiHeaders: Record<string, string>,
 ): ServerToolConfig<
   typeof getAthleteProfileTool.inputSchema.shape,
   typeof getAthleteProfileTool.outputSchema.shape
@@ -14,7 +14,9 @@ export const stravaGetAthleteProfileToolConfigServer = (
       });
 
       if (!response.ok) {
-        throw new Error(`Strava API error: ${response.status} ${response.statusText}`);
+        throw new Error(
+          `Strava API error: ${response.status} ${response.statusText}`,
+        );
       }
 
       const athlete = await response.json();
@@ -22,4 +24,4 @@ export const stravaGetAthleteProfileToolConfigServer = (
     },
     message: "Successfully retrieved athlete profile from Strava.",
   };
-}; 
+};

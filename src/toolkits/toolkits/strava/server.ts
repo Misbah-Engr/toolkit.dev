@@ -27,24 +27,35 @@ Use these tools to help users analyze their fitness data, track performance tren
     const account = await api.accounts.getAccountByProvider("strava");
 
     if (!account) {
-      throw new Error("No Strava account found. Please connect your Strava account first.");
+      throw new Error(
+        "No Strava account found. Please connect your Strava account first.",
+      );
     }
 
     const stravaApiHeaders = {
-      'Authorization': `Bearer ${account.access_token}`,
-      'Content-Type': 'application/json',
+      Authorization: `Bearer ${account.access_token}`,
+      "Content-Type": "application/json",
     };
 
     return {
-      [StravaTools.GetAthleteProfile]: stravaGetAthleteProfileToolConfigServer(stravaApiHeaders),
-      [StravaTools.GetAthleteActivities]: stravaGetAthleteActivitiesToolConfigServer(stravaApiHeaders),
-      [StravaTools.GetActivityDetails]: stravaGetActivityDetailsToolConfigServer(stravaApiHeaders),
-      [StravaTools.GetAthleteStats]: stravaGetAthleteStatsToolConfigServer(stravaApiHeaders),
-      [StravaTools.SearchSegments]: stravaSearchSegmentsToolConfigServer(stravaApiHeaders),
-      [StravaTools.GetSegmentDetails]: stravaGetSegmentDetailsToolConfigServer(stravaApiHeaders),
-      [StravaTools.GetSegmentLeaderboard]: stravaGetSegmentLeaderboardToolConfigServer(stravaApiHeaders),
-      [StravaTools.GetRoutes]: stravaGetRoutesToolConfigServer(stravaApiHeaders),
-      [StravaTools.GetAthleteZones]: stravaGetAthleteZonesToolConfigServer(stravaApiHeaders),
+      [StravaTools.GetAthleteProfile]:
+        stravaGetAthleteProfileToolConfigServer(stravaApiHeaders),
+      [StravaTools.GetAthleteActivities]:
+        stravaGetAthleteActivitiesToolConfigServer(stravaApiHeaders),
+      [StravaTools.GetActivityDetails]:
+        stravaGetActivityDetailsToolConfigServer(stravaApiHeaders),
+      [StravaTools.GetAthleteStats]:
+        stravaGetAthleteStatsToolConfigServer(stravaApiHeaders),
+      [StravaTools.SearchSegments]:
+        stravaSearchSegmentsToolConfigServer(stravaApiHeaders),
+      [StravaTools.GetSegmentDetails]:
+        stravaGetSegmentDetailsToolConfigServer(stravaApiHeaders),
+      [StravaTools.GetSegmentLeaderboard]:
+        stravaGetSegmentLeaderboardToolConfigServer(stravaApiHeaders),
+      [StravaTools.GetRoutes]:
+        stravaGetRoutesToolConfigServer(stravaApiHeaders),
+      [StravaTools.GetAthleteZones]:
+        stravaGetAthleteZonesToolConfigServer(stravaApiHeaders),
     };
   },
-); 
+);

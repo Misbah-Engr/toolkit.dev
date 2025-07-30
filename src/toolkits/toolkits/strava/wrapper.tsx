@@ -52,4 +52,4 @@ export const StravaWrapper: ClientToolkitWrapper = ({ Item }) => {
   }
 
   return <Item isLoading={false} />;
-}; 
+};

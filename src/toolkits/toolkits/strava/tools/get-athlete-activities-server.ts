@@ -2,7 +2,7 @@ import { getAthleteActivitiesTool } from "./get-athlete-activities";
 import type { ServerToolConfig } from "@/toolkits/types";
 
 export const stravaGetAthleteActivitiesToolConfigServer = (
-  stravaApiHeaders: Record<string, string>
+  stravaApiHeaders: Record<string, string>,
 ): ServerToolConfig<
   typeof getAthleteActivitiesTool.inputSchema.shape,
   typeof getAthleteActivitiesTool.outputSchema.shape
@@ -13,17 +13,19 @@ export const stravaGetAthleteActivitiesToolConfigServer = (
         page: page.toString(),
         per_page: per_page.toString(),
       });
-      
-      if (before) params.append('before', before.toString());
-      if (after) params.append('after', after.toString());
+
+      if (before) params.append("before", before.toString());
+      if (after) params.append("after", after.toString());
 
       const response = await fetch(
         `https://www.strava.com/api/v3/athlete/activities?${params}`,
-        { headers: stravaApiHeaders }
+        { headers: stravaApiHeaders },
       );
 
       if (!response.ok) {
-        throw new Error(`Strava API error: ${response.status} ${response.statusText}`);
+        throw new Error(
+          `Strava API error: ${response.status} ${response.statusText}`,
+        );
       }
 
       const activities = await response.json();
@@ -31,4 +33,4 @@ export const stravaGetAthleteActivitiesToolConfigServer = (
     },
     message: "Successfully retrieved athlete activities from Strava.",
   };
-}; 
+};
