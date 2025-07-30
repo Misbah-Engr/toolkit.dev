@@ -1,10 +1,18 @@
 import { StravaWrapper } from "./wrapper";
-import { createClientToolkit } from "@/toolkits/create-toolkit";
 import { SiStrava } from "@icons-pack/react-simple-icons";
+
+import { createClientToolkit } from "@/toolkits/create-toolkit";
+
+import { ToolkitGroups } from "@/toolkits/types";
+
 import { baseStravaToolkitConfig } from "./base";
 import { StravaTools } from "./tools";
+
+import { getAthleteToolConfigClient } from "./tools/profile/client";
+import { getActivityDetailsToolConfigClient } from "./tools/activity-details/client";
+import { getActivitiesToolConfigClient } from "./tools/activities/client";
+
 import {
-  stravaGetAthleteActivitiesToolConfigClient,
   stravaGetAthleteStatsToolConfigClient,
   stravaSearchSegmentsToolConfigClient,
   stravaGetSegmentDetailsToolConfigClient,
@@ -12,10 +20,7 @@ import {
   stravaGetRoutesToolConfigClient,
   stravaGetAthleteZonesToolConfigClient,
 } from "./tools/client";
-import { ToolkitGroups } from "@/toolkits/types";
 import { Link } from "../components/link";
-import { getAthleteToolConfigClient } from "./tools/profile/client";
-import { getActivityDetailsToolConfigClient } from "./tools/activity-details/client";
 
 export const stravaClientToolkit = createClientToolkit(
   baseStravaToolkitConfig,
@@ -43,8 +48,7 @@ export const stravaClientToolkit = createClientToolkit(
   },
   {
     [StravaTools.GetAthleteProfile]: getAthleteToolConfigClient,
-    [StravaTools.GetAthleteActivities]:
-      stravaGetAthleteActivitiesToolConfigClient,
+    [StravaTools.GetAthleteActivities]: getActivitiesToolConfigClient,
     [StravaTools.GetActivityDetails]: getActivityDetailsToolConfigClient,
     [StravaTools.GetAthleteStats]: stravaGetAthleteStatsToolConfigClient,
     [StravaTools.SearchSegments]: stravaSearchSegmentsToolConfigClient,

@@ -11,7 +11,7 @@ export enum StravaTools {
 }
 
 export { getAthleteBase } from "./profile/base";
-export { getAthleteActivitiesBase } from "./get-athlete-activities-base";
+export { getActivitiesBase } from "./activities/base";
 export { getActivityDetailsBase } from "./activity-details/base";
 export { getAthleteStatsBase } from "./get-athlete-stats-base";
 export { searchSegmentsBase } from "./search-segments-base";
