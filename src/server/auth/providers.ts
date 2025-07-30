@@ -12,9 +12,7 @@ import NotionProvider, { type NotionProfile } from "next-auth/providers/notion";
 import SpotifyProvider, {
   type SpotifyProfile,
 } from "next-auth/providers/spotify";
-import StravaProvider, {
-  type StravaProfile,
-} from "next-auth/providers/strava";
+import StravaProvider, { type StravaProfile } from "next-auth/providers/strava";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 import type {
