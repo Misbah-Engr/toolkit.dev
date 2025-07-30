@@ -58,10 +58,6 @@ export const useModelSelect = ({
 
   const filteredModels = useMemo(() => {
     return sortedModels.filter((model) => {
-      const matchesSearch =
-        model.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        model.description?.toLowerCase().includes(searchQuery.toLowerCase());
-
       const matchesCapabilities =
         selectedCapabilities.length === 0 ||
         selectedCapabilities.every((capability) =>
@@ -72,9 +68,9 @@ export const useModelSelect = ({
         selectedProviders.length === 0 ||
         selectedProviders.includes(model.provider);
 
-      return matchesSearch && matchesCapabilities && matchesProviders;
+      return matchesCapabilities && matchesProviders;
     });
-  }, [sortedModels, searchQuery, selectedCapabilities, selectedProviders]);
+  }, [sortedModels, selectedCapabilities, selectedProviders]);
 
   const toggleCapability = (capability: LanguageModelCapability) => {
     setSelectedCapabilities((prev) =>

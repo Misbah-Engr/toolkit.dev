@@ -13,6 +13,7 @@ import { ZodError } from "zod";
 
 import { auth } from "@/server/auth";
 import { db } from "@/server/db";
+import { IS_DEVELOPMENT } from "@/lib/constants";
 
 /**
  * 1. CONTEXT
@@ -137,7 +138,7 @@ export const protectedProcedure = t.procedure
   });
 
 export const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
-  if (ctx.session.user.role !== "ADMIN") {
+  if (ctx.session.user.role !== "ADMIN" && !IS_DEVELOPMENT) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
   return next({ ctx });

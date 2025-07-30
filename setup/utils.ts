@@ -97,26 +97,14 @@ export function getServiceUrl(service: string): string {
 export function getPackageManager(): string {
   if (commandExists("pnpm")) {
     return "pnpm";
-  } else if (commandExists("yarn")) {
-    return "yarn";
-  } else if (commandExists("bun")) {
-    return "bun";
-  } else if (commandExists("npm")) {
-    return "npm";
   }
-  throw new Error("No package manager found");
+  throw new Error("pnpm is not installed. run `npm i -g pnpm`");
 }
 
 export function getPackageRunner(): string {
   const packageManager = getPackageManager();
   if (packageManager === "pnpm") {
     return "pnpm dlx";
-  } else if (packageManager === "yarn") {
-    return "yarn dlx";
-  } else if (packageManager === "bun") {
-    return "bunx";
-  } else if (packageManager === "npm") {
-    return "npx";
   }
   throw new Error("No package runner found");
 }
