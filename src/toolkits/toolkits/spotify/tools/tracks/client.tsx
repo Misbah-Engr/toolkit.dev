@@ -1,12 +1,15 @@
 import React from "react";
-import type { ClientToolConfig } from "@/toolkits/types";
-import type { getPlaylistsBase } from "@/toolkits/toolkits/spotify/tools/playlists/base";
+
 import { Music } from "lucide-react";
+
 import { ToolCallDisplay } from "../../components/tool-call-display";
 
-export const getPlaylistsToolConfigClient: ClientToolConfig<
-  typeof getPlaylistsBase.inputSchema.shape,
-  typeof getPlaylistsBase.outputSchema.shape
+import type { ClientToolConfig } from "@/toolkits/types";
+import type { getTracksBase } from "@/toolkits/toolkits/spotify/tools/tracks/base";
+
+export const getTracksToolConfigClient: ClientToolConfig<
+  typeof getTracksBase.inputSchema.shape,
+  typeof getTracksBase.outputSchema.shape
 > = {
   CallComponent: ({ args }) => {
     const limit = args.limit ?? 20;
@@ -15,39 +18,33 @@ export const getPlaylistsToolConfigClient: ClientToolConfig<
     return (
       <ToolCallDisplay
         icon={Music}
-        label="Get Playlists"
-        value={`Fetching ${limit} playlists (offset: ${offset})...`}
+        label="Get Tracks"
+        value={`Fetching ${limit} tracks (offset: ${offset})...`}
       />
     );
   },
   ResultComponent: ({ result, append }) => {
-    if (!result.playlists.length) {
-      return <div className="text-muted-foreground">No playlists found</div>;
+    if (!result.tracks.length) {
+      return <div className="text-muted-foreground">No tracks found</div>;
     }
 
     return (
       <div className="">
         <h1 className="text-muted-foreground text-sm font-medium">
-          Your Spotify Playlists
+          Your Saved Tracks
         </h1>
         <div className="mt-2 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {result.playlists.map((playlist) => (
+          {result.tracks.map((track) => (
             <div
-              key={playlist.id}
+              key={track.track.id}
               className="hover:bg-muted/50 cursor-pointer rounded-lg border p-4 transition-colors"
-              onClick={() => {
-                void append({
-                  role: "user",
-                  content: `Tell me more about the playlist "${playlist.name}"`,
-                });
-              }}
             >
               <div className="flex items-center space-x-3">
-                {playlist.images?.[0]?.url ? (
+                {track.track.album.images?.[0]?.url ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
-                    src={playlist.images[0].url}
-                    alt={playlist.name}
+                    src={track.track.album.images[0].url}
+                    alt={track.track.album.name}
                     className="h-12 w-12 rounded-md object-cover"
                   />
                 ) : (
@@ -57,10 +54,10 @@ export const getPlaylistsToolConfigClient: ClientToolConfig<
                 )}
                 <div className="min-w-0 flex-1">
                   <h3 className="truncate text-sm font-medium">
-                    {playlist.name}
+                    {track.track.name}
                   </h3>
                   <a
-                    href={playlist.href}
+                    href={track.track.external_urls.spotify}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-muted-foreground hover:text-primary text-xs transition-colors"

@@ -1,6 +1,6 @@
 // src/toolkits/toolkits/spotify/base.ts
 import type { ToolkitConfig } from "@/toolkits/types";
-import { SpotifyTools } from "./tools";
+import { getTracksBase, SpotifyTools } from "./tools";
 import { z } from "zod";
 import { getPlaylistsBase } from "./tools/playlists/base";
 
@@ -12,6 +12,7 @@ export const baseSpotifyToolkitConfig: ToolkitConfig<
 > = {
   tools: {
     [SpotifyTools.GetPlaylists]: getPlaylistsBase,
+    [SpotifyTools.GetTracks]: getTracksBase,
   },
   parameters: spotifyParameters,
 };

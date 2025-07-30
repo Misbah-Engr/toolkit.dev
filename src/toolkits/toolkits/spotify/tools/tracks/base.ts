@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { createBaseTool } from "@/toolkits/create-tool";
+import type { SavedTrack } from "@spotify/web-api-ts-sdk";
 
 export const getTracksBase = createBaseTool({
   description: "Get the user's saved tracks from Spotify.",
@@ -20,36 +21,7 @@ export const getTracksBase = createBaseTool({
   }),
   outputSchema: z.object({
     tracks: z.array(
-      z.object({
-        id: z.string(),
-        name: z.string(),
-        url: z.string().url(),
-        album: z.object({
-          id: z.string(),
-          name: z.string(),
-          url: z.string().url(),
-          image: z.string().url().optional(),
-          images: z.array(
-            z.object({
-              url: z.string().url(),
-              height: z.number().nullable(),
-              width: z.number().nullable(),
-            }),
-          ),
-        }),
-        artists: z.array(
-          z.object({
-            id: z.string(),
-            name: z.string(),
-            url: z.string().url(),
-          }),
-        ),
-        duration_ms: z.number(),
-        popularity: z.number(),
-        explicit: z.boolean(),
-        uri: z.string(),
-        added_at: z.string(),
-      }),
+      z.custom<SavedTrack>(),
     ),
   }),
 });

@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { createBaseTool } from "@/toolkits/create-tool";
+import type { SimplifiedPlaylist } from "@spotify/web-api-ts-sdk";
 
 export const getPlaylistsBase = createBaseTool({
   description: "Get the user's Spotify playlists.",
@@ -20,32 +21,7 @@ export const getPlaylistsBase = createBaseTool({
   }),
   outputSchema: z.object({
     playlists: z.array(
-      z.object({
-        id: z.string(),
-        name: z.string(),
-        url: z.string().url(),
-        image: z.string().url().optional(),
-        description: z.string(),
-        public: z.boolean(),
-        collaborative: z.boolean(),
-        owner: z.object({
-          id: z.string(),
-          display_name: z.string().optional(),
-        }),
-        tracks: z.object({
-          total: z.number(),
-        }),
-        snapshot_id: z.string(),
-        uri: z.string(),
-        type: z.string(),
-        images: z.array(
-          z.object({
-            url: z.string().url(),
-            height: z.number().nullable(),
-            width: z.number().nullable(),
-          }),
-        ),
-      }),
+      z.custom<SimplifiedPlaylist>(),
     ),
   }),
 });

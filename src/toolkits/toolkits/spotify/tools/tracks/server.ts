@@ -1,24 +1,23 @@
-// src/toolkits/toolkits/spotify/tools/get-playlists/server.ts
-//TODO: Implement the actual server tool for the GetPlaylists tool
 import type { SpotifyApi } from "@spotify/web-api-ts-sdk";
-import type { ServerToolConfig } from "@/toolkits/types";
-import type { getPlaylistsBase } from "@/toolkits/toolkits/spotify/tools/playlists/base";
 
-export const getPlaylistsToolConfigServer = (
+import type { ServerToolConfig } from "@/toolkits/types";
+import type { getTracksBase } from "@/toolkits/toolkits/spotify/tools/tracks/base";
+
+export const getTracksToolConfigServer = (
   spotify: SpotifyApi,
 ): ServerToolConfig<
-  typeof getPlaylistsBase.inputSchema.shape,
-  typeof getPlaylistsBase.outputSchema.shape
+  typeof getTracksBase.inputSchema.shape,
+  typeof getTracksBase.outputSchema.shape
 > => {
   return {
     callback: async ({ offset = 0 }) => {
       try {
-        const { items } = await spotify.currentUser.playlists.playlists(
+        const { items } = await spotify.currentUser.tracks.savedTracks(
           10,
           offset,
         );
         return {
-          playlists: items,
+          tracks: items,
         };
       } catch (error) {
         console.log("Spotify API error:", error);
