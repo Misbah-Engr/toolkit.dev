@@ -1,15 +1,21 @@
 "use client";
 
 import { useState } from "react";
+
 import { SiStrava } from "@icons-pack/react-simple-icons";
+
 import { signIn } from "next-auth/react";
+
 import { api } from "@/trpc/react";
+
 import {
   AuthButton,
   AuthRequiredDialog,
 } from "@/toolkits/lib/auth-required-dialog";
-import type { ClientToolkitWrapper } from "@/toolkits/types";
+
 import { Toolkits } from "../shared";
+
+import type { ClientToolkitWrapper } from "@/toolkits/types";
 
 export const StravaWrapper: ClientToolkitWrapper = ({ Item }) => {
   const { data: hasAccount, isLoading } =
