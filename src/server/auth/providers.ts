@@ -22,12 +22,67 @@ import type {
 import { IS_DEVELOPMENT } from "@/lib/constants";
 import { db } from "../db";
 
+// Strava provider profile type
+interface StravaProfile {
+  id: number;
+  firstname: string;
+  lastname: string;
+  email: string;
+  profile: string;
+  profile_medium: string;
+  city: string;
+  state: string;
+  country: string;
+  sex: string;
+  premium: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+// Strava provider using NextAuth OAuth flow
+const StravaProvider = (options: {
+  clientId: string;
+  clientSecret: string;
+}): OAuthConfig<StravaProfile> => {
+  return {
+    id: "strava",
+    name: "Strava",
+    type: "oauth",
+    clientId: options.clientId,
+    clientSecret: options.clientSecret,
+    authorization: {
+      url: "https://www.strava.com/oauth/authorize",
+      params: {
+        scope: "read,activity:read_all",
+        response_type: "code",
+      },
+    },
+    token: "https://www.strava.com/oauth/token",
+    userinfo: "https://www.strava.com/api/v3/athlete",
+    profile(profile: StravaProfile) {
+      return {
+        id: profile.id.toString(),
+        name: `${profile.firstname} ${profile.lastname}`,
+        email: profile.email || null,
+        image: profile.profile || profile.profile_medium || null,
+      };
+    },
+    style: {
+      logo: "https://developers.strava.com/images/strava_logo_orange.svg",
+      bg: "#fc4c02",
+      text: "#fff",
+    },
+    allowDangerousEmailAccountLinking: true,
+  };
+};
+
 export const providers: (
   | OAuthConfig<DiscordProfile>
   | OAuthConfig<GoogleProfile>
   | OAuthConfig<GitHubProfile>
   | OAuthConfig<TwitterProfile>
   | OAuthConfig<NotionProfile>
+  | OAuthConfig<StravaProfile>
   | OAuthConfig<SpotifyProfile>
   | CredentialsConfig<Record<string, CredentialInput>>
 )[] = [
@@ -84,6 +139,14 @@ export const providers: (
               return new Response(JSON.stringify(body), response);
             },
           },
+        }),
+      ]
+    : []),
+  ...("AUTH_STRAVA_ID" in env && "AUTH_STRAVA_SECRET" in env
+    ? [
+        StravaProvider({
+          clientId: env.AUTH_STRAVA_ID,
+          clientSecret: env.AUTH_STRAVA_SECRET,
         }),
       ]
     : []),
