@@ -25,7 +25,7 @@ import { useEnvVarAvailable } from "@/contexts/env/available-env-vars";
 import { imageEnvVarMap } from "./env-vars";
 
 import { cn } from "@/lib/utils";
-import { IS_PRODUCTION } from "@/lib/constants";
+import { IS_DEVELOPMENT } from "@/lib/constants";
 
 import type { imageParameters } from "./base";
 import type { ImageModel } from "@/ai/image/types";
@@ -51,7 +51,7 @@ export const Form: React.ComponentType<{
             const modelValue = `${model.provider}:${model.modelId}`;
             const isSelected = parameters.model === modelValue;
 
-            return IS_PRODUCTION ? (
+            return !IS_DEVELOPMENT ? (
               <ImageModelItem
                 key={model.modelId}
                 model={model}
