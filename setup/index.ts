@@ -34,6 +34,7 @@ async function main(): Promise<void> {
     runMigrations();
   } catch (error) {
     logError("Setup failed: " + (error as Error).message);
+    process.exit(1);
   }
 }
 

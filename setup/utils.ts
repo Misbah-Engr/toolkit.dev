@@ -64,6 +64,16 @@ export function checkDocker(): string | null {
   return null;
 }
 
+export function dockerDaemonRunning(dockerCommand: string): boolean {
+  try {
+    execSync(`${dockerCommand} info`, { stdio: "ignore", timeout: 2000 });
+    return true;
+  } catch (error) {
+    logError(error as string);
+    return false;
+  }
+}
+
 // Get project root directory
 export function getProjectRoot(): string {
   return join(__dirname, "..");
