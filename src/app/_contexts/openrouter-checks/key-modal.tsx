@@ -2,6 +2,14 @@
 
 import React, { useEffect, useState } from "react";
 
+import { Loader2 } from "lucide-react";
+
+import Link from "next/link";
+
+import { useSearchParams } from "next/navigation";
+
+import { toast } from "sonner";
+
 import {
   Dialog,
   DialogContent,
@@ -11,14 +19,10 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { VStack } from "@/components/ui/stack";
-import { EnvVarForm } from "@/components/env-vars/env-var-form";
-import { toast } from "sonner";
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { setEnvVar } from "@/actions/add-env-var";
-import { Loader2 } from "lucide-react";
 import { AnimatedLogo } from "@/components/ui/logo";
 import { Separator } from "@/components/ui/separator";
+
+import { setEnvVar } from "@/actions/add-env-var";
 
 export const KeyModal = () => {
   const searchParams = useSearchParams();

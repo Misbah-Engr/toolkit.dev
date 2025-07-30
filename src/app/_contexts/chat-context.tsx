@@ -12,6 +12,8 @@ import { useChat } from "@ai-sdk/react";
 
 import { toast } from "sonner";
 
+import { OpenRouterChecks } from "./openrouter-checks";
+
 import { api } from "@/trpc/react";
 
 import { useAutoResume } from "@/app/_hooks/use-auto-resume";
@@ -26,6 +28,7 @@ import { clientCookieUtils } from "@/lib/cookies/client";
 import { generateUUID } from "@/lib/utils";
 import { fetchWithErrorHandlers } from "@/lib/fetch";
 import { ChatSDKError } from "@/lib/errors";
+import { IS_DEVELOPMENT } from "@/lib/constants";
 
 import type { ReactNode } from "react";
 import type { Attachment, UIMessage } from "ai";
@@ -38,10 +41,6 @@ import type { Workbench } from "@prisma/client";
 import type { PersistedToolkit } from "@/lib/cookies/types";
 import type { ImageModel } from "@/ai/image/types";
 import type { LanguageModel } from "@/ai/language/types";
-import { useEnvVarAvailable } from "@/contexts/env/available-env-vars";
-import { KeyModal } from "./openrouter-checks/key-modal";
-import { IS_DEVELOPMENT } from "@/lib/constants";
-import { OpenRouterChecks } from "./openrouter-checks";
 
 const DEFAULT_CHAT_MODEL = anthropicModels[0]!;
 
