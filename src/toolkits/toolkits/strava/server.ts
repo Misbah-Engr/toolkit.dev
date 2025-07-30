@@ -12,8 +12,8 @@ import { StravaTools } from "./tools";
 import { getAthleteProfileToolConfigServer } from "./tools/profile/server";
 import { getActivityDetailsToolConfigServer } from "./tools/activity-details/server";
 import { getActivitiesToolConfigServer } from "./tools/activities/server";
+import { getAthleteStatsToolConfigServer } from "./tools/stats/server";
 
-import { stravaGetAthleteStatsToolConfigServer } from "./tools/get-athlete-stats-server";
 import { stravaSearchSegmentsToolConfigServer } from "./tools/search-segments-server";
 import { stravaGetSegmentDetailsToolConfigServer } from "./tools/get-segment-details-server";
 import { stravaGetSegmentLeaderboardToolConfigServer } from "./tools/get-segment-leaderboard-server";
@@ -52,8 +52,7 @@ Use these tools to help users analyze their fitness data, track performance tren
       [StravaTools.GetAthleteActivities]: getActivitiesToolConfigServer(strava),
       [StravaTools.GetActivityDetails]:
         getActivityDetailsToolConfigServer(strava),
-      [StravaTools.GetAthleteStats]:
-        stravaGetAthleteStatsToolConfigServer(strava),
+      [StravaTools.GetAthleteStats]: getAthleteStatsToolConfigServer(strava),
       [StravaTools.SearchSegments]:
         stravaSearchSegmentsToolConfigServer(strava),
       [StravaTools.GetSegmentDetails]:

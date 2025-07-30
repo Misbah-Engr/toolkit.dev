@@ -2,13 +2,13 @@ import type { Strava } from "strava";
 
 import type { ServerToolConfig } from "@/toolkits/types";
 
-import type { getAthleteStatsTool } from "./base";
+import type { getAthleteStatsBase } from "./base";
 
 export const getAthleteStatsToolConfigServer = (
   strava: Strava,
 ): ServerToolConfig<
-  typeof getAthleteStatsTool.inputSchema.shape,
-  typeof getAthleteStatsTool.outputSchema.shape
+  typeof getAthleteStatsBase.inputSchema.shape,
+  typeof getAthleteStatsBase.outputSchema.shape
 > => {
   return {
     callback: async () => {

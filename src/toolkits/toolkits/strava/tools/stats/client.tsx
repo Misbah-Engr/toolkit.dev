@@ -5,11 +5,11 @@ import { HStack } from "@/components/ui/stack";
 import { BarChart3 } from "lucide-react";
 
 import type { ClientToolConfig } from "@/toolkits/types";
-import type { getAthleteStatsTool } from "./base";
+import type { getAthleteStatsBase } from "./base";
 
 export const getAthleteStatsToolConfigClient: ClientToolConfig<
-  typeof getAthleteStatsTool.inputSchema.shape,
-  typeof getAthleteStatsTool.outputSchema.shape
+  typeof getAthleteStatsBase.inputSchema.shape,
+  typeof getAthleteStatsBase.outputSchema.shape
 > = {
   CallComponent: ({}) => (
     <HStack className="gap-2">

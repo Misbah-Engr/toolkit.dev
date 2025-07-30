@@ -4,7 +4,7 @@ import { createBaseTool } from "@/toolkits/create-tool";
 
 import type { ActivityStats } from "strava";
 
-export const getAthleteStatsTool = createBaseTool({
+export const getAthleteStatsBase = createBaseTool({
   description: "Get the authenticated athlete's statistics",
   inputSchema: z.object({}),
   outputSchema: z.object({

@@ -1,66 +1,11 @@
 import { createClientTool } from "@/toolkits/create-tool";
-import { getAthleteStatsTool } from "./get-athlete-stats";
 import { searchSegmentsTool } from "./search-segments";
 import { getSegmentDetailsTool } from "./get-segment-details";
 import { getSegmentLeaderboardTool } from "./get-segment-leaderboard";
 import { getRoutesTool } from "./get-routes";
 import { getAthleteZonesTool } from "./get-athlete-zones";
-import { BarChart3, Search, Route, Trophy, MapPin, Target } from "lucide-react";
+import { Search, Route, Trophy, MapPin, Target } from "lucide-react";
 import { HStack, VStack } from "@/components/ui/stack";
-
-export const stravaGetAthleteStatsToolConfigClient = createClientTool(
-  getAthleteStatsTool,
-  {
-    CallComponent: ({ args }) => (
-      <HStack className="gap-2">
-        <BarChart3 className="text-muted-foreground size-4" />
-        <span className="text-sm">Get Athlete Statistics</span>
-      </HStack>
-    ),
-    ResultComponent: ({ result }) => (
-      <div className="space-y-4">
-        <h3 className="font-semibold">Athlete Statistics</h3>
-        <div className="grid grid-cols-1 gap-4">
-          <div className="space-y-2">
-            <h4 className="font-medium">Recent Totals (4 weeks)</h4>
-            <div className="grid grid-cols-3 gap-2 text-sm">
-              <div className="bg-muted rounded p-2">
-                <div className="font-medium">Rides</div>
-                <div>{result.recent_ride_totals.count} rides</div>
-                <div>
-                  {result.recent_ride_totals.distance
-                    ? (result.recent_ride_totals.distance / 1000).toFixed(0)
-                    : "N/A"}
-                  km
-                </div>
-              </div>
-              <div className="bg-muted rounded p-2">
-                <div className="font-medium">Runs</div>
-                <div>{result.recent_run_totals.count} runs</div>
-                <div>
-                  {result.recent_run_totals.distance
-                    ? (result.recent_run_totals.distance / 1000).toFixed(0)
-                    : "N/A"}
-                  km
-                </div>
-              </div>
-              <div className="bg-muted rounded p-2">
-                <div className="font-medium">Swims</div>
-                <div>{result.recent_swim_totals.count} swims</div>
-                <div>
-                  {result.recent_swim_totals.distance
-                    ? (result.recent_swim_totals.distance / 1000).toFixed(0)
-                    : "N/A"}
-                  km
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    ),
-  },
-);
 
 export const stravaSearchSegmentsToolConfigClient = createClientTool(
   searchSegmentsTool,

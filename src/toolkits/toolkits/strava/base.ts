@@ -4,9 +4,9 @@ import { StravaTools } from "./tools";
 
 import { getAthleteBase } from "./tools/profile/base";
 import { getActivityDetailsBase } from "./tools/activity-details/base";
+import { getActivitiesBase } from "./tools/activities/base";
+import { getAthleteStatsBase } from "./tools/stats/base";
 
-import { getAthleteActivitiesBase } from "./tools/get-athlete-activities-base";
-import { getAthleteStatsBase } from "./tools/get-athlete-stats-base";
 import { searchSegmentsBase } from "./tools/search-segments-base";
 import { getSegmentDetailsBase } from "./tools/get-segment-details-base";
 import { getSegmentLeaderboardBase } from "./tools/get-segment-leaderboard-base";
@@ -23,7 +23,7 @@ export const baseStravaToolkitConfig: ToolkitConfig<
 > = {
   tools: {
     [StravaTools.GetAthleteProfile]: getAthleteBase,
-    [StravaTools.GetAthleteActivities]: getAthleteActivitiesBase,
+    [StravaTools.GetAthleteActivities]: getActivitiesBase,
     [StravaTools.GetActivityDetails]: getActivityDetailsBase,
     [StravaTools.GetAthleteStats]: getAthleteStatsBase,
     [StravaTools.SearchSegments]: searchSegmentsBase,
