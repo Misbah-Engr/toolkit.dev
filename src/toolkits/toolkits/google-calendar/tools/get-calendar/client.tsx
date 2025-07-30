@@ -21,7 +21,7 @@ export const googleCalendarGetCalendarToolConfigClient: ClientToolConfig<
     return (
       <VStack className="items-start gap-2">
         <h3 className="text-sm font-medium">Calendar Details</h3>
-        <CalendarCard calendar={result} showDetails={true} />
+        <CalendarCard calendar={result.calendar} showDetails={true} />
       </VStack>
     );
   },

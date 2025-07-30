@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { createBaseTool } from "@/toolkits/create-tool";
+import type { calendar_v3 } from "googleapis";
 
 export const searchEventsTool = createBaseTool({
   description: "Search for events across calendars using free text search",
@@ -35,51 +36,7 @@ export const searchEventsTool = createBaseTool({
       ),
   }),
   outputSchema: z.object({
-    events: z.array(
-      z.object({
-        id: z.string().describe("Event ID"),
-        summary: z.string().optional().describe("Event title"),
-        description: z.string().optional().describe("Event description"),
-        location: z.string().optional().describe("Event location"),
-        start: z.object({
-          dateTime: z
-            .string()
-            .optional()
-            .describe("Start time as RFC3339 timestamp"),
-          date: z
-            .string()
-            .optional()
-            .describe("Start date (for all-day events)"),
-          timeZone: z.string().optional().describe("Time zone"),
-        }),
-        end: z.object({
-          dateTime: z
-            .string()
-            .optional()
-            .describe("End time as RFC3339 timestamp"),
-          date: z.string().optional().describe("End date (for all-day events)"),
-          timeZone: z.string().optional().describe("Time zone"),
-        }),
-        status: z.string().optional().describe("Event status"),
-        organizer: z
-          .object({
-            email: z.string().optional(),
-            displayName: z.string().optional(),
-          })
-          .optional(),
-        attendees: z
-          .array(
-            z.object({
-              email: z.string().optional(),
-              displayName: z.string().optional(),
-              responseStatus: z.string().optional(),
-            }),
-          )
-          .optional(),
-        created: z.string().optional().describe("Event creation time"),
-        updated: z.string().optional().describe("Last modification time"),
-      }),
-    ),
+    events: z.array(z.custom<calendar_v3.Schema$Event>()),
     timeZone: z.string().optional().describe("Time zone of the calendar"),
   }),
 });

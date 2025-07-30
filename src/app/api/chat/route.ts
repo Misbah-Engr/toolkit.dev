@@ -19,7 +19,7 @@ import { createServerOnlyCaller } from "@/server/api/root";
 
 import { postRequestBodySchema, type PostRequestBody } from "./schema";
 
-import { generateText, streamText } from "@/ai/generate";
+import { generateText, streamText } from "@/ai/language/generate";
 import { generateUUID } from "@/lib/utils";
 
 import { ChatSDKError } from "@/lib/errors";
@@ -34,7 +34,7 @@ import type {
 import type { Chat } from "@prisma/client";
 import { openai } from "@ai-sdk/openai";
 import { getServerToolkit } from "@/toolkits/toolkits/server";
-import { languageModels } from "@/ai/models";
+import { languageModels } from "@/ai/language";
 
 export const maxDuration = 60;
 
@@ -48,7 +48,7 @@ function getStreamContext() {
       });
     } catch (error: unknown) {
       if (error instanceof Error && error.message.includes("REDIS_URL")) {
-        console.log(
+        console.warn(
           " > Resumable streams are disabled due to missing REDIS_URL",
         );
       } else {
@@ -148,6 +148,7 @@ export async function POST(request: Request) {
           name: attachment.name,
           contentType: attachment.contentType,
         })) ?? [],
+      modelId: "user",
     });
 
     const streamId = generateUUID();
@@ -384,8 +385,16 @@ async function generateTitleFromUserMessage(message: UIMessage) {
       - you will generate a short title based on the first message a user begins a conversation with
       - ensure it is not more than 80 characters long
       - the title should be a summary of the user's message
+      - the title should be in the same language as the user's message
+      - the title does not need to be a full sentence, try to pack in the most important information in a few words
       - do not use quotes or colons`,
-    prompt: JSON.stringify(message),
+    messages: [
+      {
+        role: "user",
+        content: message.content,
+        experimental_attachments: message.experimental_attachments,
+      },
+    ],
   });
 
   return title;

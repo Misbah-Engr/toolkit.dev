@@ -15,7 +15,9 @@ import {
   workbenchesRouter,
   toolkitsRouter,
   toolsRouter,
+  creditsRouter,
 } from "./routers";
+import { IS_DEVELOPMENT } from "@/lib/constants";
 
 /**
  * This is the primary router for your server.
@@ -35,6 +37,7 @@ export const appRouter = createTRPCRouter({
   workbenches: workbenchesRouter,
   toolkits: toolkitsRouter,
   tools: toolsRouter,
+  ...(IS_DEVELOPMENT ? { credits: creditsRouter } : {}),
 });
 
 // export type definition of API
