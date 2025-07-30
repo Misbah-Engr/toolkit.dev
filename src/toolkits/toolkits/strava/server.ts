@@ -1,19 +1,24 @@
 import { Strava } from "strava";
 
 import { createServerToolkit } from "@/toolkits/create-toolkit";
+
+import { env } from "@/env";
+
+import { api } from "@/trpc/server";
+
 import { baseStravaToolkitConfig } from "./base";
-import { stravaGetAthleteProfileToolConfigServer } from "./tools/profile/server";
+import { StravaTools } from "./tools";
+
+import { getAthleteProfileToolConfigServer } from "./tools/profile/server";
+import { getActivityDetailsToolConfigServer } from "./tools/activity-details/server";
+
 import { stravaGetAthleteActivitiesToolConfigServer } from "./tools/get-athlete-activities-server";
-import { stravaGetActivityDetailsToolConfigServer } from "./tools/get-activity-details-server";
 import { stravaGetAthleteStatsToolConfigServer } from "./tools/get-athlete-stats-server";
 import { stravaSearchSegmentsToolConfigServer } from "./tools/search-segments-server";
 import { stravaGetSegmentDetailsToolConfigServer } from "./tools/get-segment-details-server";
 import { stravaGetSegmentLeaderboardToolConfigServer } from "./tools/get-segment-leaderboard-server";
 import { stravaGetRoutesToolConfigServer } from "./tools/get-routes-server";
 import { stravaGetAthleteZonesToolConfigServer } from "./tools/get-athlete-zones-server";
-import { StravaTools } from "./tools";
-import { api } from "@/trpc/server";
-import { env } from "@/env";
 
 export const stravaToolkitServer = createServerToolkit(
   baseStravaToolkitConfig,
@@ -43,11 +48,11 @@ Use these tools to help users analyze their fitness data, track performance tren
 
     return {
       [StravaTools.GetAthleteProfile]:
-        stravaGetAthleteProfileToolConfigServer(strava),
+        getAthleteProfileToolConfigServer(strava),
       [StravaTools.GetAthleteActivities]:
         stravaGetAthleteActivitiesToolConfigServer(strava),
       [StravaTools.GetActivityDetails]:
-        stravaGetActivityDetailsToolConfigServer(strava),
+        getActivityDetailsToolConfigServer(strava),
       [StravaTools.GetAthleteStats]:
         stravaGetAthleteStatsToolConfigServer(strava),
       [StravaTools.SearchSegments]:

@@ -1,15 +1,19 @@
-import type { ToolkitConfig } from "@/toolkits/types";
 import { z } from "zod";
+
 import { StravaTools } from "./tools";
+
 import { getAthleteBase } from "./tools/profile/base";
-import { getAthleteActivitiesTool } from "./tools/get-athlete-activities";
-import { getActivityDetailsTool } from "./tools/get-activity-details";
-import { getAthleteStatsTool } from "./tools/get-athlete-stats";
-import { searchSegmentsTool } from "./tools/search-segments";
-import { getSegmentDetailsTool } from "./tools/get-segment-details";
-import { getSegmentLeaderboardTool } from "./tools/get-segment-leaderboard";
-import { getRoutesTool } from "./tools/get-routes";
-import { getAthleteZonesTool } from "./tools/get-athlete-zones";
+import { getActivityDetailsBase } from "./tools/activity-details/base";
+
+import { getAthleteActivitiesBase } from "./tools/get-athlete-activities-base";
+import { getAthleteStatsBase } from "./tools/get-athlete-stats-base";
+import { searchSegmentsBase } from "./tools/search-segments-base";
+import { getSegmentDetailsBase } from "./tools/get-segment-details-base";
+import { getSegmentLeaderboardBase } from "./tools/get-segment-leaderboard-base";
+import { getRoutesBase } from "./tools/get-routes-base";
+import { getAthleteZonesBase } from "./tools/get-athlete-zones-base";
+
+import type { ToolkitConfig } from "@/toolkits/types";
 
 export const stravaParameters = z.object({});
 
@@ -19,14 +23,14 @@ export const baseStravaToolkitConfig: ToolkitConfig<
 > = {
   tools: {
     [StravaTools.GetAthleteProfile]: getAthleteBase,
-    [StravaTools.GetAthleteActivities]: getAthleteActivitiesTool,
-    [StravaTools.GetActivityDetails]: getActivityDetailsTool,
-    [StravaTools.GetAthleteStats]: getAthleteStatsTool,
-    [StravaTools.SearchSegments]: searchSegmentsTool,
-    [StravaTools.GetSegmentDetails]: getSegmentDetailsTool,
-    [StravaTools.GetSegmentLeaderboard]: getSegmentLeaderboardTool,
-    [StravaTools.GetRoutes]: getRoutesTool,
-    [StravaTools.GetAthleteZones]: getAthleteZonesTool,
+    [StravaTools.GetAthleteActivities]: getAthleteActivitiesBase,
+    [StravaTools.GetActivityDetails]: getActivityDetailsBase,
+    [StravaTools.GetAthleteStats]: getAthleteStatsBase,
+    [StravaTools.SearchSegments]: searchSegmentsBase,
+    [StravaTools.GetSegmentDetails]: getSegmentDetailsBase,
+    [StravaTools.GetSegmentLeaderboard]: getSegmentLeaderboardBase,
+    [StravaTools.GetRoutes]: getRoutesBase,
+    [StravaTools.GetAthleteZones]: getAthleteZonesBase,
   },
   parameters: stravaParameters,
 };

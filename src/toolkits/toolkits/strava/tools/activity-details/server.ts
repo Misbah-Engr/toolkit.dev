@@ -4,7 +4,7 @@ import type { ServerToolConfig } from "@/toolkits/types";
 
 import type { getActivityDetailsBase } from "./base";
 
-export const stravaGetActivityDetailsToolConfigServer = (
+export const getActivityDetailsToolConfigServer = (
   strava: Strava,
 ): ServerToolConfig<
   typeof getActivityDetailsBase.inputSchema.shape,
