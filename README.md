@@ -16,8 +16,8 @@ We also have a [Discord Community](https://discord.gg/cnNBsSfY) to discuss all t
 
 ### Prerequisites
 
-- **Node.js** 18+
-- **pnpm** (recommended), npm, bun, or yarn
+- **Node.js** 18+ - if you do not have node installed, install it [here](https://nodejs.org/en/download)
+- **pnpm** - if you do not have pnpm installed, run `npm i -g pnpm`
 - **Docker** or **Podman**
   - You can install Docker Desktop for free [here](https://www.docker.com/products/docker-desktop/)
 
@@ -32,12 +32,6 @@ cd toolkit.dev
 
 # Run the automated setup
 pnpm dev
-# or
-npm run dev
-# or
-yarn dev
-# or
-bun dev
 ```
 
 The setup script will:
@@ -65,15 +59,6 @@ This will set up your `.env.local`, install dependencies, start the required Doc
 
 ```bash
 pnpm dev
-
-# or
-npm run dev
-
-# or
-yarn dev
-
-# or
-bun dev
 ```
 
 #### 3) [OPTIONAL] Add an OpenRouter Key
