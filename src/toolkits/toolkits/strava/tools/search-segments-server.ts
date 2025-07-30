@@ -1,4 +1,4 @@
-import { searchSegmentsTool } from "./search-segments";
+import type { searchSegmentsTool } from "./search-segments";
 import type { ServerToolConfig } from "@/toolkits/types";
 
 export const stravaSearchSegmentsToolConfigServer = (

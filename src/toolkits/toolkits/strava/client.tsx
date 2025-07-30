@@ -15,6 +15,7 @@ import {
   stravaGetAthleteZonesToolConfigClient,
 } from "./tools/client";
 import { ToolkitGroups } from "@/toolkits/types";
+import { Link } from "../components/link";
 
 export const stravaClientToolkit = createClientToolkit(
   baseStravaToolkitConfig,
@@ -25,6 +26,18 @@ export const stravaClientToolkit = createClientToolkit(
     form: null,
     Wrapper: StravaWrapper,
     type: ToolkitGroups.DataSource,
+    envVars: [
+      {
+        type: "all",
+        keys: ["AUTH_STRAVA_ID", "AUTH_STRAVA_SECRET"],
+        description: (
+          <span>
+            Create a Strava OAuth application{" "}
+            <Link href="https://developers.strava.com/docs/getting-started/#account">here</Link>
+          </span>
+        ),
+      },
+    ],
   },
   {
     [StravaTools.GetAthleteProfile]: stravaGetAthleteProfileToolConfigClient,

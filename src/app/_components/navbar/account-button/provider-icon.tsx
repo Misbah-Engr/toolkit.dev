@@ -6,6 +6,7 @@ import {
   SiNotion,
   SiX,
   SiSpotify,
+  SiStrava,
 } from "@icons-pack/react-simple-icons";
 
 interface Props {
@@ -38,6 +39,7 @@ export const AuthProviderIcon: React.FC<Props> = ({ provider, className }) => {
       Twitter: SiX,
       Notion: SiNotion,
       Spotify: SiSpotify,
+      Strava: SiStrava,
     }[provider] ?? null;
 
   return Icon ? <Icon className={cn("size-4", className)} /> : null;

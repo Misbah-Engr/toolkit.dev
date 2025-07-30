@@ -1,6 +1,6 @@
 import { createServerToolkit } from "@/toolkits/create-toolkit";
 import { baseStravaToolkitConfig } from "./base";
-import { stravaGetAthleteProfileToolConfigServer } from "./tools/get-athlete-profile-server";
+import { stravaGetAthleteProfileToolConfigServer } from "./tools/profile/get-athlete-profile-server";
 import { stravaGetAthleteActivitiesToolConfigServer } from "./tools/get-athlete-activities-server";
 import { stravaGetActivityDetailsToolConfigServer } from "./tools/get-activity-details-server";
 import { stravaGetAthleteStatsToolConfigServer } from "./tools/get-athlete-stats-server";

@@ -1,5 +1,5 @@
 import { createClientTool } from "@/toolkits/create-tool";
-import { getAthleteProfileTool } from "./get-athlete-profile";
+import { getAthleteBase } from "./profile/base";  
 import { getAthleteActivitiesTool } from "./get-athlete-activities";
 import { getActivityDetailsTool } from "./get-activity-details";
 import { getAthleteStatsTool } from "./get-athlete-stats";
@@ -21,7 +21,7 @@ import {
 import { HStack, VStack } from "@/components/ui/stack";
 
 export const stravaGetAthleteProfileToolConfigClient = createClientTool(
-  getAthleteProfileTool,
+  getAthleteBase,
   {
     CallComponent: ({ args }) => (
       <HStack className="gap-2">

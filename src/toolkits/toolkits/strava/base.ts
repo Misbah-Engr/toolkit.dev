@@ -1,7 +1,7 @@
 import type { ToolkitConfig } from "@/toolkits/types";
 import { z } from "zod";
 import { StravaTools } from "./tools";
-import { getAthleteProfileTool } from "./tools/get-athlete-profile";
+import { getAthleteBase } from "./tools/profile/base";
 import { getAthleteActivitiesTool } from "./tools/get-athlete-activities";
 import { getActivityDetailsTool } from "./tools/get-activity-details";
 import { getAthleteStatsTool } from "./tools/get-athlete-stats";
@@ -18,7 +18,7 @@ export const baseStravaToolkitConfig: ToolkitConfig<
   typeof stravaParameters.shape
 > = {
   tools: {
-    [StravaTools.GetAthleteProfile]: getAthleteProfileTool,
+    [StravaTools.GetAthleteProfile]: getAthleteBase,
     [StravaTools.GetAthleteActivities]: getAthleteActivitiesTool,
     [StravaTools.GetActivityDetails]: getActivityDetailsTool,
     [StravaTools.GetAthleteStats]: getAthleteStatsTool,
