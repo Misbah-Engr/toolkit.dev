@@ -1,0 +1,55 @@
+import fetch, { Response } from 'node-fetch';
+import { createWriteStream } from 'fs';
+import LumaAI  from 'lumaai';
+
+
+export const generateVideo = async (
+  prompt: string,
+): Promise<LumaAI.Generation> => {
+  const apiKey = process.env.LUMAAI_API_KEY;
+  if (!apiKey) {
+    throw new Error('LUMAAI_API_KEY environment variable is not set');
+  }
+
+  const client = new LumaAI({ authToken: apiKey });
+
+  // Kick off the generation
+  let generation = await client.generations.create({
+    prompt: prompt,
+    model: 'ray-2',
+    duration: '3s',
+  });
+
+  // Poll until complete or failed
+  while (generation.state !== 'completed') {
+    if (generation.state === 'failed') {
+      throw new Error(`Generation failed: ${generation.failure_reason}`);
+    }
+    console.log('Dreaming...');
+    await new Promise((r) => setTimeout(r, 3000));
+    if (generation.id != null) {
+      generation = await client.generations.get(generation.id);
+    }
+  }
+
+  // Download the resulting video
+  // @ts-ignore
+  const videoUrl = generation.assets.video;
+  // @ts-ignore
+  const response: Response = await fetch(videoUrl);
+  if (!response.ok || !response.body) {
+    throw new Error(`Failed to download video: ${response.statusText}`);
+  }
+  //
+  // const filePath = `${generation.id}.mp4`;
+  // const fileStream = createWriteStream(filePath);
+  // await new Promise<void>((resolve, reject) => {
+  //   response.body!.pipe(fileStream);
+  //   response.body!.on('error', reject);
+  //   fileStream.on('finish', resolve);
+  // });
+  //
+  // console.log(`File downloaded as ${filePath}`);
+  return generation;
+};
+
