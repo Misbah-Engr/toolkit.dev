@@ -1,6 +1,8 @@
+import { Strava } from "strava";
+
 import { createServerToolkit } from "@/toolkits/create-toolkit";
 import { baseStravaToolkitConfig } from "./base";
-import { stravaGetAthleteProfileToolConfigServer } from "./tools/profile/get-athlete-profile-server";
+import { stravaGetAthleteProfileToolConfigServer } from "./tools/profile/server";
 import { stravaGetAthleteActivitiesToolConfigServer } from "./tools/get-athlete-activities-server";
 import { stravaGetActivityDetailsToolConfigServer } from "./tools/get-activity-details-server";
 import { stravaGetAthleteStatsToolConfigServer } from "./tools/get-athlete-stats-server";
@@ -11,6 +13,7 @@ import { stravaGetRoutesToolConfigServer } from "./tools/get-routes-server";
 import { stravaGetAthleteZonesToolConfigServer } from "./tools/get-athlete-zones-server";
 import { StravaTools } from "./tools";
 import { api } from "@/trpc/server";
+import { env } from "@/env";
 
 export const stravaToolkitServer = createServerToolkit(
   baseStravaToolkitConfig,
@@ -26,16 +29,17 @@ Use these tools to help users analyze their fitness data, track performance tren
   async () => {
     const account = await api.accounts.getAccountByProvider("strava");
 
-    if (!account) {
+    if (!account?.refresh_token) {
       throw new Error(
         "No Strava account found. Please connect your Strava account first.",
       );
     }
 
-    const stravaApiHeaders = {
-      Authorization: `Bearer ${account.access_token}`,
-      "Content-Type": "application/json",
-    };
+    const strava = new Strava({
+      client_id: env.AUTH_STRAVA_ID,
+      client_secret: env.AUTH_STRAVA_SECRET,
+      refresh_token: account.refresh_token,
+    });
 
     return {
       [StravaTools.GetAthleteProfile]:

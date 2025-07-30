@@ -4,7 +4,6 @@ import { SiStrava } from "@icons-pack/react-simple-icons";
 import { baseStravaToolkitConfig } from "./base";
 import { StravaTools } from "./tools";
 import {
-  stravaGetAthleteProfileToolConfigClient,
   stravaGetAthleteActivitiesToolConfigClient,
   stravaGetActivityDetailsToolConfigClient,
   stravaGetAthleteStatsToolConfigClient,
@@ -16,6 +15,7 @@ import {
 } from "./tools/client";
 import { ToolkitGroups } from "@/toolkits/types";
 import { Link } from "../components/link";
+import { getAthleteToolConfigClient } from "./tools/profile/client";
 
 export const stravaClientToolkit = createClientToolkit(
   baseStravaToolkitConfig,
@@ -33,14 +33,16 @@ export const stravaClientToolkit = createClientToolkit(
         description: (
           <span>
             Create a Strava OAuth application{" "}
-            <Link href="https://developers.strava.com/docs/getting-started/#account">here</Link>
+            <Link href="https://developers.strava.com/docs/getting-started/#account">
+              here
+            </Link>
           </span>
         ),
       },
     ],
   },
   {
-    [StravaTools.GetAthleteProfile]: stravaGetAthleteProfileToolConfigClient,
+    [StravaTools.GetAthleteProfile]: getAthleteToolConfigClient,
     [StravaTools.GetAthleteActivities]:
       stravaGetAthleteActivitiesToolConfigClient,
     [StravaTools.GetActivityDetails]: stravaGetActivityDetailsToolConfigClient,
