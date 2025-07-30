@@ -2,9 +2,9 @@ import { createClientTool } from "@/toolkits/create-tool";
 import { searchSegmentsTool } from "./search-segments";
 import { getSegmentDetailsTool } from "./get-segment-details";
 import { getSegmentLeaderboardTool } from "./get-segment-leaderboard";
-import { getRoutesTool } from "./get-routes";
-import { getAthleteZonesTool } from "./get-athlete-zones";
-import { Search, Route, Trophy, MapPin, Target } from "lucide-react";
+
+import { Search, Trophy, MapPin } from "lucide-react";
+
 import { HStack, VStack } from "@/components/ui/stack";
 
 export const stravaSearchSegmentsToolConfigClient = createClientTool(
@@ -149,109 +149,6 @@ export const stravaGetSegmentLeaderboardToolConfigClient = createClientTool(
               </div>
             </div>
           ))}
-        </div>
-      </div>
-    ),
-  },
-);
-
-export const stravaGetRoutesToolConfigClient = createClientTool(getRoutesTool, {
-  CallComponent: ({ args }) => (
-    <HStack className="gap-2">
-      <Route className="text-muted-foreground size-4" />
-      <VStack className="items-start gap-0">
-        <span className="text-muted-foreground/80 text-xs font-medium">
-          Get Routes
-        </span>
-        <span className="text-sm">Premium feature</span>
-      </VStack>
-    </HStack>
-  ),
-  ResultComponent: ({ result }) => (
-    <div className="space-y-3">
-      <h3 className="font-semibold">Routes ({result.routes.length})</h3>
-      <div className="space-y-2">
-        {result.routes.slice(0, 10).map((route) => (
-          <div key={route.id} className="rounded-md border p-2">
-            <div className="flex items-start justify-between">
-              <div>
-                <h4 className="text-sm font-medium">{route.name}</h4>
-                <p className="text-muted-foreground text-xs">
-                  {route.distance ? (route.distance / 1000).toFixed(1) : "N/A"}
-                  km • {route.elevation_gain || "N/A"}m elevation
-                </p>
-                {route.description && (
-                  <p className="text-muted-foreground text-xs">
-                    {route.description}
-                  </p>
-                )}
-              </div>
-              <div className="flex items-center gap-1">
-                {route.starred && <span className="text-yellow-500">⭐</span>}
-                {route.private && <span className="text-gray-500">🔒</span>}
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  ),
-});
-
-export const stravaGetAthleteZonesToolConfigClient = createClientTool(
-  getAthleteZonesTool,
-  {
-    CallComponent: ({ args }) => (
-      <HStack className="gap-2">
-        <Target className="text-muted-foreground size-4" />
-        <span className="text-sm">Get Training Zones</span>
-      </HStack>
-    ),
-    ResultComponent: ({ result }) => (
-      <div className="space-y-4">
-        <h3 className="font-semibold">Training Zones</h3>
-        <div className="space-y-3">
-          {result.heart_rate && (
-            <div>
-              <h4 className="text-sm font-medium">Heart Rate Zones</h4>
-              <div className="mt-2 grid grid-cols-1 gap-1">
-                {result.heart_rate.zones.map((zone, index) => (
-                  <div
-                    key={index}
-                    className="bg-muted flex justify-between rounded p-2 text-sm"
-                  >
-                    <span>Zone {index + 1}</span>
-                    <span>
-                      {zone.min} - {zone.max} bpm
-                    </span>
-                  </div>
-                ))}
-              </div>
-              {result.heart_rate.custom_zones && (
-                <p className="text-muted-foreground mt-1 text-xs">
-                  Custom zones configured
-                </p>
-              )}
-            </div>
-          )}
-          {result.power && (
-            <div>
-              <h4 className="text-sm font-medium">Power Zones</h4>
-              <div className="mt-2 grid grid-cols-1 gap-1">
-                {result.power.zones.map((zone, index) => (
-                  <div
-                    key={index}
-                    className="bg-muted flex justify-between rounded p-2 text-sm"
-                  >
-                    <span>Zone {index + 1}</span>
-                    <span>
-                      {zone.min} - {zone.max} watts
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       </div>
     ),
