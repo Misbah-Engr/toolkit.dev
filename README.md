@@ -14,9 +14,16 @@ We also have a [Discord Community](https://discord.gg/cnNBsSfY) to discuss all t
 
 ## Getting Started
 
+### Prerequisites
+
+- **Node.js** 18+
+- **pnpm** (recommended), npm, bun, or yarn
+- **Docker** or **Podman**
+  - You can install Docker Desktop for free [here](https://www.docker.com/products/docker-desktop/)
+
 ### Quick Setup (Recommended)
 
-The easiest way to get started is to use our automated setup script:
+The `dev` script will automatically configure everything for you
 
 ```bash
 # Clone the repository
@@ -24,34 +31,26 @@ git clone https://github.com/jasonhedman/toolkit.dev.git
 cd toolkit.dev
 
 # Run the automated setup
-pnpm dev:setup
+pnpm dev
 # or
-npm run dev:setup
+npm run dev
 # or
-yarn dev:setup
+yarn dev
+# or
+bun dev
 ```
 
 The setup script will:
 
 - Create your `.env.local` file with all necessary environment variables
 - Install dependencies
-- Automatically set up the database using Docker/Podman (unless external database is configured)
+- Automatically set up the database, Redis, and Blob Storage using Docker/Podman (unless external database is configured)
 - Run database migrations
-- Optionally set up Redis and other services
-- Guide you through API key configuration
-
-For detailed setup instructions, see the setup script comments in `setup.ts`.
+- Run the app
 
 ### Manual Setup
 
 If you prefer to set up manually:
-
-#### Prerequisites
-
-- **Node.js** 18+
-- **pnpm** (recommended), npm, bun, or yarn
-- **Docker** or **Podman**
-  - You can install Docker Desktop for free [here](https://www.docker.com/products/docker-desktop/)
 
 #### 1) Clone the Repository
 
