@@ -23,7 +23,7 @@ export const getTracksToolConfigClient: ClientToolConfig<
       />
     );
   },
-  ResultComponent: ({ result, append }) => {
+  ResultComponent: ({ result }) => {
     if (!result.tracks.length) {
       return <div className="text-muted-foreground">No tracks found</div>;
     }

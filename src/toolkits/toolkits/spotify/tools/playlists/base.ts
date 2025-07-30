@@ -20,8 +20,6 @@ export const getPlaylistsBase = createBaseTool({
       .describe("The index of the first playlist to return. Default: 0."),
   }),
   outputSchema: z.object({
-    playlists: z.array(
-      z.custom<SimplifiedPlaylist>(),
-    ),
+    playlists: z.array(z.custom<SimplifiedPlaylist>()),
   }),
 });

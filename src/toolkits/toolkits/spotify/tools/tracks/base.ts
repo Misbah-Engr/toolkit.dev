@@ -20,8 +20,6 @@ export const getTracksBase = createBaseTool({
       .describe("The index of the first track to return. Default: 0."),
   }),
   outputSchema: z.object({
-    tracks: z.array(
-      z.custom<SavedTrack>(),
-    ),
+    tracks: z.array(z.custom<SavedTrack>()),
   }),
 });

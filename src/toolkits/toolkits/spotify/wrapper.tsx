@@ -27,8 +27,7 @@ export const SpotifyWrapper: ClientToolkitWrapper = ({ Item }) => {
 
   const [isAuthRequiredDialogOpen, setIsAuthRequiredDialogOpen] =
     useState(false);
-  const [isPrivateBetaDialogOpen, setIsPrivateBetaDialogOpen] =
-    useState(false);
+  const [isPrivateBetaDialogOpen, setIsPrivateBetaDialogOpen] = useState(false);
 
   if (isLoading || isLoadingAccess) {
     return <Item isLoading={true} />;
