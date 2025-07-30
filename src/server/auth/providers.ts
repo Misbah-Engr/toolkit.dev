@@ -90,7 +90,9 @@ export const providers: (
             SpotifyProvider({
                 clientId: env.AUTH_SPOTIFY_ID,
                 clientSecret: env.AUTH_SPOTIFY_SECRET,
-                authorization: "https://accounts.spotify.com/authorize?scope=user-read-email+playlist-read-private+playlist-read-collaborative"
+                authorization: "https://accounts.spotify.com/authorize?scope=user-read-email+playlist-read-private+playlist-read-collaborative",
+                allowDangerousEmailAccountLinking: true,
+                redirectProxyUrl: `http://127.0.0.1:3000/api/auth`,
             }),
         ]
         : []),

@@ -5,6 +5,7 @@ import { createClientToolkit } from "@/toolkits/create-toolkit";
 import { SpotifyTools } from "./tools";
 import { baseSpotifyToolkitConfig } from "./base";
 import { getPlaylistsToolConfigClient } from "./tools/playlists/client";
+// import { getTracksToolConfigClient } from "./tools/tracks/client";
 import { ToolkitGroups } from "@/toolkits/types";
 
 import { SpotifyWrapper } from "./wrapper";
@@ -21,5 +22,6 @@ export const spotifyClientToolkit = createClientToolkit(
   },
   {
     [SpotifyTools.GetPlaylists]: getPlaylistsToolConfigClient,
+    // [SpotifyTools.GetTracks]: getTracksToolConfigClient,
   },
 );
