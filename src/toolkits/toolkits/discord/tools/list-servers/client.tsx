@@ -1,6 +1,7 @@
 import React from "react";
 import { createClientTool } from "@/toolkits/create-tool";
 import { listServersTool } from "./base";
+import Image from "next/image";
 
 export const listServersToolConfigClient = createClientTool(
   listServersTool,
@@ -28,7 +29,7 @@ export const listServersToolConfigClient = createClientTool(
                 <div key={server.id} className="text-sm flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                     {server.icon && (
-                      <img 
+                      <Image
                         src={server.icon} 
                         alt={server.name}
                         className="w-6 h-6 rounded-full"

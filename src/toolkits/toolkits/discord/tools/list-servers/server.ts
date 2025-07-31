@@ -1,5 +1,4 @@
 import { type listServersTool } from "./base";
-import { api } from "@/trpc/server";
 import type { ServerToolConfig } from "@/toolkits/types";
 import type { APIGuild } from "discord-api-types/v10";
 import type { REST } from "@discordjs/rest";
@@ -20,8 +19,8 @@ export const listServersToolConfigServer = (rest: REST): ServerToolConfig<
             id: guild.id,
             name: guild.name,
             icon: guild.icon ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png` : undefined,
-            memberCount: guild.approximate_member_count || undefined,
-            owner: guild.owner || false,
+            memberCount: guild.approximate_member_count ?? undefined,
+            owner: guild.owner ?? false,
           })),
         };
       } catch (error) {

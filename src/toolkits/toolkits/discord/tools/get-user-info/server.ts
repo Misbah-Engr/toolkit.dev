@@ -1,5 +1,4 @@
 import { type getUserInfoTool } from "./base";
-import { api } from "@/trpc/server";
 import type { ServerToolConfig } from "@/toolkits/types";
 import type { APIUser } from "discord-api-types/v10";
 import { Routes } from "discord-api-types/v10";
@@ -19,10 +18,10 @@ export const getUserInfoToolConfigServer = (rest: REST): ServerToolConfig<
           user: {
             id: user.id,
             username: user.username,
-            discriminator: user.discriminator || '0',
+            discriminator: user.discriminator ?? '0',
             avatar: user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` : undefined,
-            email: user.email || undefined,
-            verified: user.verified || false,
+            email: user.email ?? undefined,
+            verified: user.verified ?? false,
             nitro: user.premium_type ? true : false,
             createdAt: new Date(parseInt(user.id) / 4194304 + 1420070400000).toISOString(),
           },

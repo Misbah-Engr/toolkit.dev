@@ -1,6 +1,7 @@
 import React from "react";
 import { createClientTool } from "@/toolkits/create-tool";
 import { getUserInfoTool } from "./base";
+import Image from "next/image";
 
 export const getUserInfoToolConfigClient = createClientTool(
   getUserInfoTool,
@@ -22,7 +23,7 @@ export const getUserInfoToolConfigClient = createClientTool(
           <div className="space-y-3">
             <div className="flex items-center space-x-3">
               {result.user.avatar && (
-                <img 
+                <Image
                   src={result.user.avatar} 
                   alt={result.user.username}
                   className="w-12 h-12 rounded-full"

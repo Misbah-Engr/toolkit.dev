@@ -23,7 +23,7 @@ export const discordToolkitServer = createServerToolkit(
 - Use List Servers to understand your server landscape
 - Check your user info to understand your account capabilities
 - Note: Discord doesn't provide a global search API, so message search is limited to individual channels`,
-  async (params) => {
+  async () => {
     const account = await api.accounts.getAccountByProvider("discord");
 
     if (!account) {
