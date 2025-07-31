@@ -11,12 +11,12 @@ import {
 } from "./models";
 
 export const languageModels = [
-  ...openRouterModels,
   ...anthropicModels,
   ...googleModels,
   ...openAiLanguageModels,
   ...xaiLanguageModels,
   ...perplexityModels,
+  ...openRouterModels,
   ...llamaModels,
   ...qwenModels,
   ...deepseekModels,
