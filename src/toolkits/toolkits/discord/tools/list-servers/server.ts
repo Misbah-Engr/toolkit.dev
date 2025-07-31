@@ -1,6 +1,7 @@
 import { type listServersTool } from "./base";
 import { api } from "@/trpc/server";
 import type { ServerToolConfig } from "@/toolkits/types";
+import { Client, GatewayIntentBits, Guild } from "discord.js";
 
 export const listServersToolConfigServer = (): ServerToolConfig<
   typeof listServersTool.inputSchema.shape,
@@ -15,28 +16,41 @@ export const listServersToolConfigServer = (): ServerToolConfig<
           throw new Error("No Discord account found. Please connect your Discord account first.");
         }
 
-        const response = await fetch('https://discord.com/api/v10/users/@me/guilds', {
-          headers: {
-            Authorization: `Bearer ${account.access_token}`,
-            'Content-Type': 'application/json',
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error(`Discord API error: ${response.status} ${response.statusText}`);
+        if (!account.access_token) {
+          throw new Error("No access token available for Discord account.");
         }
 
-        const guilds = await response.json();
-        
+        // Create a Discord client instance
+        const client = new Client({
+          intents: [
+            GatewayIntentBits.Guilds,
+            GatewayIntentBits.GuildMembers,
+          ],
+        });
+
+        // Login using the access token
+        await client.login(account.access_token);
+
+        // Wait for the client to be ready
+        await new Promise<void>((resolve) => {
+          client.once('ready', () => resolve());
+        });
+
+        // Get all guilds the user is a member of
+        const guilds = client.guilds.cache.map((guild: Guild) => ({
+          id: guild.id,
+          name: guild.name,
+          icon: guild.iconURL() || undefined,
+          memberCount: guild.memberCount || undefined,
+          owner: guild.ownerId === client.user?.id,
+        }));
+
+        // Destroy the client to clean up
+        client.destroy();
+
         return {
           success: true,
-          servers: guilds.map((guild: any) => ({
-            id: guild.id,
-            name: guild.name,
-            icon: guild.icon ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png` : undefined,
-            memberCount: guild.approximate_member_count,
-            owner: guild.owner === true,
-          })),
+          servers: guilds,
         };
       } catch (error) {
         return {

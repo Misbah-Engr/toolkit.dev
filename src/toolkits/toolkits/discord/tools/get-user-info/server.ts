@@ -1,6 +1,7 @@
 import { type getUserInfoTool } from "./base";
 import { api } from "@/trpc/server";
 import type { ServerToolConfig } from "@/toolkits/types";
+import { Client, GatewayIntentBits, User } from "discord.js";
 
 export const getUserInfoToolConfigServer = (): ServerToolConfig<
   typeof getUserInfoTool.inputSchema.shape,
@@ -15,30 +16,47 @@ export const getUserInfoToolConfigServer = (): ServerToolConfig<
           throw new Error("No Discord account found. Please connect your Discord account first.");
         }
 
-        const response = await fetch('https://discord.com/api/v10/users/@me', {
-          headers: {
-            Authorization: `Bearer ${account.access_token}`,
-            'Content-Type': 'application/json',
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error(`Discord API error: ${response.status} ${response.statusText}`);
+        if (!account.access_token) {
+          throw new Error("No access token available for Discord account.");
         }
 
-        const user = await response.json();
+        // Create a Discord client instance
+        const client = new Client({
+          intents: [
+            GatewayIntentBits.Guilds,
+            GatewayIntentBits.GuildMembers,
+          ],
+        });
+
+        // Login using the access token
+        await client.login(account.access_token);
+
+        // Wait for the client to be ready
+        await new Promise<void>((resolve) => {
+          client.once('ready', () => resolve());
+        });
+
+        // Get the current user
+        const user = client.user;
+        
+        if (!user) {
+          throw new Error("Failed to get user information from Discord");
+        }
+
+        // Fetch full user data
+        const fullUser = await user.fetch();
         
         return {
           success: true,
           user: {
-            id: user.id,
-            username: user.username,
-            discriminator: user.discriminator,
-            avatar: user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` : undefined,
-            email: user.email,
-            verified: user.verified,
-            nitro: user.premium_type > 0,
-            createdAt: user.created_at,
+            id: fullUser.id,
+            username: fullUser.username,
+            discriminator: fullUser.discriminator,
+            avatar: fullUser.displayAvatarURL() || undefined,
+            email: undefined, // Email not available through bot API
+            verified: false, // Verification status not available through bot API
+            nitro: false, // Nitro status not available through bot API
+            createdAt: fullUser.createdAt.toISOString(),
           },
         };
       } catch (error) {
