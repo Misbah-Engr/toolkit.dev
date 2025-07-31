@@ -5,6 +5,8 @@ import {
   listServersToolConfigServer,
   getUserInfoToolConfigServer,
 } from "./tools/server";
+import { REST } from "@discordjs/rest";
+import { api } from "@/trpc/server";
 
 export const discordToolkitServer = createServerToolkit(
   baseDiscordToolkitConfig,
@@ -22,9 +24,21 @@ export const discordToolkitServer = createServerToolkit(
 - Check your user info to understand your account capabilities
 - Note: Discord doesn't provide a global search API, so message search is limited to individual channels`,
   async (params) => {
+    const account = await api.accounts.getAccountByProvider("discord");
+
+    if (!account) {
+      throw new Error("No Discord account found. Please connect your Discord account first.");
+    }
+
+    if (!account.access_token) {
+      throw new Error("No access token available for Discord account.");
+    }
+
+    const rest = new REST({ version: '10', authPrefix: 'Bearer' }).setToken(account.access_token);
+
     return {
-      [DiscordTools.ListServers]: listServersToolConfigServer(),
-      [DiscordTools.GetUserInfo]: getUserInfoToolConfigServer(),
+      [DiscordTools.ListServers]: listServersToolConfigServer(rest),
+      [DiscordTools.GetUserInfo]: getUserInfoToolConfigServer(rest),
     };
   },
 ); 
