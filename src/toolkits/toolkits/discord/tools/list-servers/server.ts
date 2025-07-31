@@ -1,4 +1,4 @@
-import { listServersTool } from "./base";
+import { type listServersTool } from "./base";
 import { api } from "@/trpc/server";
 import type { ServerToolConfig } from "@/toolkits/types";
 

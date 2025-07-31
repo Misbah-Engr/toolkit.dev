@@ -16,6 +16,10 @@ import type { e2bParameters } from "./e2b/base";
 import type { E2BTools } from "./e2b/tools/tools";
 import type { discordParameters } from "./discord/base";
 import type { DiscordTools } from "./discord/tools";
+import type { stravaParameters } from "./strava/base";
+import type { StravaTools } from "./strava/tools";
+import type { spotifyParameters } from "./spotify/base";
+import type { SpotifyTools } from "./spotify/tools";
 
 export enum Toolkits {
   Exa = "exa",
@@ -27,6 +31,8 @@ export enum Toolkits {
   Notion = "notion",
   E2B = "e2b",
   Discord = "discord",
+  Strava = "strava",
+  Spotify = "spotify",
 }
 
 export type ServerToolkitNames = {
@@ -39,6 +45,8 @@ export type ServerToolkitNames = {
   [Toolkits.Notion]: NotionTools;
   [Toolkits.E2B]: E2BTools;
   [Toolkits.Discord]: DiscordTools;
+  [Toolkits.Strava]: StravaTools;
+  [Toolkits.Spotify]: SpotifyTools;
 };
 
 export type ServerToolkitParameters = {
@@ -51,4 +59,6 @@ export type ServerToolkitParameters = {
   [Toolkits.Notion]: typeof notionParameters.shape;
   [Toolkits.E2B]: typeof e2bParameters.shape;
   [Toolkits.Discord]: typeof discordParameters.shape;
+  [Toolkits.Strava]: typeof stravaParameters.shape;
+  [Toolkits.Spotify]: typeof spotifyParameters.shape;
 };

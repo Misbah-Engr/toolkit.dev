@@ -1,4 +1,4 @@
-import { getUserInfoTool } from "./base";
+import { type getUserInfoTool } from "./base";
 import { api } from "@/trpc/server";
 import type { ServerToolConfig } from "@/toolkits/types";
 
