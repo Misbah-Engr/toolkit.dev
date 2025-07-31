@@ -51,4 +51,5 @@ export const modelProviderNames: Record<string, string> = {
   azure: "Azure (DALL-E)",
   vertex: "Google Vertex AI",
   xai: "xAI",
+  openrouter: "OpenRouter",
 };
