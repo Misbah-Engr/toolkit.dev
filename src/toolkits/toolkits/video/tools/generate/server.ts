@@ -1,11 +1,8 @@
 import type { ServerToolConfig } from "@/toolkits/types";
 import type { baseGenerateTool } from "./base";
-import type { videoParameters } from "../../base";
 import { put } from "@vercel/blob";
 import { api } from "@/trpc/server";
-import type z from "zod";
 import { generateVideo } from "@/ai/video/generate";
-
 
 export const generateToolConfigServer = (): ServerToolConfig<
   typeof baseGenerateTool.inputSchema.shape,
@@ -15,14 +12,24 @@ export const generateToolConfigServer = (): ServerToolConfig<
     callback: async ({ prompt }) => {
       const generation = await generateVideo(prompt);
 
-      // @ts-ignore
-      if (!generation.assets.video) {
-        console.error("No video generated");
-        throw new Error("No video generated");
+      let completed = false;
+
+      while (!completed) {
+        generation = await client.generations.get(generation.id);
+
+        if (generation.state === "completed") {
+          completed = true;
+        } else if (generation.state === "failed") {
+          throw new Error(`Generation failed: ${generation.failure_reason}`);
+        } else {
+          console.log("Dreaming...");
+          await new Promise((r) => setTimeout(r, 3000)); // Wait for 3 seconds
+        }
       }
 
-      // @ts-ignore
-      const video = generation.assets.video;
+      const videoUrl = generation.assets.video;
+
+      const response = await fetch(videoUrl);
       const res = await fetch(video);
       if (!res.ok) {
         console.error("Failed to fetch video from generation assets");
@@ -32,13 +39,9 @@ export const generateToolConfigServer = (): ServerToolConfig<
 
       const videoId = crypto.randomUUID();
 
-      const file = new File(
-        [videoBlob],
-        `videos/${videoId}.mp4`,
-        {
-          type: "video/mp4",
-        },
-      );
+      const file = new File([videoBlob], `videos/${videoId}.mp4`, {
+        type: "video/mp4",
+      });
 
       const { url: videoUrl } = await put(file.name, file, {
         access: "public",
@@ -46,10 +49,10 @@ export const generateToolConfigServer = (): ServerToolConfig<
 
       await api.videos.createVideo({
         url: videoUrl,
-        modelId: 'ray-2',
+        modelId: "ray-2",
       });
 
       return { url: videoUrl };
     },
-  }
+  };
 };
