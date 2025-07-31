@@ -12,6 +12,7 @@ import NotionProvider, { type NotionProfile } from "next-auth/providers/notion";
 import SpotifyProvider, {
   type SpotifyProfile,
 } from "next-auth/providers/spotify";
+import StravaProvider, { type StravaProfile } from "next-auth/providers/strava";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 import type {
@@ -28,6 +29,7 @@ export const providers: (
   | OAuthConfig<GitHubProfile>
   | OAuthConfig<TwitterProfile>
   | OAuthConfig<NotionProfile>
+  | OAuthConfig<StravaProfile>
   | OAuthConfig<SpotifyProfile>
   | CredentialsConfig<Record<string, CredentialInput>>
 )[] = [
@@ -83,6 +85,23 @@ export const providers: (
               }
               return new Response(JSON.stringify(body), response);
             },
+          },
+        }),
+      ]
+    : []),
+  ...("AUTH_STRAVA_ID" in env && "AUTH_STRAVA_SECRET" in env
+    ? [
+        StravaProvider({
+          clientId: env.AUTH_STRAVA_ID,
+          clientSecret: env.AUTH_STRAVA_SECRET,
+          allowDangerousEmailAccountLinking: true,
+          profile(profile) {
+            return {
+              id: profile.id.toString(),
+              name: `${profile.firstname} ${profile.lastname}`,
+              email: null,
+              image: profile.profile,
+            };
           },
         }),
       ]
