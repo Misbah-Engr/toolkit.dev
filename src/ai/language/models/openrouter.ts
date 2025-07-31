@@ -22,6 +22,24 @@ const openRouterModelData: Omit<LanguageModel, "provider">[] = [
     contextLength: 200000, // Using a high value since it can route to models with large context
     isNew: true,
   },
+  {
+    name: "Horizon Alpha",
+    modelId: "horizon-alpha",
+    description:
+      "A cloaked model provided to the community for feedback. Supports vision and long-context tasks.",
+    capabilities: [
+      LanguageModelCapability.Vision,
+      LanguageModelCapability.ToolCalling,
+    ],
+    bestFor: [
+      "Vision tasks",
+      "Long-context processing",
+      "General purpose",
+      "Community feedback model",
+    ],
+    contextLength: 256000,
+    isNew: true,
+  },
 ];
 
 export const openRouterModels: LanguageModel[] = openRouterModelData.map(
