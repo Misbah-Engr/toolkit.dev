@@ -1,6 +1,11 @@
 import LumaAI from "lumaai";
 
-export const generateVideo = async (prompt: string): Promise<string> => {
+import type { allVideoModels } from ".";
+
+export const generateVideo = async (
+  modelId: (typeof allVideoModels)[number]["modelId"],
+  prompt: string,
+): Promise<string> => {
   const apiKey = process.env.LUMAAI_API_KEY;
   if (!apiKey) {
     throw new Error("LUMAAI_API_KEY environment variable is not set");
@@ -11,7 +16,7 @@ export const generateVideo = async (prompt: string): Promise<string> => {
   // Kick off the generation
   let generation = await client.generations.create({
     prompt: prompt,
-    model: "ray-2",
+    model: modelId as "ray-flash-2" | "ray-2",
     duration: "3s",
   });
 

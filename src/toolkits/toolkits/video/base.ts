@@ -1,7 +1,7 @@
 import { z } from "zod";
 import type { ToolkitConfig } from "@/toolkits/types";
-import { VideoTools } from "./tools/tools";
-import { baseGenerateTool } from "./tools/generate/base";
+import { VideoTools } from "./tools";
+import { baseGenerateTool } from "./tools";
 
 export const videoParameters = z.object({
   // any input needed from the user on the client
