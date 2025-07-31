@@ -35,21 +35,11 @@ export const generateVideo = async (
   // Download the resulting video
   // @ts-ignore
   const videoUrl = generation.assets.video;
-  // @ts-ignore
-  const response: Response = await fetch(videoUrl);
+  const response = await fetch(videoUrl as string);
   if (!response.ok || !response.body) {
     throw new Error(`Failed to download video: ${response.statusText}`);
   }
-  //
-  // const filePath = `${generation.id}.mp4`;
-  // const fileStream = createWriteStream(filePath);
-  // await new Promise<void>((resolve, reject) => {
-  //   response.body!.pipe(fileStream);
-  //   response.body!.on('error', reject);
-  //   fileStream.on('finish', resolve);
-  // });
-  //
-  // console.log(`File downloaded as ${filePath}`);
+
   return generation;
 };
 
