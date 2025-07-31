@@ -26,16 +26,18 @@ const openRouterModelData: Omit<LanguageModel, "provider">[] = [
     name: "Horizon Alpha",
     modelId: "horizon-alpha",
     description:
-      "A cloaked model provided to the community for feedback. Supports vision and long-context tasks.",
+      "A cloaked model provided to the community to gather feedback. Supports vision and long-context tasks.",
     capabilities: [
       LanguageModelCapability.Vision,
       LanguageModelCapability.ToolCalling,
+      LanguageModelCapability.Reasoning,
+      LanguageModelCapability.Pdf,
     ],
     bestFor: [
-      "Vision tasks",
-      "Long-context processing",
-      "General purpose",
-      "Community feedback model",
+      "Image analysis",
+      "Long-context tasks",
+      "Community feedback",
+      "General purpose AI",
     ],
     contextLength: 256000,
     isNew: true,
