@@ -1,6 +1,7 @@
 import { Space_Grotesk } from "next/font/google";
 import { JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider } from "next-themes";
 
 import { TRPCReactProvider } from "@/trpc/react";
@@ -64,6 +65,7 @@ export default async function RootLayout({
       </head>
       <body>
         <Analytics />
+        <SpeedInsights />
 
         <TRPCReactProvider>
           <EnvProvider>
