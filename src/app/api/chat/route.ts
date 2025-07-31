@@ -281,10 +281,11 @@ export async function POST(request: Request) {
             onFinish: async ({ response }) => {
               // Get the actual model used from OpenRouter's response
               const [provider, modelId] = response.modelId.split("/");
-              
+
               // Try to find the model in our list first
               const model = languageModels.find(
-                (model) => model.provider === provider && model.modelId === modelId,
+                (model) =>
+                  model.provider === provider && model.modelId === modelId,
               );
 
               // Create model info from OpenRouter's response if not in our list

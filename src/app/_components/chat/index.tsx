@@ -85,15 +85,18 @@ export const Chat = async ({
               model: (() => {
                 const [provider, modelId] = message.modelId.split("/");
                 const model = languageModels.find(
-                  (model) => model.provider === provider && model.modelId === modelId,
+                  (model) =>
+                    model.provider === provider && model.modelId === modelId,
                 );
 
                 // If model not in our list, create a display version
-                return model || {
-                  name: `${provider}/${modelId}`,
-                  provider: provider || "unknown",
-                  modelId: modelId || "unknown",
-                };
+                return (
+                  model || {
+                    name: `${provider}/${modelId}`,
+                    provider: provider || "unknown",
+                    modelId: modelId || "unknown",
+                  }
+                );
               })(),
             },
           ]
