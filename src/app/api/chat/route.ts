@@ -289,10 +289,10 @@ export async function POST(request: Request) {
               );
 
               // Create model info from OpenRouter's response if not in our list
-              const modelInfo = model || {
+              const modelInfo = model ?? {
                 name: `${provider}/${modelId}`, // Format nicely for display
-                provider: provider || "unknown",
-                modelId: modelId || "unknown",
+                provider: provider ?? "unknown",
+                modelId: modelId ?? "unknown",
               };
 
               // Write the model annotation

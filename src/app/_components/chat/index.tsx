@@ -91,10 +91,10 @@ export const Chat = async ({
 
                 // If model not in our list, create a display version
                 return (
-                  model || {
+                  model ?? {
                     name: `${provider}/${modelId}`,
-                    provider: provider || "unknown",
-                    modelId: modelId || "unknown",
+                    provider: provider ?? "unknown",
+                    modelId: modelId ?? "unknown",
                   }
                 );
               })(),
