@@ -22,7 +22,7 @@ import { LanguageModelCapability } from "@/ai/language/types";
 
 import { clientToolkits } from "@/toolkits/toolkits/client";
 
-import { anthropicModels } from "@/ai/language/models/anthropic";
+import { languageModels } from "@/ai/language";
 
 import { clientCookieUtils } from "@/lib/cookies/client";
 import { generateUUID } from "@/lib/utils";
@@ -42,7 +42,7 @@ import type { PersistedToolkit } from "@/lib/cookies/types";
 import type { ImageModel } from "@/ai/image/types";
 import type { LanguageModel } from "@/ai/language/types";
 
-const DEFAULT_CHAT_MODEL = anthropicModels[0]!;
+const DEFAULT_CHAT_MODEL = languageModels[0]!;
 
 interface ChatContextType {
   // Chat state
