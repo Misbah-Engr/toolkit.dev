@@ -35,7 +35,7 @@ export const clientToolkits: ClientToolkits = {
   [Toolkits.GoogleDrive]: googleDriveClientToolkit,
   [Toolkits.Discord]: discordClientToolkit,
   [Toolkits.Strava]: stravaClientToolkit,
-  [Toolkits.Spotify]: spotifyClientToolkit, 
+  [Toolkits.Spotify]: spotifyClientToolkit,
 };
 
 export function getClientToolkit<T extends Toolkits>(

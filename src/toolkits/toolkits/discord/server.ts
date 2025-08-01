@@ -27,18 +27,22 @@ export const discordToolkitServer = createServerToolkit(
     const account = await api.accounts.getAccountByProvider("discord");
 
     if (!account) {
-      throw new Error("No Discord account found. Please connect your Discord account first.");
+      throw new Error(
+        "No Discord account found. Please connect your Discord account first.",
+      );
     }
 
     if (!account.access_token) {
       throw new Error("No access token available for Discord account.");
     }
 
-    const rest = new REST({ version: '10', authPrefix: 'Bearer' }).setToken(account.access_token);
+    const rest = new REST({ version: "10", authPrefix: "Bearer" }).setToken(
+      account.access_token,
+    );
 
     return {
       [DiscordTools.ListServers]: listServersToolConfigServer(rest),
       [DiscordTools.GetUserInfo]: getUserInfoToolConfigServer(rest),
     };
   },
-); 
+);

@@ -8,16 +8,18 @@ export const getUserInfoTool = createBaseTool({
   }),
   outputSchema: z.object({
     success: z.boolean(),
-    user: z.object({
-      id: z.string(),
-      username: z.string(),
-      discriminator: z.string().optional(),
-      avatar: z.string().optional(),
-      email: z.string().optional(),
-      verified: z.boolean().optional(),
-      nitro: z.boolean().optional(),
-      createdAt: z.string().optional(),
-    }).optional(),
+    user: z
+      .object({
+        id: z.string(),
+        username: z.string(),
+        discriminator: z.string().optional(),
+        avatar: z.string().optional(),
+        email: z.string().optional(),
+        verified: z.boolean().optional(),
+        nitro: z.boolean().optional(),
+        createdAt: z.string().optional(),
+      })
+      .optional(),
     error: z.string().optional(),
   }),
-}); 
+});

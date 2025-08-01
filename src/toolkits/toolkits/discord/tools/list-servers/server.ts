@@ -4,21 +4,27 @@ import type { APIGuild } from "discord-api-types/v10";
 import type { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v10";
 
-export const listServersToolConfigServer = (rest: REST): ServerToolConfig<
+export const listServersToolConfigServer = (
+  rest: REST,
+): ServerToolConfig<
   typeof listServersTool.inputSchema.shape,
   typeof listServersTool.outputSchema.shape
 > => {
   return {
     callback: async () => {
       try {
-        const guilds: APIGuild[] = await rest.get(Routes.userGuilds()) as APIGuild[];
+        const guilds: APIGuild[] = (await rest.get(
+          Routes.userGuilds(),
+        )) as APIGuild[];
 
         return {
           success: true,
           servers: guilds.map((guild: APIGuild) => ({
             id: guild.id,
             name: guild.name,
-            icon: guild.icon ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png` : undefined,
+            icon: guild.icon
+              ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`
+              : undefined,
             memberCount: guild.approximate_member_count ?? undefined,
             owner: guild.owner ?? false,
           })),
@@ -38,4 +44,4 @@ export const listServersToolConfigServer = (rest: REST): ServerToolConfig<
       }
     },
   };
-}; 
+};

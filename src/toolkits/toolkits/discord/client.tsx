@@ -28,7 +28,7 @@ export const discordClientToolkit = createClientToolkit(
           <span>
             Get an Auth Client ID and Secret from{" "}
             <Link href="https://discord.com/developers/applications">here</Link>
-          </span> 
+          </span>
         ),
       },
     ],
@@ -37,4 +37,4 @@ export const discordClientToolkit = createClientToolkit(
     [DiscordTools.ListServers]: listServersToolConfigClient,
     [DiscordTools.GetUserInfo]: getUserInfoToolConfigClient,
   },
-); 
+);

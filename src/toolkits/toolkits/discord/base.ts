@@ -16,4 +16,4 @@ export const baseDiscordToolkitConfig: ToolkitConfig<
     [DiscordTools.GetUserInfo]: getUserInfoTool,
   },
   parameters: discordParameters,
-}; 
+};

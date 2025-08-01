@@ -8,13 +8,17 @@ export const listServersTool = createBaseTool({
   }),
   outputSchema: z.object({
     success: z.boolean(),
-    servers: z.array(z.object({
-      id: z.string(),
-      name: z.string(),
-      icon: z.string().optional(),
-      memberCount: z.number().optional(),
-      owner: z.boolean().optional(),
-    })).optional(),
+    servers: z
+      .array(
+        z.object({
+          id: z.string(),
+          name: z.string(),
+          icon: z.string().optional(),
+          memberCount: z.number().optional(),
+          owner: z.boolean().optional(),
+        }),
+      )
+      .optional(),
     error: z.string().optional(),
   }),
-}); 
+});

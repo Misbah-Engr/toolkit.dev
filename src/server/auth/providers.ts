@@ -39,7 +39,8 @@ export const providers: (
           clientId: env.AUTH_DISCORD_ID,
           clientSecret: env.AUTH_DISCORD_SECRET,
           allowDangerousEmailAccountLinking: true,
-          authorization: "https://discord.com/oauth2/authorize?scope=identify+guilds"
+          authorization:
+            "https://discord.com/oauth2/authorize?scope=identify+guilds",
         }),
       ]
     : []),
