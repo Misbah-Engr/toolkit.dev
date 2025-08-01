@@ -1,4 +1,3 @@
-import webpack from "webpack";
 import "./src/env.js";
 
 /** @type {import("next").NextConfig} */
