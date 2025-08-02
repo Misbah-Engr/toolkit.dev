@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Markdown } from "@/components/ui/markdown";
+import { LLMMarkdown } from "@/components/ui/llm-markdown";
 import { HStack, VStack } from "@/components/ui/stack";
 import Link from "next/link";
 
@@ -80,7 +80,7 @@ export const ResultItem: React.FC<ResultItemProps> = ({
           </DialogDescription>
         </DialogHeader>
         <div className="w-full overflow-hidden">
-          <Markdown>{result.content}</Markdown>
+          <LLMMarkdown isStreamFinished={true}>{result.content}</LLMMarkdown>
         </div>
         <DialogFooter>
           <Link

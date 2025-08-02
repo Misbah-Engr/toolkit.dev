@@ -18,7 +18,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import type { Result } from "@e2b/code-interpreter";
-import { Markdown } from "@/components/ui/markdown";
+import { LLMMarkdown } from "@/components/ui/llm-markdown";
 import { HStack } from "@/components/ui/stack";
 
 const ResultWrapper: React.FC<{
@@ -98,7 +98,7 @@ const ResultItem: React.FC<{ result: Result; index: number }> = ({
           Icon={r.latex ? Pi : FileText}
           index={index}
         >
-          <Markdown>{r.markdown ?? r.text ?? r.latex ?? ""}</Markdown>
+          <LLMMarkdown isStreamFinished={true}>{r.markdown ?? r.text ?? r.latex ?? ""}</LLMMarkdown>
         </ResultWrapper>
       ),
     },
