@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure} from "@/server/api/trpc";
+import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 
 export const videosRouter = createTRPCRouter({
   getUserVideos: protectedProcedure
@@ -92,7 +92,9 @@ export const videosRouter = createTRPCRouter({
       });
 
       if (!video) {
-        throw new Error("Video not found or you do not have permission to delete it.");
+        throw new Error(
+          "Video not found or you do not have permission to delete it.",
+        );
       }
 
       return ctx.db.video.delete({
@@ -101,15 +103,13 @@ export const videosRouter = createTRPCRouter({
         },
       });
     }),
-  deleteAllUserVideos: protectedProcedure
-    .mutation(async ({ ctx }) => {
-      const userId = ctx.session.user.id;
+  deleteAllUserVideos: protectedProcedure.mutation(async ({ ctx }) => {
+    const userId = ctx.session.user.id;
 
-      return ctx.db.video.deleteMany({
-        where: {
-          userId,
-        },
-      });
-    }),
+    return ctx.db.video.deleteMany({
+      where: {
+        userId,
+      },
+    });
+  }),
 });
-
