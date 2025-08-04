@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { AuthProviderIcon } from "../navbar/account-button/provider-icon";
+import { AuthProviderIcon } from "../../../_components/navbar/account-button/provider-icon";
 import { signIn } from "next-auth/react";
 
 interface AuthButtonsProps {

@@ -1,4 +1,4 @@
-import { AuthProviderIcon } from "@/app/(general)/_components/navbar/account-button/provider-icon";
+import { AuthProviderIcon } from "@/app/_components/navbar/account-button/provider-icon";
 import { Badge } from "@/components/ui/badge";
 import { HStack } from "@/components/ui/stack";
 import { providers } from "@/server/auth/providers";

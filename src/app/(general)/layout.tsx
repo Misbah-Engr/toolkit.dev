@@ -1,6 +1,6 @@
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
-import { Navbar } from "./_components/navbar";
+import { Navbar } from "../_components/navbar";
 
 import { AppSidebar } from "./_components/sidebar";
 import { InstallPromptProvider } from "@/app/(general)/_contexts/install-prompt-context";

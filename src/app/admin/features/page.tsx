@@ -21,7 +21,7 @@ import {
 import { toast } from "sonner";
 import { Loader2, Search, UserPlus, Plus, X } from "lucide-react";
 
-export function AdminPanel() {
+export default function FeaturesAdmin() {
   const [searchQuery, setSearchQuery] = useState("");
   const [newFeatureName, setNewFeatureName] = useState("");
   const [newFeatureDescription, setNewFeatureDescription] = useState("");

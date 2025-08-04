@@ -1,6 +1,6 @@
 import { Logo } from "@/components/ui/logo";
 import { HStack } from "@/components/ui/stack";
-import { ColorModeToggle } from "../../navbar/color-mode-toggle";
+import { ColorModeToggle } from "../../../../_components/navbar/color-mode-toggle";
 import { Button } from "@/components/ui/button";
 import { AuthModal } from "../lib/auth-modal";
 import { SiDiscord, SiGithub } from "@icons-pack/react-simple-icons";
