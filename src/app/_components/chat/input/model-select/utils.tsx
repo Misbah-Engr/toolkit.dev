@@ -1,6 +1,6 @@
 "use client";
 
-import { Eye, Sparkles, File, Wrench, Globe, Gift, Star } from "lucide-react";
+import { Eye, Sparkles, File, Wrench, Globe, Gift } from "lucide-react";
 
 import { LanguageModelCapability } from "@/ai/language/types";
 
