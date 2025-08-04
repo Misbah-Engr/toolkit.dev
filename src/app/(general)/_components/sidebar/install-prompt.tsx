@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useInstallPrompt } from "@/contexts/install-prompt-context";
+import { useInstallPrompt } from "@/app/(general)/_contexts/install-prompt-context";
 import { Download, Plus, Share, X } from "lucide-react";
 
 export function InstallPrompt() {
