@@ -30,7 +30,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip"
+} from "@/components/ui/tooltip";
 
 import {
   capabilityColors,
@@ -142,12 +142,11 @@ const ModelSelectContent: React.FC<{
           if (capability === LanguageModelCapability.Free) {
             return (
               <Tooltip key={capability} delayDuration={150}>
-                <TooltipTrigger asChild>
-                  {content}
-                </TooltipTrigger>
+                <TooltipTrigger asChild>{content}</TooltipTrigger>
                 <TooltipContent>
                   <p className="text-sm">
-                    This model is free to use, but the provider may rate limit you and store your requests.
+                    This model is free to use, but the provider may rate limit
+                    you and store your requests.
                   </p>
                 </TooltipContent>
               </Tooltip>
