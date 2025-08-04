@@ -141,9 +141,10 @@ const PurePreviewMessage: React.FC<Props> = ({
                             message.role === "user",
                         })}
                       >
-                        <LLMMarkdown isStreamFinished={!isLoading}>
-                          {sanitizeText(part.text)}
-                        </LLMMarkdown>
+                        <LLMMarkdown
+                          isStreamFinished={!isLoading}
+                          llmOutput={sanitizeText(part.text)}
+                        />
                       </div>
                     </div>
                   );

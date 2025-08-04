@@ -19,7 +19,19 @@ export const Code: React.FC<Props> = ({ value, initial, lang }) => {
   const [nodes, setNodes] = useState(initial);
 
   useLayoutEffect(() => {
-    void highlight(value, lang).then(setNodes);
+    void highlight(value, lang)
+      .then(setNodes)
+      .catch(() =>
+        setNodes(
+          <code
+            className={
+              "w-full max-w-full overflow-x-auto p-4 whitespace-pre-wrap"
+            }
+          >
+            {value}
+          </code>,
+        ),
+      );
   }, [value, lang]);
 
   return (

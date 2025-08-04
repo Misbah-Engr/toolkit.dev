@@ -43,7 +43,7 @@ export const LLMMarkdown: React.FC<Props> = ({
   });
 
   return (
-    <div>
+    <div className="flex flex-col gap-2">
       {blockMatches.map((blockMatch, index) => {
         const Component = blockMatch.block
           .component as LLMOutputComponent<LLMMarkdownProps>;
