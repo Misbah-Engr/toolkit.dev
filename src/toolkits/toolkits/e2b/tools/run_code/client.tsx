@@ -1,6 +1,3 @@
-import { type ClientToolConfig } from "@/toolkits/types";
-import { type baseRunCodeTool } from "./base";
-import { Badge } from "@/components/ui/badge";
 import {
   AlertCircle,
   ImageIcon,
@@ -10,6 +7,8 @@ import {
   Code,
   Pi,
 } from "lucide-react";
+
+import { Badge } from "@/components/ui/badge";
 import { CodeBlock } from "@/components/ui/code-block";
 import {
   Accordion,
@@ -17,9 +16,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import type { Result } from "@e2b/code-interpreter";
-import { LLMMarkdown } from "@/components/ui/llm-markdown";
 import { HStack } from "@/components/ui/stack";
+import { Markdown } from "@/components/ui/markdown";
+
+import type { Result } from "@e2b/code-interpreter";
+import type { ClientToolConfig } from "@/toolkits/types";
+import type { baseRunCodeTool } from "./base";
 
 const ResultWrapper: React.FC<{
   type: string;
@@ -98,9 +100,7 @@ const ResultItem: React.FC<{ result: Result; index: number }> = ({
           Icon={r.latex ? Pi : FileText}
           index={index}
         >
-          <LLMMarkdown isStreamFinished={true}>
-            {r.markdown ?? r.text ?? r.latex ?? ""}
-          </LLMMarkdown>
+          <Markdown>{r.markdown ?? r.text ?? r.latex ?? ""}</Markdown>
         </ResultWrapper>
       ),
     },

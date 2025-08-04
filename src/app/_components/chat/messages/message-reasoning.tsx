@@ -6,7 +6,8 @@ import { ChevronDown, Loader2 } from "lucide-react";
 
 import { motion, AnimatePresence } from "motion/react";
 
-import { LLMMarkdown } from "@/components/ui/llm-markdown";
+import { LLMMarkdown } from "./utils/llm-markdown";
+
 import { cn } from "@/lib/utils";
 
 interface MessageReasoningProps {
@@ -84,7 +85,7 @@ export function MessageReasoning({
             style={{ overflow: "hidden" }}
             className="flex flex-col gap-4 border-l pl-4 text-zinc-600 dark:text-zinc-400"
           >
-            <LLMMarkdown isStreamFinished={!isLoading}>{reasoning}</LLMMarkdown>
+            <LLMMarkdown isStreamFinished={!isLoading} llmOutput={reasoning} />
           </motion.div>
         )}
       </AnimatePresence>
