@@ -1,7 +1,8 @@
-import type { ToolkitConfig } from "@/toolkits/types";
 import { z } from "zod";
-import { DiscordTools } from "./tools";
-import { listServersTool, getUserInfoTool } from "./tools";
+
+import { DiscordTools, listServersTool, getUserInfoTool } from "./tools";
+
+import type { ToolkitConfig } from "@/toolkits/types";
 
 export const discordParameters = z.object({
   // No parameters needed for user-focused tools

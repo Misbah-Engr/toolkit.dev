@@ -1,11 +1,14 @@
+import { REST } from "@discordjs/rest";
+
 import { createServerToolkit } from "@/toolkits/create-toolkit";
+
 import { baseDiscordToolkitConfig } from "./base";
 import { DiscordTools } from "./tools";
 import {
   listServersToolConfigServer,
   getUserInfoToolConfigServer,
 } from "./tools/server";
-import { REST } from "@discordjs/rest";
+
 import { api } from "@/trpc/server";
 
 export const discordToolkitServer = createServerToolkit(

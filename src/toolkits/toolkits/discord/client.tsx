@@ -9,8 +9,9 @@ import {
   getUserInfoToolConfigClient,
 } from "./tools/client";
 
-import { ToolkitGroups } from "@/toolkits/types";
 import { Link } from "../components/link";
+
+import { ToolkitGroups } from "@/toolkits/types";
 
 export const discordClientToolkit = createClientToolkit(
   baseDiscordToolkitConfig,
