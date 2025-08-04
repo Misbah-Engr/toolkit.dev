@@ -17,26 +17,27 @@ export type MessageEditorProps = {
   chatId: string;
 };
 
-export function MessageEditor({ message, setMode, chatId }: MessageEditorProps) {
+export function MessageEditor({
+  message,
+  setMode,
+  chatId,
+}: MessageEditorProps) {
   const { setMessages, append } = useChatContext();
   const { mutate } = useDeleteMessagesAfterTimestamp();
 
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-  const getTextFromMessage = (msg: Message): string => {
-   
-    if (msg.parts && msg.parts.length > 0) {
-      return msg.parts
+  const [draftContent, setDraftContent] = useState<string>(() => {
+    if (message.parts && message.parts.length > 0) {
+      return message.parts
         .filter((part) => part.type === "text")
         .map((part) => part.text)
         .join("\n")
         .trim();
     }
-    
-    return msg.content || "";
-  };
 
-  const [draftContent, setDraftContent] = useState<string>(getTextFromMessage(message));
+    return message.content || "";
+  });
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
@@ -55,6 +56,37 @@ export function MessageEditor({ message, setMode, chatId }: MessageEditorProps) 
   const handleInput = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setDraftContent(event.target.value);
     adjustHeight();
+  };
+
+  const onSubmit = async () => {
+    setIsSubmitting(true);
+
+    const messageCreatedAt = message.createdAt;
+    const messageTimestamp = messageCreatedAt
+      ? messageCreatedAt.getTime()
+      : Date.now();
+    const deleteFromTimestamp = new Date(messageTimestamp);
+    mutate({
+      chatId: chatId,
+      timestamp: deleteFromTimestamp,
+    });
+
+    setMessages((messages) => {
+      const index = messages.findIndex((m) => m.id === message.id);
+      if (index !== -1) {
+        return messages.slice(0, index);
+      }
+      return messages;
+    });
+
+    setMode("view");
+
+    await append({
+      role: "user",
+      content: draftContent,
+    });
+
+    setIsSubmitting(false);
   };
 
   return (
@@ -82,38 +114,7 @@ export function MessageEditor({ message, setMode, chatId }: MessageEditorProps) 
           variant="default"
           className="h-fit px-3 py-2"
           disabled={isSubmitting}
-          onClick={async () => {
-            setIsSubmitting(true);
-
-           
-            const messageCreatedAt = message.createdAt as Date | undefined;
-            const messageTimestamp = messageCreatedAt ? messageCreatedAt.getTime() : Date.now();
-            const deleteFromTimestamp = new Date(messageTimestamp);
-            mutate({
-              chatId: chatId,
-              timestamp: deleteFromTimestamp,
-            });
-
-         
-            setMessages((messages) => {
-              const index = messages.findIndex((m) => m.id === message.id);
-              if (index !== -1) {
-                
-                return messages.slice(0, index);
-              }
-              return messages;
-            });
-
-            setMode("view");
-            
-           
-            await append({
-              role: "user",
-              content: draftContent,
-            });
-            
-            setIsSubmitting(false);
-          }}
+          onClick={onSubmit}
         >
           {isSubmitting ? "Sending..." : "Send"}
         </Button>
