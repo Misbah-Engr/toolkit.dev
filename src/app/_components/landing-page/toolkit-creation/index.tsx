@@ -4,13 +4,12 @@ import React, { useState } from "react";
 
 import { AnimatePresence, motion } from "motion/react";
 
+import { Code } from "@/components/ui/code";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { HStack, VStack } from "@/components/ui/stack";
 
 import { Section } from "../lib/section";
 import { Heading } from "../lib/heading";
-
-import { CodeBlock } from "./code-block";
 
 import { SECTIONS } from "../sections";
 
@@ -72,7 +71,7 @@ export const ToolkitCreationSection: React.FC = () => {
               </div>
             ))}
           </TabsList>
-          <div className="relative col-span-7">
+          <div className="bg-card relative col-span-7 rounded-lg border">
             <AnimatePresence mode="wait">
               {toolkitCreationSteps[activeTab]?.code && (
                 <motion.div
@@ -81,15 +80,18 @@ export const ToolkitCreationSection: React.FC = () => {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.3 }}
-                  className="absolute inset-0 overflow-hidden rounded-lg border"
+                  className="absolute inset-0 overflow-hidden"
                 >
-                  <CodeBlock value={toolkitCreationSteps[activeTab].code} />
+                  <Code
+                    value={toolkitCreationSteps[activeTab].code}
+                    lang="ts"
+                  />
                 </motion.div>
               )}
             </AnimatePresence>
             {/* Invisible placeholder to maintain height */}
             <div className="invisible">
-              <CodeBlock value={toolkitCreationSteps[0]?.code ?? ""} />
+              <Code value={toolkitCreationSteps[0]?.code ?? ""} lang="ts" />
             </div>
           </div>
         </Tabs>
