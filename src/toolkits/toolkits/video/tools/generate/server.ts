@@ -1,8 +1,11 @@
+import { put } from "@vercel/blob";
+
+import { api } from "@/trpc/server";
+
+import { generateVideo } from "@/ai/video/generate";
+
 import type { ServerToolConfig } from "@/toolkits/types";
 import type { baseGenerateTool } from "./base";
-import { put } from "@vercel/blob";
-import { api } from "@/trpc/server";
-import { generateVideo } from "@/ai/video/generate";
 import type { videoParameters } from "../../base";
 import type z from "zod";
 
