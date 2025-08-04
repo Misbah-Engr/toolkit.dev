@@ -4,20 +4,11 @@ import { getUserInfoTool } from "./base";
 import Image from "next/image";
 
 export const getUserInfoToolConfigClient = createClientTool(getUserInfoTool, {
-  CallComponent: ({ isPartial }) => (
-    <div className="rounded-lg border p-4">
-      <h3 className="mb-2 font-semibold">Get Discord User Info</h3>
-      {isPartial ? (
-        <div className="text-sm text-gray-500">Loading your profile...</div>
-      ) : (
-        <div className="text-sm text-gray-600">
-          Fetching your Discord profile
-        </div>
-      )}
-    </div>
+  CallComponent: () => (
+    <h3 className="mb-2 font-semibold">Getting your Discord User Info</h3>
   ),
   ResultComponent: ({ result: { user } }) => (
-    <div className="rounded-lg border p-4">
+    <div>
       <h3 className="mb-2 font-semibold">Your Discord Profile</h3>
       <div className="space-y-3">
         <div className="flex items-center space-x-3">
