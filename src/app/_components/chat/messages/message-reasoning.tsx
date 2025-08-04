@@ -6,7 +6,7 @@ import { ChevronDown, Loader2 } from "lucide-react";
 
 import { motion, AnimatePresence } from "motion/react";
 
-import { LLMMarkdown } from "@/components/ui/llm-markdown";
+import { LLMMarkdown } from "@/app/_components/chat/messages/utils/llm-markdown";
 import { cn } from "@/lib/utils";
 
 interface MessageReasoningProps {

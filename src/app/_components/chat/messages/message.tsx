@@ -9,7 +9,7 @@ import { AnimatePresence, motion } from "motion/react";
 import equal from "fast-deep-equal";
 
 import { Button } from "@/components/ui/button";
-import { LLMMarkdown } from "@/components/ui/llm-markdown";
+import { LLMMarkdown } from "@/app/_components/chat/messages/utils/llm-markdown";
 import {
   Tooltip,
   TooltipContent,

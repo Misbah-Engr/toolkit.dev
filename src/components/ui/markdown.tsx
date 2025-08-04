@@ -11,13 +11,17 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import type { BundledLanguage } from "./code/shiki.bundle";
 
-interface Props {
+export interface MarkdownProps {
   children: string;
   headingClassName?: string;
   asSpan?: boolean;
 }
 
-const NonMemoizedMarkdown = ({ children, headingClassName, asSpan }: Props) => {
+const NonMemoizedMarkdown: React.FC<MarkdownProps> = ({
+  children,
+  headingClassName,
+  asSpan,
+}) => {
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm, remarkMath]}

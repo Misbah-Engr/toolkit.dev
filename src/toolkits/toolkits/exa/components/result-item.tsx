@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { LLMMarkdown } from "@/components/ui/llm-markdown";
+import { LLMMarkdown } from "@/app/_components/chat/messages/utils/llm-markdown";
 import { HStack, VStack } from "@/components/ui/stack";
 import Link from "next/link";
 
