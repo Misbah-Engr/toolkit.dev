@@ -13,6 +13,8 @@ import { Link } from "../components/link";
 
 import { ToolkitGroups } from "@/toolkits/types";
 
+import { DiscordWrapper } from "./wrapper";
+
 export const discordClientToolkit = createClientToolkit(
   baseDiscordToolkitConfig,
   {
@@ -20,6 +22,7 @@ export const discordClientToolkit = createClientToolkit(
     description: "Explore your Discord servers and account information",
     icon: SiDiscord,
     form: null,
+    Wrapper: DiscordWrapper,
     type: ToolkitGroups.DataSource,
     envVars: [
       {
