@@ -37,18 +37,16 @@ const codeToHtmlOptionsDark: CodeToHtmlOptions = {
   theme: "github-dark",
 };
 
-
 export const LLMCodeBlock: LLMOutputComponent = memo(({ blockMatch }) => {
   const [isCopied, setIsCopied] = useState(false);
   const [, copyToClipboard] = useCopyToClipboard();
 
- 
   const parsed = parseCompleteMarkdownCodeBlock(blockMatch.output);
   const language = parsed?.language || "text";
   const code = parsed?.code || blockMatch.output;
   console.log("Parsed code block:", { language, code });
   console.log("Block match output:", blockMatch.output);
-  console.log(parsed)
+  console.log(parsed);
 
   const { html: lightHtml } = useCodeBlockToHtml({
     markdownCodeBlock: blockMatch.output,
@@ -74,9 +72,8 @@ export const LLMCodeBlock: LLMOutputComponent = memo(({ blockMatch }) => {
   };
 
   if (!lightHtml || !darkHtml) {
+    const codeLines = code.split("\n");
 
-    const codeLines = code.split('\n');
-    
     return (
       <Card className="codeblock relative w-full max-w-full gap-0 overflow-hidden rounded-md py-0 font-sans">
         <div className="bg-primary/10 flex w-full items-center justify-between py-1 pr-2 pl-4">
@@ -99,14 +96,14 @@ export const LLMCodeBlock: LLMOutputComponent = memo(({ blockMatch }) => {
         </div>
         <div className="overflow-x-auto">
           <pre className="flex p-4 text-sm">
-            <div className="flex flex-col pr-4 text-right text-xs text-muted-foreground select-none">
+            <div className="text-muted-foreground flex flex-col pr-4 text-right text-xs select-none">
               {codeLines.map((_, index) => (
                 <span key={index} className="leading-6">
                   {index + 1}
                 </span>
               ))}
             </div>
-            <code className="font-mono flex-1 overflow-x-auto">
+            <code className="flex-1 overflow-x-auto font-mono">
               {codeLines.map((line, index) => (
                 <div key={index} className="leading-6 whitespace-pre">
                   {line}
@@ -119,8 +116,7 @@ export const LLMCodeBlock: LLMOutputComponent = memo(({ blockMatch }) => {
     );
   }
 
-  
-  const codeLines = code.split('\n');
+  const codeLines = code.split("\n");
 
   return (
     <Card className="codeblock relative w-full max-w-full gap-0 overflow-hidden rounded-md py-0 font-sans">
@@ -144,7 +140,7 @@ export const LLMCodeBlock: LLMOutputComponent = memo(({ blockMatch }) => {
       </div>
       <div className="overflow-x-auto">
         <div className="flex p-4 text-sm">
-          <div className="flex flex-col pr-4 text-right text-xs text-muted-foreground select-none">
+          <div className="text-muted-foreground flex flex-col pr-4 text-right text-xs select-none">
             {codeLines.map((_, index) => (
               <span key={index} className="leading-6">
                 {index + 1}
@@ -154,11 +150,11 @@ export const LLMCodeBlock: LLMOutputComponent = memo(({ blockMatch }) => {
 
           <div className="flex-1 overflow-x-auto">
             {/* Light theme */}
-            <div className="dark:hidden [&_pre]:!p-0 [&_pre]:!m-0 [&_pre]:!bg-transparent [&_pre]:!leading-6 [&_code]:!leading-6 [&_span]:!leading-6">
+            <div className="dark:hidden [&_code]:!leading-6 [&_pre]:!m-0 [&_pre]:!bg-transparent [&_pre]:!p-0 [&_pre]:!leading-6 [&_span]:!leading-6">
               {parseHtml(lightHtml)}
             </div>
             {/* Dark theme */}
-            <div className="hidden dark:block [&_pre]:!p-0 [&_pre]:!m-0 [&_pre]:!bg-transparent [&_pre]:!leading-6 [&_code]:!leading-6 [&_span]:!leading-6">
+            <div className="hidden dark:block [&_code]:!leading-6 [&_pre]:!m-0 [&_pre]:!bg-transparent [&_pre]:!p-0 [&_pre]:!leading-6 [&_span]:!leading-6">
               {parseHtml(darkHtml)}
             </div>
           </div>

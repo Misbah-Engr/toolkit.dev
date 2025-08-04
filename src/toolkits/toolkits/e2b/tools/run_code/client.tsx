@@ -98,7 +98,9 @@ const ResultItem: React.FC<{ result: Result; index: number }> = ({
           Icon={r.latex ? Pi : FileText}
           index={index}
         >
-          <LLMMarkdown isStreamFinished={true}>{r.markdown ?? r.text ?? r.latex ?? ""}</LLMMarkdown>
+          <LLMMarkdown isStreamFinished={true}>
+            {r.markdown ?? r.text ?? r.latex ?? ""}
+          </LLMMarkdown>
         </ResultWrapper>
       ),
     },

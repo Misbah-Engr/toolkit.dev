@@ -6,10 +6,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
-import {
-  useLLMOutput,
-  type LLMOutputComponent,
-} from "@llm-ui/react";
+import { useLLMOutput, type LLMOutputComponent } from "@llm-ui/react";
 import { markdownLookBack } from "@llm-ui/markdown";
 import {
   codeBlockLookBack,
@@ -30,53 +27,29 @@ interface Props {
 
 const MarkdownComponent: LLMOutputComponent = ({ blockMatch }) => {
   const markdown = blockMatch.output;
-  
+
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm, remarkMath]}
       rehypePlugins={[rehypeKatex]}
       components={{
         h1({ children }) {
-          return (
-            <h1 className="text-xl font-bold md:text-2xl">
-              {children}
-            </h1>
-          );
+          return <h1 className="text-xl font-bold md:text-2xl">{children}</h1>;
         },
         h2({ children }) {
-          return (
-            <h2 className="text-lg font-bold md:text-xl">
-              {children}
-            </h2>
-          );
+          return <h2 className="text-lg font-bold md:text-xl">{children}</h2>;
         },
         h3({ children }) {
-          return (
-            <h3 className="text-md font-bold md:text-lg">
-              {children}
-            </h3>
-          );
+          return <h3 className="text-md font-bold md:text-lg">{children}</h3>;
         },
         h4({ children }) {
-          return (
-            <h4 className="md:text-md text-sm font-bold">
-              {children}
-            </h4>
-          );
+          return <h4 className="md:text-md text-sm font-bold">{children}</h4>;
         },
         h5({ children }) {
-          return (
-            <h5 className="text-xs font-bold md:text-sm">
-              {children}
-            </h5>
-          );
+          return <h5 className="text-xs font-bold md:text-sm">{children}</h5>;
         },
         h6({ children }) {
-          return (
-            <h6 className="text-xs font-bold">
-              {children}
-            </h6>
-          );
+          return <h6 className="text-xs font-bold">{children}</h6>;
         },
         p({ children, node }) {
           const hasBlockElements = node?.children?.some(
@@ -106,11 +79,10 @@ const MarkdownComponent: LLMOutputComponent = ({ blockMatch }) => {
           );
         },
         code({ className, children }) {
-
           return (
             <code
               className={cn(
-                "rounded bg-muted px-1.5 py-0.5 text-sm font-mono",
+                "bg-muted rounded px-1.5 py-0.5 font-mono text-sm",
                 className,
               )}
             >
@@ -118,7 +90,7 @@ const MarkdownComponent: LLMOutputComponent = ({ blockMatch }) => {
             </code>
           );
         },
-        
+
         pre({ children }) {
           return <div>{children}</div>;
         },
@@ -148,7 +120,6 @@ const MarkdownComponent: LLMOutputComponent = ({ blockMatch }) => {
             return null;
           }
 
-      
           return <img src={src} alt={alt} className="mx-auto" />;
         },
         table({ children }) {
@@ -185,7 +156,7 @@ const MarkdownComponent: LLMOutputComponent = ({ blockMatch }) => {
         },
         blockquote({ children }) {
           return (
-            <blockquote className="border-l-4 border-muted-foreground/20 pl-4 italic text-muted-foreground">
+            <blockquote className="border-muted-foreground/20 text-muted-foreground border-l-4 pl-4 italic">
               {children}
             </blockquote>
           );
@@ -197,11 +168,11 @@ const MarkdownComponent: LLMOutputComponent = ({ blockMatch }) => {
   );
 };
 
-const NonMemoizedLLMMarkdown = ({ 
-  children, 
-  headingClassName, 
-  asSpan, 
-  isStreamFinished = true 
+const NonMemoizedLLMMarkdown = ({
+  children,
+  headingClassName,
+  asSpan,
+  isStreamFinished = true,
 }: Props) => {
   const { blockMatches } = useLLMOutput({
     llmOutput: children,
@@ -232,7 +203,7 @@ const NonMemoizedLLMMarkdown = ({
 
 export const LLMMarkdown = memo(
   NonMemoizedLLMMarkdown,
-  (prevProps, nextProps) => 
-    prevProps.children === nextProps.children && 
+  (prevProps, nextProps) =>
+    prevProps.children === nextProps.children &&
     prevProps.isStreamFinished === nextProps.isStreamFinished,
 );
