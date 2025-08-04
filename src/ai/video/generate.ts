@@ -13,11 +13,9 @@ export const generateVideo = async (
 
   const client = new LumaAI({ authToken: apiKey });
 
-  // Kick off the generation
   let generation = await client.generations.create({
     prompt: prompt,
     model: modelId as "ray-flash-2" | "ray-2",
-    duration: "3s",
   });
 
   // Poll until complete or failed
