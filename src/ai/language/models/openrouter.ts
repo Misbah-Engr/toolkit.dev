@@ -23,8 +23,8 @@ const openRouterModelData: Omit<LanguageModel, "provider">[] = [
     isNew: true,
   },
   {
-    name: "Horizon Alpha",
-    modelId: "horizon-alpha",
+    name: "Horizon Beta",
+    modelId: "horizon-beta",
     description:
       "A cloaked model provided to the community to gather feedback. Supports vision and long-context tasks.",
     capabilities: [
