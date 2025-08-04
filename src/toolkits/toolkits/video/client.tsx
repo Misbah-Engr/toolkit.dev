@@ -11,6 +11,7 @@ import { VideoTools } from "./tools";
 import { generateToolConfigClient } from "./tools/generate/client";
 
 import { videoEnvVars } from "./env-vars";
+import { VideoForm } from "./form";
 
 export const videoClientToolkit = createClientToolkit(
   baseVideoToolkitConfig,
@@ -18,7 +19,7 @@ export const videoClientToolkit = createClientToolkit(
     name: "Video",
     description: "Generate videos with AI",
     icon: Video,
-    form: null,
+    form: VideoForm,
     type: ToolkitGroups.Native,
     envVars: videoEnvVars,
   },
