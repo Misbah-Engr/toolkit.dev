@@ -8,9 +8,9 @@ const inputSchema = z.object({
 const outputSchema = z.object({
   url: z.string().describe("The URL of the generated video"),
 });
+
 export const baseGenerateTool = createBaseTool({
-  description: "Generate a video using Luma Labs AI tool",
+  description: "Generate a video using Luma Labs Dream Machine",
   inputSchema,
   outputSchema,
 });
-
