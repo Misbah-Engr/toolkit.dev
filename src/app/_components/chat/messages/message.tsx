@@ -152,6 +152,7 @@ const PurePreviewMessage: React.FC<Props> = ({
                     key={key}
                     message={message}
                     setMode={setMode}
+                    chatId={chatId}
                   />
                 );
               }
