@@ -18,6 +18,7 @@ type BundledLanguage =
   | 'python'
   | 'py'
   | 'java'
+  | 'c'
   | 'csharp'
   | 'c#'
   | 'cs'
@@ -77,6 +78,7 @@ const bundledLanguages = {
   python: () => import('@shikijs/langs/python'),
   py: () => import('@shikijs/langs/python'),
   java: () => import('@shikijs/langs/java'),
+  c: () => import('@shikijs/langs/c'),
   csharp: () => import('@shikijs/langs/csharp'),
   'c#': () => import('@shikijs/langs/csharp'),
   cs: () => import('@shikijs/langs/csharp'),

@@ -13,6 +13,7 @@ const { code } = await codegen({
     "javascript",
     "python",
     "java",
+    "c",
     "csharp",
     "cpp",
     "go",

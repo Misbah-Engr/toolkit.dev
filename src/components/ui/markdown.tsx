@@ -9,6 +9,7 @@ import { CodeBlock } from "./code-block";
 
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import type { BundledLanguage } from "./code/shiki.bundle";
 
 interface Props {
   children: string;
@@ -136,7 +137,7 @@ const NonMemoizedMarkdown = ({ children, headingClassName, asSpan }: Props) => {
           return (
             <div className="w-full max-w-full overflow-hidden">
               <CodeBlock
-                language={match[1] ?? "Plain Text"}
+                language={match[1] as BundledLanguage}
                 value={content.replace(/\n$/, "")}
               />
             </div>
