@@ -25,7 +25,6 @@ export const generateVideo = async (
     if (generation.state === "failed") {
       throw new Error(`Generation failed: ${generation.failure_reason}`);
     }
-    console.log("Dreaming...");
     await new Promise((r) => setTimeout(r, 3000));
     if (generation.id != null) {
       generation = await client.generations.get(generation.id);
