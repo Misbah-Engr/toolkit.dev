@@ -143,7 +143,7 @@ const ModelSelectContent: React.FC<{
             return (
               <Tooltip key={capability} delayDuration={150}>
                 <TooltipTrigger asChild>{content}</TooltipTrigger>
-                <TooltipContent>
+                <TooltipContent className="max-w-xs text-center">
                   <p className="text-sm">
                     This model is free to use, but the provider may rate limit
                     you and store your requests.
