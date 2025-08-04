@@ -16,7 +16,7 @@ import {
 import type { ClientToolkitWrapper } from "@/toolkits/types";
 import { Toolkits } from "../shared";
 
-const scopes = ["identify", "guilds"];
+const scopes = ["identify", "guilds", "email"];
 
 export const DiscordWrapper: ClientToolkitWrapper = ({ Item }) => {
   const { data: account, isLoading } =
