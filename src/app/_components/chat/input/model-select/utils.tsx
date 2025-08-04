@@ -34,11 +34,6 @@ export const capabilityColors: Record<LanguageModelCapability, string> = {
   [LanguageModelCapability.Free]: "bg-purple-100 text-purple-800",
 };
 
-// Extra "badge" style to mimic capability badges for random flag
-export const featuredBadgeStyle = "bg-purple-100 text-purple-800";
-export const FeaturedBadgeIcon = Star;
-export const FEATURED_BADGE_LABEL = "Featured";
-
 export const formatContextLength = (length?: number) => {
   if (!length) return null;
   if (length >= 1000000) return `${(length / 1000000).toFixed(1)}M tokens`;
