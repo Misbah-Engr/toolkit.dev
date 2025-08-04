@@ -27,6 +27,12 @@ import {
 } from "@/components/ui/drawer";
 
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+import {
   capabilityColors,
   capabilityIcons,
   capabilityLabels,
@@ -117,7 +123,7 @@ const ModelSelectContent: React.FC<{
       <div className="no-scrollbar flex gap-1 overflow-x-auto px-2">
         {Object.values(LanguageModelCapability).map((capability) => {
           const Icon = capabilityIcons[capability];
-          return (
+          const content = (
             <Badge
               key={capability}
               variant={
@@ -132,6 +138,22 @@ const ModelSelectContent: React.FC<{
               {capabilityLabels[capability]}
             </Badge>
           );
+
+          if (capability === LanguageModelCapability.Free) {
+            return (
+              <Tooltip key={capability} delayDuration={150}>
+                <TooltipTrigger asChild>{content}</TooltipTrigger>
+                <TooltipContent className="max-w-xs text-center">
+                  <p className="text-sm">
+                    This model is free to use, but the provider may rate limit
+                    you and store your requests.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            );
+          }
+
+          return content;
         })}
       </div>
     </div>
