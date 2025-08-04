@@ -1,5 +1,7 @@
 import { put } from "@vercel/blob";
 
+import { differenceInHours } from "date-fns";
+
 import { api } from "@/trpc/server";
 
 import { generateVideo } from "@/ai/video/generate";
@@ -8,6 +10,7 @@ import type { ServerToolConfig } from "@/toolkits/types";
 import type { baseGenerateTool } from "./base";
 import type { videoParameters } from "../../base";
 import type z from "zod";
+import { IS_DEVELOPMENT } from "@/lib/constants";
 
 export const generateToolConfigServer = ({
   model,
@@ -17,6 +20,26 @@ export const generateToolConfigServer = ({
 > => {
   return {
     callback: async ({ prompt }) => {
+      if (!IS_DEVELOPMENT) {
+        const {
+          items: [mostRecentUserVideo],
+        } = await api.videos.getUserVideos({
+          limit: 1,
+        });
+
+        if (
+          mostRecentUserVideo?.createdAt &&
+          differenceInHours(
+            new Date(),
+            new Date(mostRecentUserVideo.createdAt),
+          ) < 24
+        ) {
+          throw new Error(
+            "You can only generate one video per day. If you want to generate more videos, clone the repo from https://github.com/jasonhedman/toolkit.dev and run it locally.",
+          );
+        }
+      }
+
       const videoUrl = await generateVideo(model.split(":")[1]!, prompt);
 
       const res = await fetch(videoUrl);
