@@ -30,8 +30,8 @@ const openRouterModelData: Omit<LanguageModel, "provider">[] = [
     capabilities: [
       LanguageModelCapability.Vision,
       LanguageModelCapability.ToolCalling,
-      LanguageModelCapability.Reasoning,
       LanguageModelCapability.Pdf,
+      LanguageModelCapability.Free
     ],
     bestFor: [
       "Image analysis",
