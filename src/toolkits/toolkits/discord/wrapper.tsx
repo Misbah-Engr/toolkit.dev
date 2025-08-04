@@ -16,9 +16,11 @@ import {
 import type { ClientToolkitWrapper } from "@/toolkits/types";
 import { Toolkits } from "../shared";
 
+const scopes = ["identify", "guilds"];
+
 export const DiscordWrapper: ClientToolkitWrapper = ({ Item }) => {
-  const { data: hasAccount, isLoading } =
-    api.accounts.hasProviderAccount.useQuery("discord");
+  const { data: account, isLoading } =
+    api.accounts.getAccountByProvider.useQuery("discord");
 
   const [isAuthRequiredDialogOpen, setIsAuthRequiredDialogOpen] =
     useState(false);
@@ -27,7 +29,7 @@ export const DiscordWrapper: ClientToolkitWrapper = ({ Item }) => {
     return <Item isLoading={true} />;
   }
 
-  if (!hasAccount) {
+  if (!scopes.every((scope) => account?.scope?.includes(scope))) {
     return (
       <>
         <Item
@@ -39,13 +41,23 @@ export const DiscordWrapper: ClientToolkitWrapper = ({ Item }) => {
           onOpenChange={setIsAuthRequiredDialogOpen}
           Icon={SiDiscord}
           title="Connect your Discord account"
-          description="This will request read access to your Discord servers and users."
+          description={
+            account
+              ? "You need to provide additional permissions to access the Discord Toolkit."
+              : "This will request read access to your Discord servers and users."
+          }
           content={
             <AuthButton
               onClick={() => {
-                void signIn("discord", {
-                  callbackUrl: `${window.location.href}?${Toolkits.Discord}=true`,
-                });
+                void signIn(
+                  "discord",
+                  {
+                    callbackUrl: `${window.location.href}?${Toolkits.Discord}=true`,
+                  },
+                  {
+                    scope: scopes,
+                  },
+                );
               }}
             >
               Connect
