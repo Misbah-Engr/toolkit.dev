@@ -21,7 +21,8 @@
     "preview": "next build && next start",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "ci": "pnpm run format:check && pnpm run check && pnpm run build-pure"
+    "ci": "pnpm run format:check && pnpm run check && pnpm run build-pure",
+    "shiki:generate": "pnpm dlx tsx src/components/ui/code/codegen.ts && pnpm format:write"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^1.2.12",

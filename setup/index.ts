@@ -5,7 +5,6 @@ import { log, logStep, logError } from "./utils";
 import {
   createEnvFile,
   installDependencies,
-  runCodeGeneration,
   runMigrations,
   startDockerServices,
 } from "./steps";
@@ -34,10 +33,6 @@ async function main(): Promise<void> {
     {
       name: "Running database migrations",
       step: runMigrations,
-    },
-    {
-      name: "Running code generation",
-      step: runCodeGeneration,
     },
   ];
 
