@@ -6,9 +6,9 @@ export const generateVideo = async (
   modelId: (typeof allVideoModels)[number]["modelId"],
   prompt: string,
 ): Promise<string> => {
-  const apiKey = process.env.LUMAAI_API_KEY;
+  const apiKey = process.env.LUMA_API_KEY;
   if (!apiKey) {
-    throw new Error("LUMAAI_API_KEY environment variable is not set");
+    throw new Error("LUMA_API_KEY environment variable is not set");
   }
 
   const client = new LumaAI({ authToken: apiKey });
