@@ -55,7 +55,7 @@ export const DiscordWrapper: ClientToolkitWrapper = ({ Item }) => {
                     callbackUrl: `${window.location.href}?${Toolkits.Discord}=true`,
                   },
                   {
-                    scope: scopes,
+                    scope: scopes.join(" "),
                   },
                 );
               }}
