@@ -16,6 +16,7 @@ import { e2bClientToolkit } from "./e2b/client";
 import { discordClientToolkit } from "./discord/client";
 import { stravaClientToolkit } from "./strava/client";
 import { spotifyClientToolkit } from "./spotify/client";
+import { videoClientToolkit } from "./video/client";
 
 export type ClientToolkits = {
   [K in Toolkits]: ClientToolkit<
@@ -36,6 +37,7 @@ export const clientToolkits: ClientToolkits = {
   [Toolkits.Discord]: discordClientToolkit,
   [Toolkits.Strava]: stravaClientToolkit,
   [Toolkits.Spotify]: spotifyClientToolkit,
+  [Toolkits.Video]: videoClientToolkit,
 };
 
 export function getClientToolkit<T extends Toolkits>(

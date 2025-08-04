@@ -20,6 +20,8 @@ import type { stravaParameters } from "./strava/base";
 import type { StravaTools } from "./strava/tools";
 import type { spotifyParameters } from "./spotify/base";
 import type { SpotifyTools } from "./spotify/tools";
+import type { VideoTools } from "./video/tools";
+import type { videoParameters } from "./video/base";
 
 export enum Toolkits {
   Exa = "exa",
@@ -33,6 +35,7 @@ export enum Toolkits {
   Discord = "discord",
   Strava = "strava",
   Spotify = "spotify",
+  Video = "video",
 }
 
 export type ServerToolkitNames = {
@@ -47,6 +50,7 @@ export type ServerToolkitNames = {
   [Toolkits.Discord]: DiscordTools;
   [Toolkits.Strava]: StravaTools;
   [Toolkits.Spotify]: SpotifyTools;
+  [Toolkits.Video]: VideoTools;
 };
 
 export type ServerToolkitParameters = {
@@ -61,4 +65,5 @@ export type ServerToolkitParameters = {
   [Toolkits.Discord]: typeof discordParameters.shape;
   [Toolkits.Strava]: typeof stravaParameters.shape;
   [Toolkits.Spotify]: typeof spotifyParameters.shape;
+  [Toolkits.Video]: typeof videoParameters.shape;
 };

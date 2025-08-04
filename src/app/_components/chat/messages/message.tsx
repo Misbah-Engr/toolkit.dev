@@ -9,7 +9,7 @@ import { AnimatePresence, motion } from "motion/react";
 import equal from "fast-deep-equal";
 
 import { Button } from "@/components/ui/button";
-import { Markdown } from "@/components/ui/markdown";
+import { LLMMarkdown } from "@/app/_components/chat/messages/utils/llm-markdown";
 import {
   Tooltip,
   TooltipContent,
@@ -141,7 +141,10 @@ const PurePreviewMessage: React.FC<Props> = ({
                             message.role === "user",
                         })}
                       >
-                        <Markdown>{sanitizeText(part.text)}</Markdown>
+                        <LLMMarkdown
+                          isStreamFinished={!isLoading}
+                          llmOutput={sanitizeText(part.text)}
+                        />
                       </div>
                     </div>
                   );
@@ -152,6 +155,7 @@ const PurePreviewMessage: React.FC<Props> = ({
                     key={key}
                     message={message}
                     setMode={setMode}
+                    chatId={chatId}
                   />
                 );
               }
