@@ -67,9 +67,11 @@ export const ChatContent = ({
           }}
           className={cn(
             "w-full px-4 pb-4",
-         
-            !hasMessages && !hasInitialMessages && "absolute bottom-4 left-1/2 max-w-3xl -translate-x-1/2",
-            (hasMessages || hasInitialMessages) && "mx-auto max-w-3xl"
+
+            !hasMessages &&
+              !hasInitialMessages &&
+              "absolute bottom-4 left-1/2 max-w-3xl -translate-x-1/2",
+            (hasMessages || hasInitialMessages) && "mx-auto max-w-3xl",
           )}
         >
           {/* Greeting - only shown when no messages */}

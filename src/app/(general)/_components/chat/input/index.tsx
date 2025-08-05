@@ -77,10 +77,12 @@ const PureMultimodalInput: React.FC<Props> = ({
   const adjustHeight = () => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
-    
-      const maxHeight = Math.min(window.innerHeight * 0.35 - 32, textareaRef.current.scrollHeight + 2);
+
+      const maxHeight = Math.min(
+        window.innerHeight * 0.35 - 32,
+        textareaRef.current.scrollHeight + 2,
+      );
       if (textareaRef.current.scrollHeight + 2 <= maxHeight) {
-      
         textareaRef.current.style.height = `${textareaRef.current.scrollHeight + 2}px`;
         textareaRef.current.style.overflowY = "hidden";
       } else {
