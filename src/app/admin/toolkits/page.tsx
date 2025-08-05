@@ -1,7 +1,15 @@
 import { clientToolkits } from "@/toolkits/toolkits/client";
 import { StatsOverview } from "./_components/stats-overview";
-import { ToolkitCard } from "./_components/toolkit-card";
+import { ToolkitTableRow } from "./_components/toolkit-row";
+import {
+  Table,
+  TableBody,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import type { ClientToolkit } from "@/toolkits/types";
+import { SyncButton } from "./_components/sync-button";
 
 export default function AdminToolkitsPage() {
   return (
@@ -14,18 +22,33 @@ export default function AdminToolkitsPage() {
             Manage and monitor toolkit usage and performance
           </p>
         </div>
+        <SyncButton />
       </div>
 
       <StatsOverview />
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {Object.entries(clientToolkits).map(([toolkitId, toolkit]) => (
-          <ToolkitCard
-            key={toolkitId}
-            toolkitId={toolkitId}
-            toolkit={toolkit as ClientToolkit}
-          />
-        ))}
+      <div className="space-y-4">
+        <div className="rounded-md border">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Toolkit</TableHead>
+                <TableHead className="text-center">Tools</TableHead>
+                <TableHead className="text-center">Total Uses</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {Object.entries(clientToolkits).map(([toolkitId, toolkit]) => (
+                <ToolkitTableRow
+                  key={toolkitId}
+                  toolkitId={toolkitId}
+                  toolkit={toolkit as ClientToolkit}
+                />
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </div>
   );

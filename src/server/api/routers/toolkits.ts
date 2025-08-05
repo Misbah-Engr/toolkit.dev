@@ -4,7 +4,6 @@ import {
   createTRPCRouter,
   publicProcedure,
 } from "@/server/api/trpc";
-import { clientToolkits } from "@/toolkits/toolkits/client";
 
 export const toolkitsRouter = createTRPCRouter({
   // Get all toolkits
@@ -197,92 +196,5 @@ export const toolkitsRouter = createTRPCRouter({
       toolCount,
       topToolkits,
     };
-  }),
-
-  // Sync toolkits with client toolkits
-  syncToolkits: adminProcedure.mutation(async ({ ctx }) => {
-    const created: string[] = [];
-    const updated: string[] = [];
-    const errors: string[] = [];
-
-    try {
-      // Get all existing toolkits
-      const existingToolkits = await ctx.db.toolkit.findMany({
-        include: {
-          tools: true,
-        },
-      });
-
-      const existingToolkitMap = new Map(
-        existingToolkits.map((tk) => [tk.id, tk]),
-      );
-
-      // Process each client toolkit
-      for (const [toolkitId, toolkit] of Object.entries(clientToolkits)) {
-        try {
-          const existingToolkit = existingToolkitMap.get(toolkitId);
-          const tools = Object.keys(toolkit.tools);
-
-          if (!existingToolkit) {
-            // Create new toolkit
-            await ctx.db.toolkit.create({
-              data: {
-                id: toolkitId,
-              },
-            });
-            created.push(toolkitId);
-
-            // Create tools for this toolkit
-            const toolData = tools.map((toolName) => ({
-              id: toolName,
-              toolkitId: toolkitId,
-            }));
-
-            await ctx.db.tool.createMany({
-              data: toolData,
-            });
-          } else {
-            // Toolkit exists, check for missing tools
-            const existingToolIds = new Set(
-              existingToolkit.tools.map((tool) => tool.id),
-            );
-            const missingTools = tools.filter(
-              (toolId) => !existingToolIds.has(toolId),
-            );
-
-            if (missingTools.length > 0) {
-              const toolData = missingTools.map((toolName) => ({
-                id: toolName,
-                toolkitId: toolkitId,
-              }));
-
-              await ctx.db.tool.createMany({
-                data: toolData,
-              });
-              updated.push(toolkitId);
-            }
-          }
-        } catch (error) {
-          errors.push(
-            `Failed to sync toolkit ${toolkitId}: ${error instanceof Error ? error.message : "Unknown error"}`,
-          );
-        }
-      }
-
-      return {
-        created: created.length,
-        updated: updated.length,
-        errors,
-      };
-    } catch (error) {
-      errors.push(
-        `Sync failed: ${error instanceof Error ? error.message : "Unknown error"}`,
-      );
-      return {
-        created: created.length,
-        updated: updated.length,
-        errors,
-      };
-    }
   }),
 });
