@@ -39,6 +39,11 @@ const createAuthSchema = () => {
     authSchema.AUTH_SPOTIFY_SECRET = z.string();
   }
 
+  if (process.env.AUTH_TWITTER_ID || process.env.AUTH_TWITTER_SECRET) {
+    authSchema.AUTH_TWITTER_ID = z.string();
+    authSchema.AUTH_TWITTER_SECRET = z.string();
+  }
+
   return authSchema;
 };
 

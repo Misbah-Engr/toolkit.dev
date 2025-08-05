@@ -121,6 +121,15 @@ export const providers: (
         }),
       ]
     : []),
+  ...("AUTH_TWITTER_ID" in env && "AUTH_TWITTER_SECRET" in env
+    ? [
+        TwitterProvider({
+          clientId: env.AUTH_TWITTER_ID,
+          clientSecret: env.AUTH_TWITTER_SECRET,
+          allowDangerousEmailAccountLinking: true,
+        }),
+      ]
+    : []),
   ...(IS_DEVELOPMENT
     ? [
         CredentialsProvider({
