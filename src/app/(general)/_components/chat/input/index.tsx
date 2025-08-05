@@ -77,7 +77,16 @@ const PureMultimodalInput: React.FC<Props> = ({
   const adjustHeight = () => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight + 2}px`;
+    
+      const maxHeight = Math.min(window.innerHeight * 0.35 - 32, textareaRef.current.scrollHeight + 2);
+      if (textareaRef.current.scrollHeight + 2 <= maxHeight) {
+      
+        textareaRef.current.style.height = `${textareaRef.current.scrollHeight + 2}px`;
+        textareaRef.current.style.overflowY = "hidden";
+      } else {
+        textareaRef.current.style.height = `${maxHeight}px`;
+        textareaRef.current.style.overflowY = "auto";
+      }
     }
   };
 
@@ -417,7 +426,7 @@ const PureMultimodalInput: React.FC<Props> = ({
           value={input}
           onChange={handleInput}
           className={cn(
-            "h-auto max-h-[calc(75dvh-4rem)] min-h-[48px] resize-none overflow-hidden border-0 bg-transparent px-4 py-3 !text-base shadow-none focus-visible:ring-0 dark:bg-transparent",
+            "h-auto max-h-[calc(35dvh-2rem)] min-h-[48px] resize-none overflow-y-auto border-0 bg-transparent px-4 py-3 !text-base shadow-none focus-visible:ring-0 dark:bg-transparent",
             className,
           )}
           rows={2}

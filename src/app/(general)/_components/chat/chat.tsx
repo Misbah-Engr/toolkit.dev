@@ -12,6 +12,7 @@ import { Logo } from "@/components/ui/logo";
 import { useSearchParams } from "next/navigation";
 import { WelcomeDialog } from "../welcome-dialog";
 import { Anvil } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export const ChatContent = ({
   id,
@@ -40,7 +41,7 @@ export const ChatContent = ({
   return (
     <>
       <div className="bg-background relative flex h-full min-w-0 flex-col">
-        {/* Messages - always shown */}
+        {/* Messages - flex-1 to take available space */}
         <Messages
           chatId={id}
           isReadonly={isReadonly}
@@ -51,7 +52,7 @@ export const ChatContent = ({
           scrollToBottom={scrollToBottom}
         />
 
-        {/* Input Container - absolutely positioned, contains greeting, input, and starter prompts */}
+        {/* Input Container - normal flow no absolute positioning */}
         <motion.div
           initial={hasInitialMessages ? { y: 0 } : { y: "calc(-50vh + 50%)" }}
           animate={
@@ -64,7 +65,12 @@ export const ChatContent = ({
             ease: "easeInOut",
             duration: 0.4,
           }}
-          className="absolute bottom-4 left-1/2 h-fit w-full max-w-3xl -translate-x-1/2 px-4"
+          className={cn(
+            "w-full px-4 pb-4",
+         
+            !hasMessages && !hasInitialMessages && "absolute bottom-4 left-1/2 max-w-3xl -translate-x-1/2",
+            (hasMessages || hasInitialMessages) && "mx-auto max-w-3xl"
+          )}
         >
           {/* Greeting - only shown when no messages */}
           <AnimatePresence>
