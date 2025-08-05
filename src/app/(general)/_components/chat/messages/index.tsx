@@ -50,7 +50,6 @@ const PureMessages: React.FC<Props> = ({
       ref={containerRef}
       className={cn(
         "relative flex h-full min-w-0 flex-1 flex-col gap-6 overflow-y-scroll py-8",
-        messages.length > 0 && "mb-20",
       )}
     >
       {messages
