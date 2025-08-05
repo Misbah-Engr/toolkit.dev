@@ -3,7 +3,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AdminSidebar } from "@/app/admin/_components/admin-sidebar";
 import { Navbar } from "@/app/_components/navbar";
 import { auth } from "@/server/auth";
-import { unauthorized } from "next/navigation";
+import { forbidden, unauthorized } from "next/navigation";
 import { IS_DEVELOPMENT } from "@/lib/constants";
 
 export default async function AdminLayout({
@@ -11,8 +11,12 @@ export default async function AdminLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   const session = await auth();
 
-  if (!session || (session.user.role !== "ADMIN" && !IS_DEVELOPMENT)) {
+  if (!session) {
     return unauthorized();
+  }
+
+  if (session.user.role !== "ADMIN" && !IS_DEVELOPMENT) {
+    return forbidden();
   }
 
   return (
