@@ -1,23 +1,26 @@
 import type { ServerToolConfig } from "@/toolkits/types";
 import { getLatestTweetsTool } from "./base";
-import { TwitterApi } from "twitter-api-v2";
+import type { TwitterApi } from "twitter-api-v2";
 
 export const getLatestTweetsToolConfigServer = (
-  clientId: string,
-  clientSecret: string,
-): ServerToolConfig => {
+  client: TwitterApi,
+): ServerToolConfig<
+  typeof getLatestTweetsTool.inputSchema.shape,
+  typeof getLatestTweetsTool.outputSchema.shape
+> => {
   return {
-    callback: async (args: any) => {
+    callback: async (args: {
+      username: string;
+      max_results?: number;
+      exclude_retweets?: boolean;
+      exclude_replies?: boolean;
+    }) => {
       const {
         username,
         max_results = 10,
         exclude_retweets = false,
         exclude_replies = false,
       } = args;
-      const client = new TwitterApi({
-        clientId,
-        clientSecret,
-      });
 
       // First get the user ID
       const user = await client.v2.userByUsername(username);
@@ -44,42 +47,7 @@ export const getLatestTweetsToolConfigServer = (
       });
 
       return {
-        tweets:
-          tweets.data.data?.map((tweet) => ({
-            id: tweet.id,
-            text: tweet.text,
-            created_at: tweet.created_at || new Date().toISOString(),
-            public_metrics: {
-              retweet_count: tweet.public_metrics?.retweet_count || 0,
-              reply_count: tweet.public_metrics?.reply_count || 0,
-              like_count: tweet.public_metrics?.like_count || 0,
-              quote_count: tweet.public_metrics?.quote_count || 0,
-            },
-            entities: tweet.entities
-              ? {
-                  urls: tweet.entities.urls?.map((url) => ({
-                    url: url.url,
-                    expanded_url: url.expanded_url,
-                    display_url: url.display_url,
-                  })),
-                  hashtags: tweet.entities.hashtags?.map((hashtag) => ({
-                    tag: hashtag.tag,
-                  })),
-                  mentions: tweet.entities.mentions?.map((mention) => ({
-                    username: mention.username,
-                  })),
-                }
-              : undefined,
-            in_reply_to_user_id: tweet.in_reply_to_user_id || null,
-            referenced_tweets: tweet.referenced_tweets?.map((ref) => ({
-              type: ref.type,
-              id: ref.id,
-            })),
-          })) || [],
-        meta: {
-          result_count: tweets.data.data?.length || 0,
-          next_token: tweets.data.meta?.next_token,
-        },
+        tweets,
       };
     },
   };

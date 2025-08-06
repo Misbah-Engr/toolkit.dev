@@ -3,16 +3,17 @@ import { getUserProfileTool } from "./base";
 import { TwitterApi } from "twitter-api-v2";
 
 export const getUserProfileToolConfigServer = (
-  clientId: string,
-  clientSecret: string,
-): ServerToolConfig => {
+  client: TwitterApi,
+): ServerToolConfig<
+  typeof getUserProfileTool.inputSchema.shape,
+  typeof getUserProfileTool.outputSchema.shape
+> => {
   return {
-    callback: async (args: any) => {
+    callback: async (args: { username: string }) => {
       const { username } = args;
-      const client = new TwitterApi({
-        clientId,
-        clientSecret,
-      });
+
+      const me = await client.v2.me();
+      console.log(me);
 
       const user = await client.v2.userByUsername(username, {
         "user.fields": [
@@ -31,18 +32,7 @@ export const getUserProfileToolConfigServer = (
       }
 
       return {
-        id: user.data.id,
-        username: user.data.username,
-        name: user.data.name,
-        description: user.data.description || null,
-        location: user.data.location || null,
-        url: user.data.url || null,
-        followers_count: user.data.public_metrics?.followers_count || 0,
-        following_count: user.data.public_metrics?.following_count || 0,
-        tweets_count: user.data.public_metrics?.tweet_count || 0,
-        verified: user.data.verified || false,
-        profile_image_url: user.data.profile_image_url || null,
-        created_at: user.data.created_at || new Date().toISOString(),
+        user,
       };
     },
   };

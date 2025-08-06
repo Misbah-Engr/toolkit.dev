@@ -23,7 +23,7 @@ export const getLatestTweetsToolConfigClient = createClientTool(
       );
     },
     ResultComponent: ({ result, args }) => {
-      if (!result.tweets.length) {
+      if (!result.tweets.tweets.length) {
         return (
           <div className="text-muted-foreground">
             No tweets found for this user.
@@ -35,11 +35,11 @@ export const getLatestTweetsToolConfigClient = createClientTool(
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold">Latest Tweets</h3>
-            <Badge variant="secondary">{result.meta.result_count} tweets</Badge>
+            <Badge variant="secondary">{result.tweets.meta.result_count} tweets</Badge>
           </div>
 
           <div className="space-y-3">
-            {result.tweets.map((tweet) => (
+            {result.tweets.tweets.map((tweet) => (
               <Card key={tweet.id} className="w-full">
                 <CardHeader className="flex flex-row items-start space-y-0 pb-2">
                   <Avatar className="h-8 w-8">
@@ -49,7 +49,7 @@ export const getLatestTweetsToolConfigClient = createClientTool(
                     <div className="flex items-center gap-2">
                       <span className="font-semibold">@{args.username}</span>
                       <span className="text-muted-foreground text-sm">
-                        {new Date(tweet.created_at).toLocaleDateString()}
+                        {new Date(tweet.created_at || "").toLocaleDateString()}
                       </span>
                     </div>
                   </div>
@@ -91,19 +91,19 @@ export const getLatestTweetsToolConfigClient = createClientTool(
                   <div className="text-muted-foreground mt-3 flex items-center gap-4 text-sm">
                     <div className="flex items-center gap-1">
                       <MessageCircle className="h-4 w-4" />
-                      {tweet.public_metrics.reply_count}
+                      {tweet.public_metrics?.reply_count}
                     </div>
                     <div className="flex items-center gap-1">
                       <Repeat2 className="h-4 w-4" />
-                      {tweet.public_metrics.retweet_count}
+                      {tweet.public_metrics?.retweet_count}
                     </div>
                     <div className="flex items-center gap-1">
                       <Heart className="h-4 w-4" />
-                      {tweet.public_metrics.like_count}
+                      {tweet.public_metrics?.like_count}
                     </div>
                     <div className="flex items-center gap-1">
                       <Share className="h-4 w-4" />
-                      {tweet.public_metrics.quote_count}
+                      {tweet.public_metrics?.quote_count}
                     </div>
                   </div>
                 </CardContent>

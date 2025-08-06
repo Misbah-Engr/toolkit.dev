@@ -57,6 +57,12 @@ export const providers: (
           clientId: env.AUTH_TWITTER_ID,
           clientSecret: env.AUTH_TWITTER_SECRET,
           allowDangerousEmailAccountLinking: true,
+          authorization: {
+            url: "https://x.com/i/oauth2/authorize",
+            params: {
+              scope: "tweet.read users.read offline.access",
+            },
+          },
         }),
       ]
     : []),
@@ -118,15 +124,6 @@ export const providers: (
           redirectProxyUrl: IS_DEVELOPMENT
             ? `http://127.0.0.1:3000/api/auth`
             : undefined,
-        }),
-      ]
-    : []),
-  ...("AUTH_TWITTER_ID" in env && "AUTH_TWITTER_SECRET" in env
-    ? [
-        TwitterProvider({
-          clientId: env.AUTH_TWITTER_ID,
-          clientSecret: env.AUTH_TWITTER_SECRET,
-          allowDangerousEmailAccountLinking: true,
         }),
       ]
     : []),

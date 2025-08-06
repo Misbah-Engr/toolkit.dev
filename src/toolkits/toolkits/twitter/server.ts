@@ -5,7 +5,8 @@ import {
   getLatestTweetsToolConfigServer,
 } from "./tools/server";
 import { TwitterTools } from "./tools";
-import { env } from "@/env";
+import { api } from "@/trpc/server";
+import { TwitterApi } from "twitter-api-v2";
 
 export const twitterToolkitServer = createServerToolkit(
   baseTwitterToolkitConfig,
@@ -25,23 +26,25 @@ export const twitterToolkitServer = createServerToolkit(
 - Use the exclude_retweets and exclude_replies options to focus on original content
 - Consider the user's follower count and verification status when analyzing their influence`,
   async () => {
-    const clientId = env.AUTH_TWITTER_ID;
-    const clientSecret = env.AUTH_TWITTER_SECRET;
+    const account = await api.accounts.getAccountByProvider("twitter");
 
-    if (!clientId || !clientSecret) {
-      throw new Error(
-        "Twitter OAuth credentials are required: AUTH_TWITTER_ID, AUTH_TWITTER_SECRET",
-      );
+    if (!account) {
+      throw new Error("No Twitter account found. Please connect your Twitter account first.");
     }
+
+    if (!account.access_token) {
+      throw new Error("Twitter access token not found. Please reconnect your Twitter account.");
+    }
+
+    // Create Twitter API client with user's access token
+    const client = new TwitterApi(account.access_token);
 
     return {
       [TwitterTools.GetUserProfile]: getUserProfileToolConfigServer(
-        clientId,
-        clientSecret,
+        client,
       ),
       [TwitterTools.GetLatestTweets]: getLatestTweetsToolConfigServer(
-        clientId,
-        clientSecret,
+        client,
       ),
     };
   },
