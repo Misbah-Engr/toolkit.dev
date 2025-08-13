@@ -2,7 +2,6 @@ import React from "react";
 import { createClientTool } from "@/toolkits/create-tool";
 import { getUserProfileTool } from "./base";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { BadgeCheck } from "lucide-react";
 
@@ -15,8 +14,8 @@ export const getUserProfileToolConfigClient = createClientTool(
       </div>
     ),
     ResultComponent: ({ result }) => (
-      <Card className="w-full">
-        <CardHeader className="flex flex-row items-center space-y-0 pb-2">
+      <div className="w-full">
+        <div className="flex flex-row items-center space-y-0 pb-2">
           <Avatar className="h-12 w-12">
             <AvatarImage
               src={result.user.data.profile_image_url ?? undefined}
@@ -47,8 +46,8 @@ export const getUserProfileToolConfigClient = createClientTool(
               @{result.user.data.username}
             </p>
           </div>
-        </CardHeader>
-        <CardContent className="space-y-3">
+        </div>
+        <div className="space-y-3">
           {result.user.data.description && (
             <p className="text-sm">{result.user.data.description}</p>
           )}
@@ -65,32 +64,32 @@ export const getUserProfileToolConfigClient = createClientTool(
               {result.user.data.public_metrics?.tweet_count?.toLocaleString()}{" "}
               tweets
             </span>
+            {result.user.data.location && (
+              <p className="text-muted-foreground text-sm">
+                📍 {result.user.data.location}
+              </p>
+            )}
+            {result.user.data.url && (
+              <p className="text-muted-foreground text-sm">
+                🔗{" "}
+                <a
+                  href={result.user.data.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500 hover:underline"
+                >
+                  {result.user.data.url}
+                </a>
+              </p>
+            )}
           </div>
-          {result.user.data.location && (
-            <p className="text-muted-foreground text-sm">
-              📍 {result.user.data.location}
-            </p>
-          )}
-          {result.user.data.url && (
-            <p className="text-muted-foreground text-sm">
-              🔗{" "}
-              <a
-                href={result.user.data.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-500 hover:underline"
-              >
-                {result.user.data.url}
-              </a>
-            </p>
-          )}
           <Separator />
           <p className="text-muted-foreground text-xs">
             Joined{" "}
             {new Date(result.user.data.created_at ?? "").toLocaleDateString()}
           </p>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     ),
   },
 );

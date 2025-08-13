@@ -14,16 +14,9 @@ export const getLatestTweetsTool = createBaseTool({
       .number()
       .min(1)
       .max(100)
-      .default(10)
       .describe("Number of tweets to retrieve (max 100, default 10)"),
-    exclude_retweets: z
-      .boolean()
-      .default(false)
-      .describe("Exclude retweets from results"),
-    exclude_replies: z
-      .boolean()
-      .default(false)
-      .describe("Exclude replies from results"),
+    exclude_retweets: z.boolean().describe("Exclude retweets from results"),
+    exclude_replies: z.boolean().describe("Exclude replies from results"),
   }),
   outputSchema: z.object({
     tweets: z.custom<TweetUserTimelineV2Paginator>(),
