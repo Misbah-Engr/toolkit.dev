@@ -35,7 +35,9 @@ export const getLatestTweetsToolConfigClient = createClientTool(
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold">Latest Tweets</h3>
-            <Badge variant="secondary">{result.tweets.meta.result_count} tweets</Badge>
+            <Badge variant="secondary">
+              {result.tweets.meta.result_count} tweets
+            </Badge>
           </div>
 
           <div className="space-y-3">

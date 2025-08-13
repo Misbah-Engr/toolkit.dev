@@ -25,5 +25,4 @@ const config = {
   serverExternalPackages: ["twitter-api-v2"],
 };
 
-
 export default config;

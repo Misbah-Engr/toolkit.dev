@@ -25,10 +25,7 @@ export const twitterClientToolkit = createClientToolkit(
     envVars: [
       {
         type: "all",
-        keys: [
-          "AUTH_TWITTER_ID",
-          "AUTH_TWITTER_SECRET",
-        ],
+        keys: ["AUTH_TWITTER_ID", "AUTH_TWITTER_SECRET"],
         description: (
           <span>
             Get OAuth credentials from{" "}
@@ -40,7 +37,8 @@ export const twitterClientToolkit = createClientToolkit(
             >
               Twitter Developer Portal
             </a>
-            . You&apos;ll need to create an app and generate OAuth 1.0a credentials.
+            . You&apos;ll need to create an app and generate OAuth 1.0a
+            credentials.
           </span>
         ),
       },

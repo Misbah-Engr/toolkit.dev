@@ -29,23 +29,23 @@ export const twitterToolkitServer = createServerToolkit(
     const account = await api.accounts.getAccountByProvider("twitter");
 
     if (!account) {
-      throw new Error("No Twitter account found. Please connect your Twitter account first.");
+      throw new Error(
+        "No Twitter account found. Please connect your Twitter account first.",
+      );
     }
 
     if (!account.access_token) {
-      throw new Error("Twitter access token not found. Please reconnect your Twitter account.");
+      throw new Error(
+        "Twitter access token not found. Please reconnect your Twitter account.",
+      );
     }
 
     // Create Twitter API client with user's access token
     const client = new TwitterApi(account.access_token);
 
     return {
-      [TwitterTools.GetUserProfile]: getUserProfileToolConfigServer(
-        client,
-      ),
-      [TwitterTools.GetLatestTweets]: getLatestTweetsToolConfigServer(
-        client,
-      ),
+      [TwitterTools.GetUserProfile]: getUserProfileToolConfigServer(client),
+      [TwitterTools.GetLatestTweets]: getLatestTweetsToolConfigServer(client),
     };
   },
 );
