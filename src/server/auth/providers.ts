@@ -57,12 +57,6 @@ export const providers: (
           clientId: env.AUTH_TWITTER_ID,
           clientSecret: env.AUTH_TWITTER_SECRET,
           allowDangerousEmailAccountLinking: true,
-          authorization: {
-            url: "https://x.com/i/oauth2/authorize",
-            params: {
-              scope: "tweet.read users.read offline.access",
-            },
-          },
         }),
       ]
     : []),

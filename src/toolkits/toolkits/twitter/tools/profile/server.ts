@@ -12,16 +12,13 @@ export const getUserProfileToolConfigServer = (
     callback: async (args: { username: string }) => {
       const { username } = args;
 
-      const me = await client.v2.me();
-      console.log(me);
-
       const user = await client.v2.userByUsername(username, {
         "user.fields": [
           "description",
           "location",
           "url",
           "public_metrics",
-          "verified",
+          "verified_type",
           "profile_image_url",
           "created_at",
         ],

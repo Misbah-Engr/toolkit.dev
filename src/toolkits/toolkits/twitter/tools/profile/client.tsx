@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { BadgeCheck } from "lucide-react";
 
 export const getUserProfileToolConfigClient = createClientTool(
   getUserProfileTool,
@@ -26,10 +27,18 @@ export const getUserProfileToolConfigClient = createClientTool(
           <div className="ml-4 flex-1">
             <div className="flex items-center gap-2">
               <h3 className="text-lg font-semibold">{result.user.data.name}</h3>
-              {result.user.data.verified && (
-                <Badge variant="secondary" className="text-xs">
-                  Verified
-                </Badge>
+              {result.user.data.verified_type && result.user.data.verified_type !== 'none' && (
+                <BadgeCheck 
+                  className={`h-5 w-5 ${
+                    result.user.data.verified_type === 'blue' 
+                      ? 'text-blue-500' 
+                      : result.user.data.verified_type === 'government' 
+                      ? 'text-gray-500' 
+                      : result.user.data.verified_type === 'business' 
+                      ? 'text-yellow-500' 
+                      : 'text-gray-400'
+                  }`} 
+                />
               )}
             </div>
             <p className="text-muted-foreground text-sm">@{result.user.data.username}</p>
