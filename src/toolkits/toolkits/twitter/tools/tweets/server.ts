@@ -1,5 +1,5 @@
 import type { ServerToolConfig } from "@/toolkits/types";
-import { getLatestTweetsTool } from "./base";
+import type { getLatestTweetsTool } from "./base";
 import type { TwitterApi } from "twitter-api-v2";
 
 export const getLatestTweetsToolConfigServer = (

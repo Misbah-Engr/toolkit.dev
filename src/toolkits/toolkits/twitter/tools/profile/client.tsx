@@ -2,7 +2,6 @@ import React from "react";
 import { createClientTool } from "@/toolkits/create-tool";
 import { getUserProfileTool } from "./base";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { BadgeCheck } from "lucide-react";
@@ -19,7 +18,7 @@ export const getUserProfileToolConfigClient = createClientTool(
       <Card className="w-full">
         <CardHeader className="flex flex-row items-center space-y-0 pb-2">
           <Avatar className="h-12 w-12">
-            <AvatarImage src={result.user.data.profile_image_url || undefined} />
+            <AvatarImage src={result.user.data.profile_image_url ?? undefined} />
             <AvatarFallback>
               {result.user.data.username.charAt(0).toUpperCase()}
             </AvatarFallback>
@@ -73,7 +72,7 @@ export const getUserProfileToolConfigClient = createClientTool(
           )}
           <Separator />
           <p className="text-muted-foreground text-xs">
-            Joined {new Date(result.user.data.created_at || "").toLocaleDateString()}
+            Joined {new Date(result.user.data.created_at ?? "").toLocaleDateString()}
           </p>
         </CardContent>
       </Card>

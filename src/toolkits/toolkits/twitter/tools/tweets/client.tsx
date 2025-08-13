@@ -1,7 +1,7 @@
 import React from "react";
 import { createClientTool } from "@/toolkits/create-tool";
 import { getLatestTweetsTool } from "./base";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Heart, MessageCircle, Repeat2, Share } from "lucide-react";
@@ -16,7 +16,7 @@ export const getLatestTweetsToolConfigClient = createClientTool(
 
       return (
         <div className="text-sm">
-          Getting {args.max_results || 10} latest tweets from{" "}
+          Getting {args.max_results ?? 10} latest tweets from{" "}
           <span className="font-mono">@{args.username}</span>
           {filters.length > 0 && ` (${filters.join(", ")})`}
         </div>
@@ -43,13 +43,15 @@ export const getLatestTweetsToolConfigClient = createClientTool(
               <Card key={tweet.id} className="w-full">
                 <CardHeader className="flex flex-row items-start space-y-0 pb-2">
                   <Avatar className="h-8 w-8">
-                    <AvatarFallback>U</AvatarFallback>
+                    <AvatarFallback>
+                      {args.username.charAt(0).toUpperCase()}
+                    </AvatarFallback>
                   </Avatar>
                   <div className="ml-3 flex-1">
                     <div className="flex items-center gap-2">
                       <span className="font-semibold">@{args.username}</span>
                       <span className="text-muted-foreground text-sm">
-                        {new Date(tweet.created_at || "").toLocaleDateString()}
+                        {new Date(tweet.created_at ?? "").toLocaleDateString()}
                       </span>
                     </div>
                   </div>

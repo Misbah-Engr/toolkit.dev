@@ -1,6 +1,6 @@
 import type { ServerToolConfig } from "@/toolkits/types";
-import { getUserProfileTool } from "./base";
-import { TwitterApi } from "twitter-api-v2";
+import type { getUserProfileTool } from "./base";
+import type { TwitterApi } from "twitter-api-v2";
 
 export const getUserProfileToolConfigServer = (
   client: TwitterApi,

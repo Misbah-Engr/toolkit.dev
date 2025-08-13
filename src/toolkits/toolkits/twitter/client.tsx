@@ -40,7 +40,7 @@ export const twitterClientToolkit = createClientToolkit(
             >
               Twitter Developer Portal
             </a>
-            . You'll need to create an app and generate OAuth 1.0a credentials.
+            . You&apos;ll need to create an app and generate OAuth 1.0a credentials.
           </span>
         ),
       },
