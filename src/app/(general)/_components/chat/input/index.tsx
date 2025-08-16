@@ -30,6 +30,7 @@ import { ModelSelect } from "./model-select";
 import { useChatContext } from "@/app/(general)/_contexts/chat-context";
 type Attachment = { url: string; name?: string; contentType?: string };
 import type { UseChatHelpers } from "@ai-sdk/react";
+import type { UIMessage } from "ai";
 import { ToolsSelect } from "./tools";
 import type { File as DbFile } from "@prisma/client";
 import { LanguageModelCapability } from "@/ai/language/types";
@@ -505,7 +506,7 @@ function PureAttachmentsButton({
   disabledString,
 }: {
   fileInputRef: React.MutableRefObject<HTMLInputElement | null>;
-  status: UseChatHelpers<unknown>["status"];
+  status: UseChatHelpers<UIMessage>["status"];
   disabledString: string;
 }) {
   const button = (

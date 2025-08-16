@@ -148,11 +148,11 @@ export async function POST(request: Request) {
       parts: message.parts,
       attachments:
         message.parts
-          ?.filter((p): p is IncomingFilePart => p.type === "file")
+          ?.filter((p): p is Extract<PostRequestBody["message"]["parts"][number], { type: "file" }> => p.type === "file")
           .map((p) => ({
             url: p.url,
             name: p.filename ?? "",
-            contentType: p.mediaType ?? "application/octet-stream",
+            contentType: p.mediaType,
           })) ?? [],
       modelId: "user",
     });

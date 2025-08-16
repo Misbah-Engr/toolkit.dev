@@ -94,14 +94,19 @@ const PurePreviewMessage: React.FC<Props> = ({
               const { type } = part;
               const key = `message-${message.id}-part-${index}`;
 
-      if (type === "reasoning") {
+              if (type === "reasoning") {
+                const anyPart = part as any;
+                const reasoningText =
+                  (typeof anyPart?.reasoningText === "string"
+                    ? anyPart.reasoningText
+                    : undefined) ??
+                  (typeof anyPart?.text === "string" ? anyPart.text : undefined) ??
+                  "";
                 return (
                   <MessageReasoning
                     key={key}
                     isLoading={isLoading}
-                    reasoningText={
-                      (part as { type: "reasoning"; reasoningText: string } | undefined)?.reasoningText ?? ""
-                    }
+                    reasoningText={reasoningText}
                   />
                 );
               }

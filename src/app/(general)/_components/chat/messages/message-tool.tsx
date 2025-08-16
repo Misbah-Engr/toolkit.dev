@@ -38,6 +38,14 @@ const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
 
   const { toolName } = toolInvocation;
 
+  if (!toolName) {
+    return (
+      <pre className="w-full max-w-full whitespace-pre-wrap">
+        {JSON.stringify(toolInvocation, null, 2)}
+      </pre>
+    );
+  }
+
   const [server, tool] = toolName.split("_");
 
   if (!server || !tool) {
@@ -134,7 +142,7 @@ const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
                 }}
                 style={{ overflow: "hidden" }}
               >
-                {toolInvocation.args && (
+                {toolInvocation.args !== undefined ? (
                   <toolConfig.CallComponent
                     args={
                       toolInvocation.args as DeepPartial<
@@ -143,7 +151,7 @@ const MessageToolComponent: React.FC<Props> = ({ toolInvocation }) => {
                     }
                     isPartial={toolInvocation.state === "partial-call"}
                   />
-                )}
+                ) : null}
               </motion.div>
             ) : toolConfig && toolInvocation.state === "result" ? (
               (() => {
@@ -256,5 +264,21 @@ const MessageToolResultComponent: React.FC<{
   }>;
 }> = ({ Component }) => {
   const { append } = useChatContext();
-  return <Component append={(m) => void append(m)} />;
+  return (
+    <Component
+      append={(m) =>
+        m.text
+          ? void append({
+              text: m.text,
+              files: m.files?.map((f) => ({
+                type: "file" as const,
+                url: f.url,
+                filename: f.filename,
+                mediaType: f.mediaType,
+              })),
+            })
+          : undefined
+      }
+    />
+  );
 };
