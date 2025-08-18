@@ -4,7 +4,7 @@ import { put } from "@vercel/blob";
 import { api } from "@/trpc/server";
 import type { imageParameters } from "../../base";
 import type z from "zod";
-import { generateImage, type GeneratedImage } from "@/ai/image/generate";
+import { generateImage } from "@/ai/image/generate";
 
 export const generateToolConfigServer = (
   parameters: z.infer<typeof imageParameters>,
@@ -14,28 +14,27 @@ export const generateToolConfigServer = (
 > => {
   return {
     callback: async ({ prompt }) => {
-  const image: GeneratedImage = await generateImage(parameters.model, prompt);
+      const result = await generateImage(parameters.model, prompt);
+      if (!result) throw new Error("No image generated");
 
-      if (!image) {
-        console.error("No image generated");
-        throw new Error("No image generated");
+      // If we already have a remote URL, persist metadata only.
+      if (result.url) {
+        await api.images.createImage({
+          url: result.url,
+          contentType: result.mimeType,
+        });
+        return { url: result.url };
       }
 
+      if (!result.bytes) throw new Error("Image result missing bytes");
       const imageId = crypto.randomUUID();
+      const ext = result.mimeType.split("/")[1] || "png";
+      const fileName = `images/${imageId}.${ext}`;
+      const file = new File([result.bytes], fileName, { type: result.mimeType });
 
-  const fileName = `images/${imageId}.${image.mimeType.split("/")[1]}`;
-  const file = new File([image.uint8Array], fileName, { type: image.mimeType });
-
-      const { url: imageUrl } = await put(file.name, file, {
-        access: "public",
-      });
-
-      await api.images.createImage({
-        url: imageUrl,
-        contentType: image.mimeType,
-      });
-
-      return { url: imageUrl };
+      const { url } = await put(file.name, file, { access: "public" });
+      await api.images.createImage({ url, contentType: result.mimeType });
+      return { url };
     },
   };
 };

@@ -13,22 +13,6 @@ import {
 
 export function runMigrations(): void {
   try {
-    // Allow skipping via env flags or CI
-    if (
-      process.env.SKIP_DB === "1" ||
-      process.env.SKIP_DB === "true" ||
-      // support both SKIP_DB_MIGRATIONS and SKIP_DB_MIGRATE spellings
-      process.env.SKIP_DB_MIGRATIONS === "1" ||
-      process.env.SKIP_DB_MIGRATIONS === "true" ||
-      process.env.SKIP_DB_MIGRATE === "1" ||
-      process.env.SKIP_DB_MIGRATE === "true" ||
-      process.env.CI === "true"
-    ) {
-      logInfo(
-        "Skipping database migrations (SKIP_DB/SKIP_DB_MIGRATIONS/SKIP_DB_MIGRATE/CI detected)",
-      );
-      return;
-    }
 
     // If no local env file, warn and skip to keep setup non-blocking
     const envPath = join(getProjectRoot(), ".env.local");
@@ -38,20 +22,28 @@ export function runMigrations(): void {
     }
 
     // If DATABASE_URL isn't configured, skip to avoid blocking in ephemeral/dev envs
+    let dbUrl: string | undefined;
     try {
       const envContents = readFileSync(envPath, "utf8");
       const dbUrlLine = envContents
         .split(/\r?\n/)
         .find((l) => /^\s*DATABASE_URL\s*=/.test(l) && !/^\s*#/.test(l));
-      const dbUrl = dbUrlLine?.split("=").slice(1).join("=").trim();
-      if (!dbUrl) {
-        logWarning(
-          "DATABASE_URL missing in .env.local. Skipping database migrations. Configure it to enable Prisma.",
-        );
-        return;
-      }
+      dbUrl = dbUrlLine?.split("=").slice(1).join("=").trim();
     } catch {
-      // If we can't read/parse for some reason, proceed; failures will be caught below
+      // ignore, will handle below
+    }
+
+    if (!dbUrl) {
+      logWarning(
+        "DATABASE_URL missing in .env.local. Skipping database migrations. Configure it to enable Prisma.",
+      );
+      return;
+    }
+
+    const isLocal = /localhost|127\.0\.0\.1/.test(dbUrl);
+    if (!isLocal) {
+      logInfo("Remote/non-local DATABASE_URL detected; assuming migrations handled elsewhere. Skipping.");
+      return;
     }
 
     // Attempt to run migrations (script loads env via dotenv)

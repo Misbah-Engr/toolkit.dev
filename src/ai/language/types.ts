@@ -1,4 +1,4 @@
-// ProviderMetadata removed in v5; use a generic record for providerOptions
+// ProviderMetadata: retained for compatibility; if the upstream SDK exposes a richer type, prefer importing it.
 export type ProviderMetadata = Record<string, unknown>;
 
 export enum LanguageModelCapability {

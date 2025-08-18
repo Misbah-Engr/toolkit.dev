@@ -15,11 +15,7 @@ import {
 // Start Docker Compose services
 export function startDockerServices(): void {
   try {
-    // Allow skipping docker setup via env or CI
-    if (process.env.SKIP_DOCKER === "1" || process.env.SKIP_DOCKER === "true" || process.env.CI === "true") {
-      logInfo("Skipping Docker services setup (SKIP_DOCKER/CI detected)");
-      return;
-    }
+    // Opinionated: do not allow skipping; environment is expected to support required services.
 
     // Check if Docker is available
     const dockerCommand = checkDocker();
@@ -42,9 +38,7 @@ export function startDockerServices(): void {
     }
 
     if (!dockerDaemonRunning(dockerCommand)) {
-      logWarning(
-        `${dockerCommand} daemon is not running. Skipping Docker services. Start the daemon and rerun if needed.`,
-      );
+      logError(`${dockerCommand} daemon is not running. Start it and rerun setup.`);
       return;
     }
 
