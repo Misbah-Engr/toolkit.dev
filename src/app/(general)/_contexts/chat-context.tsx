@@ -6,8 +6,8 @@ import { DefaultChatTransport, type UIMessage } from "ai";
 import { toast } from "sonner";
 
 import { OpenRouterChecks } from "./openrouter-checks";
-import { api } from "@/trpc/react";
 import { useAutoResume } from "@/app/(general)/_hooks/use-auto-resume";
+import { api } from "@/trpc/react";
 import { LanguageModelCapability, type LanguageModel } from "@/ai/language/types";
 import { clientToolkits } from "@/toolkits/toolkits/client";
 import { languageModels } from "@/ai/language";
@@ -54,11 +54,14 @@ interface ChatContextType {
 
   workbench?: Workbench;
 
-  // Chat actions
+      // Chat actions
   handleSubmit: (event?: { preventDefault?: () => void }) => void;
   stop: () => void;
   reload: () => Promise<void>;
-  append: UseChatHelpers<UIMessage>["sendMessage"];
+  append: (
+    message?: Parameters<UseChatHelpers<UIMessage>["sendMessage"]>[0],
+    options?: Parameters<UseChatHelpers<UIMessage>["sendMessage"]>[1],
+  ) => Promise<void>;
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -191,13 +194,20 @@ export function ChatProvider({
         });
       }
     },
-    onError: (error) => {
-      if (error instanceof ChatSDKError) {
-        toast.error(error.message);
-      } else {
-        console.error(error);
-        toast.error("An error occurred while processing your request");
+    onError: (err: unknown) => {
+      if (err instanceof ChatSDKError) {
+        toast.error(err.message);
+        return;
       }
+      console.error(err);
+      const derivedMessage =
+        typeof err === "object" &&
+        err !== null &&
+        "message" in err &&
+        typeof (err as { message?: unknown }).message === "string"
+          ? (err as { message: string }).message
+          : undefined;
+      toast.error(derivedMessage ?? "An error occurred while processing your request");
     },
   });
 
@@ -207,12 +217,18 @@ export function ChatProvider({
     // Mark stream as stopped to hide thinking message
     setStreamStopped(true);
     // Also call stop to change the status away from 'submitted'
-    stop();
+    void stop();
   }, [stop]);
 
-  useAutoResume({ autoResume, initialMessages, resumeStream, setMessages, onStreamError });
+  useAutoResume({
+    autoResume,
+    initialMessages,
+    resumeStream,
+    setMessages,
+    onStreamError,
+  });
 
-  const handleSubmit = (event?: { preventDefault?: () => void }) => {
+  const handleSubmit = (event?: { preventDefault?: () => void }): void => {
     event?.preventDefault?.();
     // Reset stream stopped flag when submitting new message
     setStreamStopped(false);
@@ -222,7 +238,7 @@ export function ChatProvider({
       url: a.url,
       filename: a.name,
     }));
-  void append({ text: input, files });
+    void append({ text: input, files });
     setAttachments([]);
     setInput("");
   };
@@ -249,7 +265,7 @@ export function ChatProvider({
     useNativeSearch: useNativeSearchState,
     setUseNativeSearch,
     handleSubmit,
-    stop,
+  stop: () => { void stop(); },
     reload,
     append,
     imageGenerationModel: imageGenerationModelState,

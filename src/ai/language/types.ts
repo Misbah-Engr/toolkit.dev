@@ -1,5 +1,4 @@
-// ProviderMetadata: retained for compatibility; if the upstream SDK exposes a richer type, prefer importing it.
-export type ProviderMetadata = Record<string, unknown>;
+import type { ProviderMetadata } from "ai";
 
 export enum LanguageModelCapability {
   Vision = "vision",
@@ -19,5 +18,5 @@ export type LanguageModel = {
   bestFor?: string[];
   contextLength?: number;
   isNew?: boolean;
-  providerOptions?: ProviderMetadata;
+  providerOptions?: ProviderMetadata; // use SDK type directly (no alias masking)
 };

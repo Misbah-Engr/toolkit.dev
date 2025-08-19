@@ -273,11 +273,10 @@ export async function POST(request: Request) {
           if (session.user?.id) {
             try {
               const assistantMessages = response.messages.filter(
-                (m) => m.role === "assistant",
+                (m): m is CoreAssistantMessage & { id: string } =>
+                  m.role === "assistant" && typeof (m as { id?: unknown }).id === "string",
               );
-              const assistantId = getTrailingMessageId({
-                messages: assistantMessages as any,
-              });
+              const assistantId = getTrailingMessageId({ messages: assistantMessages });
 
               if (!assistantId) {
                 throw new Error("No assistant message found!");
@@ -294,8 +293,8 @@ export async function POST(request: Request) {
                 id: assistantId,
                 role: "assistant",
                 // Persist the final assistant text as a single text part
-                parts: response && typeof (response as any).text === "string"
-                  ? [{ type: "text", text: (response as any).text }]
+                parts: typeof (response as { text?: unknown }).text === "string"
+                  ? [{ type: "text", text: (response as { text?: string }).text! }]
                   : [],
                 attachments: [],
                 modelId: response.modelId,
@@ -323,9 +322,9 @@ export async function POST(request: Request) {
     const streamContext = getStreamContext();
 
     if (streamContext) {
-      return new Response(
-  await streamContext.resumableStream(streamId, () => stream as unknown as ReadableStream<string>),
-      );
+      // Cast to unknown first for safety with complex types
+      const readable = await streamContext.resumableStream(streamId, () => stream as unknown as ReadableStream<string>);
+      return new Response(readable);
     } else {
       return new Response(stream);
     }
@@ -353,7 +352,7 @@ function extractTextFromParts(
     return parts
       .filter(
         (p): p is IncomingTextPart =>
-          !!p && p.type === "text" && typeof (p as IncomingTextPart).text === "string",
+          !!p && p.type === "text" && typeof p.text === "string",
       )
       .map((p) => p.text)
       .join("\n")

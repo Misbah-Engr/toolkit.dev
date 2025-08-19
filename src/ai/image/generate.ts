@@ -1,47 +1,39 @@
-import type { ImageModelProvider } from "./types";
-import { createOpenAI } from "@ai-sdk/openai"; // example provider (extend as needed)
-import { generateImage as sdkGenerateImage } from "ai";
+import { experimental_generateImage as sdkGenerateImage } from "ai";
+import type { ImageModel } from "ai";
+import { openai } from "@ai-sdk/openai";
+import { xai } from "@ai-sdk/xai";
+import { fal } from "@ai-sdk/fal";
+import { fireworks } from "@ai-sdk/fireworks";
+import { luma } from "@ai-sdk/luma";
 
-// We intentionally do not redefine SDK return types; we adapt to what the SDK returns.
-export interface GeneratedImageResult {
-  url: string;
-  mimeType: string;
-  bytes?: Uint8Array;
-}
+/**
+ * Maps provider id to a function that returns a configured image model factory.
+ * We only support providers that are installed. Extend here to add more.
+ */
+type ImageModelFactory = (model: string) => ImageModel; // SDK returns model descriptor
+const providerMap: Record<string, ImageModelFactory> = {
+  openai: (m: string) => openai.image(m),
+  xai: (m: string) => xai.image(m),
+  fal: (m: string) => fal.image(m),
+  fireworks: (m: string) => fireworks.image(m),
+  luma: (m: string) => luma.image(m),
+};
 
-// Basic provider routing; extend with other providers if needed.
-function getProvider(model: `${ImageModelProvider}:${string}`) {
-  const [provider] = model.split(":");
-  switch (provider) {
-    case "openai":
-      return createOpenAI({ apiKey: process.env.OPENAI_API_KEY });
-    default:
-      throw new Error(`Unsupported image provider: ${provider}`);
+/**
+ * Generates a single image using the Vercel AI SDK v5 experimental image API.
+ * Keeps a minimal return shape expected by the image toolkit server tool.
+ */
+export type GenerateImageResult = Awaited<ReturnType<typeof sdkGenerateImage>>;
+
+export async function generateImage(model: string, prompt: string): Promise<GenerateImageResult> {
+  const [provider, providerModel] = model.split(":");
+  if (!provider || !providerModel) {
+    throw new Error("Image model must be in '<provider>:<model>' format");
   }
-}
-
-export async function generateImage(
-  model: `${ImageModelProvider}:${string}`,
-  prompt: string,
-): Promise<GeneratedImageResult> {
-  const provider = getProvider(model);
-  // The v5 SDK generateImage returns an iterator/stream or object depending on provider; we assume a simple call pattern.
-  const { image } = await sdkGenerateImage({
-    model: provider.image(model.split(":")[1]!),
+  const factory = providerMap[provider];
+  if (!factory) throw new Error(`Unsupported image provider: ${provider}`);
+  return sdkGenerateImage({
+    model: factory(providerModel),
     prompt,
   });
-
-  if (!image) throw new Error("No image returned by provider");
-
-  // Normalized shape. Some providers may give URL directly, others raw bytes.
-  if (typeof image.url === "string") {
-    return { url: image.url, mimeType: image.mimeType ?? "image/png" };
-  }
-
-  if (image.bytes instanceof Uint8Array) {
-    // Caller is responsible for persisting bytes (we convert upstream where needed)
-    return { url: "", mimeType: image.mimeType ?? "image/png", bytes: image.bytes };
-  }
-
-  throw new Error("Unrecognized image response shape");
 }

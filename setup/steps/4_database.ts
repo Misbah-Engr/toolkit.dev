@@ -2,58 +2,44 @@ import { execSync } from "child_process";
 import { existsSync, readFileSync } from "fs";
 import { join } from "path";
 
-import {
-  logSuccess,
-  logError,
-  logInfo,
-  logWarning,
-  getPackageManager,
-  getProjectRoot,
-} from "../utils";
+import { logSuccess, logInfo, getPackageManager, getProjectRoot } from "../utils";
+import { STEP_FAILURE } from "../types";
 
 export function runMigrations(): void {
   try {
-
-    // If no local env file, warn and skip to keep setup non-blocking
     const envPath = join(getProjectRoot(), ".env.local");
     if (!existsSync(envPath)) {
-      logWarning(".env.local not found. Skipping database migrations. Create it to enable local DB.");
-      return;
+      throw new STEP_FAILURE(".env.local not found. Create it and define DATABASE_URL.");
     }
 
-    // If DATABASE_URL isn't configured, skip to avoid blocking in ephemeral/dev envs
     let dbUrl: string | undefined;
-    try {
-      const envContents = readFileSync(envPath, "utf8");
-      const dbUrlLine = envContents
-        .split(/\r?\n/)
-        .find((l) => /^\s*DATABASE_URL\s*=/.test(l) && !/^\s*#/.test(l));
-      dbUrl = dbUrlLine?.split("=").slice(1).join("=").trim();
-    } catch {
-      // ignore, will handle below
-    }
+    const envContents = readFileSync(envPath, "utf8");
+    const dbUrlLine = envContents
+      .split(/\r?\n/)
+      .find((l) => /^\s*DATABASE_URL\s*=/.test(l) && !/^\s*#/.test(l));
+    dbUrl = dbUrlLine?.split("=").slice(1).join("=").trim();
 
     if (!dbUrl) {
-      logWarning(
-        "DATABASE_URL missing in .env.local. Skipping database migrations. Configure it to enable Prisma.",
-      );
-      return;
+      throw new STEP_FAILURE("DATABASE_URL missing in .env.local");
     }
 
     const isLocal = /localhost|127\.0\.0\.1/.test(dbUrl);
-    if (!isLocal) {
-      logInfo("Remote/non-local DATABASE_URL detected; assuming migrations handled elsewhere. Skipping.");
-      return;
+    const allowRemoteSkip = process.env.REMOTE_DB === "1";
+    if (!isLocal && allowRemoteSkip) {
+      logInfo("REMOTE_DB=1 set and remote DATABASE_URL detected; skipping local migrations.");
+      return; // explicit remote skip path
+    }
+    if (!isLocal && !allowRemoteSkip) {
+      throw new STEP_FAILURE("Remote DATABASE_URL detected. Set REMOTE_DB=1 to explicitly allow skipping local migrations.");
     }
 
-    // Attempt to run migrations (script loads env via dotenv)
     execSync(`${getPackageManager()} db:generate`, { stdio: "ignore" });
     logSuccess("Database migrations completed successfully");
   } catch (error) {
-    // Don't block local dev if DB isn't available
-    logWarning("Continuing without running database migrations (DB unavailable or command failed)");
-    if (error instanceof Error) {
-      logError(error.message);
+    if (error instanceof STEP_FAILURE) {
+      throw error;
     }
+    const message = error instanceof Error ? error.message : String(error);
+    throw new STEP_FAILURE(`Database migration step failed: ${message}`);
   }
 }

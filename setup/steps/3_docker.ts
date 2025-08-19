@@ -2,28 +2,18 @@ import { execSync } from "child_process";
 import { existsSync } from "fs";
 import { join } from "path";
 
-import {
-  logInfo,
-  logSuccess,
-  logError,
-  logWarning,
-  getProjectRoot,
-  checkDocker,
-  dockerDaemonRunning,
-} from "../utils";
+import { logInfo, logSuccess, getProjectRoot, checkDocker, dockerDaemonRunning } from "../utils";
+import { STEP_FAILURE } from "../types";
 
 // Start Docker Compose services
 export function startDockerServices(): void {
   try {
-    // Opinionated: do not allow skipping; environment is expected to support required services.
+  // Strict: do not allow skipping; environment must support required services.
 
     // Check if Docker is available
     const dockerCommand = checkDocker();
     if (!dockerCommand) {
-      logWarning(
-        "Docker/Podman not found. Skipping Docker services. Install Docker if you need local services.",
-      );
-      return;
+      throw new STEP_FAILURE("Docker/Podman not found. Install Docker to continue.");
     }
 
     logInfo(`Using ${dockerCommand} as container runtime`);
@@ -33,13 +23,12 @@ export function startDockerServices(): void {
     const dockerComposePath = join(projectRoot, "docker-compose.yml");
 
     if (!existsSync(dockerComposePath)) {
-      logWarning("docker-compose.yml not found. Skipping Docker services.");
-      return;
+      throw new STEP_FAILURE("docker-compose.yml not found. Ensure it exists and is valid.");
     }
 
-    if (!dockerDaemonRunning(dockerCommand)) {
-      logError(`${dockerCommand} daemon is not running. Start it and rerun setup.`);
-      return;
+    const daemonRunning = dockerDaemonRunning(dockerCommand);
+    if (!daemonRunning) {
+      throw new STEP_FAILURE(`${dockerCommand} daemon is not running. Start it and rerun setup.`);
     }
 
     // Start Docker Compose services in detached mode
@@ -51,10 +40,10 @@ export function startDockerServices(): void {
 
     logSuccess("Docker services started successfully");
   } catch (error) {
-    logWarning("Continuing without Docker services due to an error starting them.");
-    if (error instanceof Error) {
-      logWarning(error.message);
+    if (error instanceof STEP_FAILURE) {
+      throw error; // propagate strict failure
     }
-    // Do not throw; allow setup to proceed
+    const message = error instanceof Error ? error.message : String(error);
+    throw new STEP_FAILURE(`Error starting Docker services: ${message}`);
   }
 }
